@@ -1,0 +1,2 @@
+# Somahub-Kenya
+Educational purposes 
