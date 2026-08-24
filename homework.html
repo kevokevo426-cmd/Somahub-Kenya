@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SomaHub - AI Homework Helper</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import { getAuth, onAuthStateChanged, GoogleAuthProvider, signInWithPopup, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+import { getFirestore, doc, getDoc, setDoc, updateDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+const firebaseConfig = {
+  apiKey: "AIzaSyA93BNes3AmFyxIEgjSbvbIWqLyorLsuj8",
+  authDomain: "somahubkenya-9e458.firebaseapp.com",
+  projectId: "somahubkenya-9e458",
+  storageBucket: "somahubkenya-9e458.firebasestorage.app",
+  messagingSenderId: "615579085715",
+  appId: "1:615579085715:web:28fca37ba498324bb49666"
+};
+const app=initializeApp(firebaseConfig); const auth=getAuth(app); const db=getFirestore(app); const provider=new GoogleAuthProvider();
+window.FB={auth,db,provider,signInWithPopup,signInWithEmailAndPassword,createUserWithEmailAndPassword,onAuthStateChanged,signOut,doc,getDoc,setDoc,updateDoc,serverTimestamp};
+</script>
+</head>
+<body class="bg-green-50">
+<header class="bg-white shadow sticky top-0">
+<div class="max-w-5xl mx-auto px-4 py-3 flex justify-between">
+<a href="/" class="font-bold"><i class="fa-solid fa-robot text-green-600"></i> AI Homework</a>
+<div class="flex gap-2"><a href="/notes.html" class="text-xs bg-purple-100 px-3 py-2 rounded-full">Notes</a><a href="/exams.html" class="text-xs bg-blue-100 px-3 py-2 rounded-full">Exams</a><button id="authBtn" class="bg-green-600 text-white px-4 py-2 rounded-full text-sm">Login</button></div>
+</div>
+</header>
+
+<div class="max-w-5xl mx-auto p-4">
+<div class="bg-gradient-to-r from-green-600 to-emerald-700 rounded-2xl p-6 text-white">
+<h1 class="text-2xl font-bold">🤖 AI Homework Helper - PP1-G9</h1><p class="text-sm mt-1">Snap photo of homework • AI solves & explains in CBC way</p>
+<div id="premB" class="hidden mt-2 bg-white text-green-700 px-3 py-1 rounded-full text-xs inline-block font-bold">✅ PREMIUM ACTIVE</div>
+<div id="freeB" class="mt-2 bg-white/20 px-3 py-1 rounded-full text-xs inline-block">🔒 500 KES / 3 Months - Till 0701305109</div>
+</div>
+
+<div class="mt-6 grid md:grid-cols-2 gap-6">
+<div class="bg-white rounded-2xl p-5 shadow">
+<h3 class="font-bold mb-3">📸 Upload Homework Photo</h3>
+<input type="file" id="imgInput" accept="image/*" class="w-full border p-2 rounded">
+<div id="preview" class="mt-3 hidden"><img id="prevImg" class="rounded-xl w-full"></div>
+<textarea id="question" placeholder="Or type your question e.g 'Grade 5 math page 34 q5'" class="w-full border p-3 rounded mt-3 h-24 text-sm"></textarea>
+<select id="grade" class="w-full border p-2 rounded mt-2"><option>Grade 5</option><option>Grade 6</option><option>Grade 7</option><option>Grade 8</option><option>Grade 9</option><option>Grade 4</option><option>Grade 3</option><option>Grade 2</option><option>Grade 1</option></select>
+<button onclick="askAI()" class="w-full bg-green-600 text-white py-3 rounded-xl mt-3 font-bold">✨ Solve with AI</button>
+</div>
+
+<div class="bg-white rounded-2xl p-5 shadow">
+<h3 class="font-bold mb-3">💡 AI Answer</h3>
+<div id="aiAnswer" class="text-sm text-gray-700 min-h-[300px] bg-gray-50 p-4 rounded-xl">
+<p class="text-gray-400">Upload photo or type question and click Solve...</p>
+<p class="text-xs mt-4">Example: "What is 3/4 + 1/2 Grade 5?"</p>
+</div>
+<div class="mt-3 flex gap-2">
+<button onclick="copyAns()" class="text-xs border px-3 py-2 rounded-full">Copy</button>
+<button onclick="document.getElementById('aiAnswer').innerHTML='<p class=text-gray-400>Ready...</p>'" class="text-xs border px-3 py-2 rounded-full">Clear</button>
+</div>
+</div>
+</div>
+
+<div class="mt-6 bg-white p-4 rounded-xl shadow">
+<h3 class="font-bold text-sm">🔥 Popular Homework Today</h3>
+<div class="grid grid-cols-2 md:grid-cols-4 gap-2 mt-3 text-xs">
+<button onclick="setQ('Grade 6 Math: Area of triangle base 12 height 8')" class="bg-gray-100 p-2 rounded text-left">Triangle Area G6</button>
+<button onclick="setQ('Grade 7 English: Write composition My Family')" class="bg-gray-100 p-2 rounded text-left">Composition G7</button>
+<button onclick="setQ('Grade 5 Science: Parts of a plant')" class="bg-gray-100 p-2 rounded text-left">Plant Parts G5</button>
+<button onclick="setQ('Grade 8 Kiswahili: Insha - Umuhimu wa elimu')" class="bg-gray-100 p-2 rounded text-left">Insha Kisw G8</button>
+</div>
+</div>
+</div>
+
+<!-- Modals -->
+<div id="authModal" class="hidden fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4"><div class="bg-white rounded-2xl p-6 w-full max-w-sm"><h3 class="font-bold">Login for AI Homework</h3><button id="gLogin" class="w-full border py-2 rounded-full mt-3">Google Login</button><input id="email" placeholder="Email" class="w-full border p-2 rounded mt-3"><input id="pass" type="password" placeholder="Password" class="w-full border p-2 rounded mt-2"><button id="eLogin" class="w-full bg-green-600 text-white py-2 rounded mt-3">Login</button><button onclick="closeM()" class="w-full mt-2 text-sm">Close</button></div></div>
+<div id="subModal" class="hidden fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4"><div class="bg-white rounded-2xl p-6 w-full max-w-sm text-center"><h3 class="font-bold">Unlock AI - 500 KES</h3><p class="text-sm">Till 0701305109 - 90 days</p><input id="mpesa" placeholder="M-Pesa Code" class="w-full border p-2 rounded mt-3"><button onclick="submitMpesa()" class="w-full bg-green-600 text-white py-2 rounded mt-3 font-bold">Submit</button><button onclick="closeM()" class="w-full mt-2 text-sm">Close</button></div></div>
+
+<script>
+let currentUser=null, userData=null;
+function closeM(){document.getElementById('authModal').classList.add('hidden'); document.getElementById('subModal').classList.add('hidden');}
+function setQ(t){document.getElementById('question').value=t;}
+document.getElementById('imgInput').onchange=(e)=>{const f=e.target.files[0]; if(f){const r=new FileReader(); r.onload=()=>{document.getElementById('prevImg').src=r.result; document.getElementById('preview').classList.remove('hidden');}; r.readAsDataURL(f);}};
+
+async function askAI(){
+const q=document.getElementById('question').value; const grade=document.getElementById('grade').value;
+if(!q &&!document.getElementById('imgInput').files[0]) return alert("Upload photo or type question");
+if(!currentUser){document.getElementById('authModal').classList.remove('hidden'); return;}
+if(!userData?.isPremium){document.getElementById('subModal').classList.remove('hidden'); return;}
+
+const box=document.getElementById('aiAnswer');
+box.innerHTML=`<p class="animate-pulse">🤖 AI thinking for ${grade}... solving...</p>`;
+
+ // SIMPLE AI SIMULATION (works offline) - You can connect real AI later
+ setTimeout(()=>{
+  const lower=q.toLowerCase();
+  let ans="";
+  if(lower.includes("triangle")||lower.includes("area")) ans=`<b>Solution for ${grade} - Area of Triangle</b><br><br>Formula: Area = ½ × base × height<br>Given: base=12, height=8<br>Area = ½ × 12 × 8 = 6 × 8 = <b>48 square units</b><br><br>Explanation: In CBC we multiply base and height then divide by 2. Draw triangle and label.`;
+  else if(lower.includes("plant")) ans=`<b>Parts of a Plant - ${grade} Science</b><br><br>1. Roots - absorb water<br>2. Stem - supports<br>3. Leaves - make food (photosynthesis)<br>4. Flowers - reproduction<br>5. Fruits - protect seeds<br><br>CBC Activity: Draw plant and label parts.`;
+  else if(lower.includes("composition")||lower.includes("insha")||lower.includes("family")) ans=`<b>Composition: My Family (${grade})</b><br><br>My family has... We live in... My father is... My mother... I love my family because...<br><br>Write 150 words, use paragraphs, good grammar.`;
+  else ans=`<b>${grade} Homework Help</b><br><br>Question: ${q}<br><br>Step 1: Understand question<br>Step 2: Recall CBC concept<br>Step 3: Solve step by step<br>Step 4: Final answer with explanation<br><br><i>This is demo AI. For full AI (ChatGPT), admin will connect API key in admin.html later.</i><br><br><b>Tip:</b> Check notes.html for ${grade} notes on this topic.`;
+  box.innerHTML=ans;
+ },1500);
+}
+
+function copyAns(){const t=document.getElementById('aiAnswer').innerText; navigator.clipboard.writeText(t); alert("Copied!");}
+
+setTimeout(()=>{
+const FB=window.FB;
+document.getElementById('gLogin').onclick=async()=>{try{await FB.signInWithPopup(FB.auth,FB.provider)}catch(e){alert(e.message)}};
+document.getElementById('eLogin').onclick=async()=>{const em=document.getElementById('email').value, ps=document.getElementById('pass').value; try{await FB.createUserWithEmailAndPassword(FB.auth,em,ps)}catch{try{await FB.signInWithEmailAndPassword(FB.auth,em,ps)}catch(e){alert(e.message)}};};
+document.getElementById('authBtn').onclick=()=>{if(currentUser) FB.signOut(FB.auth); else document.getElementById('authModal').classList.remove('hidden');};
+FB.onAuthStateChanged(FB.auth, async(u)=>{
+currentUser=u;
+if(u){
+document.getElementById('authBtn').innerText="Logout";
+const ref=FB.doc(FB.db,"users",u.uid); const snap=await FB.getDoc(ref);
+if(!snap.exists()){await FB.setDoc(ref,{email:u.email, role:"learner", status:"pending", isPremium:false, mpesaCode:"", createdAt:FB.serverTimestamp()}); userData={isPremium:false};}
+else{userData=snap.data(); if(userData.isPremium){document.getElementById('premB').classList.remove('hidden'); document.getElementById('freeB').classList.add('hidden');}}
+}else{document.getElementById('authBtn').innerText="Login"; userData=null; document.getElementById('premB').classList.add('hidden'); document.getElementById('freeB').classList.remove('hidden');}
+});
+},600);
+
+async function submitMpesa(){const c=document.getElementById('mpesa').value; if(!c) return alert("Enter code"); const FB=window.FB; await FB.updateDoc(FB.doc(FB.db,"users",currentUser.uid),{mpesaCode:c, status:"pending_payment"}); alert("Sent!"); closeM();}
+window.askAI=askAI; window.closeM=closeM; window.submitMpesa=submitMpesa; window.setQ=setQ; window.copyAns=copyAns;
+</script>
+</body>
+</html>
