@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SomaHub - AI Assistant CBC</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import { getAuth, onAuthStateChanged, GoogleAuthProvider, signInWithPopup, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+import { getFirestore, doc, getDoc, setDoc, updateDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+const firebaseConfig = {
+  apiKey: "AIzaSyA93BNes3AmFyxIEgjSbvbIWqLyorLsuj8",
+  authDomain: "somahubkenya-9e458.firebaseapp.com",
+  projectId: "somahubkenya-9e458",
+  storageBucket: "somahubkenya-9e458.firebasestorage.app",
+  messagingSenderId: "615579085715",
+  appId: "1:615579085715:web:28fca37ba498324bb49666"
+};
+const app=initializeApp(firebaseConfig); const auth=getAuth(app); const db=getFirestore(app); const provider=new GoogleAuthProvider();
+window.FB={auth,db,provider,signInWithPopup,signInWithEmailAndPassword,createUserWithEmailAndPassword,onAuthStateChanged,signOut,doc,getDoc,setDoc,updateDoc,serverTimestamp};
+</script>
+</head>
+<body class="bg-gray-900 text-white h-screen flex flex-col">
+<header class="bg-gray-800 p-3 flex justify-between items-center">
+<a href="/" class="font-bold"><i class="fa-solid fa-robot text-green-400"></i> SomaHub AI - CBC Expert</a>
+<div class="flex gap-2"><span id="prem" class="hidden bg-green-600 px-3 py-1 rounded-full text-xs">PREMIUM</span><span id="free" class="bg-gray-700 px-3 py-1 rounded-full text-xs">FREE - 500 KES</span><button id="authBtn" class="bg-white text-black px-4 py-1 rounded-full text-xs">Login</button></div>
+</header>
+
+<div class="flex flex-1 overflow-hidden">
+<!-- Sidebar -->
+<div class="hidden md:block w-64 bg-gray-800 p-4">
+<h3 class="font-bold text-sm">Quick Prompts</h3>
+<div class="mt-3 space-y-2 text-xs">
+<button onclick="setPrompt('Explain Grade 6 fractions like I am 12')" class="w-full text-left bg-gray-700 p-2 rounded">📘 Explain Fractions G6</button>
+<button onclick="setPrompt('Create CBC lesson plan for Grade 5 Science - Soil')" class="w-full text-left bg-gray-700 p-2 rounded">📋 Lesson Plan G5 Soil</button>
+<button onclick="setPrompt('Generate Grade 7 Math exam 20 questions with answers')" class="w-full text-left bg-gray-700 p-2 rounded">📝 Exam G7 Math</button>
+<button onclick="setPrompt('Summarize Grade 8 Agriculture notes')" class="w-full text-left bg-gray-700 p-2 rounded">📚 Summarize Notes G8</button>
+<button onclick="setPrompt('Solve: Grade 9 simultaneous equations x+y=10, x-y=2')" class="w-full text-left bg-gray-700 p-2 rounded">🧮 Solve Equations</button>
+<button onclick="setPrompt('Write composition My Mother for Grade 4')" class="w-full text-left bg-gray-700 p-2 rounded">✍️ Composition G4</button>
+</div>
+<p class="text-[10px] text-gray-400 mt-6">Till 0701305109 • 500 KES / 3 Months</p>
+</div>
+
+<!-- Chat -->
+<div class="flex-1 flex flex-col">
+<div id="chat" class="flex-1 overflow-y-auto p-4 space-y-4">
+<div class="bg-gray-800 p-4 rounded-xl"><p class="font-bold">👋 Hi! I'm SomaHub AI - Your CBC Assistant!</p><p class="text-sm text-gray-300 mt-2">I can:</p><ul class="text-xs text-gray-400 mt-2 list-disc ml-4 space-y-1"><li>Explain any topic PP1-G9 in simple Swahili/English</li><li>Create lesson plans, schemes, exams instantly</li><li>Solve homework (photo or text)</li><li>Summarize notes</li><li>Mark compositions</li></ul><p class="text-xs mt-3 text-green-400">Try: "Explain photosynthesis Grade 5"</p></div>
+</div>
+
+<div class="p-3 bg-gray-800 border-t border-gray-700">
+<div class="flex gap-2">
+<input id="msg" placeholder="Ask anything CBC... e.g 'Grade 7 fractions'" class="flex-1 bg-gray-700 p-3 rounded-full text-sm outline-none">
+<button onclick="send()" class="bg-green-600 w-12 h-12 rounded-full"><i class="fa-solid fa-paper-plane"></i></button>
+</div>
+<p class="text-[10px] text-gray-500 text-center mt-2">AI answers CBC only • Premium unlocks unlimited • Till 0701305109</p>
+</div>
+</div>
+</div>
+
+<div id="authModal" class="hidden fixed inset-0 bg-black/70 z-50 flex items-center justify-center p-4"><div class="bg-white text-black rounded-2xl p-6 w-full max-w-sm"><h3 class="font-bold">Login for AI</h3><button id="gLogin" class="w-full border py-2 rounded-full mt-3">Google Login</button><input id="email" placeholder="Email" class="w-full border p-2 rounded mt-3"><input id="pass" type="password" placeholder="Password" class="w-full border p-2 rounded mt-2"><button id="eLogin" class="w-full bg-green-600 text-white py-2 rounded mt-3">Login</button><button onclick="closeM()" class="w-full mt-2 text-sm">Close</button></div></div>
+<div id="subModal" class="hidden fixed inset-0 bg-black/70 z-50 flex items-center justify-center p-4"><div class="bg-white text-black rounded-2xl p-6 w-full max-w-sm text-center"><h3 class="font-bold">Unlock AI Unlimited - 500 KES</h3><p class="text-sm">Till 0701305109 - 3 Months</p><p class="text-xs text-gray-500 mt-1">You have 3 free questions</p><input id="mpesa" placeholder="M-Pesa Code" class="w-full border p-2 rounded mt-3"><button onclick="submitMpesa()" class="w-full bg-green-600 text-white py-2 rounded mt-3 font-bold">Submit</button><button onclick="closeM()" class="w-full mt-2 text-sm">Close</button></div></div>
+
+<script>
+let currentUser=null, userData=null, count=0;
+function closeM(){document.getElementById('authModal').classList.add('hidden'); document.getElementById('subModal').classList.add('hidden');}
+function setPrompt(t){document.getElementById('msg').value=t;}
+
+function send(){
+const input=document.getElementById('msg'); const q=input.value.trim(); if(!q) return;
+if(!currentUser){document.getElementById('authModal').classList.remove('hidden'); return;}
+if(!userData?.isPremium && count>=3){document.getElementById('subModal').classList.remove('hidden'); return;}
+
+const chat=document.getElementById('chat');
+chat.innerHTML+=`<div class="bg-blue-600 p-3 rounded-xl ml-auto max-w-[80%] text-sm">${q}</div>`;
+input.value=""; chat.innerHTML+=`<div id="typing" class="bg-gray-800 p-3 rounded-xl max-w-[80%] text-sm animate-pulse">🤖 Thinking...</div>`; chat.scrollTop=chat.scrollHeight;
+
+setTimeout(()=>{
+document.getElementById('typing')?.remove();
+let ans="";
+const l=q.toLowerCase();
+if(l.includes("fraction")) ans=`<b>Fractions - ${q}</b><br><br><b>What is fraction?</b> Part of whole.<br>Example: 1/2 = half<br><br><b>Grade 6:</b><br>1. Numerator (top) = parts we have<br>2. Denominator (bottom) = total parts<br><br><b>Addition:</b> 1/4 + 2/4 = 3/4 (same denominator add top)<br><b>Different:</b> 1/2 + 1/4 = 2/4 +1/4 =3/4 (find LCM)<br><br>Activity: Cut chapati into 4, shade 1/4.`;
+else if(l.includes("lesson plan")) ans=`<b>CBC LESSON PLAN GENERATED</b><br><br>Subject: Science<br>Topic: ${q}<br>Grade: 5<br>Time: 40min<br><br><b>Outcome:</b> Learner can explain topic<br><b>Resources:</b> Chart, real objects<br><b>Intro (5):</b> Review previous lesson, ask questions<br><b>Development (25):</b> 1. Teacher explains with examples<br>2. Group discussion<br>3. Learners do activity<br><b>Conclusion (5):</b> Q&A, summary<br><b>Assessment:</b> Oral + written<br><b>Reflection:</b> Well done.`;
+else if(l.includes("exam")) ans=`<b>EXAM GENERATED - ${q}</b><br><br>1. What is...? (2mks)<br>2. Explain... (3mks)<br>3. Solve... (4mks)<br>... up to 20 questions<br><br><b>Marking Scheme:</b><br>1. Answer (2)<br>2....<br><br>Want PDF? Go to exams.html`;
+else if(l.includes("soil")||l.includes("photosynthesis")||l.includes("plant")) ans=`<b>Science - ${q}</b><br><br><b>Simple Explanation (CBC):</b><br>Soil is top layer of earth. Types: clay, sand, loam.<br>Importance: grows crops, holds water.<br><br>Photosynthesis: Leaves make food using sun + water + CO2 = glucose + oxygen<br>Equation: 6CO2 + 6H2O + sun → C6H12O6 + 6O2<br><br>Experiment: Put plant in dark, test starch.`;
+else ans=`<b>Answer for: ${q}</b><br><br>This is CBC concept for PP1-G9.<br><br><b>Step 1:</b> Understand question<br><b>Step 2:</b> Break into small parts<br><b>Step 3:</b> Give example from Kenya<br><b>Step 4:</b> Summary in simple English & Kiswahili<br><br>Example: If math, we solve with steps. If English, we give composition structure. If science, we give experiment.<br><br><i>Premium connects to real ChatGPT API for unlimited answers. Currently demo mode - admin add API key in admin.html</i>`;
+
+chat.innerHTML+=`<div class="bg-gray-800 p-4 rounded-xl max-w-[90%] text-sm">${ans}</div>`;
+chat.scrollTop=chat.scrollHeight; count++;
+},1200);
+}
+document.getElementById('msg').addEventListener('keypress',(e)=>{if(e.key==='Enter') send();});
+
+setTimeout(()=>{
+const FB=window.FB;
+document.getElementById('gLogin').onclick=async()=>{try{await FB.signInWithPopup(FB.auth,FB.provider)}catch(e){alert(e.message)}};
+document.getElementById('eLogin').onclick=async()=>{const em=document.getElementById('email').value, ps=document.getElementById('pass').value; try{await FB.createUserWithEmailAndPassword(FB.auth,em,ps)}catch{try{await FB.signInWithEmailAndPassword(FB.auth,em,ps)}catch(e){alert(e.message)}};};
+document.getElementById('authBtn').onclick=()=>{if(currentUser) FB.signOut(FB.auth); else document.getElementById('authModal').classList.remove('hidden');};
+FB.onAuthStateChanged(FB.auth, async(u)=>{
+currentUser=u;
+if(u){
+document.getElementById('authBtn').innerText="Logout";
+const ref=FB.doc(FB.db,"users",u.uid); const snap=await FB.getDoc(ref);
+if(!snap.exists()){await FB.setDoc(ref,{email:u.email, role:"learner", status:"pending", isPremium:false, mpesaCode:"", createdAt:FB.serverTimestamp()}); userData={isPremium:false};}
+else{userData=snap.data(); if(userData.isPremium){document.getElementById('prem').classList.remove('hidden'); document.getElementById('free').classList.add('hidden');}}
+}else{document.getElementById('authBtn').innerText="Login"; userData=null; document.getElementById('prem').classList.add('hidden'); document.getElementById('free').classList.remove('hidden');}
+});
+},600);
+async function submitMpesa(){const c=document.getElementById('mpesa').value; if(!c) return alert("Enter code"); const FB=window.FB; await FB.updateDoc(FB.doc(FB.db,"users",currentUser.uid),{mpesaCode:c, status:"pending_payment"}); alert("Sent!"); closeM();}
+window.send=send; window.setPrompt=setPrompt; window.closeM=closeM; window.submitMpesa=submitMpesa;
+</script>
+</body>
+</html>
