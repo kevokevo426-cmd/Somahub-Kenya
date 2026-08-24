@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SomaHub - Student Portal PP1-G9</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import { getAuth, GoogleAuthProvider, signInWithPopup, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+import { getFirestore, doc, setDoc, getDoc, collection, getDocs, query, where, updateDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+const firebaseConfig = {
+  apiKey: "AIzaSyA93BNes3AmFyxIEgjSbvbIWqLyorLsuj8",
+  authDomain: "somahubkenya-9e458.firebaseapp.com",
+  projectId: "somahubkenya-9e458",
+  storageBucket: "somahubkenya-9e458.firebasestorage.app",
+  messagingSenderId: "615579085715",
+  appId: "1:615579085715:web:28fca37ba498324bb49666"
+};
+const app=initializeApp(firebaseConfig); const auth=getAuth(app); const db=getFirestore(app); const provider=new GoogleAuthProvider();
+window.FB={auth,db,provider,signInWithPopup,signInWithEmailAndPassword,createUserWithEmailAndPassword,onAuthStateChanged,signOut,doc,setDoc,getDoc,collection,getDocs,query,where,updateDoc,serverTimestamp};
+</script>
+</head>
+<body class="bg-gray-50">
+<header class="bg-white shadow sticky top-0 z-50">
+<div class="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
+<a href="/" class="flex items-center gap-2"><i class="fa-solid fa-book-open text-green-600 text-xl"></i><span class="font-bold">SomaHub Students</span><span class="text-xs bg-green-100 px-2 py-1 rounded">PP1-G9</span></a>
+<div class="flex gap-2"><a href="/teachers.html" class="text-xs bg-orange-100 px-3 py-2 rounded-full">Teachers</a><button id="authBtn" class="bg-green-600 text-white px-4 py-2 rounded-full text-sm">Login</button></div>
+</div>
+</header>
+
+<section id="home" class="max-w-7xl mx-auto px-4 py-6">
+<div class="bg-gradient-to-r from-blue-600 to-indigo-700 rounded-2xl p-6 text-white mb-6">
+<h1 class="text-2xl font-bold">🎓 Student Portal - PP1 to Grade 9</h1>
+<p class="text-sm mt-1">Exams • Notes • AI Homework Helper • Video Lessons • Games</p>
+<div id="premiumBadge" class="hidden mt-3 bg-white text-blue-700 px-3 py-1 rounded-full text-xs inline-block font-bold">✅ PREMIUM ACTIVE - 3 Months</div>
+<div id="freeBadge" class="mt-3 bg-white/20 px-3 py-1 rounded-full text-xs inline-block">🔒 Subscribe 500 KES / 3 Months - Till 0701305109</div>
+</div>
+
+<h2 class="font-bold mb-3">Select Your Grade</h2>
+<div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-3 mb-8" id="gradeGrid"></div>
+
+<div class="grid md:grid-cols-3 gap-4">
+<div class="bg-white p-4 rounded-xl shadow border"><h3 class="font-bold">📝 Auto-Mark Exams</h3><p class="text-xs text-gray-600 mt-1">Do exams, get instant marks & corrections</p></div>
+<div class="bg-white p-4 rounded-xl shadow border"><h3 class="font-bold">🤖 AI Homework</h3><p class="text-xs text-gray-600 mt-1">Snap homework photo, AI explains</p></div>
+<div class="bg-white p-4 rounded-xl shadow border"><h3 class="font-bold">🎮 CBC Games</h3><p class="text-xs text-gray-600 mt-1">Learn Math & Science through games</p></div>
+</div>
+</section>
+
+<section id="resView" class="hidden max-w-7xl mx-auto px-4 py-6">
+<button onclick="showHome()" class="mb-4 bg-gray-200 px-3 py-1 rounded text-sm">← Back to Grades</button>
+<h2 id="resTitle" class="text-xl font-bold mb-1"></h2>
+<p class="text-xs text-gray-500 mb-4">Choose subject</p>
+<div class="flex gap-2 mb-4 flex-wrap" id="subjectTabs"></div>
+<div id="resList" class="grid md:grid-cols-2 gap-3"></div>
+</section>
+
+<!-- Auth Modal -->
+<div id="authModal" class="hidden fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
+<div class="bg-white rounded-2xl p-6 w-full max-w-sm">
+<h3 class="font-bold mb-4">Student Login</h3>
+<button id="gLogin" class="w-full border py-2 rounded-full mb-3">Continue with Google</button>
+<input id="email" placeholder="Email" class="w-full border p-2 rounded mb-2">
+<input id="pass" type="password" placeholder="Password" class="w-full border p-2 rounded mb-3">
+<button id="eLogin" class="w-full bg-blue-600 text-white py-2 rounded">Login / Signup</button>
+<button onclick="closeMod()" class="w-full mt-2 text-sm">Cancel</button>
+</div>
+</div>
+
+<!-- Subscribe Modal -->
+<div id="subModal" class="hidden fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
+<div class="bg-white rounded-2xl p-6 w-full max-w-sm text-center">
+<h3 class="font-bold">Unlock All - 500 KES</h3>
+<p class="text-sm mt-2">Lipa <b>500 KES</b> to Till <b>0701305109</b></p>
+<p class="text-xs text-gray-500 mt-1">Enter M-Pesa code after payment</p>
+<input id="mpesa" placeholder="M-Pesa Code e.g QGH7..." class="w-full border p-2 rounded mt-3">
+<button onclick="submitMpesa()" class="w-full bg-green-600 text-white py-2 rounded mt-3 font-bold">Submit</button>
+<button onclick="closeMod()" class="w-full mt-2 text-sm">Close</button>
+</div>
+</div>
+
+<script>
+const grades=["PP1","PP2","Grade 1","Grade 2","Grade 3","Grade 4","Grade 5","Grade 6","Grade 7","Grade 8","Grade 9"];
+const subjects=["All","Mathematics","English","Kiswahili","Science","SST","CRE"];
+let currentGrade="Grade 5"; let currentUser=null; let userData=null;
+const gradeGrid=document.getElementById('gradeGrid');
+grades.forEach(g=>{gradeGrid.innerHTML+=`<div onclick="openGrade('${g}')" class="bg-white p-4 rounded-xl shadow border hover:shadow-lg cursor-pointer text-center"><p class="font-bold text-sm">${g}</p><p class="text-[10px] text-gray-500 mt-1">Notes • Exams • Videos</p></div>`;});
+
+function showHome(){document.getElementById('home').classList.remove('hidden'); document.getElementById('resView').classList.add('hidden');}
+function openGrade(g){currentGrade=g; document.getElementById('home').classList.add('hidden'); document.getElementById('resView').classList.remove('hidden'); document.getElementById('resTitle').innerText=g+" Resources"; renderSubjects(); loadRes("All");}
+function renderSubjects(){const tabs=document.getElementById('subjectTabs'); tabs.innerHTML=""; subjects.forEach(s=>{tabs.innerHTML+=`<button onclick="loadRes('${s}')" class="px-3 py-1 rounded-full text-xs border ${s==='All'?'bg-blue-600 text-white':''}">${s}</button>`;});}
+function closeMod(){document.getElementById('authModal').classList.add('hidden'); document.getElementById('subModal').classList.add('hidden');}
+
+async function loadRes(sub){
+const list=document.getElementById('resList'); list.innerHTML="Loading...";
+try{
+const FB=window.FB;
+let q;
+if(sub==="All") q=FB.query(FB.collection(FB.db,"resources"), FB.where("grade","==",currentGrade));
+else q=FB.query(FB.collection(FB.db,"resources"), FB.where("grade","==",currentGrade), FB.where("subject","==",sub));
+const snap=await FB.getDocs(q);
+list.innerHTML="";
+if(snap.empty){list.innerHTML=`<p class="text-sm text-gray-500 col-span-2">No resources yet for ${currentGrade} - ${sub}. Check back soon!</p>`; return;}
+snap.forEach(d=>{
+const r=d.data();
+const isPrem=userData?.isPremium;
+list.innerHTML+=`<div class="bg-white p-4 rounded-xl shadow border"><div class="flex justify-between items-center"><span class="text-[10px] bg-blue-100 text-blue-700 px-2 py-1 rounded">${r.type}</span><span class="text-[10px] text-gray-500">${r.subject}</span></div><h4 class="font-bold text-sm mt-2">${r.title}</h4><button onclick="downloadRes('${r.link}')" class="mt-3 w-full ${isPrem?'bg-green-600':'bg-gray-300'} text-white py-2 rounded text-xs font-bold">${isPrem?'📥 Download / View':'🔒 Subscribe (500 KES) to View'}</button></div>`;
+});
+}catch(e){list.innerHTML="Error: "+e.message;}
+}
+function downloadRes(link){
+if(!currentUser){document.getElementById('authModal').classList.remove('hidden'); return;}
+if(!userData?.isPremium){document.getElementById('subModal').classList.remove('hidden'); return;}
+window.open(link,"_blank");
+}
+
+setTimeout(()=>{
+const FB=window.FB;
+document.getElementById('gLogin').onclick=async()=>{try{await FB.signInWithPopup(FB.auth,FB.provider)}catch(e){alert(e.message)}};
+document.getElementById('eLogin').onclick=async()=>{
+const em=document.getElementById('email').value, ps=document.getElementById('pass').value;
+try{await FB.createUserWithEmailAndPassword(FB.auth,em,ps)}catch{try{await FB.signInWithEmailAndPassword(FB.auth,em,ps)}catch(e){alert(e.message)}};
+};
+document.getElementById('authBtn').onclick=()=>{if(currentUser) FB.signOut(FB.auth); else document.getElementById('authModal').classList.remove('hidden');};
+FB.onAuthStateChanged(FB.auth, async(u)=>{
+currentUser=u;
+if(u){
+document.getElementById('authBtn').innerText="Logout";
+const ref=FB.doc(FB.db,"users",u.uid); const snap=await FB.getDoc(ref);
+if(!snap.exists()){await FB.setDoc(ref,{email:u.email, role:"learner", status:"pending", isPremium:false, mpesaCode:"", createdAt:FB.serverTimestamp()}); userData={isPremium:false};}
+else{userData=snap.data(); if(userData.isPremium){document.getElementById('premiumBadge').classList.remove('hidden'); document.getElementById('freeBadge').classList.add('hidden');}}
+}else{document.getElementById('authBtn').innerText="Login"; userData=null; document.getElementById('premiumBadge').classList.add('hidden'); document.getElementById('freeBadge').classList.remove('hidden');}
+});
+},600);
+
+async function submitMpesa(){
+const code=document.getElementById('mpesa').value; if(!code) return alert("Enter code");
+const FB=window.FB; await FB.updateDoc(FB.doc(FB.db,"users",currentUser.uid),{mpesaCode:code, status:"pending_payment"}); alert("Submitted! Admin will approve in 5min. Till 0701305109"); closeMod();
+}
+window.showHome=showHome; window.openGrade=openGrade; window.loadRes=loadRes; window.downloadRes=downloadRes; window.closeMod=closeMod; window.submitMpesa=submitMpesa;
+</script>
+</body>
+  </html>
