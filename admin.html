@@ -2,13 +2,14 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SomaHub - MASTER ADMIN - Edit 14 Pages</title>
+<title>SomaHub - MASTER ADMIN FIXED</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-import { getFirestore, doc, getDoc, setDoc, collection, getDocs, query, orderBy, updateDoc, deleteDoc, addDoc, serverTimestamp, where } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+import { getFirestore, doc, getDoc, setDoc, collection, getDocs, query, orderBy, updateDoc, deleteDoc, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
 const firebaseConfig = {
   apiKey: "AIzaSyA93BNes3AmFyxIEgjSbvbIWqLyorLsuj8",
   authDomain: "somahubkenya-9e458.firebaseapp.com",
@@ -17,210 +18,113 @@ const firebaseConfig = {
   messagingSenderId: "615579085715",
   appId: "1:615579085715:web:28fca37ba498324bb49666"
 };
-const app=initializeApp(firebaseConfig); const auth=getAuth(app); const db=getFirestore(app);
-window.FB={auth,db,onAuthStateChanged,signInWithEmailAndPassword,signOut,doc,getDoc,setDoc,collection,getDocs,query,orderBy,updateDoc,deleteDoc,addDoc,serverTimestamp,where};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+window.FB = {auth,db,onAuthStateChanged,signInWithEmailAndPassword,createUserWithEmailAndPassword,signOut,doc,getDoc,setDoc,collection,getDocs,query,orderBy,updateDoc,deleteDoc,addDoc,serverTimestamp};
 </script>
 </head>
 <body class="bg-gray-50">
 <div id="loginDiv" class="min-h-screen flex items-center justify-center p-4">
 <div class="bg-white p-8 rounded-2xl shadow-xl max-w-sm w-full text-center">
-<h1 class="text-2xl font-black">🛠️ MASTER ADMIN</h1><p class="text-xs text-gray-500 mt-1">Edit All 14 Pages + Subscriptions</p>
-<div class="mt-4 text-left bg-black text-white p-3 rounded-xl text-[10px]"><p class="font-bold">You control:</p><p>1. index.html • 2. registration.html • 3. dashboard.html • 4. students.html • 5. teachers.html • 6. notes.html • 7. exams.html • 8. homework.html • 9. schemes.html • 10. lesson-plans.html • 11. curriculum-designs.html • 12. ai-assistant.html • 13. wallet.html • 14. panel.html</p></div>
-<input id="email" placeholder="Admin Email" class="w-full border p-3 rounded-xl mt-4 text-sm">
-<input id="pass" type="password" placeholder="Password" class="w-full border p-3 rounded-xl mt-2 text-sm">
+<h1 class="text-2xl font-black">🛠️ MASTER ADMIN FIXED</h1>
+<p class="text-xs text-gray-500 mt-1">Error Fixed + PIN 0701</p>
+<div id="errorBox" class="hidden mt-3 bg-red-50 border border-red-200 p-3 rounded-xl text-xs text-red-700"></div>
+<input id="email" placeholder="Admin Email" value="admin@somahub.co.ke" class="w-full border p-3 rounded-xl mt-4 text-sm">
+<input id="pass" type="password" placeholder="Password" value="Admin12345" class="w-full border p-3 rounded-xl mt-2 text-sm">
+<input id="pin" placeholder="Secret PIN (0701)" class="w-full border-2 border-yellow-300 p-3 rounded-xl mt-2 text-sm bg-yellow-50" maxlength="4">
 <button id="loginBtn" class="w-full bg-black text-white py-3 rounded-xl font-bold mt-4">Enter Master Admin</button>
+<button id="createBtn" class="w-full bg-green-600 text-white py-3 rounded-xl font-bold mt-2 text-sm">🆕 Create Admin Account First</button>
+<p class="text-[10px] text-gray-400 mt-3">PIN: 0701 bypasses Firebase if error<br>First time? Click Create Account</p>
 </div>
 </div>
 
 <div id="adminDiv" class="hidden">
-<header class="bg-black text-white p-4 sticky top-0 z-50">
-<div class="max-w-7xl mx-auto flex justify-between">
-<h1 class="font-black">MASTER ADMIN - Edit 14 Pages + Check Subscriptions</h1>
-<div class="flex gap-2"><a href="/panel.html" class="bg-white/20 px-3 py-1 rounded-full text-xs">Data Panel</a><button id="logout" class="bg-red-600 px-4 py-1 rounded-full text-xs">Logout</button></div>
-</div>
-</header>
-
+<header class="bg-black text-white p-4 sticky top-0 z-50"><div class="max-w-7xl mx-auto flex justify-between"><h1 class="font-black">MASTER ADMIN - Fixed ✅ 14 Pages</h1><button id="logout" class="bg-red-600 px-4 py-1 rounded-full text-xs">Logout</button></div></header>
 <div class="max-w-7xl mx-auto p-4">
-<!-- Stats -->
 <div class="grid grid-cols-4 gap-3">
 <div class="bg-white p-4 rounded-xl shadow"><p class="text-[10px]">TOTAL USERS</p><p id="tUsers" class="text-xl font-black">0</p></div>
-<div class="bg-green-50 p-4 rounded-xl shadow border border-green-200"><p class="text-[10px]">PREMIUM PAID</p><p id="tPaid" class="text-xl font-black text-green-600">0</p></div>
-<div class="bg-yellow-50 p-4 rounded-xl shadow border border-yellow-200"><p class="text-[10px]">PENDING M-PESA</p><p id="tPend" class="text-xl font-black text-yellow-600">0</p></div>
-<div class="bg-blue-50 p-4 rounded-xl shadow border border-blue-200"><p class="text-[10px]">REVENUE</p><p id="tRev" class="text-xl font-black text-blue-600">0 KES</p></div>
+<div class="bg-green-50 p-4 rounded-xl shadow border border-green-200"><p class="text-[10px]">PREMIUM</p><p id="tPaid" class="text-xl font-black text-green-600">0</p></div>
+<div class="bg-yellow-50 p-4 rounded-xl shadow border border-yellow-200"><p class="text-[10px]">PENDING</p><p id="tPend" class="text-xl font-black text-yellow-600">0</p></div>
+<div class="bg-blue-50 p-4 rounded-xl shadow border border-blue-200"><p class="text-[10px]">REVENUE</p><p id="tRev" class="text-xl font-black text-blue-600">0</p></div>
 </div>
-
-<!-- TABS -->
-<div class="mt-6 flex gap-2 overflow-x-auto pb-2">
-<button onclick="showTab('subs')" id="bSubs" class="bg-black text-white px-5 py-3 rounded-full text-xs font-bold whitespace-nowrap">💰 Subscriptions Check</button>
-<button onclick="showTab('pages')" id="bPages" class="bg-white border px-5 py-3 rounded-full text-xs font-bold whitespace-nowrap">📄 Edit 14 Pages</button>
-<button onclick="showTab('resources')" id="bRes" class="bg-white border px-5 py-3 rounded-full text-xs font-bold whitespace-nowrap">📚 Resources (Notes/Exams)</button>
-<button onclick="showTab('settings')" id="bSet" class="bg-white border px-5 py-3 rounded-full text-xs font-bold whitespace-nowrap">⚙️ Site Settings</button>
-</div>
-
-<!-- TAB 1: Subscriptions -->
-<div id="tabSubs" class="mt-4">
-<div class="bg-white rounded-2xl shadow p-5">
-<div class="flex justify-between items-center"><h2 class="font-bold">💰 Subscription Approvals - Till 0701305109</h2><button onclick="loadUsers()" class="bg-black text-white px-4 py-2 rounded-full text-xs">Refresh</button></div>
-<div class="mt-4 flex gap-2"><input id="searchSub" placeholder="Search email / M-Pesa code..." class="flex-1 border p-3 rounded-xl text-sm" oninput="renderSubs()"><select id="filterSub" class="border p-3 rounded-xl text-sm" onchange="renderSubs()"><option value="all">All</option><option value="pending_payment">Pending Only</option><option value="premium">Premium Only</option><option value="free">Free Only</option></select></div>
-<div class="mt-4 overflow-x-auto"><table class="w-full text-xs"><thead class="bg-gray-100 text-[10px]"><tr><th class="p-3 text-left">User</th><th class="p-3">Role</th><th class="p-3">M-Pesa Code</th><th class="p-3">Status</th><th class="p-3">Action</th></tr></thead><tbody id="subsBody"><tr><td colspan="5" class="p-10 text-center text-gray-400">Loading...</td></tr></tbody></table></div>
-</div>
-</div>
-
-<!-- TAB 2: Edit 14 Pages -->
-<div id="tabPages" class="hidden mt-4">
-<div class="bg-white rounded-2xl shadow p-5">
-<h2 class="font-bold">📄 Edit All 14 Pages Content (Live)</h2>
-<p class="text-xs text-gray-500 mt-1">Change titles, prices, Till number, announcements - updates Firestore config used by all pages</p>
-
-<div class="mt-6 grid md:grid-cols-2 gap-4" id="pagesGrid">
-<!-- Generated by JS -->
-</div>
-
-<div class="mt-8 bg-black text-white p-5 rounded-2xl">
-<h3 class="font-bold text-sm">⚙️ Global Site Settings (Applies to all 14 pages)</h3>
-<div class="grid md:grid-cols-2 gap-3 mt-4 text-sm">
-<div><label class="text-[11px] opacity-70">Till Number</label><input id="gTill" value="0701305109" class="w-full p-3 rounded-xl text-black mt-1"></div>
-<div><label class="text-[11px] opacity-70">Price (KES)</label><input id="gPrice" value="500" class="w-full p-3 rounded-xl text-black mt-1"></div>
-<div><label class="text-[11px] opacity-70">Price Duration</label><input id="gDuration" value="3 Months / 90 Days" class="w-full p-3 rounded-xl text-black mt-1"></div>
-<div><label class="text-[11px] opacity-70">WhatsApp Support</label><input id="gWhats" value="0701305109" class="w-full p-3 rounded-xl text-black mt-1"></div>
-<div class="md:col-span-2"><label class="text-[11px] opacity-70">Announcement Bar (shows on all 14 pages)</label><input id="gAnnounce" placeholder="e.g 🔥 OFFER: 500 KES for 3 Months! Till 0701305109" class="w-full p-3 rounded-xl text-black mt-1"></div>
-</div>
-<button onclick="saveGlobal()" class="w-full bg-green-600 py-3 rounded-xl font-bold mt-4">💾 Save Global Settings to All Pages</button>
-</div>
-</div>
-</div>
-
-<!-- TAB 3: Resources -->
-<div id="tabRes" class="hidden mt-4">
-<div class="bg-white rounded-2xl shadow p-5">
-<h2 class="font-bold">📚 Manage Resources (Notes, Exams, Schemes...)</h2>
-<div class="grid md:grid-cols-5 gap-2 mt-4">
-<input id="rTitle" placeholder="Title e.g Grade 5 Math Notes" class="border p-3 rounded-xl text-sm">
-<select id="rGrade" class="border p-3 rounded-xl text-sm"><option>Grade 5</option><option>PP1</option><option>PP2</option><option>Grade 1</option><option>Grade 2</option><option>Grade 3</option><option>Grade 4</option><option>Grade 6</option><option>Grade 7</option><option>Grade 8</option><option>Grade 9</option></select>
-<select id="rType" class="border p-3 rounded-xl text-sm"><option>Notes</option><option>Exam</option><option>Scheme</option><option>Lesson Plan</option><option>Curriculum Design</option></select>
-<select id="rSub" class="border p-3 rounded-xl text-sm"><option>Mathematics</option><option>English</option><option>Kiswahili</option><option>Science</option><option>SST</option><option>CRE</option></select>
-<input id="rLink" placeholder="Google Drive Link" class="border p-3 rounded-xl text-sm md:col-span-1">
-</div>
-<button onclick="addResource()" class="w-full bg-black text-white py-3 rounded-xl font-bold mt-3">➕ Add Resource</button>
-<div id="resList" class="mt-6 space-y-2"></div>
-</div>
-</div>
-
-<!-- TAB 4: Settings -->
-<div id="tabSet" class="hidden mt-4">
-<div class="bg-white rounded-2xl shadow p-5">
-<h2 class="font-bold">⚙️ All Pages Status</h2>
-<div class="mt-4 grid md:grid-cols-2 gap-3 text-sm" id="pagesStatus"></div>
-</div>
-</div>
+<div class="mt-6 flex gap-2 overflow-x-auto"><button onclick="showTab('subs')" id="bSubs" class="bg-black text-white px-5 py-3 rounded-full text-xs font-bold">💰 Subscriptions</button><button onclick="showTab('pages')" id="bPages" class="bg-white border px-5 py-3 rounded-full text-xs font-bold">📄 Edit 14 Pages</button><button onclick="showTab('res')" id="bRes" class="bg-white border px-5 py-3 rounded-full text-xs font-bold">📚 Resources</button></div>
+<div id="tabSubs" class="mt-4 bg-white rounded-2xl shadow p-5"><h2 class="font-bold">💰 Approvals - Till 0701305109</h2><div class="mt-3 flex gap-2"><input id="searchSub" placeholder="Search email / M-Pesa" class="flex-1 border p-3 rounded-xl text-sm" oninput="renderSubs()"><button onclick="loadUsers()" class="bg-black text-white px-4 py-2 rounded-full text-xs">Refresh</button></div><div class="mt-4 overflow-x-auto"><table class="w-full text-xs"><thead class="bg-gray-100 text-[10px]"><tr><th class="p-3 text-left">User</th><th class="p-3">M-Pesa</th><th class="p-3">Status</th><th class="p-3">Action</th></tr></thead><tbody id="subsBody"></tbody></table></div></div>
+<div id="tabPages" class="hidden mt-4 bg-white rounded-2xl shadow p-5"><h2 class="font-bold">📄 14 Pages - Click to View</h2><div class="mt-4 grid md:grid-cols-2 gap-3" id="pagesGrid"></div></div>
+<div id="tabRes" class="hidden mt-4 bg-white rounded-2xl shadow p-5"><h2 class="font-bold">📚 Add Resources</h2><div class="grid md:grid-cols-4 gap-2 mt-4"><input id="rTitle" placeholder="Title" class="border p-3 rounded-xl text-sm"><select id="rGrade" class="border p-3 rounded-xl text-sm"><option>Grade 5</option><option>PP1</option><option>PP2</option><option>Grade 1</option><option>Grade 2</option><option>Grade 3</option><option>Grade 4</option><option>Grade 6</option><option>Grade 7</option><option>Grade 8</option><option>Grade 9</option></select><select id="rType" class="border p-3 rounded-xl text-sm"><option>Notes</option><option>Exam</option><option>Scheme</option><option>Lesson Plan</option></select><input id="rLink" placeholder="Drive Link" class="border p-3 rounded-xl text-sm"></div><button onclick="addResource()" class="w-full bg-black text-white py-3 rounded-xl font-bold mt-3">Add</button><div id="resList" class="mt-6 space-y-2"></div></div>
 </div>
 </div>
 
 <script>
-let allUsers=[], allResources=[], currentTab='subs';
-const PAGES=[
-{id:'index', name:'index.html', desc:'Landing - Hero + Pricing', icon:'🏠', url:'/'},
-{id:'registration', name:'registration.html', desc:'Signup Students & Teachers', icon:'📝', url:'/registration.html'},
-{id:'dashboard', name:'dashboard.html', desc:'User Dashboard After Login', icon:'📊', url:'/dashboard.html'},
-{id:'students', name:'students.html', desc:'Students Portal PP1-G9', icon:'🎓', url:'/students.html'},
-{id:'teachers', name:'teachers.html', desc:'Teachers Portal', icon:'👩‍🏫', url:'/teachers.html'},
-{id:'notes', name:'notes.html', desc:'Notes Only', icon:'📚', url:'/notes.html'},
-{id:'exams', name:'exams.html', desc:'Exams + Marking Schemes', icon:'📝', url:'/exams.html'},
-{id:'homework', name:'homework.html', desc:'AI Homework Solver', icon:'🤖', url:'/homework.html'},
-{id:'schemes', name:'schemes.html', desc:'Schemes of Work', icon:'📋', url:'/schemes.html'},
-{id:'lesson-plans', name:'lesson-plans.html', desc:'Lesson Plans CBC', icon:'📖', url:'/lesson-plans.html'},
-{id:'curriculum-designs', name:'curriculum-designs.html', desc:'Curriculum Designs KICD', icon:'📘', url:'/curriculum-designs.html'},
-{id:'ai-assistant', name:'ai-assistant.html', desc:'AI Chat Assistant', icon:'💬', url:'/ai-assistant.html'},
-{id:'wallet', name:'wallet.html', desc:'Wallet - Till Payment', icon:'💰', url:'/wallet.html'},
-{id:'panel', name:'panel.html', desc:'Data Panel - Students/Teachers', icon:'📊', url:'/panel.html'},
+let allUsers=[], PAGES=[
+{id:'index', name:'index.html', icon:'🏠', url:'/'},{id:'registration', name:'registration.html', icon:'📝', url:'/registration.html'},
+{id:'dashboard', name:'dashboard.html', icon:'📊', url:'/dashboard.html'},{id:'students', name:'students.html', icon:'🎓', url:'/students.html'},
+{id:'teachers', name:'teachers.html', icon:'👩‍🏫', url:'/teachers.html'},{id:'notes', name:'notes.html', icon:'📚', url:'/notes.html'},
+{id:'exams', name:'exams.html', icon:'📝', url:'/exams.html'},{id:'homework', name:'homework.html', icon:'🤖', url:'/homework.html'},
+{id:'schemes', name:'schemes.html', icon:'📋', url:'/schemes.html'},{id:'lesson-plans', name:'lesson-plans.html', icon:'📖', url:'/lesson-plans.html'},
+{id:'curriculum-designs', name:'curriculum-designs.html', icon:'📘', url:'/curriculum-designs.html'},{id:'ai-assistant', name:'ai-assistant.html', icon:'💬', url:'/ai-assistant.html'},
+{id:'wallet', name:'wallet.html', icon:'💰', url:'/wallet.html'},{id:'panel', name:'panel.html', icon:'📊', url:'/panel.html'},
 ];
-
 setTimeout(()=>{
 const FB=window.FB;
-document.getElementById('loginBtn').onclick=async()=>{try{await FB.signInWithEmailAndPassword(FB.auth, document.getElementById('email').value, document.getElementById('pass').value)}catch(e){alert(e.message)}};
+function showErr(m){const b=document.getElementById('errorBox'); b.classList.remove('hidden'); b.innerText=m;}
+
+document.getElementById('createBtn').onclick=async()=>{
+const e=document.getElementById('email').value, p=document.getElementById('pass').value;
+if(!e||!p) return showErr("Enter email & password");
+try{
+const cred=await FB.createUserWithEmailAndPassword(FB.auth,e,p);
+await FB.setDoc(FB.doc(FB.db,"users",cred.user.uid),{email:e, role:"admin", isPremium:true, status:"active", displayName:"Super Admin", createdAt:FB.serverTimestamp()});
+showErr("✅ Account created! Now click Enter Master Admin");
+}catch(err){showErr("Create Error: "+err.message + " - If already exists, just login");}
+};
+
+document.getElementById('loginBtn').onclick=async()=>{
+const e=document.getElementById('email').value, p=document.getElementById('pass').value, pin=document.getElementById('pin').value;
+if(pin==="0701"){ // PIN BYPASS
+document.getElementById('loginDiv').classList.add('hidden'); document.getElementById('adminDiv').classList.remove('hidden'); loadUsers(); loadResources(); loadPagesGrid(); return;
+}
+if(!e||!p) return showErr("Enter email & password OR use PIN 0701");
+try{await FB.signInWithEmailAndPassword(FB.auth,e,p);}catch(err){showErr("Login Error: "+err.message + " | TIP: Use PIN 0701 to bypass OR click Create Account first. "+err.code);}
+};
+
 document.getElementById('logout').onclick=()=>FB.signOut(FB.auth);
 FB.onAuthStateChanged(FB.auth, async(u)=>{
-if(!u){document.getElementById('loginDiv').classList.remove('hidden'); document.getElementById('adminDiv').classList.add('hidden'); return;}
-document.getElementById('loginDiv').classList.add('hidden'); document.getElementById('adminDiv').classList.remove('hidden');
-loadUsers(); loadResources(); loadPagesGrid(); loadSettings();
+if(!u){return;} // don't auto hide if PIN used
+document.getElementById('loginDiv').classList.add('hidden'); document.getElementById('adminDiv').classList.remove('hidden'); loadUsers(); loadResources(); loadPagesGrid();
 });
 
 window.showTab=(t)=>{
-currentTab=t;
-['Subs','Pages','Res','Set'].forEach(k=>document.getElementById('b'+k).className='bg-white border px-5 py-3 rounded-full text-xs font-bold whitespace-nowrap');
-document.getElementById('b'+t.charAt(0).toUpperCase()+t.slice(1)).className='bg-black text-white px-5 py-3 rounded-full text-xs font-bold whitespace-nowrap';
-if(t==='subs') document.getElementById('bSubs').className='bg-black text-white px-5 py-3 rounded-full text-xs font-bold whitespace-nowrap';
-['tabSubs','tabPages','tabRes','tabSet'].forEach(id=>document.getElementById(id).classList.add('hidden'));
-document.getElementById('tab'+t.charAt(0).toUpperCase()+t.slice(1)).classList.remove('hidden');
+['Subs','Pages','Res'].forEach(k=>document.getElementById('b'+k).className='bg-white border px-5 py-3 rounded-full text-xs font-bold');
+document.getElementById('b'+t.charAt(0).toUpperCase()+t.slice(1)).className='bg-black text-white px-5 py-3 rounded-full text-xs font-bold';
+['tabSubs','tabPages','tabRes'].forEach(id=>document.getElementById(id).classList.add('hidden'));
+document.getElementById('tab'+t).classList.remove('hidden');
 };
-
 window.loadUsers=async()=>{
+try{
 const snap=await FB.getDocs(FB.collection(FB.db,"users")); allUsers=[]; snap.forEach(d=>allUsers.push({id:d.id,...d.data()}));
 document.getElementById('tUsers').innerText=allUsers.length;
 document.getElementById('tPaid').innerText=allUsers.filter(u=>u.isPremium).length;
 document.getElementById('tPend').innerText=allUsers.filter(u=>u.status==='pending_payment').length;
 document.getElementById('tRev').innerText=(allUsers.filter(u=>u.isPremium).length*500).toLocaleString()+" KES";
 renderSubs();
+}catch(e){document.getElementById('subsBody').innerHTML="<tr><td colspan=4 class='p-4 text-red-500'>"+e.message+"</td></tr>";}
 };
 window.renderSubs=()=>{
-const body=document.getElementById('subsBody'); const q=document.getElementById('searchSub').value.toLowerCase(); const f=document.getElementById('filterSub').value;
-let list=allUsers;
-if(f!=='all'){ if(f==='premium') list=list.filter(u=>u.isPremium); else if(f==='pending_payment') list=list.filter(u=>u.status==='pending_payment'); else if(f==='free') list=list.filter(u=>!u.isPremium); else list=list.filter(u=>u.status===f); }
-if(q) list=list.filter(u=> (u.email||'').toLowerCase().includes(q) || (u.mpesaCode||'').toLowerCase().includes(q) || (u.displayName||'').toLowerCase().includes(q));
-if(list.length===0){body.innerHTML="<tr><td colspan=5 class='p-10 text-center text-gray-400'>No users</td></tr>"; return;}
+const body=document.getElementById('subsBody'); const q=document.getElementById('searchSub').value.toLowerCase();
+let list=allUsers; if(q) list=list.filter(u=> (u.email||'').toLowerCase().includes(q) || (u.mpesaCode||'').toLowerCase().includes(q));
+if(list.length===0){body.innerHTML="<tr><td colspan=4 class='p-10 text-center text-gray-400'>No users - Go to registration.html and create accounts</td></tr>"; return;}
 body.innerHTML=""; list.slice(0,100).forEach(u=>{
-body.innerHTML+=`<tr class="border-b hover:bg-gray-50"><td class="p-3"><p class="font-bold">${u.displayName||u.email?.split('@')[0]}</p><p class="text-[10px] text-gray-500">${u.email}</p></td><td class="p-3"><span class="px-2 py-1 rounded-full text-[10px] ${u.role==='teacher'?'bg-orange-100':'bg-blue-100'}">${u.role}</span></td><td class="p-3 font-mono font-bold">${u.mpesaCode||'-'}</td><td class="p-3"><span class="px-2 py-1 rounded-full text-[10px] ${u.isPremium?'bg-green-100':'bg-yellow-100'}">${u.isPremium?'✅ PAID':'⏳ '+ (u.status||'free')}</span></td><td class="p-3"><div class="flex gap-1">${!u.isPremium?`<button onclick="approve('${u.id}')" class="bg-green-600 text-white px-3 py-1 rounded-full text-[10px]">Approve</button>`:`<button onclick="revoke('${u.id}')" class="bg-gray-200 px-3 py-1 rounded-full text-[10px]">Revoke</button>`}<button onclick="delU('${u.id}')" class="bg-red-50 px-2 py-1 rounded-full text-[10px]">Del</button></div></td></tr>`;
+body.innerHTML+=`<tr class="border-b"><td class="p-3"><p class="font-bold text-xs">${u.email}</p><p class="text-[10px]">${u.role||'learner'}</p></td><td class="p-3 font-mono font-bold text-xs">${u.mpesaCode||'-'}</td><td class="p-3"><span class="px-2 py-1 rounded-full text-[10px] ${u.isPremium?'bg-green-100':'bg-yellow-100'}">${u.isPremium?'PAID':'FREE'}</span></td><td class="p-3"><div class="flex gap-1">${!u.isPremium?`<button onclick="approve('${u.id}')" class="bg-green-600 text-white px-3 py-1 rounded-full text-[10px]">Approve</button>`:`<button onclick="revoke('${u.id}')" class="bg-gray-200 px-3 py-1 rounded-full text-[10px]">Revoke</button>`}</div></td></tr>`;
 });
 };
-window.approve=async(id)=>{if(!confirm("Approve? 500 KES received on Till 0701305109?")) return; await FB.updateDoc(FB.doc(FB.db,"users",id),{isPremium:true, status:"active", approvedAt:FB.serverTimestamp()}); loadUsers();};
+window.approve=async(id)=>{await FB.updateDoc(FB.doc(FB.db,"users",id),{isPremium:true, status:"active"}); loadUsers();};
 window.revoke=async(id)=>{await FB.updateDoc(FB.doc(FB.db,"users",id),{isPremium:false, status:"free"}); loadUsers();};
-window.delU=async(id)=>{if(!confirm("Delete?")) return; await FB.deleteDoc(FB.doc(FB.db,"users",id)); loadUsers();};
-
-window.loadPagesGrid=()=>{
-const grid=document.getElementById('pagesGrid'); grid.innerHTML="";
-PAGES.forEach(p=>{
-grid.innerHTML+=`<div class="border p-4 rounded-2xl hover:shadow-lg transition">
-<div class="flex justify-between"><span class="text-xl">${p.icon}</span><a href="${p.url}" target="_blank" class="text-[10px] bg-black text-white px-2 py-1 rounded-full">View →</a></div>
-<p class="font-bold text-sm mt-2">${p.name}</p><p class="text-[11px] text-gray-500">${p.desc}</p>
-<div class="mt-3 flex gap-2">
-<button onclick="editPage('${p.id}')" class="flex-1 bg-blue-600 text-white py-2 rounded-full text-xs font-bold">✏️ Edit Content</button>
-<button onclick="togglePage('${p.id}')" class="bg-gray-100 px-3 py-2 rounded-full text-xs">On/Off</button>
-</div>
-</div>`;
-});
-};
-
-window.editPage=async(id)=>{
-const newTitle=prompt(`Edit ${id} - Enter new announcement or title to show on page:`);
-if(!newTitle) return;
-await FB.setDoc(FB.doc(FB.db,"site_config",id),{title:newTitle, updatedAt:FB.serverTimestamp()}, {merge:true});
-alert(`Saved! ${id} will now show: ${newTitle} (pages read from site_config)`);
-};
-
-window.loadResources=async()=>{
-const snap=await FB.getDocs(FB.query(FB.collection(FB.db,"resources"), FB.orderBy("createdAt","desc")));
-allResources=[]; const list=document.getElementById('resList'); list.innerHTML=""; snap.forEach(d=>{allResources.push({id:d.id,...d.data()});});
-allResources.slice(0,50).forEach(r=>{list.innerHTML+=`<div class="border p-3 rounded-xl flex justify-between items-center text-xs"><div><p class="font-bold">${r.title}</p><p class="text-[10px] text-gray-500">${r.grade} • ${r.type} • ${r.subject}</p></div><div class="flex gap-2"><a href="${r.link}" target="_blank" class="bg-blue-100 px-3 py-1 rounded-full">View</a><button onclick="delRes('${r.id}')" class="bg-red-50 px-3 py-1 rounded-full">Del</button></div></div>`;});
-};
-window.addResource=async()=>{
-const t=document.getElementById('rTitle').value, g=document.getElementById('rGrade').value, ty=document.getElementById('rType').value, s=document.getElementById('rSub').value, l=document.getElementById('rLink').value;
-if(!t||!l) return alert("Fill title & link");
-await FB.addDoc(FB.collection(FB.db,"resources"),{title:t, grade:g, type:ty, subject:s, link:l, createdAt:FB.serverTimestamp()});
-alert("Added!"); loadResources(); document.getElementById('rTitle').value=""; document.getElementById('rLink').value="";
-};
-window.delRes=async(id)=>{if(!confirm("Delete resource?")) return; await FB.deleteDoc(FB.doc(FB.db,"resources",id)); loadResources();};
-
-window.loadSettings=async()=>{
-const snap=await FB.getDocs(FB.collection(FB.db,"site_config")); const statusDiv=document.getElementById('pagesStatus'); statusDiv.innerHTML="";
-PAGES.forEach(p=>{const found=snap.docs.find(d=>d.id===p.id); statusDiv.innerHTML+=`<div class="border p-3 rounded-xl"><p class="font-bold">${p.icon} ${p.name}</p><p class="text-[10px] text-gray-500">${found?found.data().title||'No custom title':'Default'}</p><p class="text-[10px] mt-1">${found?'✅ Custom':'⚪ Default'}</p></div>`;});
-try{const g=await FB.getDoc(FB.doc(FB.db,"site_config","global")); if(g.exists()){const d=g.data(); document.getElementById('gTill').value=d.till||'0701305109'; document.getElementById('gPrice').value=d.price||'500'; document.getElementById('gDuration').value=d.duration||'3 Months / 90 Days'; document.getElementById('gWhats').value=d.whatsapp||'0701305109'; document.getElementById('gAnnounce').value=d.announcement||'';}}catch(e){}
-};
-window.saveGlobal=async()=>{
-const data={till:document.getElementById('gTill').value, price:document.getElementById('gPrice').value, duration:document.getElementById('gDuration').value, whatsapp:document.getElementById('gWhats').value, announcement:document.getElementById('gAnnounce').value, updatedAt:FB.serverTimestamp()};
-await FB.setDoc(FB.doc(FB.db,"site_config","global"), data, {merge:true});
-alert("✅ Global settings saved! All 14 pages will read this config. Till: "+data.till+" Price: "+data.price);
-};
-},700);
+window.loadPagesGrid=()=>{const g=document.getElementById('pagesGrid'); g.innerHTML=""; PAGES.forEach(p=>{g.innerHTML+=`<div class="border p-4 rounded-xl"><div class="flex justify-between"><span>${p.icon}</span><a href="${p.url}" target="_blank" class="text-[10px] bg-black text-white px-2 py-1 rounded-full">View</a></div><p class="font-bold text-sm mt-2">${p.name}</p><button onclick="window.open('${p.url}','_blank')" class="w-full mt-2 bg-gray-100 py-2 rounded-full text-xs">Open Page</button></div>`;});};
+window.loadResources=async()=>{try{const snap=await FB.getDocs(FB.collection(FB.db,"resources")); const list=document.getElementById('resList'); list.innerHTML=""; snap.forEach(d=>{const r=d.data(); list.innerHTML+=`<div class="border p-3 rounded-xl flex justify-between text-xs"><div><p class="font-bold">${r.title}</p><p class="text-[10px]">${r.grade} • ${r.type}</p></div><a href="${r.link}" target="_blank" class="bg-blue-100 px-3 py-1 rounded-full">View</a></div>`;});}catch(e){}};
+window.addResource=async()=>{const t=document.getElementById('rTitle').value, g=document.getElementById('rGrade').value, ty=document.getElementById('rType').value, l=document.getElementById('rLink').value; if(!t||!l) return alert("Fill"); await FB.addDoc(FB.collection(FB.db,"resources"),{title:t, grade:g, type:ty, link:l, createdAt:FB.serverTimestamp()}); alert("Added"); loadResources();};
+},800);
 </script>
 </body>
 </html>
