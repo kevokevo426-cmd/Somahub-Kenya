@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SomaHub CBC Kenya - PP1 to Grade 9</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import { getAuth, GoogleAuthProvider, signInWithPopup, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+import { getFirestore, doc, setDoc, getDoc, collection, getDocs, updateDoc, deleteDoc, query, where, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+const firebaseConfig = {
+  apiKey: "YOUR_API_KEY_HERE",
+  authDomain: "YOUR_PROJECT.firebaseapp.com",
+  projectId: "YOUR_PROJECT_ID",
+  storageBucket: "YOUR_PROJECT.appspot.com",
+  messagingSenderId: "123456789",
+  appId: "1:123456789:web:abc"
+};
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+const provider = new GoogleAuthProvider();
+const ADMIN_EMAILS = ["kevokevo426@gmail.com"];
+window.firebaseApp = { auth, db, provider, signInWithPopup, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut, doc, setDoc, getDoc, collection, getDocs, updateDoc, deleteDoc, query, where, addDoc, serverTimestamp, ADMIN_EMAILS };
+</script>
+</head>
+<body class="bg-gray-50">
+<header class="bg-white shadow sticky top-0 z-50">
+<div class="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
+<div class="flex items-center gap-2"><i class="fa-solid fa-book-open text-green-600 text-2xl"></i><h1 class="font-bold text-xl">SomaHub CBC</h1></div>
+<div class="flex gap-2">
+<button id="adminBtn" class="hidden bg-black text-white px-3 py-1 rounded text-sm">👑 Admin Panel</button>
+<button id="authBtn" class="bg-green-600 text-white px-4 py-2 rounded-full text-sm">Login</button>
+</div>
+</div>
+</header>
+
+<section id="home" class="max-w-7xl mx-auto px-4 py-8">
+<div class="bg-gradient-to-r from-green-600 to-emerald-700 rounded-2xl p-6 text-white text-center mb-8">
+<h2 class="text-3xl font-bold">CBC Resources PP1 - Grade 9</h2>
+<p>Exams • Notes • AI Homework • Schemes • Lesson Plans • AI Marker</p>
+<div class="mt-3"><span class="bg-white/20 px-4 py-1 rounded-full">500 KES / 3 Months - Till 0701305109</span></div>
+</div>
+<div class="grid grid-cols-2 md:grid-cols-5 gap-3 mb-8" id="gradeGrid"></div>
+<div class="grid md:grid-cols-3 gap-4">
+<div class="bg-white p-5 rounded-xl shadow border"><h3 class="font-bold">🎓 Learners</h3><p class="text-sm text-gray-600 mt-2">Exams auto-mark, Notes, Homework AI, Tutor, Games</p><button onclick="selectRole('learner')" class="mt-3 w-full bg-blue-600 text-white py-2 rounded">Enter as Learner</button></div>
+<div class="bg-white p-5 rounded-xl shadow border"><h3 class="font-bold">👩‍🏫 Teachers</h3><p class="text-sm text-gray-600 mt-2">Schemes, Lesson Plans, AI Composition Marker, Exams</p><button onclick="selectRole('teacher')" class="mt-3 w-full bg-orange-600 text-white py-2 rounded">Enter as Teacher</button></div>
+<div class="bg-white p-5 rounded-xl shadow border"><h3 class="font-bold">🔒 Premium - 500 KES</h3><p class="text-sm text-gray-600 mt-2">Lipa 500 to 0701305109, enter code, admin approves.</p><button onclick="openSubscribe()" class="mt-3 w-full bg-green-600 text-white py-2 rounded">Subscribe Now</button></div>
+</div>
+</section>
+
+<section id="resources" class="hidden max-w-7xl mx-auto px-4 py-6">
+<button onclick="showHome()" class="mb-4 text-sm">← Back</button>
+<h2 id="resourceTitle" class="text-2xl font-bold mb-4"></h2>
+<div id="resourceList" class="grid md:grid-cols-2 gap-3"></div>
+</section>
+
+<section id="adminPanel" class="hidden max-w-7xl mx-auto px-4 py-6">
+<div class="flex justify-between mb-6"><h2 class="text-2xl font-bold">Admin Panel - kevokevo426@gmail.com</h2><button onclick="showHome()" class="bg-gray-200 px-3 py-1 rounded">Exit</button></div>
+<div class="grid md:grid-cols-3 gap-3 mb-6">
+<div class="bg-white p-4 rounded-xl shadow"><p class="text-xs">Total Users</p><p id="statUsers" class="text-2xl font-bold">0</p></div>
+<div class="bg-white p-4 rounded-xl shadow"><p class="text-xs">Pending Approvals</p><p id="statPending" class="text-2xl font-bold text-orange-600">0</p></div>
+<div class="bg-white p-4 rounded-xl shadow"><p class="text-xs">Premium Users</p><p id="statPremium" class="text-2xl font-bold text-green-600">0</p></div>
+</div>
+<div class="bg-white rounded-xl shadow p-4 mb-6">
+<h3 class="font-bold mb-3">Approve / Reject Users & Payments (0701305109)</h3>
+<div class="overflow-auto"><table class="w-full text-sm"><thead class="bg-gray-100"><tr><th class="p-2 text-left">Email</th><th>Role</th><th>M-Pesa Code</th><th>Status</th><th>Action</th></tr></thead><tbody id="usersTable"></tbody></table></div>
+</div>
+<div class="bg-white rounded-xl shadow p-4">
+<h3 class="font-bold mb-3">Add Resource (Admin can edit everything)</h3>
+<div class="grid md:grid-cols-3 gap-2">
+<select id="resGrade" class="border p-2 rounded"></select>
+<select id="resSubject" class="border p-2 rounded"><option>Mathematics</option><option>English</option><option>Kiswahili</option><option>Science</option><option>SST</option><option>CRE</option></select>
+<select id="resType" class="border p-2 rounded"><option>Notes</option><option>Exam</option><option>Scheme</option><option>Lesson Plan</option><option>Video</option><option>Game</option><option>Composition</option></select>
+<input id="resTitle" placeholder="Title e.g. Grade 5 Math Notes Term 2" class="border p-2 rounded md:col-span-2">
+<input id="resLink" placeholder="Link / Google Drive / YouTube" class="border p-2 rounded">
+<button onclick="addResource()" class="bg-black text-white p-2 rounded md:col-span-3">Add Resource</button>
+</div>
+<div id="adminResourceList" class="mt-4 grid gap-2"></div>
+</div>
+</section>
+
+<div id="authModal" class="hidden fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
+<div class="bg-white rounded-2xl p-6 w-full max-w-sm">
+<h3 class="font-bold text-lg mb-4">Login</h3>
+<button id="googleLogin" class="w-full border py-2 rounded-full mb-3">Continue with Google</button>
+<input id="email" placeholder="Email" class="w-full border p-2 rounded mb-2">
+<input id="password" type="password" placeholder="Password" class="w-full border p-2 rounded mb-3">
+<button id="emailLogin" class="w-full bg-green-600 text-white py-2 rounded">Login / Signup</button>
+<button onclick="closeModals()" class="w-full mt-2 text-sm">Cancel</button>
+</div>
+</div>
+
+<div id="subModal" class="hidden fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
+<div class="bg-white rounded-2xl p-6 w-full max-w-sm text-center">
+<h3 class="font-bold text-lg">Subscribe 500 KES / 3 Months</h3>
+<p class="text-sm mt-2">Lipa 500 KES to <b>0701305109</b> (M-Pesa)</p>
+<input id="mpesaCode" placeholder="Enter M-Pesa Code e.g. QGH7..." class="w-full border p-2 rounded mt-3">
+<button onclick="submitMpesa()" class="w-full bg-green-600 text-white py-2 rounded mt-3">Submit for Approval</button>
+<p class="text-xs text-gray-500 mt-2">Admin kevokevo426@gmail.com will approve you.</p>
+<button onclick="closeModals()" class="w-full mt-2 text-sm">Close</button>
+</div>
+</div>
+
+<script>
+const grades = ["PP1","PP2","Grade 1","Grade 2","Grade 3","Grade 4","Grade 5","Grade 6","Grade 7","Grade 8","Grade 9"];
+const gradeGrid = document.getElementById('gradeGrid');
+const resGrade = document.getElementById('resGrade');
+grades.forEach(g=>{ gradeGrid.innerHTML += `<div onclick="openGrade('${g}')" class="bg-white p-4 rounded-xl shadow border hover:shadow-lg cursor-pointer text-center"><p class="font-bold">${g}</p><p class="text-xs text-gray-500">View resources</p></div>`; resGrade.innerHTML += `<option>${g}</option>`; });
+let currentUser=null; let userData=null; let userRole='learner';
+function showHome(){document.getElementById('home').classList.remove('hidden');document.getElementById('resources').classList.add('hidden');document.getElementById('adminPanel').classList.add('hidden');}
+function openGrade(g){document.getElementById('home').classList.add('hidden');document.getElementById('resources').classList.remove('hidden');document.getElementById('resourceTitle').innerText=g+" - Resources"; loadResources(g);}
+function selectRole(r){userRole=r; if(!currentUser) openAuth(); else openGrade('Grade 5');}
+function openAuth(){document.getElementById('authModal').classList.remove('hidden');}
+function openSubscribe(){document.getElementById('subModal').classList.remove('hidden');}
+function closeModals(){document.getElementById('authModal').classList.add('hidden');document.getElementById('subModal').classList.add('hidden');}
+async function loadResources(grade){
+ const list=document.getElementById('resourceList'); list.innerHTML="Loading...";
+ try{
+  const fb=window.firebaseApp;
+  const q=fb.query(fb.collection(fb.db,"resources"), fb.where("grade","==",grade));
+  const snap=await fb.getDocs(q);
+  list.innerHTML="";
+  if(snap.empty){list.innerHTML="<p class='text-gray-500'>No resources yet. Login as Admin to add.</p>"; return;}
+  snap.forEach(d=>{
+   const r=d.data();
+   const isPremium=userData?.isPremium;
+   list.innerHTML+=`<div class="bg-white p-4 rounded-xl shadow border"><div class="flex justify-between"><span class="text-xs bg-green-100 text-green-700 px-2 py-1 rounded">${r.type}</span><span class="text-xs text-gray-500">${r.subject}</span></div><h4 class="font-bold mt-2">${r.title}</h4><button onclick="handleDownload('${r.link}')" class="mt-3 w-full ${isPremium?'bg-green-600':'bg-gray-300'} text-white py-2 rounded text-sm">${isPremium?'Download':'🔒 Subscribe to Download'}</button></div>`;
+  });
+ }catch(e){ list.innerHTML="⚠️ Set Firebase config at top of file. "+e.message; }
+}
+function handleDownload(link){ if(!currentUser){openAuth(); return;} if(!userData?.isPremium){openSubscribe(); return;} window.open(link,"_blank");}
+setTimeout(()=>{
+ const fb=window.firebaseApp;
+ document.getElementById('googleLogin').onclick=async()=>{ try{ await fb.signInWithPopup(fb.auth, fb.provider);}catch(e){alert(e.message);} };
+ document.getElementById('emailLogin').onclick=async()=>{
+  const email=document.getElementById('email').value; const pass=document.getElementById('password').value;
+  try{ await fb.createUserWithEmailAndPassword(fb.auth,email,pass);}catch{ try{ await fb.signInWithEmailAndPassword(fb.auth,email,pass);}catch(e){alert(e.message);} }
+ };
+ document.getElementById('authBtn').onclick=()=>{ if(currentUser) fb.signOut(fb.auth); else openAuth(); };
+ document.getElementById('adminBtn').onclick=()=>{ document.getElementById('home').classList.add('hidden'); document.getElementById('adminPanel').classList.remove('hidden'); loadAdmin(); };
+ fb.onAuthStateChanged(fb.auth, async (user)=>{
+  currentUser=user;
+  if(user){
+   document.getElementById('authBtn').innerText="Logout ("+user.email.split('@')[0]+")";
+   const ref=fb.doc(fb.db,"users",user.uid);
+   const snap=await fb.getDoc(ref);
+   if(!snap.exists()){
+    await fb.setDoc(ref,{email:user.email, role:userRole, status:"pending", isPremium:false, mpesaCode:"", createdAt:fb.serverTimestamp()});
+    userData={email:user.email, role:userRole, status:"pending", isPremium:false};
+   }else{ userData=snap.data(); }
+   if(fb.ADMIN_EMAILS.includes(user.email)){ document.getElementById('adminBtn').classList.remove('hidden'); await fb.updateDoc(ref,{role:"admin", status:"approved"}); }
+  }else{ document.getElementById('authBtn').innerText="Login"; document.getElementById('adminBtn').classList.add('hidden'); userData=null; }
+ });
+},500);
+async function submitMpesa(){
+ const code=document.getElementById('mpesaCode').value;
+ if(!code) return alert("Enter Code");
+ const fb=window.firebaseApp;
+ await fb.updateDoc(fb.doc(fb.db,"users",currentUser.uid),{mpesaCode:code, status:"pending_payment"});
+ alert("Submitted! Admin will approve. Karibu SomaHub!");
+ closeModals();
+}
+async function loadAdmin(){
+ const fb=window.firebaseApp;
+ const snap=await fb.getDocs(fb.collection(fb.db,"users"));
+ let pending=0, premium=0;
+ const tbody=document.getElementById('usersTable'); tbody.innerHTML="";
+ snap.forEach(d=>{
+  const u=d.data(); const id=d.id;
+  if(u.status!=="approved") pending++;
+  if(u.isPremium) premium++;
+  tbody.innerHTML+=`<tr class="border-b"><td class="p-2">${u.email}</td><td>${u.role}</td><td class="text-xs">${u.mpesaCode||'-'}</td><td><span class="px-2 py-1 rounded text-xs ${u.status==='approved'?'bg-green-100':'bg-orange-100'}">${u.status}</span> ${u.isPremium?'<span class="bg-green-600 text-white px-1 rounded text-xs">PREM</span>':''}</td><td class="flex gap-1 p-1"><button onclick="approveUser('${id}', true)" class="bg-green-600 text-white px-2 py-1 rounded text-xs">Approve</button><button onclick="approveUser('${id}', false)" class="bg-red-600 text-white px-2 py-1 rounded text-xs">Reject</button><button onclick="makePremium('${id}')" class="bg-black text-white px-2 py-1 rounded text-xs">Premium</button></td></tr>`;
+ });
+ document.getElementById('statUsers').innerText=snap.size;
+ document.getElementById('statPending').innerText=pending;
+ document.getElementById('statPremium').innerText=premium;
+ const rsnap=await fb.getDocs(fb.collection(fb.db,"resources"));
+ const alist=document.getElementById('adminResourceList'); alist.innerHTML="";
+ rsnap.forEach(d=>{ const r=d.data(); alist.innerHTML+=`<div class="flex justify-between bg-gray-50 p-2 rounded text-sm"><span>${r.grade} | ${r.subject} | ${r.title}</span><button onclick="deleteRes('${d.id}')" class="text-red-600">Delete</button></div>`; });
+}
+async function approveUser(id, isApprove){ const fb=window.firebaseApp; await fb.updateDoc(fb.doc(fb.db,"users",id),{status:isApprove?"approved":"rejected"}); loadAdmin();}
+async function makePremium(id){ const fb=window.firebaseApp; await fb.updateDoc(fb.doc(fb.db,"users",id),{isPremium:true, status:"approved", premiumUntil: Date.now()+90*24*60*60*1000}); loadAdmin(); alert("User is now PREMIUM for 90 days!");}
+async function addResource(){ const fb=window.firebaseApp; const data={ grade:document.getElementById('resGrade').value, subject:document.getElementById('resSubject').value, type:document.getElementById('resType').value, title:document.getElementById('resTitle').value, link:document.getElementById('resLink').value, createdAt:fb.serverTimestamp() }; if(!data.title||!data.link) return alert("Enter title & link"); await fb.addDoc(fb.collection(fb.db,"resources"),data); alert("Added!"); loadAdmin();}
+async function deleteRes(id){ const fb=window.firebaseApp; await fb.deleteDoc(fb.doc(fb.db,"resources",id)); loadAdmin();}
+</script>
+</body>
+  </html>
