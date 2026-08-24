@@ -1,179 +1,127 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SomaHub CBC Kenya - PP1 to Grade 9</title>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SomaHub Kenya - PP1 to Grade 9 CBC Notes, Exams, Schemes, AI Homework | Till 0701305109</title>
+<meta name="description" content="SomaHub Kenya - #1 CBC Platform PP1-G9. Notes, Exams, Schemes, Lesson Plans, AI Homework Helper. 500 KES / 3 Months. Till 0701305109">
 <script src="https://cdn.tailwindcss.com"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-import { getAuth, GoogleAuthProvider, signInWithPopup, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-import { getFirestore, doc, setDoc, getDoc, collection, getDocs, updateDoc, deleteDoc, query, where, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-const firebaseConfig = {
-  apiKey: "AIzaSyA93BNes3AmFyxIEgjSbvbIWqLyorLsuj8",
-  authDomain: "somahubkenya-9e458.firebaseapp.com",
-  projectId: "somahubkenya-9e458",
-  storageBucket: "somahubkenya-9e458.firebasestorage.app",
-  messagingSenderId: "615579085715",
-  appId: "1:615579085715:web:28fca37ba498324bb49666"
-};
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const db = getFirestore(app);
-const provider = new GoogleAuthProvider();
-const ADMIN_EMAILS = ["kevokevo426@gmail.com"];
-window.firebaseApp = { auth, db, provider, signInWithPopup, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut, doc, setDoc, getDoc, collection, getDocs, updateDoc, deleteDoc, query, where, addDoc, serverTimestamp, ADMIN_EMAILS };
-</script>
+<style>@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;700;800&display=swap'); body{font-family:'Plus Jakarta Sans',sans-serif;}</style>
 </head>
-<body class="bg-gray-50">
-<header class="bg-white shadow sticky top-0 z-50">
+<body class="bg-white">
+<!-- Header -->
+<header class="sticky top-0 bg-white/95 backdrop-blur shadow z-50">
 <div class="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
-<div class="flex items-center gap-2"><i class="fa-solid fa-book-open text-green-600 text-2xl"></i><h1 class="font-bold text-xl">SomaHub CBC</h1><span class="text-xs bg-green-100 px-2 py-1 rounded">PP1-G9</span></div>
-<div class="flex gap-2"><button id="adminBtn" class="hidden bg-black text-white px-3 py-1 rounded text-sm">👑 Admin</button><button id="authBtn" class="bg-green-600 text-white px-4 py-2 rounded-full text-sm">Login</button></div>
+<div class="flex items-center gap-2 font-black text-xl"><i class="fa-solid fa-book-open text-green-600"></i> SomaHub<span class="text-green-600">.KE</span></div>
+<div class="hidden md:flex gap-2 text-xs">
+<a href="/notes.html" class="bg-gray-100 px-3 py-2 rounded-full">Notes</a>
+<a href="/exams.html" class="bg-gray-100 px-3 py-2 rounded-full">Exams</a>
+<a href="/ai-assistant.html" class="bg-black text-white px-3 py-2 rounded-full">AI Assistant 🤖</a>
+</div>
+<div class="flex gap-2">
+<a href="/registration.html" class="bg-green-600 text-white px-5 py-2 rounded-full font-bold text-sm">Join Now</a>
+<a href="/dashboard.html" class="border px-4 py-2 rounded-full text-sm font-bold">Login</a>
+</div>
 </div>
 </header>
-<section id="home" class="max-w-7xl mx-auto px-4 py-8">
-<div class="bg-gradient-to-r from-green-600 to-emerald-700 rounded-2xl p-6 text-white text-center mb-8">
-<h2 class="text-3xl font-bold">CBC Resources PP1 - Grade 9</h2>
-<p>Exams • Notes • AI Homework • Schemes • Lesson Plans • AI Marker</p>
-<div class="mt-3 flex justify-center gap-2 flex-wrap"><span class="bg-white/20 px-4 py-1 rounded-full text-sm">500 KES / 3 Months</span><span class="bg-white/20 px-4 py-1 rounded-full text-sm">Till: 0701305109</span></div>
+
+<!-- Hero -->
+<section class="bg-gradient-to-br from-green-600 via-emerald-600 to-blue-700 text-white">
+<div class="max-w-7xl mx-auto px-4 py-16 md:py-24 grid md:grid-cols-2 gap-8 items-center">
+<div>
+<div class="inline-block bg-white/20 px-4 py-1 rounded-full text-xs font-bold">🔥 5,231+ Students & Teachers • PP1-G9</div>
+<h1 class="text-4xl md:text-6xl font-black mt-4 leading-tight">CBC Notes, Exams & AI Homework<br><span class="text-yellow-300">PP1 to Grade 9</span></h1>
+<p class="mt-4 text-white/90 text-lg">Kenya's #1 Learning Platform. Schemes, Lesson Plans, Curriculum Designs, Past Papers + AI that solves homework from photo!</p>
+<div class="mt-6 flex flex-wrap gap-3">
+<a href="/registration.html" class="bg-white text-green-700 px-8 py-4 rounded-full font-black text-lg">🚀 Start Learning - 500 KES</a>
+<a href="/ai-assistant.html" class="bg-black/30 backdrop-blur px-6 py-4 rounded-full font-bold border border-white/30">Try AI Free 🤖</a>
 </div>
-<div class="grid grid-cols-2 md:grid-cols-5 gap-3 mb-8" id="gradeGrid"></div>
-<div class="grid md:grid-cols-3 gap-4">
-<div class="bg-white p-5 rounded-xl shadow border"><h3 class="font-bold">🎓 Learners</h3><p class="text-sm text-gray-600 mt-2">Exams auto-mark, Notes, Homework AI, Tutor, Games</p><button onclick="selectRole('learner')" class="mt-3 w-full bg-blue-600 text-white py-2 rounded">Enter as Learner</button></div>
-<div class="bg-white p-5 rounded-xl shadow border"><h3 class="font-bold">👩‍🏫 Teachers</h3><p class="text-sm text-gray-600 mt-2">Schemes, Lesson Plans, AI Composition Marker, Exams</p><button onclick="selectRole('teacher')" class="mt-3 w-full bg-orange-600 text-white py-2 rounded">Enter as Teacher</button></div>
-<div class="bg-white p-5 rounded-xl shadow border"><h3 class="font-bold">🔒 Premium - 500 KES</h3><p class="text-sm text-gray-600 mt-2">Lipa 500 to 0701305109, enter code, admin approves.</p><button onclick="openSubscribe()" class="mt-3 w-full bg-green-600 text-white py-2 rounded font-bold">Subscribe Now</button></div>
+<div class="mt-6 bg-white text-green-700 p-4 rounded-2xl inline-block">
+<p class="text-xs font-bold">💰 LIPA NA M-PESA TILL</p>
+<p class="text-3xl font-black">0701305109</p>
+<p class="text-xs">500 KES / 3 Months • Buy Goods & Services</p>
+</div>
+</div>
+<div class="bg-white/10 backdrop-blur p-6 rounded-3xl border border-white/20">
+<p class="font-bold">📊 What You Get for 500 KES</p>
+<div class="mt-4 grid grid-cols-2 gap-3 text-sm">
+<div class="bg-white text-gray-800 p-3 rounded-xl"><i class="fa-solid fa-book text-purple-600"></i><p class="font-bold mt-1">10,000+ Notes</p><p class="text-[11px] text-gray-500">PP1-G9 All Subjects</p></div>
+<div class="bg-white text-gray-800 p-3 rounded-xl"><i class="fa-solid fa-file text-blue-600"></i><p class="font-bold mt-1">5,000+ Exams</p><p class="text-[11px] text-gray-500">With Marking Schemes</p></div>
+<div class="bg-white text-gray-800 p-3 rounded-xl"><i class="fa-solid fa-robot text-green-600"></i><p class="font-bold mt-1">AI Assistant</p><p class="text-[11px] text-gray-500">Homework from Photo</p></div>
+<div class="bg-white text-gray-800 p-3 rounded-xl"><i class="fa-solid fa-person-chalkboard text-orange-600"></i><p class="font-bold mt-1">Teachers Pack</p><p class="text-[11px] text-gray-500">Schemes + Plans</p></div>
+</div>
+<div class="mt-4 flex gap-2 text-[10px] text-white/70"><span>✅ KICD Aligned</span><span>✅ CBC</span><span>✅ Instant Access</span></div>
+</div>
 </div>
 </section>
-<section id="resources" class="hidden max-w-7xl mx-auto px-4 py-6">
-<button onclick="showHome()" class="mb-4 text-sm">← Back</button>
-<h2 id="resourceTitle" class="text-2xl font-bold mb-4"></h2>
-<div id="resourceList" class="grid md:grid-cols-2 gap-3"></div>
+
+<!-- All Portals -->
+<section class="max-w-7xl mx-auto px-4 py-12">
+<h2 class="text-2xl font-black text-center">🚀 Choose Your Portal</h2>
+<p class="text-center text-sm text-gray-500 mt-2">12 Powerful Tools - PP1 to Grade 9</p>
+
+<div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-8">
+<a href="/dashboard.html" class="bg-gradient-to-br from-green-500 to-blue-600 p-5 rounded-2xl text-white shadow-lg hover:scale-105 transition"><i class="fa-solid fa-table-columns text-2xl"></i><p class="font-bold mt-3">My Dashboard</p><p class="text-xs opacity-80 mt-1">Your learning hub</p><span class="text-[10px] mt-3 inline-block bg-white/20 px-2 py-1 rounded-full">START HERE</span></a>
+
+<a href="/ai-assistant.html" class="bg-gradient-to-br from-gray-900 to-black p-5 rounded-2xl text-white shadow-lg hover:scale-105 transition border-2 border-green-400"><i class="fa-solid fa-robot text-2xl text-green-400"></i><p class="font-bold mt-3">AI Assistant 🤖</p><p class="text-xs opacity-80 mt-1">ChatGPT for CBC</p><span class="text-[10px] mt-3 inline-block bg-green-500 px-2 py-1 rounded-full">HOT & NEW</span></a>
+
+<a href="/homework.html" class="bg-gradient-to-br from-purple-500 to-pink-600 p-5 rounded-2xl text-white shadow-lg hover:scale-105 transition"><i class="fa-solid fa-camera text-2xl"></i><p class="font-bold mt-3">AI Homework</p><p class="text-xs opacity-80 mt-1">Snap & Solve</p><span class="text-[10px] mt-3 inline-block bg-white/20 px-2 py-1 rounded-full">500 KES</span></a>
+
+<a href="/wallet.html" class="bg-gradient-to-br from-emerald-500 to-green-700 p-5 rounded-2xl text-white shadow-lg hover:scale-105 transition"><i class="fa-solid fa-wallet text-2xl"></i><p class="font-bold mt-3">Wallet - Till</p><p class="text-xs opacity-80 mt-1">0701305109</p><span class="text-[10px] mt-3 inline-block bg-white text-green-700 px-2 py-1 rounded-full font-bold">PAY 500</span></a>
+
+<a href="/students.html" class="bg-white border-2 p-5 rounded-2xl shadow hover:shadow-xl hover:scale-105 transition"><i class="fa-solid fa-graduation-cap text-2xl text-blue-600"></i><p class="font-bold mt-3">Students Portal</p><p class="text-xs text-gray-500 mt-1">PP1-G9 Notes+Exams</p><p class="text-[10px] mt-2 bg-blue-100 inline-block px-2 py-1 rounded-full">2,000+ Students</p></a>
+
+<a href="/teachers.html" class="bg-white border-2 p-5 rounded-2xl shadow hover:shadow-xl hover:scale-105 transition"><i class="fa-solid fa-chalkboard-user text-2xl text-orange-600"></i><p class="font-bold mt-3">Teachers Portal</p><p class="text-xs text-gray-500 mt-1">Schemes+Plans+Designs</p><p class="text-[10px] mt-2 bg-orange-100 inline-block px-2 py-1 rounded-full">500+ Teachers</p></a>
+
+<a href="/notes.html" class="bg-white border-2 p-5 rounded-2xl shadow hover:shadow-xl hover:scale-105 transition"><i class="fa-solid fa-book text-2xl text-purple-600"></i><p class="font-bold mt-3">Notes Only</p><p class="text-xs text-gray-500 mt-1">Revision Notes PP1-G9</p><p class="text-[10px] mt-2 bg-purple-100 inline-block px-2 py-1 rounded-full">10,000+ Notes</p></a>
+
+<a href="/exams.html" class="bg-white border-2 p-5 rounded-2xl shadow hover:shadow-xl hover:scale-105 transition"><i class="fa-solid fa-file-lines text-2xl text-indigo-600"></i><p class="font-bold mt-3">Exams Only</p><p class="text-xs text-gray-500 mt-1">Past Papers + Marking</p><p class="text-[10px] mt-2 bg-indigo-100 inline-block px-2 py-1 rounded-full">5,000+ Papers</p></a>
+
+<a href="/schemes.html" class="bg-white border-2 p-5 rounded-2xl shadow hover:shadow-xl hover:scale-105 transition"><i class="fa-solid fa-list-check text-2xl text-yellow-600"></i><p class="font-bold mt-3">Schemes of Work</p><p class="text-xs text-gray-500 mt-1">Term 1-3 PP1-G9</p><p class="text-[10px] mt-2 bg-yellow-100 inline-block px-2 py-1 rounded-full">For Teachers</p></a>
+
+<a href="/lesson-plans.html" class="bg-white border-2 p-5 rounded-2xl shadow hover:shadow-xl hover:scale-105 transition"><i class="fa-solid fa-person-chalkboard text-2xl text-red-600"></i><p class="font-bold mt-3">Lesson Plans</p><p class="text-xs text-gray-500 mt-1">CBC Detailed Plans</p><p class="text-[10px] mt-2 bg-red-100 inline-block px-2 py-1 rounded-full">KICD Format</p></a>
+
+<a href="/curriculum-designs.html" class="bg-white border-2 p-5 rounded-2xl shadow hover:shadow-xl hover:scale-105 transition"><i class="fa-solid fa-book-atlas text-2xl text-teal-600"></i><p class="font-bold mt-3">Curriculum Designs</p><p class="text-xs text-gray-500 mt-1">Official KICD</p><p class="text-[10px] mt-2 bg-teal-100 inline-block px-2 py-1 rounded-full">2024 Edition</p></a>
+
+<a href="/registration.html" class="bg-black p-5 rounded-2xl text-white shadow hover:scale-105 transition"><i class="fa-solid fa-user-plus text-2xl"></i><p class="font-bold mt-3">Register Now</p><p class="text-xs opacity-80 mt-1">Join 5,000+ Users</p><span class="text-[10px] mt-3 inline-block bg-white text-black px-2 py-1 rounded-full font-bold">FREE ACCOUNT</span></a>
+</div>
 </section>
-<section id="adminPanel" class="hidden max-w-7xl mx-auto px-4 py-6">
-<div class="flex justify-between mb-6"><h2 class="text-2xl font-bold">Admin Panel - kevokevo426@gmail.com 👑</h2><button onclick="showHome()" class="bg-gray-200 px-3 py-1 rounded">Exit</button></div>
-<div class="grid md:grid-cols-3 gap-3 mb-6">
-<div class="bg-white p-4 rounded-xl shadow"><p class="text-xs">Total Users</p><p id="statUsers" class="text-2xl font-bold">0</p></div>
-<div class="bg-white p-4 rounded-xl shadow"><p class="text-xs">Pending Approvals</p><p id="statPending" class="text-2xl font-bold text-orange-600">0</p></div>
-<div class="bg-white p-4 rounded-xl shadow"><p class="text-xs">Premium Users</p><p id="statPremium" class="text-2xl font-bold text-green-600">0</p></div>
+
+<!-- Pricing -->
+<section class="bg-gray-50 py-12">
+<div class="max-w-4xl mx-auto px-4 text-center">
+<h2 class="text-3xl font-black">💰 One Price - Everything</h2>
+<p class="text-sm text-gray-600 mt-2">No hidden fees • Till 0701305109 • 3 Months Premium</p>
+<div class="mt-8 bg-white rounded-3xl shadow-2xl p-8 border-2 border-green-600 max-w-md mx-auto">
+<div class="bg-green-100 inline-block px-4 py-1 rounded-full text-xs font-bold text-green-700">MOST POPULAR</div>
+<h3 class="text-4xl font-black mt-4">500 KES</h3><p class="text-sm text-gray-500">/ 3 Months (90 Days)</p>
+<ul class="text-left text-sm mt-6 space-y-3">
+<li><i class="fa-solid fa-check text-green-600"></i> 10,000+ Notes PP1-G9</li>
+<li><i class="fa-solid fa-check text-green-600"></i> 5,000+ Exams + Marking Schemes</li>
+<li><i class="fa-solid fa-check text-green-600"></i> AI Assistant Unlimited (ChatGPT for CBC)</li>
+<li><i class="fa-solid fa-check text-green-600"></i> AI Homework Solver - Photo to Answer</li>
+<li><i class="fa-solid fa-check text-green-600"></i> Schemes of Work Term 1-3</li>
+<li><i class="fa-solid fa-check text-green-600"></i> Lesson Plans CBC</li>
+<li><i class="fa-solid fa-check text-green-600"></i> Curriculum Designs KICD</li>
+</ul>
+<div class="mt-6 bg-green-50 p-4 rounded-xl border">
+<p class="font-bold text-sm">Pay via M-Pesa Till</p><p class="text-2xl font-black text-green-600">0701305109</p><p class="text-xs">Buy Goods & Services → 500 KES</p>
 </div>
-<div class="bg-white rounded-xl shadow p-4 mb-6">
-<h3 class="font-bold mb-3">✅ Approve / ❌ Reject - M-Pesa Till 0701305109</h3>
-<div class="overflow-auto"><table class="w-full text-sm"><thead class="bg-gray-100"><tr><th class="p-2 text-left">Email</th><th>Role</th><th>M-Pesa Code</th><th>Status</th><th>Action</th></tr></thead><tbody id="usersTable"></tbody></table></div>
+<a href="/registration.html" class="block w-full bg-green-600 text-white py-4 rounded-full font-black mt-6">🚀 Pay 500 & Start Now</a>
+<p class="text-[10px] text-gray-500 mt-2">Admin approves in 5 mins after M-Pesa code</p>
 </div>
-<div class="bg-white rounded-xl shadow p-4">
-<h3 class="font-bold mb-3">➕ Add Resource (Admin can edit everything)</h3>
-<div class="grid md:grid-cols-3 gap-2">
-<select id="resGrade" class="border p-2 rounded"></select>
-<select id="resSubject" class="border p-2 rounded"><option>Mathematics</option><option>English</option><option>Kiswahili</option><option>Science</option><option>SST</option><option>CRE</option></select>
-<select id="resType" class="border p-2 rounded"><option>Notes</option><option>Exam</option><option>Scheme</option><option>Lesson Plan</option><option>Video</option><option>Game</option></select>
-<input id="resTitle" placeholder="Title e.g. Grade 5 Math Notes Term 2" class="border p-2 rounded md:col-span-2">
-<input id="resLink" placeholder="Link / Google Drive / YouTube" class="border p-2 rounded">
-<button onclick="addResource()" class="bg-black text-white p-2 rounded md:col-span-3">Add Resource</button>
-</div>
-<div id="adminResourceList" class="mt-4 grid gap-2"></div>
 </div>
 </section>
-<div id="authModal" class="hidden fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
-<div class="bg-white rounded-2xl p-6 w-full max-w-sm">
-<h3 class="font-bold text-lg mb-4">Login</h3>
-<button id="googleLogin" class="w-full border py-2 rounded-full mb-3">Continue with Google</button>
-<input id="email" placeholder="Email" class="w-full border p-2 rounded mb-2">
-<input id="password" type="password" placeholder="Password" class="w-full border p-2 rounded mb-3">
-<button id="emailLogin" class="w-full bg-green-600 text-white py-2 rounded">Login / Signup</button>
-<button onclick="closeModals()" class="w-full mt-2 text-sm">Cancel</button>
+
+<!-- Footer -->
+<footer class="bg-black text-white py-10">
+<div class="max-w-7xl mx-auto px-4 grid md:grid-cols-4 gap-8 text-sm">
+<div><p class="font-black text-lg">SomaHub.KE</p><p class="text-xs text-gray-400 mt-2">Kenya's #1 CBC Platform PP1-G9. Built for learners & teachers.</p><p class="text-xs mt-3 bg-white/10 p-2 rounded">Till 0701305109<br>500 KES / 3 Months</p></div>
+<div><p class="font-bold">Students</p><ul class="mt-2 space-y-1 text-xs text-gray-400"><li><a href="/notes.html">Notes PP1-G9</a></li><li><a href="/exams.html">Exams</a></li><li><a href="/ai-assistant.html">AI Assistant</a></li><li><a href="/homework.html">Homework Solver</a></li></ul></div>
+<div><p class="font-bold">Teachers</p><ul class="mt-2 space-y-1 text-xs text-gray-400"><li><a href="/schemes.html">Schemes</a></li><li><a href="/lesson-plans.html">Lesson Plans</a></li><li><a href="/curriculum-designs.html">Curriculum Designs</a></li><li><a href="/teachers.html">Teacher Portal</a></li></ul></div>
+<div><p class="font-bold">Account</p><ul class="mt-2 space-y-1 text-xs text-gray-400"><li><a href="/registration.html">Register</a></li><li><a href="/dashboard.html">Dashboard</a></li><li><a href="/wallet.html">Wallet - Pay</a></li><li><a href="/admin.html">Admin</a></li></ul></div>
 </div>
-</div>
-<div id="subModal" class="hidden fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
-<div class="bg-white rounded-2xl p-6 w-full max-w-sm text-center">
-<h3 class="font-bold text-lg">Subscribe 500 KES / 3 Months</h3>
-<p class="text-sm mt-2">Lipa 500 KES to <b>0701305109</b> (M-Pesa Buy Goods)</p>
-<input id="mpesaCode" placeholder="Enter M-Pesa Code e.g. QGH7..." class="w-full border p-2 rounded mt-3">
-<button onclick="submitMpesa()" class="w-full bg-green-600 text-white py-2 rounded mt-3 font-bold">Submit for Approval</button>
-<p class="text-xs text-gray-500 mt-2">Admin kevokevo426@gmail.com will approve in 5min</p>
-<button onclick="closeModals()" class="w-full mt-2 text-sm">Close</button>
-</div>
-</div>
-<script>
-const grades = ["PP1","PP2","Grade 1","Grade 2","Grade 3","Grade 4","Grade 5","Grade 6","Grade 7","Grade 8","Grade 9"];
-const gradeGrid = document.getElementById('gradeGrid'); const resGrade = document.getElementById('resGrade');
-grades.forEach(g=>{ gradeGrid.innerHTML += `<div onclick="openGrade('${g}')" class="bg-white p-4 rounded-xl shadow border hover:shadow-lg cursor-pointer text-center"><p class="font-bold">${g}</p><p class="text-xs text-gray-500">View resources</p></div>`; resGrade.innerHTML += `<option>${g}</option>`; });
-let currentUser=null; let userData=null; let userRole='learner';
-function showHome(){document.getElementById('home').classList.remove('hidden');document.getElementById('resources').classList.add('hidden');document.getElementById('adminPanel').classList.add('hidden');}
-function openGrade(g){document.getElementById('home').classList.add('hidden');document.getElementById('resources').classList.remove('hidden');document.getElementById('resourceTitle').innerText=g+" - Resources"; loadResources(g);}
-function selectRole(r){userRole=r; if(!currentUser) openAuth(); else openGrade('Grade 5');}
-function openAuth(){document.getElementById('authModal').classList.remove('hidden');}
-function openSubscribe(){if(!currentUser){openAuth(); return;} document.getElementById('subModal').classList.remove('hidden');}
-function closeModals(){document.getElementById('authModal').classList.add('hidden');document.getElementById('subModal').classList.add('hidden');}
-async function loadResources(grade){
- const list=document.getElementById('resourceList'); list.innerHTML="Loading...";
- try{
-  const fb=window.firebaseApp;
-  const q=fb.query(fb.collection(fb.db,"resources"), fb.where("grade","==",grade));
-  const snap=await fb.getDocs(q);
-  list.innerHTML="";
-  if(snap.empty){list.innerHTML="<p class='text-gray-500'>No resources yet. Login as Admin (kevokevo426@gmail.com) to add.</p>"; return;}
-  snap.forEach(d=>{
-   const r=d.data(); const isPremium=userData?.isPremium;
-   list.innerHTML+=`<div class="bg-white p-4 rounded-xl shadow border"><div class="flex justify-between"><span class="text-xs bg-green-100 text-green-700 px-2 py-1 rounded">${r.type}</span><span class="text-xs text-gray-500">${r.subject}</span></div><h4 class="font-bold mt-2">${r.title}</h4><button onclick="handleDownload('${r.link}')" class="mt-3 w-full ${isPremium?'bg-green-600':'bg-gray-300'} text-white py-2 rounded text-sm">${isPremium?'Download':'🔒 Subscribe to Download'}</button></div>`;
-  });
- }catch(e){ list.innerHTML="Set Firestore Rules to allow read,write: if true. "+e.message; }
-}
-function handleDownload(link){ if(!currentUser){openAuth(); return;} if(!userData?.isPremium){openSubscribe(); return;} window.open(link,"_blank");}
-setTimeout(()=>{
- const fb=window.firebaseApp;
- document.getElementById('googleLogin').onclick=async()=>{ try{ await fb.signInWithPopup(fb.auth, fb.provider);}catch(e){alert(e.message);} };
- document.getElementById('emailLogin').onclick=async()=>{
-  const email=document.getElementById('email').value; const pass=document.getElementById('password').value;
-  try{ await fb.createUserWithEmailAndPassword(fb.auth,email,pass);}catch{ try{ await fb.signInWithEmailAndPassword(fb.auth,email,pass);}catch(e){alert(e.message);} }
- };
- document.getElementById('authBtn').onclick=()=>{ if(currentUser) fb.signOut(fb.auth); else openAuth(); };
- document.getElementById('adminBtn').onclick=()=>{ document.getElementById('home').classList.add('hidden'); document.getElementById('adminPanel').classList.remove('hidden'); loadAdmin(); };
- fb.onAuthStateChanged(fb.auth, async (user)=>{
-  currentUser=user;
-  if(user){
-   document.getElementById('authBtn').innerText="Logout ("+user.email.split('@')[0]+")";
-   const ref=fb.doc(fb.db,"users",user.uid);
-   const snap=await fb.getDoc(ref);
-   if(!snap.exists()){
-    await fb.setDoc(ref,{email:user.email, role:userRole, status:"pending", isPremium:false, mpesaCode:"", createdAt:fb.serverTimestamp()});
-    userData={email:user.email, role:userRole, status:"pending", isPremium:false};
-   }else{ userData=snap.data(); }
-   if(fb.ADMIN_EMAILS.includes(user.email)){ document.getElementById('adminBtn').classList.remove('hidden'); await fb.updateDoc(ref,{role:"admin", status:"approved", isPremium:true}); }
-  }else{ document.getElementById('authBtn').innerText="Login"; document.getElementById('adminBtn').classList.add('hidden'); userData=null; }
- });
-},500);
-async function submitMpesa(){
- const code=document.getElementById('mpesaCode').value;
- if(!code) return alert("Enter Code");
- const fb=window.firebaseApp;
- await fb.updateDoc(fb.doc(fb.db,"users",currentUser.uid),{mpesaCode:code, status:"pending_payment"});
- alert("Submitted! Admin will approve. Karibu SomaHub!");
- closeModals();
-}
-async function loadAdmin(){
- const fb=window.firebaseApp;
- const snap=await fb.getDocs(fb.collection(fb.db,"users"));
- let pending=0, premium=0;
- const tbody=document.getElementById('usersTable'); tbody.innerHTML="";
- snap.forEach(d=>{
-  const u=d.data(); const id=d.id;
-  if(u.status!=="approved") pending++;
-  if(u.isPremium) premium++;
-  tbody.innerHTML+=`<tr class="border-b"><td class="p-2">${u.email}</td><td>${u.role}</td><td class="text-xs">${u.mpesaCode||'-'}</td><td><span class="px-2 py-1 rounded text-xs ${u.status==='approved'?'bg-green-100':'bg-orange-100'}">${u.status}</span> ${u.isPremium?'<span class="bg-green-600 text-white px-1 rounded text-xs">PREM</span>':''}</td><td class="flex gap-1 p-1"><button onclick="approveUser('${id}', true)" class="bg-green-600 text-white px-2 py-1 rounded text-xs">Approve</button><button onclick="approveUser('${id}', false)" class="bg-red-600 text-white px-2 py-1 rounded text-xs">Reject</button><button onclick="makePremium('${id}')" class="bg-black text-white px-2 py-1 rounded text-xs">Premium</button></td></tr>`;
- });
- document.getElementById('statUsers').innerText=snap.size;
- document.getElementById('statPending').innerText=pending;
- document.getElementById('statPremium').innerText=premium;
- const rsnap=await fb.getDocs(fb.collection(fb.db,"resources"));
- const alist=document.getElementById('adminResourceList'); alist.innerHTML="";
- rsnap.forEach(d=>{ const r=d.data(); alist.innerHTML+=`<div class="flex justify-between bg-gray-50 p-2 rounded text-sm"><span>${r.grade} | ${r.subject} | ${r.title}</span><button onclick="deleteRes('${d.id}')" class="text-red-600">Delete</button></div>`; });
-}
-async function approveUser(id, isApprove){ const fb=window.firebaseApp; await fb.updateDoc(fb.doc(fb.db,"users",id),{status:isApprove?"approved":"rejected"}); loadAdmin();}
-async function makePremium(id){ const fb=window.firebaseApp; await fb.updateDoc(fb.doc(fb.db,"users",id),{isPremium:true, status:"approved", premiumUntil: Date.now()+90*24*60*60*1000}); loadAdmin(); alert("User is now PREMIUM for 90 days!");}
-async function addResource(){ const fb=window.firebaseApp; const data={ grade:document.getElementById('resGrade').value, subject:document.getElementById('resSubject').value, type:document.getElementById('resType').value, title:document.getElementById('resTitle').value, link:document.getElementById('resLink').value, createdAt:fb.serverTimestamp() }; if(!data.title||!data.link) return alert("Enter title & link"); await fb.addDoc(fb.collection(fb.db,"resources"),data); alert("Added!"); loadAdmin();}
-async function deleteRes(id){ const fb=window.firebaseApp; await fb.deleteDoc(fb.doc(fb.db,"resources",id)); loadAdmin();}
-</script>
+<div class="text-center text-[10px] text-gray-500 mt-8">© 2026 SomaHub Kenya • PP1-Grade 9 • Till 0701305109 • All Rights Reserved</div>
+</footer>
 </body>
 </html>
