@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SomaHub - Notes Only PP1-G9</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import { getAuth, onAuthStateChanged, GoogleAuthProvider, signInWithPopup, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+import { getFirestore, doc, getDoc, setDoc, collection, getDocs, query, where, updateDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+const firebaseConfig = {
+  apiKey: "AIzaSyA93BNes3AmFyxIEgjSbvbIWqLyorLsuj8",
+  authDomain: "somahubkenya-9e458.firebaseapp.com",
+  projectId: "somahubkenya-9e458",
+  storageBucket: "somahubkenya-9e458.firebasestorage.app",
+  messagingSenderId: "615579085715",
+  appId: "1:615579085715:web:28fca37ba498324bb49666"
+};
+const app=initializeApp(firebaseConfig); const auth=getAuth(app); const db=getFirestore(app); const provider=new GoogleAuthProvider();
+window.FB={auth,db,provider,signInWithPopup,signInWithEmailAndPassword,createUserWithEmailAndPassword,onAuthStateChanged,signOut,doc,getDoc,setDoc,collection,getDocs,query,where,updateDoc,serverTimestamp};
+</script>
+</head>
+<body class="bg-purple-50">
+<header class="bg-white shadow sticky top-0 z-50">
+<div class="max-w-7xl mx-auto px-4 py-3 flex justify-between">
+<a href="/" class="font-bold"><i class="fa-solid fa-book text-purple-600"></i> SomaHub Notes</a>
+<div class="flex gap-2"><a href="/students.html" class="text-xs bg-blue-100 px-3 py-2 rounded-full">Exams</a><a href="/teachers.html" class="text-xs bg-orange-100 px-3 py-2 rounded-full">Teachers</a><button id="authBtn" class="bg-purple-600 text-white px-4 py-2 rounded-full text-sm">Login</button></div>
+</div>
+</header>
+
+<div class="max-w-7xl mx-auto p-4">
+<div class="bg-gradient-to-r from-purple-600 to-pink-600 rounded-2xl p-6 text-white">
+<h1 class="text-2xl font-bold">📚 Revision Notes - PP1 to Grade 9</h1><p class="text-sm mt-1">Summarized CBC Notes • All Subjects • Download PDF</p>
+<div id="premB" class="hidden mt-2 bg-white text-purple-700 px-3 py-1 rounded-full text-xs inline-block font-bold">✅ PREMIUM</div>
+<div id="freeB" class="mt-2 bg-white/20 px-3 py-1 rounded-full text-xs inline-block">🔒 500 KES / 3 Months - Till 0701305109</div>
+</div>
+
+<div class="mt-6 grid md:grid-cols-3 gap-4">
+<div><label class="text-xs font-bold">Grade</label><select id="gradeSel" class="w-full border p-2 rounded mt-1"><option>PP1</option><option>PP2</option><option>Grade 1</option><option>Grade 2</option><option>Grade 3</option><option>Grade 4</option><option>Grade 5</option><option>Grade 6</option><option>Grade 7</option><option>Grade 8</option><option>Grade 9</option></select></div>
+<div><label class="text-xs font-bold">Subject</label><select id="subSel" class="w-full border p-2 rounded mt-1"><option>All</option><option>Mathematics</option><option>English</option><option>Kiswahili</option><option>Science</option><option>SST</option><option>CRE</option><option>Agriculture</option><option>Creative Arts</option></select></div>
+<div class="flex items-end"><button onclick="loadNotes()" class="w-full bg-purple-600 text-white py-2 rounded font-bold">🔍 Show Notes</button></div>
+</div>
+
+<div id="notesList" class="mt-6 grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+<p class="text-gray-500 text-sm">Select grade & click Show Notes...</p>
+</div>
+</div>
+
+<!-- Auth -->
+<div id="authModal" class="hidden fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4"><div class="bg-white rounded-2xl p-6 w-full max-w-sm"><h3 class="font-bold">Login to Download Notes</h3><button id="gLogin" class="w-full border py-2 rounded-full mt-3">Google Login</button><input id="email" placeholder="Email" class="w-full border p-2 rounded mt-3"><input id="pass" type="password" placeholder="Password" class="w-full border p-2 rounded mt-2"><button id="eLogin" class="w-full bg-purple-600 text-white py-2 rounded mt-3">Login</button><button onclick="closeM()" class="w-full mt-2 text-sm">Close</button></div></div>
+<div id="subModal" class="hidden fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4"><div class="bg-white rounded-2xl p-6 w-full max-w-sm text-center"><h3 class="font-bold">Unlock Notes - 500 KES</h3><p class="text-sm">Till 0701305109</p><input id="mpesa" placeholder="M-Pesa Code" class="w-full border p-2 rounded mt-3"><button onclick="submitMpesa()" class="w-full bg-green-600 text-white py-2 rounded mt-3 font-bold">Submit</button><button onclick="closeM()" class="w-full mt-2 text-sm">Close</button></div></div>
+
+<script>
+let currentUser=null, userData=null;
+function closeM(){document.getElementById('authModal').classList.add('hidden'); document.getElementById('subModal').classList.add('hidden');}
+async function loadNotes(){
+const grade=document.getElementById('gradeSel').value; const sub=document.getElementById('subSel').value;
+const list=document.getElementById('notesList'); list.innerHTML="Loading notes...";
+try{
+const FB=window.FB; let q;
+if(sub==="All") q=FB.query(FB.collection(FB.db,"resources"), FB.where("grade","==",grade), FB.where("type","==","Notes"));
+else q=FB.query(FB.collection(FB.db,"resources"), FB.where("grade","==",grade), FB.where("subject","==",sub), FB.where("type","==","Notes"));
+const snap=await FB.getDocs(q); list.innerHTML="";
+if(snap.empty){list.innerHTML=`<div class="col-span-3 text-center py-10"><p class="text-gray-500">No notes yet for ${grade} - ${sub}</p><p class="text-xs mt-2">Admin add via admin.html</p></div>`; return;}
+snap.forEach(d=>{
+const r=d.data(); const prem=userData?.isPremium;
+list.innerHTML+=`<div class="bg-white p-4 rounded-xl shadow border hover:shadow-lg"><div class="flex justify-between text-[10px]"><span class="bg-purple-100 text-purple-700 px-2 py-1 rounded">${r.grade}</span><span class="bg-gray-100 px-2 py-1 rounded">${r.subject}</span></div><h3 class="font-bold text-sm mt-2">${r.title}</h3><p class="text-[11px] text-gray-500 mt-1">📄 PDF Notes • Ready to download</p><button onclick="openNote('${r.link}')" class="w-full mt-3 ${prem?'bg-purple-600':'bg-gray-300'} text-white py-2 rounded text-xs font-bold">${prem?'📥 Open Notes':'🔒 Subscribe to View'}</button></div>`;
+});
+}catch(e){document.getElementById('notesList').innerHTML=e.message;}
+}
+function openNote(link){
+if(!currentUser){document.getElementById('authModal').classList.remove('hidden'); return;}
+if(!userData?.isPremium){document.getElementById('subModal').classList.remove('hidden'); return;}
+window.open(link,"_blank");
+}
+setTimeout(()=>{
+const FB=window.FB;
+document.getElementById('gLogin').onclick=async()=>{try{await FB.signInWithPopup(FB.auth,FB.provider)}catch(e){alert(e.message)}};
+document.getElementById('eLogin').onclick=async()=>{const em=document.getElementById('email').value, ps=document.getElementById('pass').value; try{await FB.createUserWithEmailAndPassword(FB.auth,em,ps)}catch{try{await FB.signInWithEmailAndPassword(FB.auth,em,ps)}catch(e){alert(e.message)}};};
+document.getElementById('authBtn').onclick=()=>{if(currentUser) FB.signOut(FB.auth); else document.getElementById('authModal').classList.remove('hidden');};
+FB.onAuthStateChanged(FB.auth, async(u)=>{
+currentUser=u;
+if(u){
+document.getElementById('authBtn').innerText="Logout";
+const ref=FB.doc(FB.db,"users",u.uid); const snap=await FB.getDoc(ref);
+if(!snap.exists()){await FB.setDoc(ref,{email:u.email, role:"learner", status:"pending", isPremium:false, mpesaCode:"", createdAt:FB.serverTimestamp()}); userData={isPremium:false};}
+else{userData=snap.data(); if(userData.isPremium){document.getElementById('premB').classList.remove('hidden'); document.getElementById('freeB').classList.add('hidden');}}
+}else{document.getElementById('authBtn').innerText="Login"; userData=null; document.getElementById('premB').classList.add('hidden'); document.getElementById('freeB').classList.remove('hidden');}
+});
+},600);
+async function submitMpesa(){const c=document.getElementById('mpesa').value; if(!c) return alert("Enter code"); const FB=window.FB; await FB.updateDoc(FB.doc(FB.db,"users",currentUser.uid),{mpesaCode:c, status:"pending_payment"}); alert("Sent!"); closeM();}
+window.loadNotes=loadNotes; window.openNote=openNote; window.closeM=closeM; window.submitMpesa=submitMpesa;
+</script>
+</body>
+</html>
