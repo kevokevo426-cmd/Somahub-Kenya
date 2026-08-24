@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SomaHub - DATA PANEL - Students & Teachers</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+import { getFirestore, doc, collection, getDocs, updateDoc, deleteDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+const firebaseConfig = {
+  apiKey: "AIzaSyA93BNes3AmFyxIEgjSbvbIWqLyorLsuj8",
+  authDomain: "somahubkenya-9e458.firebaseapp.com",
+  projectId: "somahubkenya-9e458",
+  storageBucket: "somahubkenya-9e458.firebasestorage.app",
+  messagingSenderId: "615579085715",
+  appId: "1:615579085715:web:28fca37ba498324bb49666"
+};
+const app=initializeApp(firebaseConfig); const auth=getAuth(app); const db=getFirestore(app);
+window.FB={auth,db,onAuthStateChanged,signInWithEmailAndPassword,signOut,doc,collection,getDocs,updateDoc,deleteDoc,serverTimestamp};
+</script>
+</head>
+<body class="bg-[#f5f5f7]">
+<!-- ADMIN LOGIN - Hardcoded so only you -->
+<div id="loginDiv" class="min-h-screen flex items-center justify-center p-4">
+<div class="bg-white p-8 rounded-[2rem] shadow-2xl max-w-sm w-full">
+<p class="text-3xl">🔐</p><h1 class="text-2xl font-black mt-2">DATA PANEL</h1><p class="text-xs text-gray-500">Students & Teachers Database - NOT Content</p>
+<div class="mt-6 bg-red-50 p-3 rounded-xl border border-red-200"><p class="text-[11px] font-bold text-red-700">⚠️ This is NOT admin.html</p><p class="text-[10px] text-red-600">admin.html = Upload Notes/Exams<br>panel.html = View People + Money</p></div>
+<input id="email" placeholder="Admin Email" class="w-full border p-4 rounded-xl mt-4 text-sm">
+<input id="pass" type="password" placeholder="Password" class="w-full border p-4 rounded-xl mt-2 text-sm">
+<button id="loginBtn" class="w-full bg-black text-white py-4 rounded-xl font-black mt-4">Enter Data Panel →</button>
+<p class="text-[10px] text-center mt-3 text-gray-400">Secure - Only SomaHub Owner</p>
+</div>
+</div>
+
+<div id="panelDiv" class="hidden">
+<header class="bg-white border-b sticky top-0 z-50">
+<div class="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
+<div><h1 class="font-black text-lg">📊 DATA PANEL</h1><p class="text-[10px] text-gray-500">Students & Teachers • Live Data • Till 0701305109</p></div>
+<div class="flex gap-2 items-center">
+<a href="/admin.html" class="text-xs bg-gray-100 px-3 py-2 rounded-full">Go to admin.html (Content)</a>
+<button id="logout" class="bg-black text-white px-4 py-2 rounded-full text-xs">Logout</button>
+</div>
+</div>
+</header>
+
+<div class="max-w-7xl mx-auto p-4">
+<!-- Revenue Bar -->
+<div class="bg-black text-white rounded-[1.5rem] p-6 flex flex-col md:flex-row justify-between gap-4">
+<div><p class="text-xs opacity-60">TOTAL REVENUE (Till 0701305109)</p><p id="rev" class="text-4xl font-black">0 KES</p><p id="revDet" class="text-xs mt-1 opacity-70">0 premium x 500</p></div>
+<div class="flex gap-3">
+<div class="bg-white/10 p-4 rounded-2xl text-center min-w-[90px]"><p class="text-xs opacity-60">Students</p><p id="cStudents" class="text-2xl font-black">0</p></div>
+<div class="bg-white/10 p-4 rounded-2xl text-center min-w-[90px]"><p class="text-xs opacity-60">Teachers</p><p id="cTeachers" class="text-2xl font-black">0</p></div>
+<div class="bg-green-500 p-4 rounded-2xl text-center min-w-[90px]"><p class="text-xs">Paid</p><p id="cPaid" class="text-2xl font-black">0</p></div>
+</div>
+</div>
+
+<div class="grid md:grid-cols-3 gap-4 mt-6">
+<!-- Chart -->
+<div class="bg-white p-5 rounded-[1.5rem] shadow-sm"><h3 class="font-bold text-sm">Grade Distribution</h3><canvas id="gradeChart" class="mt-4"></canvas></div>
+<div class="bg-white p-5 rounded-[1.5rem] shadow-sm"><h3 class="font-bold text-sm">Role Split</h3><canvas id="roleChart" class="mt-4"></canvas></div>
+<div class="bg-white p-5 rounded-[1.5rem] shadow-sm">
+<h3 class="font-bold text-sm">🔥 Live Actions</h3>
+<div class="mt-4 space-y-2">
+<button onclick="tab('pending')" class="w-full bg-yellow-400 p-4 rounded-xl font-bold text-left flex justify-between"><span>⏳ Pending M-Pesa</span><span id="bPending" class="bg-black text-white px-3 py-1 rounded-full text-xs">0</span></button>
+<button onclick="exportCSV()" class="w-full bg-white border-2 p-4 rounded-xl font-bold text-left">📥 Export All Data CSV</button>
+<button onclick="whatsappBlast()" class="w-full bg-green-600 text-white p-4 rounded-xl font-bold text-left">💬 WhatsApp Broadcast List</button>
+<p class="text-[10px] text-gray-400 mt-2">This panel is for PEOPLE data. For NOTES/EXAMS go to admin.html</p>
+</div>
+</div>
+</div>
+
+<!-- Tabs -->
+<div class="mt-8 bg-white rounded-[1.5rem] shadow-sm p-2 flex gap-2 overflow-x-auto">
+<button onclick="switchTab('students')" id="btnStudents" class="flex-1 bg-blue-600 text-white py-3 rounded-xl font-bold text-sm">🎓 Students (PP1-G9)</button>
+<button onclick="switchTab('teachers')" id="btnTeachers" class="flex-1 bg-gray-100 py-3 rounded-xl font-bold text-sm">👩‍🏫 Teachers</button>
+<button onclick="switchTab('payments')" id="btnPayments" class="flex-1 bg-gray-100 py-3 rounded-xl font-bold text-sm">💰 M-Pesa Payments</button>
+</div>
+
+<!-- Search -->
+<div class="mt-4 flex gap-2">
+<input id="q" placeholder="Search name, email, school, M-Pesa code..." class="flex-1 bg-white p-4 rounded-xl shadow-sm text-sm outline-none" oninput="doSearch()">
+<select id="gradeSel" class="bg-white p-4 rounded-xl shadow-sm text-sm" onchange="doSearch()"><option value="">All Grades</option><option>PP1</option><option>PP2</option><option>Grade 1</option><option>Grade 2</option><option>Grade 3</option><option>Grade 4</option><option>Grade 5</option><option>Grade 6</option><option>Grade 7</option><option>Grade 8</option><option>Grade 9</option></select>
+</div>
+
+<!-- Lists -->
+<div id="studentsBox" class="mt-4 grid md:grid-cols-2 lg:grid-cols-3 gap-3"></div>
+<div id="teachersBox" class="hidden mt-4 grid md:grid-cols-2 lg:grid-cols-3 gap-3"></div>
+<div id="paymentsBox" class="hidden mt-4 bg-white rounded-[1.5rem] shadow-sm overflow-hidden">
+<table class="w-full text-xs"><thead class="bg-gray-50 text-[10px]"><tr><th class="p-3 text-left">User</th><th class="p-3">Code</th><th class="p-3">Status</th><th class="p-3">Action</th></tr></thead><tbody id="payBody"></tbody></table>
+</div>
+</div>
+</div>
+
+<script>
+let all=[], filtered=[], current='students';
+setTimeout(()=>{
+const FB=window.FB;
+document.getElementById('loginBtn').onclick=async()=>{
+try{await FB.signInWithEmailAndPassword(FB.auth,document.getElementById('email').value,document.getElementById('pass').value)}catch(e){alert(e.message)}};
+document.getElementById('logout').onclick=()=>FB.signOut(FB.auth);
+FB.onAuthStateChanged(FB.auth, async(u)=>{
+if(!u){document.getElementById('loginDiv').classList.remove('hidden'); document.getElementById('panelDiv').classList.add('hidden'); return;}
+document.getElementById('loginDiv').classList.add('hidden'); document.getElementById('panelDiv').classList.remove('hidden');
+loadData();
+});
+window.loadData=async()=>{
+const snap=await FB.getDocs(FB.collection(FB.db,"users")); all=[]; snap.forEach(d=>all.push({id:d.id,...d.data()}));
+document.getElementById('cStudents').innerText=all.filter(x=>x.role!=='teacher').length;
+document.getElementById('cTeachers').innerText=all.filter(x=>x.role==='teacher').length;
+document.getElementById('cPaid').innerText=all.filter(x=>x.isPremium).length;
+document.getElementById('bPending').innerText=all.filter(x=>x.status==='pending_payment').length;
+document.getElementById('rev').innerText=(all.filter(x=>x.isPremium).length*500).toLocaleString()+" KES";
+document.getElementById('revDet').innerText=all.filter(x=>x.isPremium).length+" premium x 500 • Till 0701305109";
+drawCharts(); doSearch();
+};
+window.drawCharts=()=>{
+const grades=["PP1","PP2","Grade 1","Grade 2","Grade 3","Grade 4","Grade 5","Grade 6","Grade 7","Grade 8","Grade 9"];
+const gCounts=grades.map(g=>all.filter(x=>x.grade===g).length);
+new Chart(document.getElementById('gradeChart'),{type:'bar',data:{labels:grades, datasets:[{data:gCounts, backgroundColor:'#000'}]},options:{plugins:{legend:{display:false}}}});
+new Chart(document.getElementById('roleChart'),{type:'doughnut',data:{labels:['Students','Teachers'], datasets:[{data:[all.filter(x=>x.role!=='teacher').length, all.filter(x=>x.role==='teacher').length], backgroundColor:['#2563eb','#f97316']}]}});
+};
+window.switchTab=(t)=>{
+current=t;
+document.getElementById('studentsBox').classList.add('hidden'); document.getElementById('teachersBox').classList.add('hidden'); document.getElementById('paymentsBox').classList.add('hidden');
+document.getElementById('btnStudents').className='flex-1 bg-gray-100 py-3 rounded-xl font-bold text-sm';
+document.getElementById('btnTeachers').className='flex-1 bg-gray-100 py-3 rounded-xl font-bold text-sm';
+document.getElementById('btnPayments').className='flex-1 bg-gray-100 py-3 rounded-xl font-bold text-sm';
+if(t==='students'){document.getElementById('studentsBox').classList.remove('hidden'); document.getElementById('btnStudents').className='flex-1 bg-blue-600 text-white py-3 rounded-xl font-bold text-sm';}
+if(t==='teachers'){document.getElementById('teachersBox').classList.remove('hidden'); document.getElementById('btnTeachers').className='flex-1 bg-orange-500 text-white py-3 rounded-xl font-bold text-sm';}
+if(t==='payments'){document.getElementById('paymentsBox').classList.remove('hidden'); document.getElementById('btnPayments').className='flex-1 bg-yellow-400 text-black py-3 rounded-xl font-bold text-sm';}
+doSearch();
+};
+window.doSearch=()=>{
+const q=document.getElementById('q').value.toLowerCase(); const g=document.getElementById('gradeSel').value;
+filtered=all.filter(u=>{
+const matchQ=!q || (u.email||'').toLowerCase().includes(q) || (u.displayName||'').toLowerCase().includes(q) || (u.mpesaCode||'').toLowerCase().includes(q);
+const matchG=!g || u.grade===g;
+return matchQ && matchG;
+});
+renderStudents(); renderTeachers(); renderPayments();
+};
+window.renderStudents=()=>{
+const box=document.getElementById('studentsBox'); const list=filtered.filter(u=>u.role!=='teacher');
+box.innerHTML=list.length?"" : "<p class='col-span-3 text-center py-10 text-gray-400'>No students</p>";
+list.forEach(u=>{
+box.innerHTML+=`<div class="bg-white p-4 rounded-2xl shadow-sm border">
+<div class="flex justify-between"><span class="bg-blue-100 text-blue-700 px-2 py-1 rounded-full text-[10px] font-bold">${u.grade||'No Grade'}</span><span class="${u.isPremium?'bg-green-600 text-white':'bg-gray-100'} px-2 py-1 rounded-full text-[10px]">${u.isPremium?'PAID':'FREE'}</span></div>
+<p class="font-bold text-sm mt-3">${u.displayName||u.email?.split('@')[0]}</p><p class="text-[11px] text-gray-500">${u.email}</p>
+<p class="text-[10px] mt-2">Joined: ${u.createdAt?new Date(u.createdAt.seconds*1000).toLocaleDateString():'-'}</p>
+<div class="flex gap-2 mt-3">
+${!u.isPremium?`<button onclick="approveU('${u.id}')" class="flex-1 bg-black text-white py-2 rounded-full text-xs font-bold">Approve 500</button>`:`<button onclick="revokeU('${u.id}')" class="flex-1 bg-red-50 py-2 rounded-full text-xs">Revoke</button>`}
+<button onclick="delU('${u.id}')" class="bg-gray-100 px-3 py-2 rounded-full text-xs">Del</button>
+</div></div>`;
+});
+};
+window.renderTeachers=()=>{
+const box=document.getElementById('teachersBox'); const list=filtered.filter(u=>u.role==='teacher');
+box.innerHTML=list.length?"" : "<p class='col-span-3 text-center py-10 text-gray-400'>No teachers</p>";
+list.forEach(u=>{
+box.innerHTML+=`<div class="bg-white p-4 rounded-2xl shadow-sm border-l-4 border-orange-400">
+<div class="flex justify-between"><span class="bg-orange-100 text-orange-700 px-2 py-1 rounded-full text-[10px] font-bold">TEACHER • ${u.grade||''}</span><span class="${u.isPremium?'bg-green-600 text-white':'bg-gray-100'} px-2 py-1 rounded-full text-[10px]">${u.isPremium?'PAID':'FREE'}</span></div>
+<p class="font-bold text-sm mt-3">${u.displayName||u.email?.split('@')[0]}</p><p class="text-[11px] text-gray-500">${u.email}</p>
+<p class="text-[10px] mt-1">TSC/School: ${u.tsc||u.school||'-'}</p>
+<div class="flex gap-2 mt-3">
+${!u.isPremium?`<button onclick="approveU('${u.id}')" class="flex-1 bg-orange-500 text-white py-2 rounded-full text-xs font-bold">Approve 500</button>`:`<button onclick="revokeU('${u.id}')" class="flex-1 bg-red-50 py-2 rounded-full text-xs">Revoke</button>`}
+<button onclick="delU('${u.id}')" class="bg-gray-100 px-3 py-2 rounded-full text-xs">Del</button>
+</div></div>`;
+});
+};
+window.renderPayments=()=>{
+const body=document.getElementById('payBody'); const list=filtered.filter(u=>u.mpesaCode||u.status==='pending_payment');
+body.innerHTML=list.length?"" : "<tr><td colspan=4 class='p-10 text-center text-gray-400'>No M-Pesa payments</td></tr>";
+list.forEach(u=>{
+body.innerHTML+=`<tr class="border-b"><td class="p-3"><p class="font-bold">${u.displayName||u.email?.split('@')[0]}</p><p class="text-[10px] text-gray-500">${u.email}</p></td><td class="p-3 font-mono font-bold">${u.mpesaCode||'-'}</td><td class="p-3"><span class="bg-yellow-100 px-2 py-1 rounded-full text-[10px]">${u.status}</span></td><td class="p-3"><button onclick="approveU('${u.id}')" class="bg-green-600 text-white px-3 py-1 rounded-full text-[10px] font-bold">Approve</button></td></tr>`;
+});
+};
+window.approveU=async(id)=>{if(!confirm("Confirm 500 KES received on Till 0701305109? Approve?")) return; await FB.updateDoc(FB.doc(FB.db,"users",id),{isPremium:true, status:"active", approvedAt:FB.serverTimestamp()}); loadData();};
+window.revokeU=async(id)=>{if(!confirm("Revoke?")) return; await FB.updateDoc(FB.doc(FB.db,"users",id),{isPremium:false, status:"free"}); loadData();};
+window.delU=async(id)=>{if(!confirm("Delete user?")) return; await FB.deleteDoc(FB.doc(FB.db,"users",id)); loadData();};
+window.exportCSV=()=>{let csv="Type,Email,Name,Grade,Role,Mpesa,Premium,Status,Joined\n"; all.forEach(u=>{const type=u.role==='teacher'?'Teacher':'Student'; csv+=`${type},"${u.email||''}","${u.displayName||''}","${u.grade||''}","${u.role||''}","${u.mpesaCode||''}","${u.isPremium||false}","${u.status||''}","${u.createdAt?new Date(u.createdAt.seconds*1000).toLocaleDateString():''}"\n`;}); const a=document.createElement('a'); a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'})); a.download="somahub_data_panel.csv"; a.click();};
+window.whatsappBlast=()=>{let txt="SomaHub Broadcast:\n"; all.filter(u=>!u.isPremium).forEach(u=>{txt+=u.email+", ";}); prompt("Copy emails for WhatsApp broadcast (free users):",txt);};
+},700);
+</script>
+</body>
+</html>
