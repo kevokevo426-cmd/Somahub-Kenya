@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SomaHub - Wallet & Till 0701305109</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+import { getFirestore, doc, getDoc, updateDoc, collection, query, where, getDocs, orderBy } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+const firebaseConfig = {
+  apiKey: "AIzaSyA93BNes3AmFyxIEgjSbvbIWqLyorLsuj8",
+  authDomain: "somahubkenya-9e458.firebaseapp.com",
+  projectId: "somahubkenya-9e458",
+  storageBucket: "somahubkenya-9e458.firebasestorage.app",
+  messagingSenderId: "615579085715",
+  appId: "1:615579085715:web:28fca37ba498324bb49666"
+};
+const app=initializeApp(firebaseConfig); const auth=getAuth(app); const db=getFirestore(app);
+window.FB={auth,db,onAuthStateChanged,signOut,doc,getDoc,updateDoc,collection,query,where,getDocs,orderBy};
+</script>
+</head>
+<body class="bg-green-50">
+<header class="bg-white shadow sticky top-0">
+<div class="max-w-4xl mx-auto px-4 py-3 flex justify-between">
+<a href="/" class="font-bold"><i class="fa-solid fa-wallet text-green-600"></i> Wallet</a>
+<div class="flex gap-2"><a href="/dashboard.html" class="text-xs bg-gray-100 px-3 py-2 rounded-full">Dashboard</a><button id="logout" class="bg-red-500 text-white px-4 py-2 rounded-full text-xs">Logout</button></div>
+</div>
+</header>
+
+<div class="max-w-4xl mx-auto p-4">
+<div class="bg-gradient-to-r from-green-600 to-emerald-700 rounded-2xl p-6 text-white">
+<div class="flex justify-between">
+<div><h1 class="text-xl font-bold">💰 SomaHub Wallet</h1><p id="userEmail" class="text-sm opacity-80 mt-1">Loading...</p></div>
+<div class="text-right"><p class="text-xs opacity-70">Balance</p><p id="bal" class="text-2xl font-bold">0 KES</p></div>
+</div>
+<div id="statusBox" class="mt-4 bg-white/20 p-3 rounded-xl">
+<p id="statusTxt" class="text-sm font-bold">⏳ Checking subscription...</p>
+<p id="expTxt" class="text-xs mt-1">Till: 0701305109 • 500 KES / 90 Days</p>
+</div>
+</div>
+
+<div class="grid md:grid-cols-2 gap-4 mt-6">
+<!-- Pay -->
+<div class="bg-white p-5 rounded-2xl shadow">
+<h3 class="font-bold">📲 Pay via M-Pesa Till</h3>
+<div class="mt-4 bg-green-50 p-4 rounded-xl border-2 border-green-300 text-center">
+<p class="text-xs text-gray-600">Go to M-Pesa</p>
+<p class="font-bold text-lg">Lipa na M-Pesa → Buy Goods</p>
+<p class="text-3xl font-bold text-green-600 mt-2">0701305109</p>
+<p class="text-sm mt-2">Amount: <b>500 KES</b></p>
+<button onclick="copyTill()" class="mt-2 bg-green-600 text-white px-4 py-1 rounded-full text-xs">Copy Till</button>
+</div>
+<div class="mt-4">
+<label class="text-xs font-bold">Enter M-Pesa Code after paying</label>
+<div class="flex gap-2 mt-2">
+<input id="mpesaCode" placeholder="e.g QGH7XYZ123" class="flex-1 border p-3 rounded-xl uppercase">
+<button onclick="submitCode()" class="bg-green-600 text-white px-6 py-3 rounded-xl font-bold text-sm">Submit</button>
+</div>
+<p class="text-[10px] text-gray-500 mt-2">Example: QGJ... from M-Pesa message. Admin approves in 5 mins.</p>
+</div>
+</div>
+
+<!-- History & Plans -->
+<div class="space-y-4">
+<div class="bg-white p-5 rounded-2xl shadow">
+<h3 class="font-bold">📦 Subscription Plans</h3>
+<div class="mt-3 space-y-2">
+<div class="border-2 border-green-600 p-3 rounded-xl flex justify-between items-center bg-green-50"><div><p class="font-bold text-sm">3 Months Premium</p><p class="text-[11px] text-gray-600">All PP1-G9 • Notes, Exams, AI</p></div><p class="font-bold text-green-600">500 KES</p></div>
+<div class="border p-3 rounded-xl flex justify-between items-center opacity-60"><div><p class="font-bold text-sm">6 Months Premium</p><p class="text-[11px]">Save 100 KES</p></div><p class="font-bold">900 KES</p></div>
+<div class="border p-3 rounded-xl flex justify-between items-center opacity-60"><div><p class="font-bold text-sm">12 Months</p><p class="text-[11px]">Best Value - Save 400 KES</p></div><p class="font-bold">1600 KES</p></div>
+</div>
+</div>
+
+<div class="bg-white p-5 rounded-2xl shadow">
+<h3 class="font-bold text-sm">📜 Payment History</h3>
+<div id="history" class="mt-3 text-xs space-y-2"><p class="text-gray-400">No payments yet</p></div>
+</div>
+</div>
+</div>
+
+<div class="mt-6 bg-white p-4 rounded-xl shadow text-center">
+<p class="text-xs text-gray-600">Need help? WhatsApp: 0701305109 • Email: somahubkenya@gmail.com</p>
+<div class="flex justify-center gap-2 mt-2">
+<a href="/" class="text-xs bg-gray-100 px-3 py-2 rounded-full">Home</a>
+<a href="/dashboard.html" class="text-xs bg-blue-100 px-3 py-2 rounded-full">Dashboard</a>
+<a href="/admin.html" class="text-xs bg-purple-100 px-3 py-2 rounded-full">Admin</a>
+</div>
+</div>
+</div>
+
+<script>
+let uid=null;
+function copyTill(){navigator.clipboard.writeText("0701305109"); alert("Copied Till 0701305109");}
+setTimeout(()=>{
+const FB=window.FB;
+FB.onAuthStateChanged(FB.auth, async(u)=>{
+if(!u){window.location.href="/registration.html"; return;}
+uid=u.uid; document.getElementById('userEmail').innerText=u.email;
+const ref=FB.doc(FB.db,"users",u.uid); const snap=await FB.getDoc(ref);
+if(!snap.exists()) return;
+const data=snap.data();
+document.getElementById('bal').innerText=data.isPremium?"500 KES":"0 KES";
+document.getElementById('statusTxt').innerText=data.isPremium?"✅ PREMIUM ACTIVE - 90 Days":"🔒 FREE ACCOUNT - Pay 500 KES";
+document.getElementById('expTxt').innerText=data.isPremium?`Expires: ${data.premiumUntil||'90 days from approval'} • Till 0701305109`:"Till 0701305109 • 500 KES / 3 Months - Pay to unlock";
+document.getElementById('statusBox').className=data.isPremium?"mt-4 bg-white text-green-700 p-3 rounded-xl":"mt-4 bg-white/20 p-3 rounded-xl";
+let hist=`<div class="border-b pb-2"><p class="font-bold">Current: ${data.status}</p><p>Mpesa: ${data.mpesaCode||'None'}</p><p>Role: ${data.role}</p></div>`;
+if(data.mpesaCode) hist+=`<div class="mt-2 p-2 bg-yellow-50 rounded"><p>Last Code: ${data.mpesaCode}</p><p>Status: ${data.status}</p></div>`;
+document.getElementById('history').innerHTML=hist;
+});
+document.getElementById('logout').onclick=()=>{FB.signOut(FB.auth); window.location.href="/";};
+window.submitCode=async()=>{
+const code=document.getElementById('mpesaCode').value.trim().toUpperCase(); if(!code) return alert("Enter code");
+if(code.length<8) return alert("Invalid M-Pesa code - check SMS");
+await FB.updateDoc(FB.doc(FB.db,"users",uid),{mpesaCode:code, status:"pending_payment"});
+alert("✅ Code "+code+" submitted! Admin approves in 5 mins. Check dashboard."); location.reload();
+};
+},600);
+</script>
+</body>
+</html>
