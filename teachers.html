@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SomaHub - Teachers Portal PP1-G9</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import { getAuth, GoogleAuthProvider, signInWithPopup, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+import { getFirestore, doc, setDoc, getDoc, collection, getDocs, query, where, updateDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+const firebaseConfig = {
+  apiKey: "AIzaSyA93BNes3AmFyxIEgjSbvbIWqLyorLsuj8",
+  authDomain: "somahubkenya-9e458.firebaseapp.com",
+  projectId: "somahubkenya-9e458",
+  storageBucket: "somahubkenya-9e458.firebasestorage.app",
+  messagingSenderId: "615579085715",
+  appId: "1:615579085715:web:28fca37ba498324bb49666"
+};
+const app=initializeApp(firebaseConfig); const auth=getAuth(app); const db=getFirestore(app); const provider=new GoogleAuthProvider();
+window.FB={auth,db,provider,signInWithPopup,signInWithEmailAndPassword,createUserWithEmailAndPassword,onAuthStateChanged,signOut,doc,setDoc,getDoc,collection,getDocs,query,where,updateDoc,serverTimestamp};
+</script>
+</head>
+<body class="bg-orange-50">
+<header class="bg-white shadow sticky top-0 z-50">
+<div class="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
+<a href="/" class="flex items-center gap-2"><i class="fa-solid fa-chalkboard-user text-orange-600 text-xl"></i><span class="font-bold">SomaHub Teachers</span><span class="text-xs bg-orange-100 px-2 py-1 rounded">CBC Tools</span></a>
+<div class="flex gap-2"><a href="/students.html" class="text-xs bg-blue-100 px-3 py-2 rounded-full">Students</a><button id="authBtn" class="bg-orange-600 text-white px-4 py-2 rounded-full text-sm">Login</button></div>
+</div>
+</header>
+
+<section id="home" class="max-w-7xl mx-auto px-4 py-6">
+<div class="bg-gradient-to-r from-orange-600 to-red-600 rounded-2xl p-6 text-white mb-6">
+<h1 class="text-2xl font-bold">👩‍🏫 Teachers Portal - PP1 to Grade 9</h1>
+<p class="text-sm mt-1">Schemes • Lesson Plans • Exams • Records • CBC Training</p>
+<div id="premiumBadge" class="hidden mt-3 bg-white text-orange-700 px-3 py-1 rounded-full text-xs inline-block font-bold">✅ PREMIUM TEACHER</div>
+<div id="freeBadge" class="mt-3 bg-white/20 px-3 py-1 rounded-full text-xs inline-block">🔒 Subscribe 500 KES / 3 Months - Till 0701305109</div>
+<button onclick="aiPlan()" class="mt-4 bg-white text-orange-600 px-4 py-2 rounded-full text-sm font-bold">🤖 AI Lesson Plan Generator</button>
+</div>
+
+<h2 class="font-bold mb-3">Teacher Tools by Grade</h2>
+<div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-3 mb-8" id="gradeGrid"></div>
+
+<div class="grid md:grid-cols-3 gap-4">
+<div class="bg-white p-4 rounded-xl shadow border"><h3 class="font-bold">📋 Schemes of Work</h3><p class="text-xs text-gray-600 mt-1">All subjects PP1-G9 ready to print</p></div>
+<div class="bg-white p-4 rounded-xl shadow border"><h3 class="font-bold">📝 Lesson Plans</h3><p class="text-xs text-gray-600 mt-1">CBC format, KICD aligned</p></div>
+<div class="bg-white p-4 rounded-xl shadow border"><h3 class="font-bold">📊 Assessments</h3><p class="text-xs text-gray-600 mt-1">Exams + rubrics + reports</p></div>
+</div>
+</section>
+
+<section id="resView" class="hidden max-w-7xl mx-auto px-4 py-6">
+<button onclick="showHome()" class="mb-4 bg-gray-200 px-3 py-1 rounded text-sm">← Back</button>
+<h2 id="resTitle" class="text-xl font-bold mb-1"></h2>
+<p class="text-xs text-gray-500 mb-4">Filter by type</p>
+<div class="flex gap-2 mb-4 flex-wrap" id="filterTabs"></div>
+<div id="resList" class="grid md:grid-cols-2 gap-3"></div>
+</section>
+
+<!-- Auth Modal -->
+<div id="authModal" class="hidden fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
+<div class="bg-white rounded-2xl p-6 w-full max-w-sm">
+<h3 class="font-bold mb-4">Teacher Login</h3>
+<button id="gLogin" class="w-full border py-2 rounded-full mb-3">Continue with Google</button>
+<input id="email" placeholder="Email" class="w-full border p-2 rounded mb-2">
+<input id="pass" type="password" placeholder="Password" class="w-full border p-2 rounded mb-3">
+<button id="eLogin" class="w-full bg-orange-600 text-white py-2 rounded">Login / Signup</button>
+<button onclick="closeMod()" class="w-full mt-2 text-sm">Cancel</button>
+</div>
+</div>
+
+<!-- Sub Modal -->
+<div id="subModal" class="hidden fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
+<div class="bg-white rounded-2xl p-6 w-full max-w-sm text-center">
+<h3 class="font-bold">Teacher Premium - 500 KES</h3>
+<p class="text-sm mt-2">Till <b>0701305109</b> - 3 Months</p>
+<input id="mpesa" placeholder="M-Pesa Code" class="w-full border p-2 rounded mt-3">
+<button onclick="submitMpesa()" class="w-full bg-green-600 text-white py-2 rounded mt-3 font-bold">Submit Code</button>
+<button onclick="closeMod()" class="w-full mt-2 text-sm">Close</button>
+</div>
+</div>
+
+<script>
+const grades=["PP1","PP2","Grade 1","Grade 2","Grade 3","Grade 4","Grade 5","Grade 6","Grade 7","Grade 8","Grade 9"];
+const filters=["All","Scheme","Lesson Plan","Exam","Notes","Video"];
+let currentGrade="Grade 5"; let currentUser=null; let userData=null;
+const grid=document.getElementById('gradeGrid');
+grades.forEach(g=>{grid.innerHTML+=`<div onclick="openGrade('${g}')" class="bg-white p-4 rounded-xl shadow border hover:shadow-lg cursor-pointer text-center"><p class="font-bold text-sm">${g}</p><p class="text-[10px] text-gray-500">Schemes • Plans • Exams</p></div>`;});
+
+function showHome(){document.getElementById('home').classList.remove('hidden'); document.getElementById('resView').classList.add('hidden');}
+function openGrade(g){currentGrade=g; document.getElementById('home').classList.add('hidden'); document.getElementById('resView').classList.remove('hidden'); document.getElementById('resTitle').innerText=g+" Teacher Resources"; renderTabs(); loadRes("All");}
+function renderTabs(){const tabs=document.getElementById('filterTabs'); tabs.innerHTML=""; filters.forEach(f=>{tabs.innerHTML+=`<button onclick="loadRes('${f}')" class="px-3 py-1 rounded-full text-xs border ${f==='All'?'bg-orange-600 text-white':''}">${f}</button>`;});}
+function closeMod(){document.getElementById('authModal').classList.add('hidden'); document.getElementById('subModal').classList.add('hidden');}
+function aiPlan(){alert("🤖 AI Lesson Plan: Coming next! Will generate CBC lesson plan in 5 sec. For now download templates from your grade.");}
+
+async function loadRes(filter){
+const list=document.getElementById('resList'); list.innerHTML="Loading...";
+try{
+const FB=window.FB;
+let q;
+if(filter==="All") q=FB.query(FB.collection(FB.db,"resources"), FB.where("grade","==",currentGrade));
+else q=FB.query(FB.collection(FB.db,"resources"), FB.where("grade","==",currentGrade), FB.where("type","==",filter));
+const snap=await FB.getDocs(q);
+list.innerHTML="";
+if(snap.empty){list.innerHTML=`<p class="text-sm text-gray-500">No ${filter} for ${currentGrade} yet.</p>`; return;}
+snap.forEach(d=>{
+const r=d.data(); const prem=userData?.isPremium;
+list.innerHTML+=`<div class="bg-white p-4 rounded-xl shadow border"><div class="flex justify-between"><span class="text-[10px] bg-orange-100 px-2 py-1 rounded">${r.type}</span><span class="text-[10px]">${r.subject}</span></div><h4 class="font-bold text-sm mt-2">${r.title}</h4><button onclick="downloadRes('${r.link}')" class="mt-3 w-full ${prem?'bg-orange-600':'bg-gray-300'} text-white py-2 rounded text-xs font-bold">${prem?'📥 Download':'🔒 500 KES to Unlock'}</button></div>`;
+});
+}catch(e){list.innerHTML=e.message;}
+}
+function downloadRes(link){
+if(!currentUser){document.getElementById('authModal').classList.remove('hidden'); return;}
+if(!userData?.isPremium){document.getElementById('subModal').classList.remove('hidden'); return;}
+window.open(link,"_blank");
+}
+
+setTimeout(()=>{
+const FB=window.FB;
+document.getElementById('gLogin').onclick=async()=>{try{await FB.signInWithPopup(FB.auth,FB.provider)}catch(e){alert(e.message)}};
+document.getElementById('eLogin').onclick=async()=>{const em=document.getElementById('email').value, ps=document.getElementById('pass').value; try{await FB.createUserWithEmailAndPassword(FB.auth,em,ps)}catch{try{await FB.signInWithEmailAndPassword(FB.auth,em,ps)}catch(e){alert(e.message)}};};
+document.getElementById('authBtn').onclick=()=>{if(currentUser) FB.signOut(FB.auth); else document.getElementById('authModal').classList.remove('hidden');};
+FB.onAuthStateChanged(FB.auth, async(u)=>{
+currentUser=u;
+if(u){
+document.getElementById('authBtn').innerText="Logout";
+const ref=FB.doc(FB.db,"users",u.uid); const snap=await FB.getDoc(ref);
+if(!snap.exists()){await FB.setDoc(ref,{email:u.email, role:"teacher", status:"pending", isPremium:false, mpesaCode:"", createdAt:FB.serverTimestamp()}); userData={isPremium:false};}
+else{userData=snap.data(); if(userData.isPremium){document.getElementById('premiumBadge').classList.remove('hidden'); document.getElementById('freeBadge').classList.add('hidden');}}
+}else{document.getElementById('authBtn').innerText="Login"; userData=null; document.getElementById('premiumBadge').classList.add('hidden'); document.getElementById('freeBadge').classList.remove('hidden');}
+});
+},600);
+
+async function submitMpesa(){
+const code=document.getElementById('mpesa').value; if(!code) return alert("Enter code");
+const FB=window.FB; await FB.updateDoc(FB.doc(FB.db,"users",currentUser.uid),{mpesaCode:code, status:"pending_payment"}); alert("Submitted! Wait approval."); closeMod();
+}
+window.showHome=showHome; window.openGrade=openGrade; window.loadRes=loadRes; window.downloadRes=downloadRes; window.closeMod=closeMod; window.submitMpesa=submitMpesa; window.aiPlan=aiPlan;
+</script>
+</body>
+</html>
