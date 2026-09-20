@@ -1,93 +1,188 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SomaHub - MASTER ADMIN CBC FINAL</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SomaHub - CBC Fixed Admin</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-import { getFirestore, doc, getDoc, setDoc, collection, getDocs, updateDoc, deleteDoc, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-const firebaseConfig={apiKey:"AIzaSyA93BNes3AmFyxIEgjSbvbIWqLyorLsuj8",authDomain:"somahubkenya-9e458.firebaseapp.com",projectId:"somahubkenya-9e458",storageBucket:"somahubkenya-9e458.firebasestorage.app",messagingSenderId:"615579085715",appId:"1:615579085715:web:28fca37ba498324bb49666"};
-const app=initializeApp(firebaseConfig);const auth=getAuth(app);const db=getFirestore(app);
-window.FB={auth,db,onAuthStateChanged,signInWithEmailAndPassword,createUserWithEmailAndPassword,signOut,doc,getDoc,setDoc,collection,getDocs,updateDoc,deleteDoc,addDoc,serverTimestamp};
-</script>
-</head>
-<body class="bg-gray-50">
-<div id="loginDiv" class="min-h-screen flex items-center justify-center p-4">
-<div class="bg-white p-8 rounded-2xl shadow-xl max-w-sm w-full text-center">
-<h1 class="text-2xl font-black">🛠️ SomaHub CBC Admin</h1>
-<p class="text-xs text-gray-500">Final Fix - Science & Tech ✅</p>
-<div id="errorBox" class="hidden mt-3 bg-red-50 border p-3 rounded-xl text-xs text-red-700"></div>
-<input id="email" value="admin@somahub.co.ke" class="w-full border p-3 rounded-xl mt-4 text-sm">
-<div class="relative mt-2"><input id="pass" type="password" placeholder="Password" class="w-full border p-3 rounded-xl text-sm pr-10"><button type="button" onclick="togglePass()" class="absolute right-3 top-3.5 text-gray-500"><i id="eyeIcon" class="fa fa-eye"></i></button></div>
-<button id="loginBtn" class="w-full bg-black text-white py-3 rounded-xl font-bold mt-4">Enter Admin</button>
-<button id="createBtn" class="w-full bg-green-600 text-white py-3 rounded-xl font-bold mt-2 text-sm">Create Account</button>
-</div>
-</div>
-<div id="adminDiv" class="hidden">
-<header class="bg-black text-white p-4 sticky top-0 z-50"><div class="max-w-7xl mx-auto flex justify-between"><h1 class="font-black">CBC Fixed Admin ✅</h1><button id="logout" class="bg-red-600 px-4 py-1 rounded-full text-xs">Logout</button></div></header>
-<div class="max-w-7xl mx-auto p-4">
-<div class="grid grid-cols-4 gap-3">
-<div class="bg-white p-4 rounded-xl shadow"><p class="text-[10px]">USERS</p><p id="tUsers" class="text-xl font-black">0</p></div>
-<div class="bg-green-50 p-4 rounded-xl shadow"><p class="text-[10px]">PAID</p><p id="tPaid" class="text-xl font-black">0</p></div>
-<div class="bg-yellow-50 p-4 rounded-xl shadow"><p class="text-[10px]">PENDING</p><p id="tPend" class="text-xl font-black">0</p></div>
-<div class="bg-blue-50 p-4 rounded-xl shadow"><p class="text-[10px]">REVENUE</p><p id="tRev" class="text-xl font-black">0</p></div>
-</div>
-<div class="mt-6 flex gap-2 overflow-x-auto"><button onclick="showTab('subs')" id="bSubs" class="bg-black text-white px-5 py-3 rounded-full text-xs font-bold">💰 Subs</button><button onclick="showTab('res')" id="bRes" class="bg-white border px-5 py-3 rounded-full text-xs font-bold">📚 Resources</button><button onclick="showTab('pages')" id="bPages" class="bg-white border px-5 py-3 rounded-full text-xs font-bold">📄 Pages</button></div>
-<div id="tabSubs" class="mt-4 bg-white rounded-2xl shadow p-5"><h2 class="font-bold">💰 Approvals - Till 0701305109</h2><div class="mt-3 flex gap-2"><input id="searchSub" placeholder="Search" class="flex-1 border p-3 rounded-xl text-sm" oninput="renderSubs()"><button onclick="loadUsers()" class="bg-black text-white px-4 py-2 rounded-full text-xs">Refresh</button></div><table class="w-full text-xs mt-4"><thead class="bg-gray-100"><tr><th class="p-3 text-left">User</th><th>M-Pesa</th><th>Status</th><th>Action</th></tr></thead><tbody id="subsBody"></tbody></table></div>
-<div id="tabPages" class="hidden mt-4 bg-white rounded-2xl shadow p-5"><div id="pagesGrid" class="grid md:grid-cols-2 gap-3"></div></div>
-<div id="tabRes" class="hidden mt-4 bg-white rounded-2xl shadow p-5">
-<h2 class="font-bold">📚 Add Resources - CBC Names</h2>
-<div id="editBanner" class="hidden mt-3 bg-yellow-100 border p-3 rounded-xl text-xs flex justify-between"><span id="editBannerText" class="font-bold">Editing</span><button onclick="cancelEdit()" class="bg-white px-3 py-1 rounded-full border">Cancel</button></div>
-<div class="grid md:grid-cols-4 gap-2 mt-4">
-<select id="rTitle" class="border p-3 rounded-xl text-sm font-bold bg-yellow-50">
-<option>Mathematics</option><option>English</option><option>Kiswahili</option><option selected>Science and Technology</option><option>SST</option><option>CRE</option><option>Agriculture and Nutrition</option><option>Creative Arts</option><option>Pre-Technical Studies</option><option>Business Studies</option>
-</select>
-<select id="rGrade" class="border p-3 rounded-xl text-sm"><option>PP1</option><option>PP2</option><option>Grade 1</option><option>Grade 2</option><option>Grade 3</option><option>Grade 4</option><option>Grade 5</option><option>Grade 6</option><option selected>Grade 7</option><option>Grade 8</option><option>Grade 9</option></select>
-<select id="rType" class="border p-3 rounded-xl text-sm"><option>Notes</option><option>Exam</option><option>Scheme</option><option>Lesson Plan</option></select>
-<input id="rLink" placeholder="Drive Link https://..." class="border p-3 rounded-xl text-sm">
-</div>
-<button id="addBtn" onclick="addResource()" class="w-full bg-black text-white py-3 rounded-xl font-bold mt-3">Add</button>
-<div id="resList" class="mt-6 space-y-2"></div>
-</div>
-</div>
-</div>
-<script>
-let allUsers=[], editingId=null, PAGES=[{name:'index.html',url:'/'},{name:'notes.html',url:'/notes.html'},{name:'exams.html',url:'/exams.html'},{name:'dashboard.html',url:'/dashboard.html'}];
-window.togglePass=()=>{const p=document.getElementById('pass'),i=document.getElementById('eyeIcon');if(p.type==='password'){p.type='text';i.className='fa fa-eye-slash';}else{p.type='password';i.className='fa fa-eye';}};
-window.cancelEdit=()=>{editingId=null;document.getElementById('rLink').value='';document.getElementById('addBtn').innerText='Add';document.getElementById('addBtn').className='w-full bg-black text-white py-3 rounded-xl font-bold mt-3';document.getElementById('editBanner').classList.add('hidden');};
-setTimeout(()=>{
-const FB=window.FB;
-document.getElementById('createBtn').onclick=async()=>{try{const c=await FB.createUserWithEmailAndPassword(FB.auth,email.value,pass.value);await FB.setDoc(FB.doc(FB.db,"users",c.user.uid),{email:email.value,role:"admin",isPremium:true,status:"active",createdAt:FB.serverTimestamp()});errorBox.innerText="✅ Created!";errorBox.classList.remove('hidden');}catch(e){errorBox.innerText=e.message;errorBox.classList.remove('hidden');}};
-document.getElementById('loginBtn').onclick=async()=>{try{await FB.signInWithEmailAndPassword(FB.auth,email.value,pass.value);}catch(e){errorBox.innerText=e.message;errorBox.classList.remove('hidden');}};
-logout.onclick=()=>FB.signOut(FB.auth);
-FB.onAuthStateChanged(FB.auth,u=>{if(!u){loginDiv.classList.remove('hidden');adminDiv.classList.add('hidden');return;}loginDiv.classList.add('hidden');adminDiv.classList.remove('hidden');loadUsers();loadResources();loadPagesGrid();});
-window.showTab=t=>{['Subs','Res','Pages'].forEach(k=>document.getElementById('b'+k).className='bg-white border px-5 py-3 rounded-full text-xs font-bold');document.getElementById('b'+t).className='bg-black text-white px-5 py-3 rounded-full text-xs font-bold';['tabSubs','tabRes','tabPages'].forEach(id=>document.getElementById(id).classList.add('hidden'));document.getElementById('tab'+t.charAt(0).toUpperCase()+t.slice(1)).classList.remove('hidden');};
-window.loadUsers=async()=>{const snap=await FB.getDocs(FB.collection(FB.db,"users"));allUsers=[];snap.forEach(d=>allUsers.push({id:d.id,...d.data()}));tUsers.innerText=allUsers.length;tPaid.innerText=allUsers.filter(u=>u.isPremium).length;tPend.innerText=allUsers.filter(u=>u.status==='pending_payment').length;tRev.innerText=(allUsers.filter(u=>u.isPremium).length*500)+" KES";renderSubs();};
-window.renderSubs=()=>{const body=subsBody,q=searchSub.value.toLowerCase();let list=allUsers;if(q)list=list.filter(u=>(u.email||'').toLowerCase().includes(q));body.innerHTML="";list.slice(0,50).forEach(u=>{body.innerHTML+=`<tr class="border-b"><td class="p-3">${u.email}</td><td>${u.mpesaCode||'-'}</td><td>${u.isPremium?'PAID':'FREE'}</td><td>${!u.isPremium?`<button onclick="approve('${u.id}')" class="bg-green-600 text-white px-3 py-1 rounded-full text-[10px]">Approve</button>`:`<button onclick="revoke('${u.id}')" class="bg-gray-200 px-3 py-1 rounded-full text-[10px]">Revoke</button>`}</td></tr>`;});};
-window.approve=async id=>{await FB.updateDoc(FB.doc(FB.db,"users",id),{isPremium:true,status:"active"});loadUsers();};
-window.revoke=async id=>{await FB.updateDoc(FB.doc(FB.db,"users",id),{isPremium:false});loadUsers();};
-window.loadPagesGrid=()=>{pagesGrid.innerHTML="";PAGES.forEach(p=>pagesGrid.innerHTML+=`<div class="border p-3 rounded-xl"><p class="font-bold text-sm">${p.name}</p><a href="${p.url}" target="_blank" class="text-xs bg-black text-white px-3 py-1 rounded-full mt-2 inline-block">View</a></div>`);};
-window.loadResources=async()=>{const snap=await FB.getDocs(FB.collection(FB.db,"resources"));resList.innerHTML="";snap.forEach(d=>{const r=d.data();resList.innerHTML+=`<div class="border p-3 rounded-xl flex justify-between items-center text-xs"><div><p class="font-bold">${r.title} • ${r.grade}</p><p class="text-[10px] truncate">${r.link}</p></div><div class="flex gap-1"><a href="${r.link}" target="_blank" class="bg-blue-100 px-3 py-2 rounded-full"><i class="fa fa-eye"></i></a><button onclick="editRes('${d.id}')" class="bg-yellow-100 px-3 py-2 rounded-full"><i class="fa fa-pen"></i></button><button onclick="deleteRes('${d.id}')" class="bg-red-100 px-3 py-2 rounded-full"><i class="fa fa-trash"></i></button></div></div>`;});};
-window.editRes=async id=>{const s=await FB.getDoc(FB.doc(FB.db,"resources",id));const r=s.data();rTitle.value=r.title||r.subject;rGrade.value=r.grade;rType.value=r.type;rLink.value=r.link;editingId=id;addBtn.innerText='Update ✅';addBtn.className='w-full bg-yellow-500 text-white py-3 rounded-xl font-bold mt-3';editBanner.classList.remove('hidden');editBannerText.innerText='Editing: '+r.title;showTab('res');};
-window.addResource=async()=>{
-  const t=rTitle.value.trim(),g=rGrade.value,ty=rType.value,l=rLink.value.trim();
-  if(!l) return alert("Paste Drive link");
-  try{
-    if(editingId){
-      await FB.updateDoc(FB.doc(FB.db,"resources",editingId),{title:t, subject:t, grade:g, type:ty, link:l});
-      alert("✅ Updated to "+t);
-    }else{
-      await FB.addDoc(FB.collection(FB.db,"resources"),{title:t, subject:t, grade:g, type:ty, link:l, createdAt:FB.serverTimestamp()});
-      alert("✅ Added "+t+" - "+g);
-    }
-    rLink.value='';cancelEdit();loadResources();
-  }catch(e){alert(e.message)}
+import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+import { getFirestore, doc, getDoc, setDoc, collection, getDocs, updateDoc, deleteDoc, addDoc, serverTimestamp, query, where } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyA93BNes3AmFyxIEgjSbvbIWqLyorLsuj8",
+  authDomain: "somahubkenya-9e458.firebaseapp.com",
+  projectId: "somahubkenya-9e458",
+  storageBucket: "somahubkenya-9e458.firebasestorage.app",
+  messagingSenderId: "615579085715",
+  appId: "1:615579085715:web:28fca37ba498324bb49666"
 };
-window.deleteRes=async id=>{if(!confirm("Delete?"))return;await FB.deleteDoc(FB.doc(FB.db,"resources",id));loadResources();};
-},800);
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+window.FB = { auth, db, onAuthStateChanged, signInWithEmailAndPassword, signOut, doc, getDoc, setDoc, collection, getDocs, updateDoc, deleteDoc, addDoc, serverTimestamp, query, where };
+</script>
+<style>
+.tab-active { background:black; color:white; }
+.tab-inactive { background:white; color:black; border:1px solid #e5e7eb; }
+</style>
+</head>
+<body class="bg-gray-100 min-h-screen">
+<!-- Header -->
+<div class="bg-black text-white p-4 flex justify-between items-center sticky top-0 z-50">
+  <h1 class="font-black text-lg">CBC Fixed Admin ✅</h1>
+  <button id="logoutBtn" class="bg-red-600 px-5 py-2 rounded-full text-sm font-bold">Logout</button>
+</div>
+
+<!-- Stats -->
+<div class="p-4 grid grid-cols-4 gap-3">
+  <div class="bg-white p-4 rounded-2xl shadow text-center"><p class="text-xs">USERS</p><p id="statUsers" class="text-2xl font-black">0</p></div>
+  <div class="bg-green-50 p-4 rounded-2xl shadow text-center"><p class="text-xs">PAID</p><p id="statPaid" class="text-2xl font-black">0</p></div>
+  <div class="bg-yellow-50 p-4 rounded-2xl shadow text-center"><p class="text-xs">PENDING</p><p id="statPending" class="text-2xl font-black">0</p></div>
+  <div class="bg-blue-50 p-4 rounded-2xl shadow text-center"><p class="text-xs">REVENUE</p><p id="statRev" class="text-xl font-black">0 KES</p></div>
+</div>
+
+<!-- Tabs -->
+<div class="px-4 flex gap-2">
+  <button onclick="showTab('subs')" id="btnSubs" class="tab-active px-5 py-2 rounded-full text-sm font-bold">💰 Subs</button>
+  <button onclick="showTab('resources')" id="btnResources" class="tab-inactive px-5 py-2 rounded-full text-sm font-bold">📚 Resources</button>
+  <button onclick="showTab('pages')" id="btnPages" class="tab-inactive px-5 py-2 rounded-full text-sm font-bold">📄 Pages</button>
+</div>
+
+<!-- SUBS TAB -->
+<div id="tabSubs" class="p-4">
+  <div class="bg-white rounded-2xl shadow p-4">
+    <h2 class="font-black mb-3">💰 Approvals - Till 0701305109</h2>
+    <div class="flex gap-2 mb-4">
+      <input id="searchUser" placeholder="Search" class="border rounded-full px-4 py-2 flex-1">
+      <button onclick="loadSubs()" class="bg-black text-white px-6 py-2 rounded-full text-sm">Refresh</button>
+    </div>
+    <div class="overflow-auto">
+      <table class="w-full text-sm">
+        <thead><tr class="bg-gray-100"><th class="p-3 text-left">User</th><th>M-Pesa</th><th>Status</th><th>Action</th></tr></thead>
+        <tbody id="subsBody"><tr><td colspan="4" class="p-4 text-center">Loading...</td></tr></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- RESOURCES TAB -->
+<div id="tabResources" class="p-4 hidden">
+  <div class="bg-white rounded-2xl shadow p-4">
+    <h2 class="font-black mb-3">📚 Add Resource - Colored Notes</h2>
+    <div class="grid gap-3">
+      <input id="resTitle" placeholder="Title e.g. SST - Historical Agriculture" class="border p-3 rounded-xl">
+      <div class="grid grid-cols-2 gap-2">
+        <select id="resGrade" class="border p-3 rounded-xl"><option>PP1</option><option>PP2</option><option>Grade 1</option><option>Grade 2</option><option>Grade 3</option><option>Grade 4</option><option>Grade 5</option><option>Grade 6</option><option selected>Grade 7</option><option>Grade 8</option><option>Grade 9</option></select>
+        <select id="resSubject" class="border p-3 rounded-xl">
+          <option>Mathematics</option><option>English</option><option>Kiswahili</option><option>Science and Technology</option><option>SST</option><option>CRE</option><option>Agriculture and Nutrition</option><option>Creative Arts</option>
+        </select>
+      </div>
+      <select id="resType" class="border p-3 rounded-xl"><option selected>Notes</option><option>Exam</option><option>Scheme</option><option>Lesson Plan</option></select>
+      <input id="resLink" placeholder="Google Drive Link - Must be Anyone with link" class="border p-3 rounded-xl">
+      <textarea id="resDesc" placeholder="Add Mnemonic e.g. MBYWS = Maize Beans Yams Wheat Sorghum | Formula: Time = Degrees x 4" class="border p-3 rounded-xl h-20"></textarea>
+      <button onclick="addResource()" class="bg-purple-600 text-white py-3 rounded-xl font-black">+ Add Resource</button>
+    </div>
+    <div id="resList" class="mt-6 space-y-2"></div>
+  </div>
+</div>
+
+<!-- PAGES TAB -->
+<div id="tabPages" class="p-4 hidden">
+  <div class="bg-white rounded-2xl shadow p-4">
+    <h2 class="font-black">📄 Notes.html Status</h2>
+    <p class="text-sm mt-2">If notes.html shows No notes yet, make sure Subject matches: Use SST, Science and Technology exactly.</p>
+    <button onclick="window.open('/notes.html','_blank')" class="mt-3 bg-black text-white px-4 py-2 rounded-full text-sm">Open Notes Page</button>
+  </div>
+</div>
+
+<script>
+let currentUser=null;
+function showTab(name){
+  document.getElementById('tabSubs').classList.add('hidden');
+  document.getElementById('tabResources').classList.add('hidden');
+  document.getElementById('tabPages').classList.add('hidden');
+  document.getElementById('btnSubs').className='tab-inactive px-5 py-2 rounded-full text-sm font-bold';
+  document.getElementById('btnResources').className='tab-inactive px-5 py-2 rounded-full text-sm font-bold';
+  document.getElementById('btnPages').className='tab-inactive px-5 py-2 rounded-full text-sm font-bold';
+  document.getElementById('tab'+name.charAt(0).toUpperCase()+name.slice(1)).classList.remove('hidden');
+  document.getElementById('btn'+name.charAt(0).toUpperCase()+name.slice(1)).className='tab-active px-5 py-2 rounded-full text-sm font-bold';
+  if(name==='subs') loadSubs();
+  if(name==='resources') loadResources();
+}
+
+async function loadSubs(){
+  const FB=window.FB;
+  const snap=await FB.getDocs(FB.collection(FB.db,'users'));
+  let users=0, paid=0, pending=0, rev=0;
+  let html='';
+  snap.forEach(d=>{
+    const u=d.data(); users++;
+    if(u.isPremium){ paid++; rev+=500; }
+    else if(u.mpesaCode){ pending++; }
+    html+=`<tr class="border-b"><td class="p-3">${u.email||d.id}</td><td>${u.mpesaCode||'-'}</td><td>${u.isPremium?'PAID':'PENDING'}</td><td><button onclick="approveUser('${d.id}')" class="bg-green-600 text-white px-3 py-1 rounded-full text-xs">${u.isPremium?'Revoke':'Approve'}</button></td></tr>`;
+  });
+  document.getElementById('statUsers').innerText=users;
+  document.getElementById('statPaid').innerText=paid;
+  document.getElementById('statPending').innerText=pending;
+  document.getElementById('statRev').innerText=rev+' KES';
+  document.getElementById('subsBody').innerHTML=html||'<tr><td colspan=4 class=p-4 text-center>No users</td></tr>';
+}
+
+async function approveUser(uid){
+  const FB=window.FB;
+  const ref=FB.doc(FB.db,'users',uid);
+  const snap=await FB.getDoc(ref);
+  const isPremium=snap.data()?.isPremium;
+  await FB.updateDoc(ref,{isPremium:!isPremium, approvedAt:FB.serverTimestamp()});
+  loadSubs();
+}
+
+async function addResource(){
+  const FB=window.FB;
+  const data={
+    title:document.getElementById('resTitle').value,
+    grade:document.getElementById('resGrade').value,
+    subject:document.getElementById('resSubject').value,
+    type:document.getElementById('resType').value,
+    link:document.getElementById('resLink').value,
+    description:document.getElementById('resDesc').value,
+    createdAt:FB.serverTimestamp()
+  };
+  if(!data.title||!data.link){ alert('Title and Link required'); return; }
+  await FB.addDoc(FB.collection(FB.db,'resources'), data);
+  alert('Added!'); loadResources();
+}
+
+async function loadResources(){
+  const FB=window.FB;
+  const snap=await FB.getDocs(FB.collection(FB.db,'resources'));
+  let html='';
+  snap.forEach(d=>{
+    const r=d.data();
+    html+=`<div class="border p-3 rounded-xl flex justify-between"><div><b>${r.title}</b><br><small>${r.grade} - ${r.subject} - ${r.type}</small></div><button onclick="deleteRes('${d.id}')" class="text-red-600 text-xs">Delete</button></div>`;
+  });
+  document.getElementById('resList').innerHTML=html;
+}
+
+async function deleteRes(id){
+  if(!confirm('Delete?')) return;
+  const FB=window.FB; await FB.deleteDoc(FB.doc(FB.db,'resources',id)); loadResources();
+}
+
+setTimeout(()=>{
+  const FB=window.FB;
+  FB.onAuthStateChanged(FB.auth, u=>{
+    if(!u){ window.location.href='/login.html'; return; }
+    currentUser=u; loadSubs();
+  });
+  document.getElementById('logoutBtn').onclick=()=>{ FB.signOut(FB.auth); window.location.href='/'; };
+},500);
+
+window.showTab=showTab; window.loadSubs=loadSubs; window.approveUser=approveUser; window.addResource=addResource; window.deleteRes=deleteRes;
 </script>
 </body>
 </html>
