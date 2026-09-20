@@ -9,54 +9,41 @@
 <style>body{font-family:'Nunito',sans-serif}</style>
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-import { getAuth, createUserWithEmailAndPassword, updateProfile } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 import { getFirestore, doc, runTransaction, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 const cfg={apiKey:"AIzaSyA93BNes3AmFyxIEgjSbvbIWqLyorLsuj8",authDomain:"somahubkenya-9e458.firebaseapp.com",projectId:"somahubkenya-9e458",storageBucket:"somahubkenya-9e458.firebasestorage.app",messagingSenderId:"615579085715",appId:"1:615579085715:web:28fca37ba498324bb49666"};
-const app=initializeApp(cfg); window.FB={auth:getAuth(app),db:getFirestore(app),createUserWithEmailAndPassword,updateProfile,doc,runTransaction,serverTimestamp};
+const app=initializeApp(cfg); window.FB={auth:getAuth(app),db:getFirestore(app),createUserWithEmailAndPassword,doc,runTransaction,serverTimestamp};
 </script>
 </head>
 <body class="min-h-screen bg-[#fef9f0] flex justify-center p-0">
-<!-- Colorful top banner -->
 <div class="w-full max-w-[420px]">
 <div class="h-2 w-full flex"><div class="flex-1 bg-[#ff8a2a]"></div><div class="flex-1 bg-[#2ac5a0]"></div><div class="flex-1 bg-[#4a86ff]"></div><div class="flex-1 bg-[#ffcc1a]"></div></div>
-
 <div class="p-5">
 <div class="flex items-center gap-2"><div class="w-8 h-8 bg-black rounded-full flex items-center justify-center text-white font-black">S</div><p class="font-black text-[18px]">SomaHub</p><span class="ml-auto text-[10px] bg-white border px-2 py-1 rounded-full">CBC • CBE</span></div>
-
 <h1 class="text-[30px] font-[900] mt-6 leading-none">Create account</h1>
 <p class="text-[13px] text-gray-600 mt-2">Grade 1-9 • All genders • Fun + Serious</p>
 
-<!-- TABS - FIXED with real buttons -->
 <div class="flex gap-2 mt-5">
 <button type="button" id="bS" class="flex-1 bg-black text-white rounded-full py-3.5 text-[13px] font-black border-2 border-black">🎒 Student</button>
 <button type="button" id="bP" class="flex-1 bg-white text-black rounded-full py-3.5 text-[13px] font-black border-2 border-black">👪 Parent</button>
 <button type="button" id="bT" class="flex-1 bg-white text-black rounded-full py-3.5 text-[13px] font-black border-2 border-black">👩‍🏫 Teacher</button>
 </div>
 
-<!-- STEP 1 -->
 <div id="step1" class="bg-white rounded-[2rem] p-5 mt-4 border-2 border-black shadow-[4px_4px_0px_0px_#000]">
 <div class="space-y-3">
-<input id="name" placeholder="Full name" class="w-full bg-[#f6f3ff] border-2 border-black rounded-2xl p-3.5 text-sm outline-none">
-
+<!-- NO FULL NAME - as you said -->
 <input id="email" placeholder="Email" class="w-full bg-[#fff7e0] border-2 border-black rounded-2xl p-3.5 text-sm outline-none">
-
 <div class="relative"><input id="pass" type="password" placeholder="Password" class="w-full bg-[#e8f8ff] border-2 border-black rounded-2xl p-3.5 text-sm outline-none pr-10"><button type="button" onclick="tog('pass','e1')" class="absolute right-4 top-4"><i id="e1" class="fa-regular fa-eye"></i></button></div>
-
 <div class="relative"><input id="pass2" type="password" placeholder="Confirm password" class="w-full bg-[#e8f8ff] border-2 border-black rounded-2xl p-3.5 text-sm outline-none pr-10"><button type="button" onclick="tog('pass2','e2')" class="absolute right-4 top-4"><i id="e2" class="fa-regular fa-eye"></i></button></div>
-
 <input id="referral" placeholder="REFERRAL ID (OPTIONAL)" class="w-full bg-white border-2 border-black rounded-2xl p-3.5 text-sm outline-none uppercase">
-
 <label class="flex items-center gap-2 text-[12px] font-bold pt-1"><input id="terms" type="checkbox" class="w-5 h-5 rounded border-2 border-black"> I agree to <span onclick="openTerms()" class="underline text-[#4a86ff] cursor-pointer">Terms & Privacy</span></label>
-
 <button id="btn1" type="button" onclick="step1Go()" class="w-full bg-black text-white py-4 rounded-full font-black text-[15px] mt-2 active:scale-95">Confirm ✓</button>
 <p id="msg1" class="text-xs text-center text-red-500 font-bold"></p>
 </div>
 </div>
 
-<!-- STEP 2 -->
 <div id="step2" class="hidden bg-white rounded-[2rem] p-5 mt-4 border-2 border-black shadow-[4px_4px_0px_0px_#000]">
 <h2 class="font-black">Additional information</h2><p id="roleLabel" class="text-[11px] text-gray-500 mb-3"></p>
-
 <div id="fs" class="space-y-2">
 <select id="sGrade" class="w-full bg-[#fef3c7] border-2 border-black rounded-2xl p-3.5 text-sm"><option>Grade 1</option><option>Grade 2</option><option>Grade 3</option><option>Grade 4</option><option>Grade 5</option><option selected>Grade 6</option><option>Grade 7</option><option>Grade 8</option><option>Grade 9</option></select>
 <input id="sCountry" value="Kenya" placeholder="Country *" class="w-full bg-[#f6f3ff] border-2 border-black rounded-2xl p-3.5 text-sm">
@@ -64,7 +51,6 @@ const app=initializeApp(cfg); window.FB={auth:getAuth(app),db:getFirestore(app),
 <input id="sTown" placeholder="Town *" class="w-full bg-[#fff7e0] border-2 border-black rounded-2xl p-3.5 text-sm">
 <input id="sSchool" placeholder="School (Optional)" class="w-full bg-white border-2 border-black rounded-2xl p-3.5 text-sm">
 </div>
-
 <div id="ft" class="hidden space-y-2">
 <input id="tCountry" value="Kenya" placeholder="Country *" class="w-full bg-[#f6f3ff] border-2 border-black rounded-2xl p-3.5 text-sm">
 <input id="tCounty" placeholder="County *" class="w-full bg-[#e8f8ff] border-2 border-black rounded-2xl p-3.5 text-sm">
@@ -73,90 +59,56 @@ const app=initializeApp(cfg); window.FB={auth:getAuth(app),db:getFirestore(app),
 <input id="tTSC" placeholder="TSC Number (Optional)" class="w-full bg-[#e8fff4] border-2 border-black rounded-2xl p-3.5 text-sm">
 <select id="tLevel" class="w-full bg-[#fef3c7] border-2 border-black rounded-2xl p-3.5 text-sm"><option>Lower Primary</option><option>Upper Primary</option><option>Junior Secondary</option></select>
 </div>
-
 <div id="fp" class="hidden space-y-2">
 <input id="pIndex" placeholder="STUDENT INDEX e.g SHKE00500 *" class="w-full bg-[#fff7e0] border-2 border-black rounded-2xl p-3.5 text-sm uppercase font-black">
-<p class="text-[11px] text-gray-500">Enter the admission number given to your child</p>
 </div>
-
 <button id="btn2" type="button" onclick="finalReg()" class="w-full bg-[#4a86ff] border-2 border-black text-white py-4 rounded-full font-black text-[15px] mt-2 shadow-[3px_3px_0px_0px_#000]">Finish registration 🚀</button>
 <p id="msg2" class="text-xs text-center text-red-500 font-bold"></p>
 </div>
 </div>
 </div>
 
-<!-- TERMS MODAL - tappable -->
-<div id="termsModal" class="hidden fixed inset-0 bg-black/50 flex items-end justify-center p-4 z-50" onclick="closeTerms()">
-<div onclick="event.stopPropagation()" class="bg-white rounded-[2rem] p-6 w-full max-w-[380px] border-2 border-black max-h-[80vh] overflow-auto">
-<h2 class="font-black text-lg">Terms & Privacy</h2>
-<p class="text-[12px] mt-3 leading-5">Welcome to SomaHub. CBC / CBE Grade 1-9.<br><br>
-<b>1. Privacy:</b> We never share your personal info. Student data is private. Parents see only their child via index. Teachers see only work to mark.<br><br>
-<b>2. No ChatGPT:</b> All marking is teacher + snap method.<br><br>
-<b>3. Schedule:</b> Mon-Fri daily practice 10 marks. Weekly Sunday to Sunday 100 marks. Sunday rest.<br><br>
-<b>4. Safety:</b> Suitable for both genders Grade 1-9.<br><br>
-<b>5. Account:</b> Your admission number SHKE... is your tracking.</p>
-<button onclick="closeTerms()" class="w-full bg-black text-white py-3 rounded-full font-bold mt-5">I Understand</button>
+<!-- YOUR TERMS EXACTLY AS YOU WROTE -->
+<div id="termsModal" class="hidden fixed inset-0 bg-black/60 flex items-end justify-center p-4 z-50" onclick="closeTerms()">
+<div onclick="event.stopPropagation()" class="bg-white rounded-[2rem] p-6 w-full max-w-[380px] border-2 border-black max-h-[85vh] overflow-auto">
+<h2 class="font-black text-[20px]">Terms & Privacy 📚</h2>
+<div class="text-[13px] mt-4 leading-6 space-y-3">
+<p>👉 <b>SomaHub is not meant to replace books and schools.</b></p>
+<p>👉 <b>Use SomaHub for quick study or revision at your convenience.</b></p>
+<p>👉 <b>Avoid misconduct.</b> No cheating, no abuse, no bad language.</p>
+<p>👉 <b>No sharing of personal data.</b> We never share your info. Student data is private.</p>
+<p>👉 <b>AI can make mistakes.</b> Teachers verify all marking. Don't rely only on AI.</p>
+<p>👉 <b>Complete your assignments.</b> Mon-Fri 10 marks daily, Weekly Sun-Sun 100 marks.</p>
+<p>👉 <b>Parents will check your work.</b> Parent account links via student index.</p>
+<p>👉 <b>No direct contact in the app,</b> concerns to human assistant only (Admin).</p>
+<p>👉 <b>The information we collect is to enhance our service</b> – County, Town, School helps us give you better CBC content.</p>
+<p class="pt-2 text-[11px] text-gray-500">Suitable for Grade 1-9, all genders. Fun + Serious learning.</p>
+</div>
+<button onclick="closeTerms()" class="w-full bg-black text-white py-3.5 rounded-full font-black mt-6">I Understand ✓</button>
 </div>
 </div>
 
 <script>
-// FIXED TABS - this is the bug fix
 let role='student';
 const bS=document.getElementById('bS'), bP=document.getElementById('bP'), bT=document.getElementById('bT');
-function render(){
- const active="flex-1 bg-black text-white rounded-full py-3.5 text-[13px] font-black border-2 border-black";
- const idle="flex-1 bg-white text-black rounded-full py-3.5 text-[13px] font-black border-2 border-black";
- bS.className=role==='student'?active:idle;
- bP.className=role==='parent'?active:idle;
- bT.className=role==='teacher'?active:idle;
-}
-bS.addEventListener('click',()=>{role='student';render()});
-bP.addEventListener('click',()=>{role='parent';render()});
-bT.addEventListener('click',()=>{role='teacher';render()});
-
+function render(){ const a="flex-1 bg-black text-white rounded-full py-3.5 text-[13px] font-black border-2 border-black"; const i="flex-1 bg-white text-black rounded-full py-3.5 text-[13px] font-black border-2 border-black"; bS.className=role==='student'?a:i; bP.className=role==='parent'?a:i; bT.className=role==='teacher'?a:i; }
+bS.addEventListener('click',()=>{role='student';render()}); bP.addEventListener('click',()=>{role='parent';render()}); bT.addEventListener('click',()=>{role='teacher';render()});
 function tog(id,eye){ const e=document.getElementById(id), ic=document.getElementById(eye); e.type=e.type==='password'?'text':'password'; ic.className=e.type==='password'?'fa-regular fa-eye':'fa-regular fa-eye-slash'; }
-function openTerms(){ termsModal.classList.remove('hidden'); }
-function closeTerms(){ termsModal.classList.add('hidden'); }
-
-let tmpUser=null, tmpName="", tmpEmail="", tmpReferral="";
+function openTerms(){ termsModal.classList.remove('hidden'); } function closeTerms(){ termsModal.classList.add('hidden'); }
+let tmpUser=null, tmpEmail="", tmpReferral="";
 async function step1Go(){
- const FB=window.FB;
- const name=document.getElementById('name').value.trim();
- const email=document.getElementById('email').value.trim();
- const pass=document.getElementById('pass').value.trim(), pass2=document.getElementById('pass2').value.trim();
- const referral=document.getElementById('referral').value.trim().toUpperCase();
- const terms=document.getElementById('terms').checked;
- if(!name||!email||!pass) return msg1.innerText="Fill all required";
- if(pass!==pass2) return msg1.innerText="Passwords don't match";
- if(!terms) return msg1.innerText="Tap to accept Terms & Privacy";
+ const FB=window.FB; const email=document.getElementById('email').value.trim(); const pass=document.getElementById('pass').value.trim(), pass2=document.getElementById('pass2').value.trim(); const referral=document.getElementById('referral').value.trim().toUpperCase(); const terms=document.getElementById('terms').checked;
+ if(!email||!pass) return msg1.innerText="Fill email & password"; if(pass!==pass2) return msg1.innerText="Passwords don't match"; if(!terms) return msg1.innerText="Accept Terms & Privacy";
  btn1.innerText="Creating..."; btn1.disabled=true;
- try{
-  const cr=await FB.createUserWithEmailAndPassword(FB.auth,email,pass);
-  await FB.updateProfile(cr.user,{displayName:name});
-  tmpUser=cr.user; tmpName=name; tmpEmail=email; tmpReferral=referral;
-  step1.classList.add('hidden'); step2.classList.remove('hidden');
-  roleLabel.innerText = role==='student'?'Student • Country County Town School':'Parent • Student Index';
-  if(role==='teacher') roleLabel.innerText='Teacher • Country County Town School TSC';
-  fs.classList.toggle('hidden',role!=='student'); fp.classList.toggle('hidden',role!=='parent'); ft.classList.toggle('hidden',role!=='teacher');
- }catch(e){ msg1.innerText=e.message; btn1.innerText="Confirm ✓"; btn1.disabled=false; }
+ try{ const cr=await FB.createUserWithEmailAndPassword(FB.auth,email,pass); tmpUser=cr.user; tmpEmail=email; tmpReferral=referral; step1.classList.add('hidden'); step2.classList.remove('hidden'); roleLabel.innerText=role==='student'?'Student':'Parent'; if(role==='teacher') roleLabel.innerText='Teacher'; fs.classList.toggle('hidden',role!=='student'); fp.classList.toggle('hidden',role!=='parent'); ft.classList.toggle('hidden',role!=='teacher'); }catch(e){ msg1.innerText=e.message; btn1.innerText="Confirm ✓"; btn1.disabled=false; }
 }
 async function finalReg(){
- const FB=window.FB;
- let ex={referral:tmpReferral}, pre="SHKE", ctr="students", col="student_index", from=500;
+ const FB=window.FB; let ex={referral:tmpReferral}, pre="SHKE", ctr="students", col="student_index", from=500;
  if(role==='student'){ ex={...ex, country:sCountry.value.trim(), county:sCounty.value.trim(), town:sTown.value.trim(), school:sSchool.value.trim(), grade:sGrade.value}; if(!ex.country||!ex.county||!ex.town) return msg2.innerText="Country County Town required"; }
  else if(role==='teacher'){ ex={...ex, country:tCountry.value.trim(), county:tCounty.value.trim(), town:tTown.value.trim(), school:tSchool.value.trim(), tsc:tTSC.value.trim(), level:tLevel.value}; if(!ex.country||!ex.county||!ex.town||!ex.school) return msg2.innerText="All fields required"; pre="SHKET"; ctr="teachers"; col="teacher_index"; from=100; }
  else{ const idx=pIndex.value.trim().toUpperCase(); if(!idx) return msg2.innerText="Student Index required"; ex={...ex, childIndex:idx}; pre="SHKEP"; ctr="parents"; col="parent_index"; from=100; }
  btn2.innerText="Finishing..."; btn2.disabled=true;
- try{
-  let finalId=pre+String(from).padStart(5,'0');
-  await FB.runTransaction(FB.db, async(t)=>{
-   const r=FB.doc(FB.db,"counters",ctr); const s=await t.get(r); let n=from; if(s.exists()) n=s.data().count||from;
-   finalId=pre+String(n).padStart(5,'0'); t.set(r,{count:n+1},{merge:true});
-   t.set(FB.doc(FB.db,"users",tmpUser.uid),{uid:tmpUser.uid,email:tmpEmail,name:tmpName,role:role==='student'?'learner':role,indexNumber:finalId,...ex,createdAt:FB.serverTimestamp()});
-   t.set(FB.doc(FB.db,col,finalId),{indexNumber:finalId,userId:tmpUser.uid,email:tmpEmail,name:tmpName,...ex,createdAt:FB.serverTimestamp()});
-  });
-  document.body.innerHTML=`<div class="min-h-screen flex justify-center items-center p-6 bg-[#fef9f0]"><div class="bg-white border-2 border-black rounded-[2rem] p-8 max-w-[360px] w-full text-center shadow-[6px_6px_0px_0px_#000]"><div class="w-14 h-14 bg-[#2ac5a0] border-2 border-black rounded-full flex items-center justify-center mx-auto text-xl">✓</div><h2 class="font-black mt-4 text-xl">Account created!</h2><div class="mt-6 bg-black text-white p-4 rounded-2xl border-2 border-black"><p class="text-[10px] opacity-60">YOUR ADMISSION NUMBER</p><p class="text-2xl font-black mt-1 tracking-widest">${finalId}</p></div><button onclick="location.href='/dashboard.html'" class="w-full bg-[#ffcc1a] border-2 border-black text-black py-3 rounded-full font-black text-sm mt-6">Go to dashboard 🚀</button></div></div>`;
- }catch(e){ msg2.innerText=e.message; btn2.innerText="Finish registration 🚀"; btn2.disabled=false; }
+ try{ let finalId=pre+String(from).padStart(5,'0'); await FB.runTransaction(FB.db, async(t)=>{ const r=FB.doc(FB.db,"counters",ctr); const s=await t.get(r); let n=from; if(s.exists()) n=s.data().count||from; finalId=pre+String(n).padStart(5,'0'); t.set(r,{count:n+1},{merge:true}); t.set(FB.doc(FB.db,"users",tmpUser.uid),{uid:tmpUser.uid,email:tmpEmail,role:role==='student'?'learner':role,indexNumber:finalId,...ex,createdAt:FB.serverTimestamp()}); t.set(FB.doc(FB.db,col,finalId),{indexNumber:finalId,userId:tmpUser.uid,email:tmpEmail,...ex,createdAt:FB.serverTimestamp()}); }); document.body.innerHTML=`<div class="min-h-screen flex justify-center items-center p-6 bg-[#fef9f0]"><div class="bg-white border-2 border-black rounded-[2rem] p-8 max-w-[360px] w-full text-center shadow-[6px_6px_0px_0px_#000]"><div class="w-14 h-14 bg-[#2ac5a0] border-2 border-black rounded-full flex items-center justify-center mx-auto text-xl">✓</div><h2 class="font-black mt-4 text-xl">Account created!</h2><div class="mt-6 bg-black text-white p-4 rounded-2xl border-2 border-black"><p class="text-[10px] opacity-60">YOUR ADMISSION NUMBER</p><p class="text-2xl font-black mt-1 tracking-widest">${finalId}</p></div><button onclick="location.href='/dashboard.html'" class="w-full bg-[#ffcc1a] border-2 border-black text-black py-3 rounded-full font-black text-sm mt-6">Go to dashboard 🚀</button></div></div>`; }catch(e){ msg2.innerText=e.message; btn2.innerText="Finish registration 🚀"; btn2.disabled=false; }
 }
 render();
 </script>
