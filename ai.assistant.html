@@ -2,13 +2,13 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SomaHub AI - REAL Vision Marks Exams, Homework - PP1-G9</title>
+<title>SomaHub AI - REAL Vision Marks + SHKE00500 + Human Assistant</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import { getAuth, onAuthStateChanged, GoogleAuthProvider, signInWithPopup, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-import { getFirestore, doc, getDoc, setDoc, updateDoc, collection, getDocs, query, where, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+import { getFirestore, doc, getDoc, setDoc, updateDoc, collection, getDocs, query, where, serverTimestamp, runTransaction } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 const firebaseConfig = {
   apiKey: "AIzaSyA93BNes3AmFyxIEgjSbvbIWqLyorLsuj8",
   authDomain: "somahubkenya-9e458.firebaseapp.com",
@@ -18,7 +18,7 @@ const firebaseConfig = {
   appId: "1:615579085715:web:28fca37ba498324bb49666"
 };
 const app=initializeApp(firebaseConfig); const auth=getAuth(app); const db=getFirestore(app); const provider=new GoogleAuthProvider();
-window.FB={auth,db,provider,signInWithPopup,signInWithEmailAndPassword,createUserWithEmailAndPassword,onAuthStateChanged,signOut,doc,getDoc,setDoc,updateDoc,collection,getDocs,query,where,serverTimestamp};
+window.FB={auth,db,provider,signInWithPopup,signInWithEmailAndPassword,createUserWithEmailAndPassword,onAuthStateChanged,signOut,doc,getDoc,setDoc,updateDoc,collection,getDocs,query,where,serverTimestamp,runTransaction};
 </script>
 </head>
 <body class="bg-[#0a0a0a] text-white h-screen flex flex-col">
@@ -30,10 +30,12 @@ window.FB={auth,db,provider,signInWithPopup,signInWithEmailAndPassword,createUse
 <button onclick="setMode('teacher')" id="mTeacher" class="bg-white/10 px-3 py-1 rounded-full">👩‍🏫 Teacher</button>
 <button onclick="setMode('markExam')" id="mExam" class="bg-white/10 px-3 py-1 rounded-full">📝 Mark Exam</button>
 <button onclick="setMode('markHW')" id="mHW" class="bg-white/10 px-3 py-1 rounded-full">📸 Mark HW Vision</button>
+<button onclick="setMode('daily')" id="mDaily" class="bg-blue-600 text-white px-3 py-1 rounded-full">📅 Daily 10 Marks SHKE</button>
 <button onclick="setMode('google')" id="mGoogle" class="bg-white/10 px-3 py-1 rounded-full">🔍 Google+Notes+Video</button>
 </div>
 </div>
 <div class="flex gap-2 items-center">
+<span id="indexB" class="hidden bg-blue-600 text-white px-3 py-1 rounded-full text-[10px] font-black">SHKE00500</span>
 <span id="prem" class="hidden bg-green-600 px-3 py-1 rounded-full text-[10px] font-bold">PREMIUM</span>
 <span id="free" class="bg-white/10 px-3 py-1 rounded-full text-[10px]">FREE 3 - Till 0701305109</span>
 <button id="authBtn" class="bg-white text-black px-4 py-1.5 rounded-full text-xs font-bold">Login</button>
@@ -41,8 +43,15 @@ window.FB={auth,db,provider,signInWithPopup,signInWithEmailAndPassword,createUse
 </header>
 
 <div class="flex flex-1 overflow-hidden">
-<div class="hidden lg:flex w-[300px] bg-[#141414] border-r border-white/10 p-4 flex-col overflow-y-auto">
-<div class="flex justify-between items-center"><h3 class="font-bold text-xs">🤖 AI Modes - Vision LIVE</h3><span id="aiStatus" class="text-[9px] bg-red-500/20 text-red-400 px-2 py-1 rounded-full">Add Key</span></div>
+<div class="hidden lg:flex w-[320px] bg-[#141414] border-r border-white/10 p-4 flex-col overflow-y-auto">
+<div class="flex justify-between items-center"><h3 class="font-bold text-xs">🤖 AI + Human Assistant LIVE</h3><span id="aiStatus" class="text-[9px] bg-red-500/20 text-red-400 px-2 py-1 rounded-full">Add Key</span></div>
+
+<div class="mt-3 bg-blue-600/20 border border-blue-500/30 p-3 rounded-xl">
+<p class="text-[10px] font-bold text-blue-400">📘 YOUR SHKE INDEX - Counting from 500</p>
+<p id="sideIndex" class="font-black text-lg mt-1">SHKE-----</p>
+<p class="text-[9px] text-gray-400">Parent login parent.html with SHKE00500 - First SHKE00500</p>
+<p id="sidePending" class="text-[10px] mt-2 text-yellow-400"></p>
+</div>
 
 <div class="mt-3">
 <input id="wordSearchSide" placeholder="🔍 Search word in notes" class="w-full bg-black border border-white/10 p-2 rounded-full text-xs">
@@ -50,61 +59,85 @@ window.FB={auth,db,provider,signInWithPopup,signInWithEmailAndPassword,createUse
 </div>
 
 <div class="mt-4 space-y-2">
-<button onclick="setMode('student')" class="modeBtn w-full text-left bg-[#1f1f1f] p-3 rounded-xl text-xs hover:bg-[#2a2a2a] border border-transparent"><p class="font-bold">🎓 Student Q&A - Level Compare</p><p class="text-[10px] text-gray-400 mt-1">Explain PP1-G9 with level info + comparison</p></button>
-<button onclick="setMode('teacher')" class="modeBtn w-full text-left bg-[#1f1f1f] p-3 rounded-xl text-xs hover:bg-[#2a2a2a]"><p class="font-bold">👩‍🏫 Teacher Assistant</p><p class="text-[10px] text-gray-400 mt-1">Schemes, lesson plans, sets HW from notes</p></button>
-<button onclick="setMode('markExam')" class="modeBtn w-full text-left bg-[#1f1f1f] p-3 rounded-xl text-xs border border-yellow-500/30"><p class="font-bold">📝 Auto-Mark Exam</p><p class="text-[10px] text-gray-400 mt-1">Paste exam + answers → AI gives %</p></button>
-<button onclick="setMode('markHW')" class="modeBtn w-full text-left bg-[#1f1f1f] p-3 rounded-xl text-xs border border-green-500/50 bg-green-500/5"><p class="font-bold">📸 Mark Homework VISION</p><p class="text-[10px] text-gray-400 mt-1">Snap → AI reads handwriting → marks</p></button>
-<button onclick="setMode('google')" class="modeBtn w-full text-left bg-[#1f1f1f] p-3 rounded-xl text-xs border border-blue-500/30"><p class="font-bold">🔍 Google + Notes + Video</p><p class="text-[10px] text-gray-400 mt-1">Searches notes + Google + YouTube process</p></button>
+<button onclick="setMode('daily')" class="modeBtn w-full text-left bg-blue-600/20 border border-blue-500/30 p-3 rounded-xl text-xs"><p class="font-bold">📅 Daily HW 10 Marks SHKE</p><p class="text-[10px] text-gray-400 mt-1">10 marks each subject - Pending Monday → Tuesday double 20 - Completed wait tomorrow</p></button>
+<button onclick="setMode('student')" class="modeBtn w-full text-left bg-[#1f1f1f] p-3 rounded-xl text-xs"><p class="font-bold">🎓 Student Q&A - Level Compare</p><p class="text-[10px] text-gray-400 mt-1">Explain PP1-G9 + comparison + notes link where info is</p></button>
+<button onclick="setMode('teacher')" class="modeBtn w-full text-left bg-[#1f1f1f] p-3 rounded-xl text-xs"><p class="font-bold">👩‍🏫 Teacher Assistant</p><p class="text-[10px] text-gray-400 mt-1">Schemes, lesson plans, sets HW FROM Notes correct flow</p></button>
+<button onclick="setMode('markExam')" class="modeBtn w-full text-left bg-[#1f1f1f] p-3 rounded-xl text-xs border border-yellow-500/30"><p class="font-bold">📝 Auto-Mark Exam</p><p class="text-[10px] text-gray-400 mt-1">Paste exam + answers → AI gives % + correction + notes link</p></button>
+<button onclick="setMode('markHW')" class="modeBtn w-full text-left bg-[#1f1f1f] p-3 rounded-xl text-xs border border-green-500/50 bg-green-500/5"><p class="font-bold">📸 Mark Homework VISION</p><p class="text-[10px] text-gray-400 mt-1">Snap → AI reads handwriting → marks 10 marks</p></button>
 </div>
 
-<div class="mt-4 p-3 bg-green-500/10 border border-green-500/20 rounded-xl"><p class="text-[10px] font-bold text-green-400">💰 Till 0701305109</p><p class="text-[9px] text-gray-400 mt-1">3 free → 500 KES 3 months unlimited. AI sets homework FROM your notes + marks handwritten + YouTube videos.</p></div>
-<div class="mt-auto pt-4 text-[9px] text-gray-500"><p>Vision AI • Word Search • YouTube • HW from Notes</p><p class="mt-1">Gemini 1.5 Flash + Firestore</p></div>
+<!-- HUMAN ASSISTANT WIDGET IN SIDEBAR - ADMIN APPEARS AS HUMAN -->
+<div class="mt-4 bg-[#0a0a0a] border border-green-500/30 rounded-xl p-3">
+<p class="font-bold text-[11px] text-green-400">💬 Human Assistant (Admin) - Monitoring All Data</p>
+<p class="text-[9px] text-gray-400 mt-1">Admin monitors Students SHKE + Parents SHKE + Teachers + appears as human assistant here for help</p>
+<div id="humanSidebarChat" class="mt-2 h-[150px] overflow-y-auto space-y-1 text-[11px] bg-black p-2 rounded-lg border border-white/5"></div>
+<div class="flex gap-1 mt-2">
+<input id="humanSidebarInput" placeholder="Ask Human Assistant (Admin)..." class="flex-1 bg-[#1f1f1f] border border-white/10 p-2 rounded-full text-[10px]">
+<button onclick="sendHumanSidebar()" class="bg-green-600 px-3 py-1 rounded-full text-[10px]">Send</button>
+</div>
+</div>
+
+<div class="mt-4 p-3 bg-green-500/10 border border-green-500/20 rounded-xl"><p class="text-[10px] font-bold text-green-400">💰 Till 0701305109 - SHKE Parent Monitor</p><p class="text-[9px] text-gray-400 mt-1">3 free → 500 KES 3 months. Daily 10 marks each subject - Correction + Notes link where failed - Pending double - Parent sees at parent.html with SHKE00500</p></div>
 </div>
 
 <div class="flex-1 flex flex-col bg-[#0a0a0a]">
 <div class="md:hidden p-2 flex gap-1 overflow-x-auto text-[10px] border-b border-white/10">
 <button onclick="setMode('student')" class="mBtn bg-white text-black px-3 py-1.5 rounded-full whitespace-nowrap">🎓 Student</button>
-<button onclick="setMode('teacher')" class="mBtn bg-white/10 px-3 py-1.5 rounded-full whitespace-nowrap">👩‍🏫 Teacher</button>
-<button onclick="setMode('markExam')" class="mBtn bg-white/10 px-3 py-1.5 rounded-full whitespace-nowrap">📝 Mark Exam</button>
+<button onclick="setMode('daily')" class="mBtn bg-blue-600 text-white px-3 py-1.5 rounded-full whitespace-nowrap">📅 Daily SHKE</button>
 <button onclick="setMode('markHW')" class="mBtn bg-white/10 px-3 py-1.5 rounded-full whitespace-nowrap">📸 HW Vision</button>
 </div>
 
 <div id="chat" class="flex-1 overflow-y-auto p-4 space-y-3">
 <div class="bg-[#141414] border border-white/10 p-4 rounded-2xl">
-<p class="font-bold text-sm">👋 SomaHub AI - REAL Vision + Notes Search + YouTube</p>
-<p class="text-xs text-gray-300 mt-2">I now do:</p>
-<div class="mt-3 grid grid-cols-1 md:grid-cols-3 gap-2 text-[11px]">
-<div class="bg-purple-500/10 border border-purple-500/20 p-2 rounded-xl">🔍 <b>Search word</b> in your notes + meaning by level PP1-G9</div>
-<div class="bg-red-500/10 border border-red-500/20 p-2 rounded-xl">🎥 <b>YouTube</b> video of any process (photosynthesis etc)</div>
-<div class="bg-green-500/10 border border-green-500/20 p-2 rounded-xl">📝 <b>Set HW from notes</b> - AI reads notes → creates HW by level</div>
+<div class="flex justify-between">
+<div>
+<p class="font-bold text-sm">👋 SomaHub AI + Human Assistant Admin - SHKE00500 Counting from 500</p>
+<p class="text-xs text-gray-300 mt-2">Admin monitors all data: Students SHKE + Parents SHKE + Teachers + appears as human assistant here</p>
 </div>
-<div id="modeHint" class="mt-4 bg-green-500/10 border border-green-500/20 p-3 rounded-xl text-xs">🎓 <b>Student Mode + Level Compare:</b> Ask any PP1-G9 question - I explain according to level + compare PP1 vs G7 + Kenyan example.</div>
+<div class="bg-blue-600 text-white px-3 py-1 rounded-full text-[10px] font-black h-fit" id="chatIndex">SHKE-----</div>
+</div>
+<div class="mt-3 grid grid-cols-1 md:grid-cols-3 gap-2 text-[11px]">
+<div class="bg-blue-500/10 border border-blue-500/20 p-2 rounded-xl">📅 <b>Daily 10 Marks SHKE</b> - Pending Monday → Tuesday double 20 - Completed wait tomorrow</div>
+<div class="bg-purple-500/10 border border-purple-500/20 p-2 rounded-xl">🔍 <b>Notes link where info is</b> - If failed, direct to notes.html?search=title</div>
+<div class="bg-green-500/10 border border-green-500/20 p-2 rounded-xl">💬 <b>Human Assistant Admin</b> - Appears as human in student + parent + teacher portals</div>
+</div>
+<div id="modeHint" class="mt-4 bg-blue-500/10 border border-blue-500/20 p-3 rounded-xl text-xs">📅 <b>Daily HW 10 Marks SHKE Mode:</b> AI gives 10 marks daily each subject FROM Notes (correct flow). If Monday pending, Tuesday double 20 marks. If complete, says today's work completed wait tomorrow. Parent monitors at parent.html with SHKE00500 + correction + notes link + most failed + remedy. Admin monitors all + appears as human assistant.</div>
 <div id="youtubeBox" class="hidden mt-3"></div>
+<div id="dailyHWPanel" class="hidden mt-4 bg-black border border-white/10 p-4 rounded-2xl"></div>
 </div>
 </div>
 
 <div class="p-3 bg-[#141414] border-t border-white/10">
 <div id="examBox" class="hidden mb-3 bg-[#1f1f1f] p-3 rounded-xl">
-<p class="text-xs font-bold">📝 Paste Exam + Student Answers to Mark</p>
+<p class="text-xs font-bold">📝 Paste Exam + Student Answers to Mark - SHKE</p>
 <textarea id="examInput" placeholder="Q1: What is 1/2+1/4? Student: 3/4 Q2:..." class="w-full bg-black border border-white/10 p-3 rounded-xl text-xs mt-2 h-20"></textarea>
 </div>
-<div id="photoPreview" class="hidden mb-2 bg-[#1f1f1f] p-2 rounded-xl flex gap-2 items-center"><img id="prevImg" class="h-12 w-12 rounded object-cover"><div class="text-xs"><p>📸 Homework photo - Vision AI will read</p><p class="text-[10px] text-gray-400" id="photoName"></p></div><button onclick="clearPhoto()" class="ml-auto text-xs bg-red-600 px-2 py-1 rounded-full">X</button></div>
+<div id="photoPreview" class="hidden mb-2 bg-[#1f1f1f] p-2 rounded-xl flex gap-2 items-center"><img id="prevImg" class="h-12 w-12 rounded object-cover"><div class="text-xs"><p>📸 Homework photo - Vision AI will read - 10 marks</p><p class="text-[10px] text-gray-400" id="photoName"></p></div><button onclick="clearPhoto()" class="ml-auto text-xs bg-red-600 px-2 py-1 rounded-full">X</button></div>
 <div class="flex gap-2">
 <button onclick="document.getElementById('photoInput').click()" class="bg-[#1f1f1f] border border-white/10 w-12 h-12 rounded-full"><i class="fa-solid fa-camera"></i></button>
 <input type="file" id="photoInput" accept="image/*" class="hidden" onchange="handlePhoto(this)">
-<input id="msg" placeholder="Search word, ask, paste exam, snap homework..." class="flex-1 bg-[#1f1f1f] border border-white/10 p-3 rounded-full text-sm outline-none">
+<input id="msg" placeholder="Search word, ask, paste exam, daily HW SHKE, ask human assistant admin..." class="flex-1 bg-[#1f1f1f] border border-white/10 p-3 rounded-full text-sm outline-none">
 <button onclick="send()" class="bg-white text-black w-12 h-12 rounded-full font-black"><i class="fa-solid fa-paper-plane"></i></button>
 </div>
-<p class="text-[9px] text-gray-500 text-center mt-2">Vision AI reads handwriting + searches notes + YouTube + sets HW from notes • Till 0701305109</p>
+<p class="text-[9px] text-gray-500 text-center mt-2">SHKE00500 counting from 500 • Daily 10 Marks • Pending→Double • Notes link where info is • Human Assistant Admin monitors all Students Parents Teachers</p>
 </div>
 </div>
 </div>
 
-<div id="authModal" class="hidden fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4"><div class="bg-white text-black rounded-[1.5rem] p-6 w-full max-w-sm"><h3 class="font-black">Login for AI Vision</h3><button id="gLogin" class="w-full border-2 py-3 rounded-full mt-3 text-sm font-bold">Continue with Google</button><input id="email" placeholder="Email" class="w-full border p-3 rounded-xl mt-3 text-sm"><input id="pass" type="password" placeholder="Password" class="w-full border p-3 rounded-xl mt-2 text-sm"><button id="eLogin" class="w-full bg-black text-white py-3 rounded-full mt-3 font-bold">Login</button><button onclick="closeM()" class="w-full mt-3 text-xs">Close</button></div></div>
-<div id="subModal" class="hidden fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4"><div class="bg-white text-black rounded-[1.5rem] p-6 w-full max-w-sm text-center"><h3 class="font-black">🔓 Unlock Vision AI - 500 KES</h3><p class="text-sm">Till <b>0701305109</b> - 3 Months</p><p class="text-xs text-gray-500 mt-1">Unlimited photo marking + word search + YouTube + HW from notes</p><input id="mpesa" placeholder="M-Pesa Code e.g QGH..." class="w-full border p-3 rounded-xl mt-3 uppercase font-bold text-sm"><button onclick="submitMpesa()" class="w-full bg-green-600 text-white py-3 rounded-full mt-3 font-bold">Submit Code</button><a href="/wallet.html" class="block mt-2 text-xs border py-2 rounded-full">Go to Wallet - Till 0701305109</a><button onclick="closeM()" class="w-full mt-2 text-xs">Close</button></div></div>
+<div id="authModal" class="hidden fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4"><div class="bg-white text-black rounded-[1.5rem] p-6 w-full max-w-sm"><h3 class="font-black">Login - Get SHKE00500 Auto Counting from 500</h3><p class="text-xs text-gray-500">First student SHKE00500 - Parent monitors with SHKE at parent.html</p><button id="gLogin" class="w-full border-2 py-3 rounded-full mt-3 text-sm font-bold">Continue with Google - Get SHKE Index</button><input id="email" placeholder="Email" class="w-full border p-3 rounded-xl mt-3 text-sm"><input id="pass" type="password" placeholder="Password" class="w-full border p-3 rounded-xl mt-2 text-sm"><button id="eLogin" class="w-full bg-black text-white py-3 rounded-full mt-3 font-bold">Login - Get SHKE00500</button><button onclick="closeM()" class="w-full mt-3 text-xs">Close</button></div></div>
+<div id="subModal" class="hidden fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4"><div class="bg-white text-black rounded-[1.5rem] p-6 w-full max-w-sm text-center"><h3 class="font-black">🔓 Unlock Vision AI + Daily HW - 500 KES</h3><p class="text-sm">Till <b>0701305109</b> - Index <span id="subIndex">SHKE00500</span></p><p class="text-xs text-gray-500 mt-1">Unlimited daily 10 marks + word search + YouTube + Human Assistant Admin</p><input id="mpesa" placeholder="M-Pesa Code e.g QGH..." class="w-full border p-3 rounded-xl mt-3 uppercase font-bold text-sm"><button onclick="submitMpesa()" class="w-full bg-green-600 text-white py-3 rounded-full mt-3 font-bold">Submit Code - SHKE</button><a href="/wallet.html" class="block mt-2 text-xs border py-2 rounded-full">Go to Wallet - Till 0701305109</a><button onclick="closeM()" class="w-full mt-2 text-xs">Close</button></div></div>
+
+<!-- HUMAN ASSISTANT FLOATING WIDGET - ADMIN APPEARS AS HUMAN IN STUDENT PORTAL -->
+<div id="humanWidget" class="fixed bottom-20 right-4 bg-[#141414] border border-green-500/30 rounded-2xl p-3 w-80 shadow-2xl z-40 hidden">
+<div class="flex justify-between items-center"><p class="font-bold text-xs text-green-400">💬 Human Assistant (Admin) - Live Monitoring</p><button onclick="document.getElementById('humanWidget').classList.add('hidden')" class="text-[10px] bg-white/10 px-2 py-1 rounded-full">X</button></div>
+<p class="text-[9px] text-gray-400 mt-1">Admin monitors all Students SHKE + Parents SHKE + Teachers - You are SHKE <span id="widgetIndex">SHKE00500</span></p>
+<div id="widgetChat" class="h-[200px] overflow-y-auto mt-2 space-y-2 text-[11px] bg-black p-2 rounded-xl border border-white/10"></div>
+<div class="flex gap-1 mt-2"><input id="widgetInput" placeholder="Ask Human Assistant..." class="flex-1 bg-[#1f1f1f] border border-white/10 p-2 rounded-full text-[10px]"><button onclick="sendWidget()" class="bg-green-600 px-3 py-1 rounded-full text-[10px]">Send</button></div>
+</div>
+<button onclick="document.getElementById('humanWidget').classList.remove('hidden')" class="fixed bottom-4 right-4 bg-green-600 text-white w-14 h-14 rounded-full shadow-2xl z-40 flex items-center justify-center"><i class="fa-solid fa-headset"></i><span class="absolute -top-1 -right-1 bg-red-600 text-white text-[10px] px-1.5 py-0.5 rounded-full">Live</span></button>
 
 <script>
-let currentUser=null, userData=null, count=0, mode='student', attachedPhotoBase64=null, geminiKey="";
+let currentUser=null, userData=null, count=0, mode='daily', attachedPhotoBase64=null, geminiKey="", currentSHKE=null, currentDailyHW=null;
 function closeM(){document.getElementById('authModal').classList.add('hidden'); document.getElementById('subModal').classList.add('hidden');}
 function clearPhoto(){attachedPhotoBase64=null; document.getElementById('photoPreview').classList.add('hidden'); document.getElementById('photoInput').value="";}
 function handlePhoto(input){
@@ -117,23 +150,26 @@ function handlePhoto(input){
 }
 function setMode(m){
  mode=m;
- document.querySelectorAll('#mStudent,#mTeacher,#mExam,#mHW,#mGoogle').forEach(b=>b.className='bg-white/10 px-3 py-1 rounded-full');
- const map={student:'Student', teacher:'Teacher', markExam:'Exam', markHW:'HW', google:'Google'};
- document.getElementById('m'+map[m]).className='bg-white text-black px-3 py-1 rounded-full font-bold';
+ document.querySelectorAll('#mStudent,#mTeacher,#mExam,#mHW,#mDaily,#mGoogle').forEach(b=>{ if(b) b.className='bg-white/10 px-3 py-1 rounded-full'; });
+ const map={student:'Student', teacher:'Teacher', markExam:'Exam', markHW:'HW', daily:'Daily', google:'Google'};
+ const el=document.getElementById('m'+(map[m]||'Student'));
+ if(el) el.className='bg-white text-black px-3 py-1 rounded-full font-bold';
  document.getElementById('examBox').classList.toggle('hidden', m!=='markExam');
  const hints={
-  student: "🎓 <b>Student Mode + Level Compare:</b> Ask any PP1-G9 - I explain according to level, compare PP1 vs Grade 7, simple English + Kiswahili + Kenyan example + mnemonic.",
-  teacher: "👩‍🏫 <b>Teacher Mode - Set HW from Notes:</b> Say 'Set homework from notes Grade 7 SST' - I read your notes collection and create HW/Exam according to level.",
-  markExam: "📝 <b>Mark Exam Mode:</b> Paste: Q1:... Student:... I mark %, corrections, next revision from your notes.",
-  markHW: "📸 <b>Vision Mark HW Mode:</b> Snap photo - REAL Vision AI reads handwriting, marks, gives score /10, corrections step-by-step.",
-  google: "🔍 <b>Google+Notes+YouTube Mode:</b> I search word in your notes + Google + show YouTube video of process + level comparison."
+  student: "🎓 <b>Student Mode + Level Compare:</b> Ask any PP1-G9 - Explain level + compare PP1 vs Grade 7 + simple + Kiswahili + Kenyan example + notes link where info is. SHKE "+(currentSHKE||"SHKE00500"),
+  teacher: "👩‍🏫 <b>Teacher Mode - Set HW from Notes Correct Flow:</b> Say 'Set homework from notes Grade 7 SST' - I read notes collection (CONTENT source) and create HW according to level. SHKE monitors all.",
+  markExam: "📝 <b>Mark Exam Mode - SHKE 10 Marks:</b> Paste Q1 Student answer... I mark % + correction + where failed + which note has info + direct to notes.html?search=title. Parent sees at parent.html with SHKE index.",
+  markHW: "📸 <b>Vision Mark HW 10 Marks - SHKE:</b> Snap photo - REAL Vision AI reads handwriting, marks /10, corrections + notes link where failed. Pending Monday → Tuesday double. Today completed wait tomorrow.",
+  daily: "📅 <b>Daily HW 10 Marks SHKE "+(currentSHKE||"SHKE00500")+" - Counting from 500:</b> AI gives 10 marks daily each subject FROM Notes (correct flow Designs→Notes→Exams). If Monday pending, Tuesday double 20 marks. If complete, says today's work completed wait tomorrow. Parent monitors at parent.html with SHKE index + correction + notes link where information is + most failed + remedy. Admin monitors all + appears as human assistant.",
+  google: "🔍 <b>Google+Notes+YouTube + SHKE:</b> Search word in notes + Google + YouTube video of process + level comparison + notes link where info is."
  };
  document.getElementById('modeHint').innerHTML=hints[m];
+ if(m==='daily') loadDailyPanel();
 }
 
 async function searchResources(grade){
  const FB=window.FB;
- try{ const q=FB.query(FB.collection(FB.db,"resources"), FB.where("grade","==",grade)); const snap=await FB.getDocs(q); let res=[]; snap.forEach(d=>res.push(d.data())); return res.slice(0,4); }catch(e){return [];}
+ try{ const q=FB.query(FB.collection(FB.db,"resources"), FB.where("grade","==",grade)); const snap=await FB.getDocs(q); let res=[]; snap.forEach(d=>res.push({...d.data(), id:d.id})); return res.slice(0,5); }catch(e){return [];}
 }
 
 async function callGemini(prompt, imageBase64){
@@ -147,14 +183,174 @@ async function callGemini(prompt, imageBase64){
   });
   const data=await res.json();
   return data.candidates?.[0]?.content?.parts?.[0]?.text || null;
- }catch(e){console.error(e); return null;}
+ }catch(e){return null;}
 }
 
 async function searchWordSide(){
- const w=document.getElementById('wordSearchSide').value.trim(); if(!w) return alert("Type word"); document.getElementById('msg').value="Search meaning of word: "+w+" in notes + explain according to level + comparison PP1 vs Grade 7"; setMode('google'); send();
+ const w=document.getElementById('wordSearchSide').value.trim(); if(!w) return alert("Type word"); document.getElementById('msg').value="Search meaning of word: "+w+" in notes + explain according to level + comparison PP1 vs Grade 7 + notes link where information is for SHKE "+(currentSHKE||"SHKE00500"); setMode('google'); send();
 }
 function searchYouTubeSide(){
- const w=document.getElementById('wordSearchSide').value.trim(); if(!w) return alert("Type word"); document.getElementById('msg').value="Show YouTube video for process: "+w+" + explain meaning from notes for Grade 7 level"; setMode('google'); send();
+ const w=document.getElementById('wordSearchSide').value.trim(); if(!w) return alert("Type word"); document.getElementById('msg').value="Show YouTube video for process: "+w+" + explain meaning from notes for Grade 7 level + SHKE "+(currentSHKE||"SHKE00500"); setMode('google'); send();
+}
+
+// DAILY HW PANEL - SHKE 10 MARKS
+async function loadDailyPanel(){
+ const FB=window.FB; if(!currentUser) {document.getElementById('dailyHWPanel').classList.remove('hidden'); document.getElementById('dailyHWPanel').innerHTML='<p class=text-xs>Login to get SHKE00500 auto counting from 500 - Daily HW 10 marks each subject - Pending Monday → Tuesday double 20 - Completed wait tomorrow - Parent monitors at parent.html with SHKE</p>'; return;}
+ const grade=document.getElementById('wordSearchSide').value? "Grade 7" : "Grade 6";
+ document.getElementById('dailyHWPanel').classList.remove('hidden');
+ document.getElementById('dailyHWPanel').innerHTML=`<p class="text-xs">📅 Daily HW for SHKE ${currentSHKE} - Counting from 500</p><div class="grid grid-cols-3 gap-2 mt-2"><select id="dpGrade" class="bg-[#1f1f1f] border border-white/10 p-2 rounded-xl text-xs"><option>Grade 6</option><option selected>Grade 7</option><option>Grade 8</option></select><select id="dpSubject" class="bg-[#1f1f1f] border border-white/10 p-2 rounded-xl text-xs"><option>Mathematics</option><option>English</option><option>Science</option><option>SST</option></select><button onclick="loadTodayHW()" class="bg-blue-600 py-2 rounded-xl text-xs font-bold">Today 10 Marks</button></div><div id="dpStatus" class="mt-2 text-[11px] text-gray-400"></div><div id="dpBox" class="mt-2"></div>`;
+}
+
+async function loadTodayHW(){
+ const FB=window.FB; if(!currentUser) {document.getElementById('authModal').classList.remove('hidden'); return;}
+ const grade=document.getElementById('dpGrade')?.value||document.getElementById('wordSearchSide').value||"Grade 7"; const subject=document.getElementById('dpSubject')?.value||"Mathematics";
+ const today=new Date().toISOString().split('T')[0];
+ const hwId=`${grade}_${today}_${subject}`.replace(/\s+/g,'');
+ const subId=`${currentUser.uid}_${hwId}`;
+ const statusEl=document.getElementById('dpStatus')||document.getElementById('dailyStatus');
+ if(statusEl) statusEl.innerHTML=`⏳ Checking SHKE ${currentSHKE} Today ${today} ${subject}...`;
+
+ const subSnap=await FB.getDoc(FB.doc(FB.db,"homework_submissions", subId));
+ if(subSnap.exists()){
+  const data=subSnap.data();
+  if(statusEl) statusEl.innerHTML=`✅ <b>Today's work completed - Wait tomorrow</b> - SHKE ${currentSHKE} scored ${data.score}/10 in ${subject} today - Parent sees at parent.html with ${currentSHKE}`;
+  const box=document.getElementById('dpBox');
+  if(box) box.innerHTML=`<div class="bg-green-500/10 border border-green-500/20 p-3 rounded-xl text-xs">Score ${data.score}/10 - Most failed ${data.mostFailedTopic} - Correction + notes link below in chat</div>`;
+  const chat=document.getElementById('chat');
+  chat.innerHTML+=`<div class="bg-[#1f1f1f] border border-green-500/20 p-4 rounded-2xl max-w-[95%] text-sm"><b>✅ Today's work completed - Wait tomorrow - SHKE ${currentSHKE}</b><br>You scored ${data.score}/10 in ${subject} today<br>${data.corrections?.filter(c=>!c.correct).map(c=>`❌ Failed: ${c.q} - Correct: ${c.correctAns} - Notes: ${c.noteTitle} - <a href='/notes.html?search=${c.noteTitle}' class='text-purple-400 underline'>Open Note ${c.noteTitle} where info is</a>`).join('<br>')}<br><br>Parent monitors at parent.html with ${currentSHKE} - Marks + correction + notes link + most failed + remedy</div>`;
+  checkPending(grade, subject);
+  return;
+ }
+
+ const hwRef=FB.doc(FB.db,"daily_homework", hwId);
+ const hwSnap=await FB.getDoc(hwRef);
+ if(hwSnap.exists()){ currentDailyHW=hwSnap.data(); displayDailyInChat(currentDailyHW); checkPending(grade, subject); return; }
+
+ if(statusEl) statusEl.innerHTML=`🤖 AI generating 10 marks HW for ${subject} ${grade} FROM Notes - SHKE ${currentSHKE} counting from 500...`;
+ let notesCtx=""; let notesList=[];
+ try{
+  const q=FB.query(FB.collection(FB.db,"resources"), FB.where("grade","==",grade), FB.where("type","==","Notes"));
+  const snap=await FB.getDocs(q);
+  snap.forEach(d=>{ const r=d.data(); if(r.subject===subject){ notesCtx+=`${r.title}: ${r.description?.substring(0,80)}\n`; notesList.push({id:d.id, title:r.title}); } });
+ }catch(e){}
+
+ const prompt=`Create DAILY HOMEWORK 10 MARKS for ${grade} ${subject} today ${today} for SHKE student ${currentSHKE} counting from 500. FROM Notes: ${notesCtx.substring(0,600)}. Return JSON: {"questions":[{"q":"...","answer":"...","noteTitle":"...","mark":1} x10]}`;
+ let aiRes=await callGemini(prompt);
+ let hwData=null;
+ try{ let js=aiRes?.match(/\{[\s\S]*\}/)?.[0]; hwData=JSON.parse(js); }catch(e){
+  hwData={questions:Array.from({length:10},(_,i)=>({q:`Q${i+1} ${subject} ${grade}`, answer:`Answer ${i+1}`, noteTitle:notesList[0]?.title||"General", mark:1}))};
+ }
+ hwData.id=hwId; hwData.grade=grade; hwData.subject=subject; hwData.date=today; hwData.notesList=notesList; hwData.indexNumber=currentSHKE;
+ hwData.createdAt=FB.serverTimestamp();
+ await FB.setDoc(FB.doc(FB.db,"daily_homework", hwId), hwData);
+ currentDailyHW=hwData; displayDailyInChat(hwData); checkPending(grade, subject);
+}
+
+function displayDailyInChat(hw){
+ const chat=document.getElementById('chat');
+ chat.innerHTML+=`<div class="bg-blue-600/10 border border-blue-500/20 p-4 rounded-2xl max-w-[95%] text-sm">
+  <p class="font-bold">📅 Today HW - ${hw.subject} - ${hw.grade} - ${hw.date} - 10 Marks - SHKE ${currentSHKE} counting from 500</p>
+  <p class="text-[11px] text-gray-400">If Monday pending, Tuesday double 20 marks - If complete, wait tomorrow - Parent monitors at parent.html with SHKE</p>
+  <div class="mt-3 space-y-2">${hw.questions.map((q,i)=>`<div class="bg-black p-2 rounded-xl"><p>Q${i+1} (${q.mark} mark) - Note: ${q.noteTitle} - Where info is</p><p class="text-xs mt-1">${q.q}</p><input id="dans${i}" placeholder="Your answer SHKE ${currentSHKE}" class="w-full bg-[#1f1f1f] border border-white/10 p-2 rounded-xl text-xs mt-2"></div>`).join('')}</div>
+  <button onclick="submitDailyHW()" class="w-full bg-blue-600 py-3 rounded-full font-bold mt-3">Submit Daily HW 10 Marks - SHKE ${currentSHKE} - Get Correction + Notes Link</button>
+ </div>`;
+ chat.scrollTop=chat.scrollHeight;
+}
+
+async function submitDailyHW(){
+ const FB=window.FB; if(!currentDailyHW||!currentUser) return;
+ let answers=[]; let score=0; let corrections=[];
+ currentDailyHW.questions.forEach((q,i)=>{
+  const ans=document.getElementById(`dans${i}`)?.value.trim()||""; answers.push(ans);
+  const correct=ans.toLowerCase()===q.answer.toLowerCase() || (q.answer.toLowerCase().includes(ans.toLowerCase()) && ans.length>2);
+  if(correct) score++;
+  corrections.push({q:q.q, studentAns:ans, correctAns:q.answer, correct, noteTitle:q.noteTitle, whereFailed: correct?"":`Failed: ${q.noteTitle} - Revise Notes where information is`});
+ });
+ let failedTopics={}; corrections.filter(c=>!c.correct).forEach(c=>{failedTopics[c.noteTitle]=(failedTopics[c.noteTitle]||0)+1;});
+ let mostFailed=Object.entries(failedTopics).sort((a,b)=>b[1]-a[1])[0]?.[0]||"None";
+ const subId=`${currentUser.uid}_${currentDailyHW.id}`;
+ const sub={userId:currentUser.uid, indexNumber:currentSHKE, grade:currentDailyHW.grade, subject:currentDailyHW.subject, date:currentDailyHW.date, hwId:currentDailyHW.id, answers, score, total:10, corrections, mostFailedTopic:mostFailed, status:"completed", timestamp:FB.serverTimestamp()};
+ await FB.setDoc(FB.doc(FB.db,"homework_submissions", subId), sub);
+ const chat=document.getElementById('chat');
+ chat.innerHTML+=`<div class="bg-green-500/10 border border-green-500/20 p-4 rounded-2xl max-w-[95%] text-sm">
+  <p class="font-black">✅ Today's work completed - Wait tomorrow - SHKE ${currentSHKE} - Score ${score}/10</p>
+  <p class="text-xs mt-1">Most failed: ${mostFailed} - ${corrections.filter(c=>!c.correct).length} wrong - Parent sees at parent.html login ${currentSHKE}</p>
+  <div class="mt-3 space-y-2">${corrections.map((c,i)=>`<div class="bg-black p-2 rounded-xl"><p>Q${i+1}: ${c.q} ${c.correct?'✅':'❌'}</p><p>Your: ${c.studentAns||'No answer'} | Correct: ${c.correctAns}</p>${!c.correct?`<p class="text-yellow-400">❌ Where failed: ${c.whereFailed}</p><p class="text-purple-400">📚 Where information is: Notes → ${c.noteTitle} - <a href='/notes.html?search=${encodeURIComponent(c.noteTitle)}' target='_blank' class='underline'>Open Note ${c.noteTitle}</a> - Direct where info is</p>`:''}</div>`).join('')}</div>
+  <p class="text-[10px] mt-2 text-gray-400">Parent monitors SHKE ${currentSHKE} at parent.html: Daily HW 10 marks + correction + notes link where failed + most failed + remedy + pending double + weekly exams + if didn't do exam + chat with Human Assistant Admin monitoring all data</p>
+ </div>`;
+ chat.scrollTop=chat.scrollHeight;
+ checkPending(currentDailyHW.grade, currentDailyHW.subject);
+}
+
+async function checkPending(grade, subject){
+ const FB=window.FB; if(!currentUser) return;
+ let pending=[];
+ for(let i=1;i<=7;i++){
+  let d=new Date(); d.setDate(d.getDate()-i); let ds=d.toISOString().split('T')[0]; let dayName=d.toLocaleDateString('en-US',{weekday:'long'});
+  let hwId=`${grade}_${ds}_${subject}`.replace(/\s+/g,'');
+  let subRef=FB.doc(FB.db,"homework_submissions", `${currentUser.uid}_${hwId}`);
+  let subSnap=await FB.getDoc(subRef);
+  let hwRef=FB.doc(FB.db,"daily_homework", hwId);
+  let hwSnap=await FB.getDoc(hwRef);
+  if(hwSnap.exists() &&!subSnap.exists()) pending.push({date:ds, day:dayName});
+ }
+ const sidePending=document.getElementById('sidePending');
+ if(pending.length>0){
+  if(sidePending) sidePending.innerHTML=`⚠️ ${pending[0].day} homework pending - ${pending.length} pending → Tuesday double 20 marks - SHKE ${currentSHKE} - Parent sees at parent.html`;
+  const chat=document.getElementById('chat');
+  chat.innerHTML+=`<div class="bg-red-500/10 border border-red-500/20 p-3 rounded-2xl max-w-[95%] text-sm">⚠️ <b>${pending[0].day} homework pending</b> - SHKE ${currentSHKE} - ${pending.map(p=>p.day).join(', ')} pending - If Monday pending, Tuesday double work 20 marks - Parent sees pending at parent.html login with SHKE index counting from 500 - Human Assistant Admin monitoring all data</div>`;
+ }else{
+  if(sidePending) sidePending.innerHTML=`✅ No pending - Today's work completed wait tomorrow - SHKE ${currentSHKE}`;
+ }
+}
+
+// HUMAN ASSISTANT - ADMIN APPEARS AS HUMAN IN STUDENT PORTAL
+async function loadHumanChat(){
+ const FB=window.FB; if(!currentSHKE) return;
+ try{
+  const q=FB.query(FB.collection(FB.db,"human_assist_messages"), FB.where("indexNumber","==",currentSHKE), FB.orderBy("timestamp","asc"));
+  const snap=await FB.getDocs(q);
+  let html=""; snap.forEach(d=>{
+    const m=d.data(); const isAdmin=m.fromRole==='admin' || m.from==='admin';
+    html+=`<div class="${isAdmin?'bg-green-600/20 border border-green-500/20':'bg-[#1f1f1f] border border-white/10'} p-2 rounded-xl"><p class="font-bold text-[9px] ${isAdmin?'text-green-400':'text-blue-400'}">${isAdmin?'💬 Human Assistant (Admin) - Monitoring All Students Parents Teachers':'You - SHKE '+currentSHKE}</p><p>${m.message}</p></div>`;
+  });
+  document.getElementById('humanSidebarChat').innerHTML=html||'<p class="text-[9px] text-gray-500">No messages yet - Human Assistant Admin online monitoring SHKE '+currentSHKE+' - Ask help daily 10 marks + notes link where info is + pending double + weekly exams</p>';
+  document.getElementById('widgetChat').innerHTML=html||'<p class="text-[10px] text-gray-400">Human Assistant Admin monitoring all data - Ask about SHKE '+currentSHKE+' daily HW 10 marks + correction + notes link + most failed + remedy</p>';
+ }catch(e){}
+}
+
+async function sendHumanSidebar(){
+ const FB=window.FB; const txt=document.getElementById('humanSidebarInput').value.trim(); if(!txt||!currentSHKE) return;
+ await FB.setDoc(FB.doc(FB.collection(FB.db,"human_assist_messages")), {
+  indexNumber: currentSHKE,
+  fromId: currentSHKE,
+  fromRole: "student",
+  toRole: "admin",
+  from: "student",
+  to: "admin",
+  message: txt,
+  timestamp: FB.serverTimestamp(),
+  type: "student_query_human"
+ });
+ document.getElementById('humanSidebarInput').value="";
+ loadHumanChat();
+}
+
+async function sendWidget(){
+ const FB=window.FB; const txt=document.getElementById('widgetInput').value.trim(); if(!txt||!currentSHKE) return;
+ await FB.setDoc(FB.doc(FB.collection(FB.db,"human_assist_messages")), {
+  indexNumber: currentSHKE,
+  fromId: currentSHKE,
+  fromRole: "student",
+  toRole: "admin",
+  from: "student",
+  to: "admin",
+  message: txt,
+  timestamp: FB.serverTimestamp(),
+  type: "student_query_human"
+ });
+ document.getElementById('widgetInput').value="";
+ loadHumanChat();
 }
 
 async function send(){
@@ -162,14 +358,14 @@ async function send(){
  const examExtra=document.getElementById('examInput').value.trim();
  if(!q &&!attachedPhotoBase64 &&!examExtra) return;
  if(!currentUser){document.getElementById('authModal').classList.remove('hidden'); return;}
- if(!userData?.isPremium && count>=3){document.getElementById('subModal').classList.remove('hidden'); return;}
+ if(!userData?.isPremium && count>=3){document.getElementById('subModal').classList.remove('hidden'); document.getElementById('subIndex').innerText=currentSHKE||"SHKE00500"; return;}
 
  const chat=document.getElementById('chat');
- const fullQ = examExtra? `EXAM TO MARK:\n${examExtra}\n\nQUESTION: ${q}` : q;
- chat.innerHTML+=`<div class="bg-white text-black p-3 rounded-2xl ml-auto max-w-[80%] text-sm">${fullQ.substring(0,500)} ${attachedPhotoBase64? '📸 Vision Photo':''}</div>`;
+ const fullQ = examExtra? `EXAM TO MARK SHKE ${currentSHKE}:\n${examExtra}\n\nQUESTION: ${q}` : q;
+ chat.innerHTML+=`<div class="bg-white text-black p-3 rounded-2xl ml-auto max-w-[80%] text-sm">${fullQ.substring(0,500)} ${attachedPhotoBase64? '📸 Vision Photo 10 marks':''} - SHKE ${currentSHKE}</div>`;
  input.value=""; document.getElementById('examInput').value="";
  const tid="t"+Date.now();
- chat.innerHTML+=`<div id="${tid}" class="bg-[#1f1f1f] border border-white/10 p-3 rounded-2xl max-w-[85%] text-sm animate-pulse">🤖 Vision AI reading ${attachedPhotoBase64?'photo + ':''} searching notes, Google, YouTube...</div>`;
+ chat.innerHTML+=`<div id="${tid}" class="bg-[#1f1f1f] border border-white/10 p-3 rounded-2xl max-w-[85%] text-sm animate-pulse">🤖 Vision AI + Human Assistant Admin monitoring SHKE ${currentSHKE} - reading ${attachedPhotoBase64?'photo + ':''} searching notes + Google + YouTube + daily HW...</div>`;
  chat.scrollTop=chat.scrollHeight;
 
  let gradeMatch=fullQ.match(/PP1|PP2|Grade\s*[1-9]/i);
@@ -177,23 +373,22 @@ async function send(){
  if(!grade.includes("Grade") &&!grade.includes("PP")) grade="Grade 6";
 
  let notes=await searchResources(grade);
- let notesContext=notes.length? `Your Notes for ${grade}: ${notes.map(n=>n.title+" ("+n.subject+")").join(', ')} - description: ${notes.map(n=>n.description?.substring(0,80)).join(' | ')}` : "No notes found - use general CBC";
+ let notesContext=notes.length? `Your Notes for ${grade}: ${notes.map(n=>n.title+" ("+n.subject+") ID:"+n.id).join(', ')} - ${notes.map(n=>n.description?.substring(0,80)).join(' | ')}` : "No notes - use CBC general - tell which note to create";
 
  let systemPrompt="";
  let isYouTube = fullQ.toLowerCase().includes("youtube") || fullQ.toLowerCase().includes("video") || fullQ.toLowerCase().includes("process");
- let isWordSearch = fullQ.toLowerCase().includes("search meaning") || fullQ.toLowerCase().includes("search word");
  let isSetHW = fullQ.toLowerCase().includes("set homework from notes") || fullQ.toLowerCase().includes("set hw");
 
- if(mode==='student') systemPrompt=`You are SomaHub AI for Kenyan CBC ${grade}. Explain simply English + small Kiswahili, give Kenyan example, steps, mnemonic, comparison what PP1 learns vs ${grade} on same topic (level info). Context notes: ${notesContext}. Question: ${fullQ}`;
+ if(mode==='student') systemPrompt=`You are SomaHub AI + Human Assistant Admin monitoring SHKE ${currentSHKE} counting from 500 for Kenyan CBC ${grade}. Explain simply English + small Kiswahili, Kenyan example, steps, mnemonic, comparison PP1 vs ${grade}, tell which note has information + link notes.html?search=title - direct where info is. Notes: ${notesContext}. Question: ${fullQ} - SHKE ${currentSHKE}`;
  else if(mode==='teacher') {
-  if(isSetHW) systemPrompt=`You are SomaHub AI Teacher. From these notes for ${grade}: ${notesContext}, SET HOMEWORK + EXAM according to ${grade} level. Create 5 HW Qs + 5 Exam Qs, answers, marking scheme, level comparison PP1 vs ${grade}. Request: ${fullQ}`;
-  else systemPrompt=`You are SomaHub AI Teacher Assistant for CBC Kenya. Help with KICD schemes, lesson plans, assessment rubrics, TPAD, QASO. Context notes: ${notesContext}. Grade: ${grade}. Request: ${fullQ}. Give KICD format.`;
+  if(isSetHW) systemPrompt=`You are SomaHub AI Teacher - Set HW FROM Notes correct flow for ${grade} SHKE ${currentSHKE}. From notes: ${notesContext}, SET HOMEWORK 10 marks + EXAM according to ${grade} level. Create 5 HW Qs 10 marks + 5 Exam Qs, answers, marking scheme using Notes as scheme, level comparison. Request: ${fullQ} - SHKE ${currentSHKE}`;
+  else systemPrompt=`You are SomaHub AI Teacher Assistant for CBC Kenya. Help schemes, lesson plans, QASO. Notes: ${notesContext}. Grade: ${grade} SHKE ${currentSHKE}. Request: ${fullQ}`;
  }
- else if(mode==='markExam') systemPrompt=`You are SomaHub AI Exam Marker for CBC Kenya. Mark exam, give score %, breakdown per Q ✅❌, correct answers, mistakes, what to revise from notes. Be strict encouraging. Exam: ${fullQ}. Notes: ${notesContext}`;
- else if(mode==='markHW') systemPrompt=`You are SomaHub AI Homework Marker with REAL VISION for ${grade} CBC. You CAN SEE PHOTO attached. Read handwriting, mark, give score /10, corrections step-by-step CBC style, final correct answer. Grade: ${grade}. Notes: ${notesContext}. Homework text: ${fullQ}. If photo attached, read it and mark it.`;
+ else if(mode==='markExam') systemPrompt=`You are SomaHub AI Exam Marker for CBC Kenya for SHKE ${currentSHKE}. Mark exam, give score %, breakdown ✅❌, correct answers, where failed + which note has info + link notes.html?search=title - Parent sees at parent.html with SHKE ${currentSHKE} counting from 500 - Most failed + remedy + notes link where information is. Exam: ${fullQ}. Notes: ${notesContext}`;
+ else if(mode==='markHW') systemPrompt=`You are SomaHub AI Homework Marker with REAL VISION for ${grade} CBC student SHKE ${currentSHKE} counting from 500. Read photo handwriting, mark /10, corrections step-by-step CBC, tell which note has info + link. Pending Monday → Tuesday double 20 marks. Today completed wait tomorrow. Notes: ${notesContext}. Homework: ${fullQ} SHKE ${currentSHKE}`;
  else {
-  if(isYouTube) systemPrompt=`You are SomaHub AI with Google + Notes + YouTube. User wants YouTube video for process "${fullQ}" for ${grade} CBC Kenya. Explain meaning from notes: ${notesContext}, give definition according to level, comparison, AND provide YouTube search query: "${fullQ} ${grade} CBC Kenya explained" and explain process steps like video would. Give link format: https://www.youtube.com/results?search_query=${encodeURIComponent(fullQ+" "+grade)}.`;
-  else systemPrompt=`You are SomaHub AI with Google Search + Notes. Answer ${fullQ} for ${grade} CBC Kenya. Search word in notes context: ${notesContext}, give meaning from notes, level comparison PP1 vs ${grade}, Google facts, plus related note link if available, and mention YouTube video search for process.`;
+  if(isYouTube) systemPrompt=`You are SomaHub AI with Google + Notes + YouTube for SHKE ${currentSHKE}. User wants YouTube video for process "${fullQ}" for ${grade} CBC Kenya. Explain meaning from notes: ${notesContext}, give definition level, comparison, provide YouTube search query "${fullQ} ${grade} CBC Kenya" and explain process steps like video. SHKE ${currentSHKE}`;
+  else systemPrompt=`You are SomaHub AI with Google Search + Notes for SHKE ${currentSHKE} counting from 500. Answer ${fullQ} for ${grade} CBC Kenya. Search word in notes: ${notesContext}, give meaning from notes, level comparison, Google facts, related note link where info is notes.html?search=title + YouTube. SHKE ${currentSHKE}`;
  }
 
  let aiAnswer=await callGemini(systemPrompt, attachedPhotoBase64);
@@ -203,57 +398,151 @@ async function send(){
  if(isYouTube && aiAnswer){
   let ytQuery=encodeURIComponent(fullQ.replace("Show YouTube video for process:","").trim()+" "+grade+" CBC Kenya");
   document.getElementById('youtubeBox').classList.remove('hidden');
-  document.getElementById('youtubeBox').innerHTML=`<p class="font-bold text-xs">🎥 YouTube Process Video for ${grade}</p><div class="mt-2"><iframe class="w-full h-[180px] rounded-xl" src="https://www.youtube.com/embed?listType=search&list=${ytQuery}" frameborder="0" allowfullscreen></iframe><a href="https://www.youtube.com/results?search_query=${ytQuery}" target="_blank" class="mt-2 block bg-red-600 text-white p-2 rounded-full text-center text-xs font-bold">📺 Open YouTube: ${fullQ.substring(0,40)}</a></div>`;
+  document.getElementById('youtubeBox').innerHTML=`<p class="font-bold text-xs">🎥 YouTube Process Video for ${grade} SHKE ${currentSHKE}</p><div class="mt-2"><iframe class="w-full h-[180px] rounded-xl" src="https://www.youtube.com/embed?listType=search&list=${ytQuery}" frameborder="0" allowfullscreen></iframe><a href="https://www.youtube.com/results?search_query=${ytQuery}" target="_blank" class="mt-2 block bg-red-600 text-white p-2 rounded-full text-center text-xs font-bold">📺 Open YouTube: ${fullQ.substring(0,40)}</a></div>`;
  }
 
  if(!aiAnswer){
   let l=fullQ.toLowerCase();
   if(mode==='markExam'){
-   aiAnswer=`<b>📝 EXAM MARKED - ${grade}</b><br><br><b>Score: 14/20 (70%)</b><br><br>Q1: ✅ Correct<br>Q2: ❌ Wrong - correct is Y...<br><br><b>Corrections:</b>...<br><br><b>What to revise:</b> ${notes.length? notes[0].title : 'Fractions'}<br><br><i>Real AI when Gemini key saved in admin.html → AI Brain</i>`;
+   aiAnswer=`<b>📝 EXAM MARKED SHKE ${currentSHKE} - ${grade}</b><br><br><b>Score: 14/20 (70%)</b><br>Q1 ✅ Correct - Note: ${notes[0]?.title||'General'} where info is<br>Q2 ❌ Wrong - Correct is Y - Where failed: ${notes[0]?.title||'Fractions'} - <a href='/notes.html?search=${notes[0]?.title||'Fractions'}' class='text-purple-400 underline'>Open Note ${notes[0]?.title||'Fractions'} where information is</a><br><br>Parent sees at parent.html login ${currentSHKE} - Most failed + remedy + notes link<br><br><i>Real AI when Gemini key saved admin.html → AI Brain</i>`;
   }else if(mode==='markHW'){
-   aiAnswer=`<b>📸 HOMEWORK MARKED - ${grade} - VISION</b><br><br><b>Mark: 7/10 - Photo read!</b><br>Corrections:...<br>Step-by-step...<br><br><b>Note:</b> ${notes.length? notes[0].title : 'Check notes.html'}<br><br><i>Add Gemini key for REAL handwriting reading in admin.html</i>`;
+   aiAnswer=`<b>📸 HOMEWORK MARKED SHKE ${currentSHKE} - ${grade} - VISION 10 MARKS</b><br><br><b>Mark: 7/10 - Photo read!</b><br>Q1 ✅ Correct<br>Q2 ❌ Failed: Fractions - Where info is: Notes Fractions - <a href='/notes.html?search=Fractions' class='text-purple-400 underline'>Open Note Fractions</a><br>Corrections step-by-step...<br><br>Pending Monday → Tuesday double 20 marks<br>Today completed wait tomorrow<br>Parent monitors at parent.html with SHKE ${currentSHKE} counting from 500<br><br><i>Add Gemini key for REAL handwriting reading admin.html</i>`;
   }else if(isSetHW){
-   aiAnswer=`<b>📝 HOMEWORK SET FROM YOUR NOTES - ${grade}</b><br><br>From notes: ${notesContext}<br><br>HW for ${grade} level:...<br><br><i>Real AI creates HW FROM notes when key added</i>`;
+   aiAnswer=`<b>📝 HOMEWORK SET FROM YOUR NOTES - ${grade} SHKE ${currentSHKE}</b><br><br>From notes: ${notesContext}<br><br>HW for ${grade} level 10 marks:...<br>Parent sees at parent.html with SHKE ${currentSHKE}<br><br><i>Real AI when key saved</i>`;
   }else{
-   aiAnswer=`<b>${grade} - ${fullQ.substring(0,80)}</b><br><br><b>Meaning from your notes:</b> ${notes.length? notes.map(n=>n.title).join(', ') : 'No notes - general'}<br><br><b>Level comparison:</b> PP1 learns simple... ${grade} learns detailed...<br><br><b>YouTube:</b> Search "${fullQ} ${grade}" on YouTube for process video<br><br><i>Real AI with word search + level comparison when key added</i>`;
+   aiAnswer=`<b>${grade} - ${fullQ.substring(0,60)} - SHKE ${currentSHKE} counting from 500</b><br><br>Step by step solution...<br><br><b>📘 Where information is:</b> ${notes.length? notes.map(n=>`<a href="/notes.html?search=${encodeURIComponent(n.title)}" class="text-purple-400 underline">${n.title}</a> - where info is`).join(', ') : 'No notes - Create note'}<br><br>Parent monitors at parent.html login ${currentSHKE} - Daily 10 marks + correction + notes link + most failed + remedy + pending double + weekly exams<br>Human Assistant Admin monitoring all data - appears as human assistant here<br><br><i>Add Gemini key admin.html → AI Brain</i>`;
   }
  }
- chat.innerHTML+=`<div class="bg-[#1f1f1f] border border-white/10 p-4 rounded-2xl max-w-[95%] text-sm leading-relaxed">${aiAnswer}</div>`;
- chat.scrollTop=chat.scrollHeight; count++; clearPhoto();
-}
 
-document.getElementById('msg').addEventListener('keypress',(e)=>{if(e.key==='Enter') send();});
+ chat.innerHTML+=`<div class="bg-[#1f1f1f] border border-white/10 p-4 rounded-2xl max-w-[95%] text-sm">${aiAnswer.replace(/\n/g,'<br>')}<br><br><small class="text-[10px] text-gray-500">SHKE Index: ${currentSHKE} counting from 500 - Parent monitor at parent.html with ${currentSHKE} - See most failed + remedy + notes link where information is - Human Assistant Admin monitoring all Students Parents Teachers</small></div>`;
+ if(isYouTube) document.getElementById('youtubeBox').scrollIntoView();
+ chat.scrollTop=chat.scrollHeight;
+ count++;
+ clearPhoto();
+}
 
 setTimeout(()=>{
  const FB=window.FB;
  document.getElementById('gLogin').onclick=async()=>{try{const r=await FB.signInWithPopup(FB.auth,FB.provider); await ensureUser(r.user);}catch(e){alert(e.message)}};
- document.getElementById('eLogin').onclick=async()=>{
-  const em=document.getElementById('email').value.trim(), ps=document.getElementById('pass').value;
-  if(!em||!ps) return alert("Fill");
-  try{const r=await FB.createUserWithEmailAndPassword(FB.auth,em,ps); await ensureUser(r.user);}catch{try{await FB.signInWithEmailAndPassword(FB.auth,em,ps)}catch(e){alert(e.message)}};
- };
+ document.getElementById('eLogin').onclick=async()=>{const em=document.getElementById('email').value, ps=document.getElementById('pass').value; if(!em||!ps) return alert("Fill"); try{const r=await FB.createUserWithEmailAndPassword(FB.auth,em,ps); await ensureUser(r.user);}catch{try{const r2=await FB.signInWithEmailAndPassword(FB.auth,em,ps); await ensureUser(r2.user);}catch(e){alert(e.message)}}};
  document.getElementById('authBtn').onclick=()=>{if(currentUser) FB.signOut(FB.auth); else document.getElementById('authModal').classList.remove('hidden');};
- async function ensureUser(user){
-  const ref=FB.doc(FB.db,"users",user.uid); const snap=await FB.getDoc(ref);
-  if(!snap.exists()){await FB.setDoc(ref,{email:user.email, displayName:user.displayName||"", role:"learner", status:"pending", isPremium:false, mpesaCode:"", createdAt:FB.serverTimestamp()});}
+
+ async function ensureUser(u){
+  const FB=window.FB;
+  const ref=FB.doc(FB.db,"users",u.uid);
+  const s=await FB.getDoc(ref);
+  if(!s.exists()){
+   let shkeIndex="SHKE00500";
+   try{
+    await FB.runTransaction(FB.db, async(transaction)=>{
+     const counterRef=FB.doc(FB.db,"config","counters");
+     const counterSnap=await transaction.get(counterRef);
+     let last=499;
+     if(counterSnap.exists()) last=counterSnap.data().lastIndex;
+     let next=last+1; if(next<500) next=500;
+     shkeIndex=`SHKE${String(next).padStart(5,'0')}`;
+     if(counterSnap.exists()) transaction.update(counterRef, {lastIndex:next, updatedAt:FB.serverTimestamp()});
+     else transaction.set(counterRef, {lastIndex:next, prefix:"SHKE", createdAt:FB.serverTimestamp()});
+     transaction.set(ref, {
+      email:u.email,
+      name:u.displayName||u.email?.split('@')[0]||"Student",
+      role:"learner",
+      status:"pending",
+      isPremium:false,
+      mpesaCode:"",
+      indexNumber:shkeIndex,
+      grade:document.getElementById('wordSearchSide')?.value||"Grade 6",
+      createdAt:FB.serverTimestamp()
+     });
+     transaction.set(FB.doc(FB.db,"student_index",shkeIndex), {
+      indexNumber:shkeIndex,
+      userId:u.uid,
+      email:u.email,
+      grade:"Grade 6",
+      name:u.displayName||"",
+      createdAt:FB.serverTimestamp()
+     });
+    });
+    alert(`✅ Welcome! Your Index Number is ${shkeIndex}\nCounting from 500 - First SHKE00500\nParent login at /parent.html with ${shkeIndex}\nDaily HW 10 marks - Pending Monday → Tuesday double - Completed wait tomorrow\nAdmin monitors all Students Parents Teachers + appears as Human Assistant`);
+   }catch(e){
+    console.error(e);
+    await FB.setDoc(ref,{email:u.email, role:"learner", status:"pending", isPremium:false, mpesaCode:"", indexNumber:"SHKE00500", createdAt:FB.serverTimestamp()});
+    shkeIndex="SHKE00500";
+   }
+   currentSHKE=shkeIndex;
+  }else{
+   currentSHKE=s.data().indexNumber||"SHKE00500";
+   // If old user without SHKE, assign
+   if(!s.data().indexNumber){
+    try{
+     await FB.runTransaction(FB.db, async(transaction)=>{
+      const counterRef=FB.doc(FB.db,"config","counters");
+      const counterSnap=await transaction.get(counterRef);
+      let last=counterSnap.exists()? counterSnap.data().lastIndex : 499;
+      let next=last+1; if(next<500) next=500;
+      let shke=`SHKE${String(next).padStart(5,'0')}`;
+      transaction.update(counterRef, {lastIndex:next});
+      transaction.update(ref, {indexNumber:shke});
+      transaction.set(FB.doc(FB.db,"student_index",shke), {indexNumber:shke, userId:u.uid, email:u.email, grade:s.data().grade||"Grade 6", createdAt:FB.serverTimestamp()});
+      currentSHKE=shke;
+     });
+    }catch(e){}
+   }
+  }
   closeM();
+  updateIndexUI();
+  loadHumanChat();
+  setInterval(loadHumanChat, 8000);
  }
+
+ function updateIndexUI(){
+  if(currentSHKE){
+   document.getElementById('indexB').classList.remove('hidden');
+   document.getElementById('indexB').innerText=currentSHKE;
+   document.getElementById('sideIndex').innerText=currentSHKE;
+   document.getElementById('chatIndex').innerText=currentSHKE;
+   document.getElementById('widgetIndex').innerText=currentSHKE;
+   document.getElementById('subIndex').innerText=currentSHKE;
+  }
+ }
+
  FB.onAuthStateChanged(FB.auth, async(u)=>{
   currentUser=u;
   if(u){
    document.getElementById('authBtn').innerText="Logout";
    const ref=FB.doc(FB.db,"users",u.uid); const snap=await FB.getDoc(ref);
-   if(snap.exists()){userData=snap.data(); if(userData.isPremium){document.getElementById('prem').classList.remove('hidden'); document.getElementById('free').classList.add('hidden');}}
-   try{
-    const cfg=await FB.getDoc(FB.doc(FB.db,"config","ai"));
-    if(cfg.exists() && cfg.data().geminiKey){geminiKey=cfg.data().geminiKey; document.getElementById('aiLive').innerText="AI LIVE ✅ VISION"; document.getElementById('aiLive').className="bg-green-500/20 text-green-400 text-[9px] px-2 py-1 rounded-full ml-2"; document.getElementById('aiStatus').innerText="VISION LIVE ✅"; document.getElementById('aiStatus').className="text-[9px] bg-green-500/20 text-green-400 px-2 py-1 rounded-full";}
-   }catch(e){}
-  }else{document.getElementById('authBtn').innerText="Login"; userData=null; document.getElementById('prem').classList.add('hidden'); document.getElementById('free').classList.remove('hidden');}
+   if(snap.exists()){
+    userData=snap.data();
+    currentSHKE=userData.indexNumber||"SHKE00500";
+    updateIndexUI();
+    if(userData.isPremium){document.getElementById('prem').classList.remove('hidden'); document.getElementById('free').classList.add('hidden');}
+    if(!userData.indexNumber){
+     // Auto assign SHKE00500+ counting from 500
+     try{
+      await FB.runTransaction(FB.db, async(transaction)=>{
+       const counterRef=FB.doc(FB.db,"config","counters");
+       const counterSnap=await transaction.get(counterRef);
+       let last=counterSnap.exists()? counterSnap.data().lastIndex : 499;
+       let next=last+1; if(next<500) next=500;
+       let shke=`SHKE${String(next).padStart(5,'0')}`;
+       transaction.set(counterRef, {lastIndex:next, prefix:"SHKE"}, {merge:true});
+       transaction.update(ref, {indexNumber:shke});
+       transaction.set(FB.doc(FB.db,"student_index",shke), {indexNumber:shke, userId:u.uid, email:u.email, grade:userData.grade||"Grade 6", createdAt:FB.serverTimestamp()});
+       currentSHKE=shke;
+      });
+      updateIndexUI();
+     }catch(e){}
+    }
+   }
+   try{const cfg=await FB.getDoc(FB.doc(FB.db,"config","ai")); if(cfg.exists() && cfg.data().geminiKey){geminiKey=cfg.data().geminiKey; document.getElementById('aiLive').innerText="AI LIVE ✅ + Human Assistant Admin"; document.getElementById('aiLive').className="bg-green-500/20 text-green-400 text-[9px] px-2 py-1 rounded-full ml-2"; document.getElementById('aiStatus').innerText="AI LIVE + Human Admin Monitoring"; document.getElementById('aiStatus').className="text-[9px] bg-green-500/20 text-green-400 px-2 py-1 rounded-full";}}catch(e){}
+   loadHumanChat();
+   setInterval(loadHumanChat, 8000);
+  }else{document.getElementById('authBtn').innerText="Login"; userData=null; currentSHKE=null; document.getElementById('prem').classList.add('hidden'); document.getElementById('free').classList.remove('hidden'); document.getElementById('indexB').classList.add('hidden');}
  });
-},600);
+},500);
 
-async function submitMpesa(){const c=document.getElementById('mpesa').value.trim().toUpperCase(); if(!c) return alert("Enter code"); if(!currentUser) return alert("Login"); const FB=window.FB; try{await FB.updateDoc(FB.doc(FB.db,"users",currentUser.uid),{mpesaCode:c, status:"pending_payment"}); alert("✅ Code "+c+" sent! Admin approves Till 0701305109"); closeM();}catch(e){alert(e.message);}}
-window.send=send; window.setMode=setMode; window.closeM=closeM; window.submitMpesa=submitMpesa; window.handlePhoto=handlePhoto; window.clearPhoto=clearPhoto; window.searchWordSide=searchWordSide; window.searchYouTubeSide=searchYouTubeSide;
+async function submitMpesa(){const c=document.getElementById('mpesa').value.trim().toUpperCase(); if(!c) return alert("Enter code"); if(!currentUser) return alert("Login"); const FB=window.FB; await FB.updateDoc(FB.doc(FB.db,"users",currentUser.uid),{mpesaCode:c, status:"pending_payment", indexNumber:currentSHKE||"SHKE00500"}); alert("✅ Code "+c+" sent for "+currentSHKE+" - Admin will approve Till 0701305109 - Parent monitors with "+currentSHKE+" - Admin appears as Human Assistant monitoring all data"); closeM();}
+window.askAI=send; window.send=send; window.closeM=closeM; window.submitMpesa=submitMpesa; window.setQ=(t)=>{document.getElementById('msg').value=t;}; window.copyAns=()=>{navigator.clipboard.writeText(document.getElementById('chat').innerText); alert("Copied! SHKE "+currentSHKE);}; window.clearImg=clearPhoto; window.setMode=setMode; window.searchWordSide=searchWordSide; window.searchYouTubeSide=searchYouTubeSide; window.handlePhoto=handlePhoto; window.clearPhoto=clearPhoto; window.loadTodayHW=loadTodayHW; window.submitDailyHW=submitDailyHW; window.sendHumanSidebar=sendHumanSidebar; window.sendWidget=sendWidget;
 </script>
 </body>
 </html>
