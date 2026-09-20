@@ -2,135 +2,111 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SomaHub Kenya - PP1 to Grade 9 CBC Notes, Exams, Schemes, AI Homework | Till 0701305109</title>
-<meta name="description" content="SomaHub Kenya - #1 CBC Platform PP1-G9. Notes, Exams, Schemes, Lesson Plans, AI Homework Helper. 500 KES / 3 Months. Till 0701305109">
+<title>SomaHub Kenya - CBC PP1-G9 Notes, Exams, AI Marks Homework</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-<style>@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;700;800&display=swap'); body{font-family:'Plus Jakarta Sans',sans-serif;}</style>
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import { getAuth, onAuthStateChanged, GoogleAuthProvider, signInWithPopup, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+import { getFirestore, doc, getDoc, setDoc, collection, getDocs, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+const firebaseConfig = { apiKey: "AIzaSyA93BNes3AmFyxIEgjSbvbIWqLyorLsuj8", authDomain: "somahubkenya-9e458.firebaseapp.com", projectId: "somahubkenya-9e458", storageBucket: "somahubkenya-9e458.firebasestorage.app", messagingSenderId: "615579085715", appId: "1:615579085715:web:28fca37ba498324bb49666" };
+const app=initializeApp(firebaseConfig); const auth=getAuth(app); const db=getFirestore(app); const provider=new GoogleAuthProvider();
+window.FB={auth,db,provider,signInWithPopup,signInWithEmailAndPassword,createUserWithEmailAndPassword,onAuthStateChanged,signOut,doc,getDoc,setDoc,collection,getDocs,serverTimestamp};
+</script>
 </head>
-<body class="bg-white">
-<!-- Header -->
-<header class="sticky top-0 bg-white/95 backdrop-blur shadow z-50">
+<body class="bg-[#0a0a0a] text-white">
+<header class="bg-[#141414] border-b border-white/10 sticky top-0 z-50">
 <div class="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
-<div class="flex items-center gap-2 font-black text-xl"><i class="fa-solid fa-book-open text-green-600"></i> SomaHub<span class="text-green-600">.KE</span></div>
-<div class="hidden md:flex gap-2 text-xs">
-<a href="/notes.html" class="bg-gray-100 px-3 py-2 rounded-full">Notes</a>
-<a href="/exams.html" class="bg-gray-100 px-3 py-2 rounded-full">Exams</a>
-<a href="/ai-assistant.html" class="bg-black text-white px-3 py-2 rounded-full">AI Assistant 🤖</a>
-</div>
+<a href="/" class="font-black text-sm"><i class="fa-solid fa-graduation-cap text-green-400"></i> SomaHub Kenya <span id="aiLive" class="bg-red-500/20 text-red-400 text-[9px] px-2 py-1 rounded-full ml-2">AI OFF</span></a>
 <div class="flex gap-2 items-center">
-<a id="joinBtn" href="/registration.html" class="bg-green-600 text-white px-5 py-2 rounded-full font-bold text-sm">Join Now</a>
-<a id="loginBtn" href="/dashboard.html" class="border px-4 py-2 rounded-full text-sm font-bold">Login</a>
+<span id="premB" class="hidden bg-green-600 px-3 py-1 rounded-full text-[10px] font-bold">PREMIUM ✅</span>
+<a href="/wallet.html" class="text-[11px] bg-white/10 px-3 py-2 rounded-full hidden md:block">Till 0701305109</a>
+<button id="authBtn" class="bg-white text-black px-4 py-2 rounded-full text-xs font-bold">Login</button>
 </div>
 </div>
 </header>
 
-<!-- Hero -->
-<section class="bg-gradient-to-br from-green-600 via-emerald-600 to-blue-700 text-white">
-<div class="max-w-7xl mx-auto px-4 py-16 md:py-24 grid md:grid-cols-2 gap-8 items-center">
-<div>
-<div class="inline-block bg-white/20 px-4 py-1 rounded-full text-xs font-bold">🔥 5,231+ Students & Teachers • PP1-G9</div>
-<h1 class="text-4xl md:text-6xl font-black mt-4 leading-tight">CBC Notes, Exams & AI Homework<br><span class="text-yellow-300">PP1 to Grade 9</span></h1>
-<p class="mt-4 text-white/90 text-lg">Kenya's #1 Learning Platform. Schemes, Lesson Plans, Curriculum Designs, Past Papers + AI that solves homework from photo!</p>
+<div class="max-w-7xl mx-auto p-4">
+<!-- HERO -->
+<div class="bg-gradient-to-br from-green-600 via-black to-purple-700 rounded-[2rem] p-8 md:p-10 text-white relative overflow-hidden">
+<div class="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full blur-3xl"></div>
+<h1 class="text-3xl md:text-5xl font-black leading-tight">CBC PP1-G9<br><span class="text-green-300">AI Marks Exams & Homework</span><br>Instantly</h1>
+<p class="text-sm mt-4 text-white/80 max-w-xl">Notes • Exams • Past Papers • AI reads handwriting, marks, gives % + corrections. Searches word meaning in your notes + YouTube video + sets homework FROM notes according to level.</p>
 <div class="mt-6 flex flex-wrap gap-3">
-<a href="/registration.html" class="bg-white text-green-700 px-8 py-4 rounded-full font-black text-lg">🚀 Start Learning - 500 KES</a>
-<a href="/ai-assistant.html" class="bg-black/30 backdrop-blur px-6 py-4 rounded-full font-bold border border-white/30">Try AI Free 🤖</a>
+<a href="/ai-homework.html" class="bg-white text-black px-6 py-3 rounded-full font-black text-sm"><i class="fa-solid fa-camera"></i> Snap Homework - AI Marks</a>
+<a href="/notes.html" class="bg-white/10 border border-white/20 px-6 py-3 rounded-full font-bold text-sm">📚 Notes + AI Search Word</a>
 </div>
-<div class="mt-6 bg-white text-green-700 p-4 rounded-2xl inline-block">
-<p class="text-xs font-bold">💰 LIPA NA M-PESA TILL</p>
-<p class="text-3xl font-black">0701305109</p>
-<p class="text-xs">500 KES / 3 Months • Buy Goods & Services</p>
+<div class="mt-6 flex gap-2 text-[10px]"><span class="bg-white/20 px-3 py-1 rounded-full">📸 Vision AI</span><span class="bg-white/20 px-3 py-1 rounded-full">📝 Auto-Mark %</span><span class="bg-white/20 px-3 py-1 rounded-full">🔍 Search + YouTube</span><span class="bg-white/20 px-3 py-1 rounded-full">500 KES / 3 Months</span></div>
 </div>
-</div>
-<div class="bg-white/10 backdrop-blur p-6 rounded-3xl border border-white/20">
-<p class="font-bold">📊 What You Get for 500 KES</p>
-<div class="mt-4 grid grid-cols-2 gap-3 text-sm">
-<div class="bg-white text-gray-800 p-3 rounded-xl"><i class="fa-solid fa-book text-purple-600"></i><p class="font-bold mt-1">10,000+ Notes</p><p class="text-[11px] text-gray-500">PP1-G9 All Subjects</p></div>
-<div class="bg-white text-gray-800 p-3 rounded-xl"><i class="fa-solid fa-file text-blue-600"></i><p class="font-bold mt-1">5,000+ Exams</p><p class="text-[11px] text-gray-500">With Marking Schemes</p></div>
-<div class="bg-white text-gray-800 p-3 rounded-xl"><i class="fa-solid fa-robot text-green-600"></i><p class="font-bold mt-1">AI Assistant</p><p class="text-[11px] text-gray-500">Homework from Photo</p></div>
-<div class="bg-white text-gray-800 p-3 rounded-xl"><i class="fa-solid fa-person-chalkboard text-orange-600"></i><p class="font-bold mt-1">Teachers Pack</p><p class="text-[11px] text-gray-500">Schemes + Plans</p></div>
-</div>
-<div class="mt-4 flex gap-2 text-[10px] text-white/70"><span>✅ KICD Aligned</span><span>✅ CBC</span><span>✅ Instant Access</span></div>
-</div>
-</div>
-</section>
 
-<!-- All Portals -->
-<section class="max-w-7xl mx-auto px-4 py-12">
-<h2 class="text-2xl font-black text-center">🚀 Choose Your Portal</h2>
-<p class="text-center text-sm text-gray-500 mt-2">12 Powerful Tools - PP1 to Grade 9</p>
-<div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-8">
-<a href="/dashboard.html" class="bg-gradient-to-br from-green-500 to-blue-600 p-5 rounded-2xl text-white shadow-lg hover:scale-105 transition"><i class="fa-solid fa-table-columns text-2xl"></i><p class="font-bold mt-3">My Dashboard</p><p class="text-xs opacity-80 mt-1">Your learning hub</p><span class="text-[10px] mt-3 inline-block bg-white/20 px-2 py-1 rounded-full">START HERE</span></a>
-<a href="/ai-assistant.html" class="bg-gradient-to-br from-gray-900 to-black p-5 rounded-2xl text-white shadow-lg hover:scale-105 transition border-2 border-green-400"><i class="fa-solid fa-robot text-2xl text-green-400"></i><p class="font-bold mt-3">AI Assistant 🤖</p><p class="text-xs opacity-80 mt-1">ChatGPT for CBC</p><span class="text-[10px] mt-3 inline-block bg-green-500 px-2 py-1 rounded-full">HOT & NEW</span></a>
-<a href="/homework.html" class="bg-gradient-to-br from-purple-500 to-pink-600 p-5 rounded-2xl text-white shadow-lg hover:scale-105 transition"><i class="fa-solid fa-camera text-2xl"></i><p class="font-bold mt-3">AI Homework</p><p class="text-xs opacity-80 mt-1">Snap & Solve</p><span class="text-[10px] mt-3 inline-block bg-white/20 px-2 py-1 rounded-full">500 KES</span></a>
-<a href="/wallet.html" class="bg-gradient-to-br from-emerald-500 to-green-700 p-5 rounded-2xl text-white shadow-lg hover:scale-105 transition"><i class="fa-solid fa-wallet text-2xl"></i><p class="font-bold mt-3">Wallet - Till</p><p class="text-xs opacity-80 mt-1">0701305109</p><span class="text-[10px] mt-3 inline-block bg-white text-green-700 px-2 py-1 rounded-full font-bold">PAY 500</span></a>
-<a href="/students.html" class="bg-white border-2 p-5 rounded-2xl shadow hover:shadow-xl hover:scale-105 transition"><i class="fa-solid fa-graduation-cap text-2xl text-blue-600"></i><p class="font-bold mt-3">Students Portal</p><p class="text-xs text-gray-500 mt-1">PP1-G9 Notes+Exams</p><p class="text-[10px] mt-2 bg-blue-100 inline-block px-2 py-1 rounded-full">2,000+ Students</p></a>
-<a href="/teachers.html" class="bg-white border-2 p-5 rounded-2xl shadow hover:shadow-xl hover:scale-105 transition"><i class="fa-solid fa-chalkboard-user text-2xl text-orange-600"></i><p class="font-bold mt-3">Teachers Portal</p><p class="text-xs text-gray-500 mt-1">Schemes+Plans+Designs</p><p class="text-[10px] mt-2 bg-orange-100 inline-block px-2 py-1 rounded-full">500+ Teachers</p></a>
-<a href="/notes.html" class="bg-white border-2 p-5 rounded-2xl shadow hover:shadow-xl hover:scale-105 transition"><i class="fa-solid fa-book text-2xl text-purple-600"></i><p class="font-bold mt-3">Notes Only</p><p class="text-xs text-gray-500 mt-1">Revision Notes PP1-G9</p><p class="text-[10px] mt-2 bg-purple-100 inline-block px-2 py-1 rounded-full">10,000+ Notes</p></a>
-<a href="/exams.html" class="bg-white border-2 p-5 rounded-2xl shadow hover:shadow-xl hover:scale-105 transition"><i class="fa-solid fa-file-lines text-2xl text-indigo-600"></i><p class="font-bold mt-3">Exams Only</p><p class="text-xs text-gray-500 mt-1">Past Papers + Marking</p><p class="text-[10px] mt-2 bg-indigo-100 inline-block px-2 py-1 rounded-full">5,000+ Papers</p></a>
-<a href="/schemes.html" class="bg-white border-2 p-5 rounded-2xl shadow hover:shadow-xl hover:scale-105 transition"><i class="fa-solid fa-list-check text-2xl text-yellow-600"></i><p class="font-bold mt-3">Schemes of Work</p><p class="text-xs text-gray-500 mt-1">Term 1-3 PP1-G9</p><p class="text-[10px] mt-2 bg-yellow-100 inline-block px-2 py-1 rounded-full">For Teachers</p></a>
-<a href="/lesson-plans.html" class="bg-white border-2 p-5 rounded-2xl shadow hover:shadow-xl hover:scale-105 transition"><i class="fa-solid fa-person-chalkboard text-2xl text-red-600"></i><p class="font-bold mt-3">Lesson Plans</p><p class="text-xs text-gray-500 mt-1">CBC Detailed Plans</p><p class="text-[10px] mt-2 bg-red-100 inline-block px-2 py-1 rounded-full">KICD Format</p></a>
-<a href="/curriculum-designs.html" class="bg-white border-2 p-5 rounded-2xl shadow hover:shadow-xl hover:scale-105 transition"><i class="fa-solid fa-book-atlas text-2xl text-teal-600"></i><p class="font-bold mt-3">Curriculum Designs</p><p class="text-xs text-gray-500 mt-1">Official KICD</p><p class="text-[10px] mt-2 bg-teal-100 inline-block px-2 py-1 rounded-full">2024 Edition</p></a>
-<a href="/registration.html" class="bg-black p-5 rounded-2xl text-white shadow hover:scale-105 transition"><i class="fa-solid fa-user-plus text-2xl"></i><p class="font-bold mt-3">Register Now</p><p class="text-xs opacity-80 mt-1">Join 5,000+ Users</p><span class="text-[10px] mt-3 inline-block bg-white text-black px-2 py-1 rounded-full font-bold">FREE ACCOUNT</span></a>
-</div>
-</section>
+<!-- 4 MAIN AI PAGES -->
+<div class="mt-8 grid md:grid-cols-4 gap-4">
+<a href="/notes.html" class="bg-[#141414] border border-purple-500/30 p-5 rounded-[1.5rem] hover:bg-[#1f1f1f] transition">
+<div class="flex justify-between"><span class="bg-purple-500/20 text-purple-400 text-[10px] px-3 py-1 rounded-full font-bold">POPULAR</span><i class="fa-solid fa-book text-purple-400"></i></div>
+<h3 class="font-black mt-3">📚 Notes PP1-G9</h3><p class="text-[11px] text-gray-400 mt-1">Colored CBC notes + AI search word meaning + YouTube process video + AI sets HW from notes by level</p>
+<div class="mt-3 text-[10px] text-purple-400 font-bold">Fixed filter + AI search + Video →</div>
+</a>
 
-<!-- Pricing -->
-<section class="bg-gray-50 py-12">
-<div class="max-w-4xl mx-auto px-4 text-center">
-<h2 class="text-3xl font-black">💰 One Price - Everything</h2>
-<p class="text-sm text-gray-600 mt-2">No hidden fees • Till 0701305109 • 3 Months Premium</p>
-<div class="mt-8 bg-white rounded-3xl shadow-2xl p-8 border-2 border-green-600 max-w-md mx-auto">
-<div class="bg-green-100 inline-block px-4 py-1 rounded-full text-xs font-bold text-green-700">MOST POPULAR</div>
-<h3 class="text-4xl font-black mt-4">500 KES</h3><p class="text-sm text-gray-500">/ 3 Months (90 Days)</p>
-<ul class="text-left text-sm mt-6 space-y-3">
-<li><i class="fa-solid fa-check text-green-600"></i> 10,000+ Notes PP1-G9</li>
-<li><i class="fa-solid fa-check text-green-600"></i> 5,000+ Exams + Marking Schemes</li>
-<li><i class="fa-solid fa-check text-green-600"></i> AI Assistant Unlimited (ChatGPT for CBC)</li>
-<li><i class="fa-solid fa-check text-green-600"></i> AI Homework Solver - Photo to Answer</li>
-<li><i class="fa-solid fa-check text-green-600"></i> Schemes of Work Term 1-3</li>
-<li><i class="fa-solid fa-check text-green-600"></i> Lesson Plans CBC</li>
-<li><i class="fa-solid fa-check text-green-600"></i> Curriculum Designs KICD</li>
-</ul>
-<div class="mt-6 bg-green-50 p-4 rounded-xl border">
-<p class="font-bold text-sm">Pay via M-Pesa Till</p><p class="text-2xl font-black text-green-600">0701305109</p><p class="text-xs">Buy Goods & Services → 500 KES</p>
-</div>
-<a href="/registration.html" class="block w-full bg-green-600 text-white py-4 rounded-full font-black mt-6">🚀 Pay 500 & Start Now</a>
-<p class="text-[10px] text-gray-500 mt-2">Admin approves in 5 mins after M-Pesa code</p>
-</div>
-</div>
-</section>
+<a href="/exams.html" class="bg-[#141414] border border-blue-500/30 p-5 rounded-[1.5rem] hover:bg-[#1f1f1f] transition">
+<div class="flex justify-between"><span class="bg-blue-500/20 text-blue-400 text-[10px] px-3 py-1 rounded-full font-bold">TIMER + AI MARK</span><i class="fa-solid fa-file-lines text-blue-400"></i></div>
+<h3 class="font-black mt-3">📝 Exams & Past Papers</h3><p class="text-[11px] text-gray-400 mt-1">Term 1,2,3 • Opener, Mid, End • Do online with timer • AI marks % + corrections instantly</p>
+<div class="mt-3 text-[10px] text-blue-400 font-bold">Do online + AI % →</div>
+</a>
 
-<footer class="bg-black text-white py-10">
-<div class="max-w-7xl mx-auto px-4 grid md:grid-cols-4 gap-8 text-sm">
-<div><p class="font-black text-lg">SomaHub.KE</p><p class="text-xs text-gray-400 mt-2">Kenya's #1 CBC Platform PP1-G9. Built for learners & teachers.</p><p class="text-xs mt-3 bg-white/10 p-2 rounded">Till 0701305109<br>500 KES / 3 Months</p></div>
-<div><p class="font-bold">Students</p><ul class="mt-2 space-y-1 text-xs text-gray-400"><li><a href="/notes.html">Notes PP1-G9</a></li><li><a href="/exams.html">Exams</a></li><li><a href="/ai-assistant.html">AI Assistant</a></li><li><a href="/homework.html">Homework Solver</a></li></ul></div>
-<div><p class="font-bold">Teachers</p><ul class="mt-2 space-y-1 text-xs text-gray-400"><li><a href="/schemes.html">Schemes</a></li><li><a href="/lesson-plans.html">Lesson Plans</a></li><li><a href="/curriculum-designs.html">Curriculum Designs</a></li><li><a href="/teachers.html">Teacher Portal</a></li></ul></div>
-<div><p class="font-bold">Account</p><ul class="mt-2 space-y-1 text-xs text-gray-400"><li><a href="/registration.html">Register</a></li><li><a href="/dashboard.html">Dashboard</a></li><li><a href="/wallet.html">Wallet - Pay</a></li><li><a href="/admin.html">Admin</a></li></ul></div>
-</div>
-<div class="text-center text-[10px] text-gray-500 mt-8">© 2026 SomaHub Kenya • PP1-Grade 9 • Till 0701305109 • All Rights Reserved</div>
-</footer>
+<a href="/ai-homework.html" class="bg-[#141414] border border-green-500/40 p-5 rounded-[1.5rem] hover:bg-[#1f1f1f] transition ring-1 ring-green-500/20">
+<div class="flex justify-between"><span class="bg-green-500 text-black text-[10px] px-3 py-1 rounded-full font-black">NEW - REAL AI</span><i class="fa-solid fa-camera text-green-400"></i></div>
+<h3 class="font-black mt-3">📸 AI Homework & Exam Marker</h3><p class="text-[11px] text-gray-400 mt-1">Snap photo → Vision AI reads handwriting → Marks → Gives % + corrections + final answer CBC style</p>
+<div class="mt-3 text-[10px] text-green-400 font-bold">Snap → AI marks real →</div>
+</a>
 
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-const firebaseConfig = {
-  apiKey: "AIzaSyA93BNes3AmFyxIEgjSbvbIWqLyorLsuj8",
-  authDomain: "somahubkenya-9e458.firebaseapp.com",
-  projectId: "somahubkenya-9e458",
-  storageBucket: "somahubkenya-9e458.firebasestorage.app",
-  messagingSenderId: "615579085715",
-  appId: "1:615579085715:web:28fca37ba498324bb49666"
-};
-const app=initializeApp(firebaseConfig); const auth=getAuth(app);
-onAuthStateChanged(auth, (user)=>{
-  if(user){
-    const joinBtn=document.getElementById('joinBtn');
-    const loginBtn=document.getElementById('loginBtn');
-    if(joinBtn){ joinBtn.textContent="Dashboard"; joinBtn.href="/dashboard.html"; joinBtn.classList.remove('bg-green-600'); joinBtn.classList.add('bg-black'); }
-    if(loginBtn){ loginBtn.textContent=user.email.split('@')[0]; }
-  }
-});
+<a href="/ai-assistant.html" class="bg-[#141414] border border-yellow-500/30 p-5 rounded-[1.5rem] hover:bg-[#1f1f1f] transition">
+<div class="flex justify-between"><span class="bg-yellow-500/20 text-yellow-400 text-[10px] px-3 py-1 rounded-full font-bold">CHAT + GOOGLE</span><i class="fa-solid fa-robot text-yellow-400"></i></div>
+<h3 class="font-black mt-3">🤖 AI Assistant - All Modes</h3><p class="text-[11px] text-gray-400 mt-1">Student Q&A, Teacher schemes, Mark exam, Mark HW, Google + Your Notes + Exams search</p>
+<div class="mt-3 text-[10px] text-yellow-400 font-bold">Chat + Google + Notes →</div>
+</a>
+</div>
+
+<!-- HOW IT WORKS -->
+<div class="mt-8 grid md:grid-cols-3 gap-4">
+<div class="bg-white text-black p-5 rounded-[1.5rem]"><h3 class="font-black text-sm">🔍 1. Search Word in Notes</h3><p class="text-xs text-gray-600 mt-2">Type <b>photosynthesis</b> in notes.html → Finds in your notes → AI gives meaning according to level (PP1 vs Grade 7) + comparison + mnemonic + YouTube video of process</p></div>
+<div class="bg-[#141414] border border-white/10 p-5 rounded-[1.5rem]"><h3 class="font-black text-sm">🤖 2. AI Sets HW from Notes</h3><p class="text-xs text-gray-400 mt-2">AI reads ALL your notes for that grade → Creates homework + exam according to level (simple PP1, hard G9) → Answers + marking scheme + level comparison</p></div>
+<div class="bg-green-600 p-5 rounded-[1.5rem] text-white"><h3 class="font-black text-sm">📸 3. Snap → AI Marks %</h3><p class="text-xs mt-2">Student snaps handwritten homework or exam → Gemini Vision reads → Marks strict CBC → Gives % + corrections + what to revise + links to your notes</p></div>
+</div>
+
+<!-- STATS + TILL -->
+<div class="mt-8 bg-[#141414] border border-white/10 rounded-[1.5rem] p-6 flex flex-col md:flex-row justify-between items-center gap-4">
+<div class="flex gap-6 text-center"><div><p class="text-2xl font-black" id="statNotes">0</p><p class="text-[10px] text-gray-400">Notes</p></div><div><p class="text-2xl font-black" id="statExams">0</p><p class="text-[10px] text-gray-400">Exams</p></div><div><p class="text-2xl font-black">PP1-G9</p><p class="text-[10px] text-gray-400">Levels</p></div><div><p class="text-2xl font-black text-green-400">AI LIVE</p><p class="text-[10px] text-gray-400">Gemini Vision</p></div></div>
+<div class="bg-white text-black px-6 py-3 rounded-full font-black text-sm">💰 Till 0701305109 - 500 KES / 3 Months Unlimited AI Marking</div>
+</div>
+
+<div class="mt-6 text-center text-[10px] text-gray-500">
+<p>SomaHub Kenya - CBC Competency Based Curriculum - Powered by Gemini AI + Firestore + Your Notes Collection</p>
+<p class="mt-1"><a href="/admin.html" class="underline">Admin - AI Brain Setup</a> • <a href="/teachers.html" class="underline">Teachers</a> • <a href="/students.html" class="underline">Students</a> • <a href="/wallet.html" class="underline">Wallet - Till 0701305109</a></p>
+</div>
+</div>
+
+<div id="authModal" class="hidden fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4"><div class="bg-white text-black rounded-[1.5rem] p-6 w-full max-w-sm"><h3 class="font-black">Login SomaHub AI</h3><button id="gLogin" class="w-full border-2 py-3 rounded-full mt-3 font-bold text-sm">Continue with Google</button><input id="email" placeholder="Email" class="w-full border p-3 rounded-xl mt-3 text-sm"><input id="pass" type="password" placeholder="Password" class="w-full border p-3 rounded-xl mt-2 text-sm"><button id="eLogin" class="w-full bg-black text-white py-3 rounded-full mt-3 font-bold">Login</button><button onclick="document.getElementById('authModal').classList.add('hidden')" class="w-full mt-3 text-xs">Close</button></div></div>
+
+<script>
+let currentUser=null;
+setTimeout(()=>{
+ const FB=window.FB;
+ document.getElementById('gLogin').onclick=async()=>{try{const r=await FB.signInWithPopup(FB.auth,FB.provider); await ensureUser(r.user);}catch(e){alert(e.message)}};
+ document.getElementById('eLogin').onclick=async()=>{const em=document.getElementById('email').value, ps=document.getElementById('pass').value; if(!em||!ps) return alert("Fill"); try{const r=await FB.createUserWithEmailAndPassword(FB.auth,em,ps); await ensureUser(r.user);}catch{try{const r2=await FB.signInWithEmailAndPassword(FB.auth,em,ps); await ensureUser(r2.user);}catch(e){alert(e.message)}}};
+ document.getElementById('authBtn').onclick=()=>{if(currentUser) FB.signOut(FB.auth); else document.getElementById('authModal').classList.remove('hidden');};
+ async function ensureUser(u){const ref=FB.doc(FB.db,"users",u.uid); const s=await FB.getDoc(ref); if(!s.exists()){await FB.setDoc(ref,{email:u.email, role:"learner", isPremium:false, mpesaCode:"", createdAt:FB.serverTimestamp()});} document.getElementById('authModal').classList.add('hidden');}
+ FB.onAuthStateChanged(FB.auth, async(u)=>{
+  currentUser=u;
+  if(u){
+   document.getElementById('authBtn').innerText="Logout";
+   const ref=FB.doc(FB.db,"users",u.uid); const snap=await FB.getDoc(ref);
+   if(snap.exists() && snap.data().isPremium){document.getElementById('premB').classList.remove('hidden');}
+   try{const cfg=await FB.getDoc(FB.doc(FB.db,"config","ai")); if(cfg.exists() && cfg.data().geminiKey){document.getElementById('aiLive').innerText="AI LIVE ✅"; document.getElementById('aiLive').className="bg-green-500/20 text-green-400 text-[9px] px-2 py-1 rounded-full ml-2";}}catch(e){}
+  }else{document.getElementById('authBtn').innerText="Login"; document.getElementById('premB').classList.add('hidden');}
+  // stats
+  try{const s1=await FB.getDocs(FB.collection(FB.db,"resources")); let n=0,e=0; s1.forEach(d=>{const r=d.data(); if(r.type==="Notes") n++; if(r.type==="Exam") e++;}); document.getElementById('statNotes').innerText=n; document.getElementById('statExams').innerText=e;}catch(e){}
+ });
+},500);
 </script>
 </body>
 </html>
