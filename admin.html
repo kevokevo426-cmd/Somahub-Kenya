@@ -2,9 +2,8 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SomaHub - MASTER ADMIN FIXED</title>
+<title>SomaHub - MASTER ADMIN SECURE</title>
 <script src="https://cdn.tailwindcss.com"></script>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
@@ -18,7 +17,6 @@ const firebaseConfig = {
   messagingSenderId: "615579085715",
   appId: "1:615579085715:web:28fca37ba498324bb49666"
 };
-
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
@@ -27,103 +25,43 @@ window.FB = {auth,db,onAuthStateChanged,signInWithEmailAndPassword,createUserWit
 </head>
 <body class="bg-gray-50">
 <div id="loginDiv" class="min-h-screen flex items-center justify-center p-4">
-<div class="bg-white p-8 rounded-2xl shadow-xl max-w-sm w-full text-center">
-<h1 class="text-2xl font-black">🛠️ MASTER ADMIN FIXED</h1>
-<p class="text-xs text-gray-500 mt-1">Error Fixed + PIN 0701</p>
-<div id="errorBox" class="hidden mt-3 bg-red-50 border border-red-200 p-3 rounded-xl text-xs text-red-700"></div>
+<div class="bg-white p-8 rounded-2xl shadow-xl max-w-sm w-full">
+<h1 class="text-2xl font-black">🛠️ MASTER ADMIN SECURE</h1>
+<div id="errorBox" class="hidden mt-3 bg-red-50 border p-3 rounded-xl text-xs text-red-700"></div>
 <input id="email" placeholder="Admin Email" value="admin@somahub.co.ke" class="w-full border p-3 rounded-xl mt-4 text-sm">
-<input id="pass" type="password" placeholder="Password" value="Admin12345" class="w-full border p-3 rounded-xl mt-2 text-sm">
-<input id="pin" placeholder="Secret PIN (0701)" class="w-full border-2 border-yellow-300 p-3 rounded-xl mt-2 text-sm bg-yellow-50" maxlength="4">
-<button id="loginBtn" class="w-full bg-black text-white py-3 rounded-xl font-bold mt-4">Enter Master Admin</button>
-<button id="createBtn" class="w-full bg-green-600 text-white py-3 rounded-xl font-bold mt-2 text-sm">🆕 Create Admin Account First</button>
-<p class="text-[10px] text-gray-400 mt-3">PIN: 0701 bypasses Firebase if error<br>First time? Click Create Account</p>
+<input id="pass" type="password" placeholder="Password" class="w-full border p-3 rounded-xl mt-2 text-sm">
+<button id="loginBtn" class="w-full bg-black text-white py-3 rounded-xl font-bold mt-4">Login</button>
+<button id="createBtn" class="w-full bg-green-600 text-white py-2 rounded-xl text-xs mt-2">Create Admin First Time Only</button>
 </div>
 </div>
-
 <div id="adminDiv" class="hidden">
-<header class="bg-black text-white p-4 sticky top-0 z-50"><div class="max-w-7xl mx-auto flex justify-between"><h1 class="font-black">MASTER ADMIN - Fixed ✅ 14 Pages</h1><button id="logout" class="bg-red-600 px-4 py-1 rounded-full text-xs">Logout</button></div></header>
-<div class="max-w-7xl mx-auto p-4">
-<div class="grid grid-cols-4 gap-3">
-<div class="bg-white p-4 rounded-xl shadow"><p class="text-[10px]">TOTAL USERS</p><p id="tUsers" class="text-xl font-black">0</p></div>
-<div class="bg-green-50 p-4 rounded-xl shadow border border-green-200"><p class="text-[10px]">PREMIUM</p><p id="tPaid" class="text-xl font-black text-green-600">0</p></div>
-<div class="bg-yellow-50 p-4 rounded-xl shadow border border-yellow-200"><p class="text-[10px]">PENDING</p><p id="tPend" class="text-xl font-black text-yellow-600">0</p></div>
-<div class="bg-blue-50 p-4 rounded-xl shadow border border-blue-200"><p class="text-[10px]">REVENUE</p><p id="tRev" class="text-xl font-black text-blue-600">0</p></div>
+<header class="bg-black text-white p-4 flex justify-between"><h1 class="font-black">MASTER ADMIN ✅ Secure Rules</h1><button id="logout" class="bg-red-600 px-4 py-1 rounded-full text-xs">Logout</button></header>
+<!-- YOUR REST OF ADMIN UI HERE - keep your grids/tables -->
 </div>
-<div class="mt-6 flex gap-2 overflow-x-auto"><button onclick="showTab('subs')" id="bSubs" class="bg-black text-white px-5 py-3 rounded-full text-xs font-bold">💰 Subscriptions</button><button onclick="showTab('pages')" id="bPages" class="bg-white border px-5 py-3 rounded-full text-xs font-bold">📄 Edit 14 Pages</button><button onclick="showTab('res')" id="bRes" class="bg-white border px-5 py-3 rounded-full text-xs font-bold">📚 Resources</button></div>
-<div id="tabSubs" class="mt-4 bg-white rounded-2xl shadow p-5"><h2 class="font-bold">💰 Approvals - Till 0701305109</h2><div class="mt-3 flex gap-2"><input id="searchSub" placeholder="Search email / M-Pesa" class="flex-1 border p-3 rounded-xl text-sm" oninput="renderSubs()"><button onclick="loadUsers()" class="bg-black text-white px-4 py-2 rounded-full text-xs">Refresh</button></div><div class="mt-4 overflow-x-auto"><table class="w-full text-xs"><thead class="bg-gray-100 text-[10px]"><tr><th class="p-3 text-left">User</th><th class="p-3">M-Pesa</th><th class="p-3">Status</th><th class="p-3">Action</th></tr></thead><tbody id="subsBody"></tbody></table></div></div>
-<div id="tabPages" class="hidden mt-4 bg-white rounded-2xl shadow p-5"><h2 class="font-bold">📄 14 Pages - Click to View</h2><div class="mt-4 grid md:grid-cols-2 gap-3" id="pagesGrid"></div></div>
-<div id="tabRes" class="hidden mt-4 bg-white rounded-2xl shadow p-5"><h2 class="font-bold">📚 Add Resources</h2><div class="grid md:grid-cols-4 gap-2 mt-4"><input id="rTitle" placeholder="Title" class="border p-3 rounded-xl text-sm"><select id="rGrade" class="border p-3 rounded-xl text-sm"><option>Grade 5</option><option>PP1</option><option>PP2</option><option>Grade 1</option><option>Grade 2</option><option>Grade 3</option><option>Grade 4</option><option>Grade 6</option><option>Grade 7</option><option>Grade 8</option><option>Grade 9</option></select><select id="rType" class="border p-3 rounded-xl text-sm"><option>Notes</option><option>Exam</option><option>Scheme</option><option>Lesson Plan</option></select><input id="rLink" placeholder="Drive Link" class="border p-3 rounded-xl text-sm"></div><button onclick="addResource()" class="w-full bg-black text-white py-3 rounded-xl font-bold mt-3">Add</button><div id="resList" class="mt-6 space-y-2"></div></div>
-</div>
-</div>
-
 <script>
-let allUsers=[], PAGES=[
-{id:'index', name:'index.html', icon:'🏠', url:'/'},{id:'registration', name:'registration.html', icon:'📝', url:'/registration.html'},
-{id:'dashboard', name:'dashboard.html', icon:'📊', url:'/dashboard.html'},{id:'students', name:'students.html', icon:'🎓', url:'/students.html'},
-{id:'teachers', name:'teachers.html', icon:'👩‍🏫', url:'/teachers.html'},{id:'notes', name:'notes.html', icon:'📚', url:'/notes.html'},
-{id:'exams', name:'exams.html', icon:'📝', url:'/exams.html'},{id:'homework', name:'homework.html', icon:'🤖', url:'/homework.html'},
-{id:'schemes', name:'schemes.html', icon:'📋', url:'/schemes.html'},{id:'lesson-plans', name:'lesson-plans.html', icon:'📖', url:'/lesson-plans.html'},
-{id:'curriculum-designs', name:'curriculum-designs.html', icon:'📘', url:'/curriculum-designs.html'},{id:'ai-assistant', name:'ai-assistant.html', icon:'💬', url:'/ai-assistant.html'},
-{id:'wallet', name:'wallet.html', icon:'💰', url:'/wallet.html'},{id:'panel', name:'panel.html', icon:'📊', url:'/panel.html'},
-];
 setTimeout(()=>{
 const FB=window.FB;
 function showErr(m){const b=document.getElementById('errorBox'); b.classList.remove('hidden'); b.innerText=m;}
-
 document.getElementById('createBtn').onclick=async()=>{
-const e=document.getElementById('email').value, p=document.getElementById('pass').value;
-if(!e||!p) return showErr("Enter email & password");
-try{
-const cred=await FB.createUserWithEmailAndPassword(FB.auth,e,p);
-await FB.setDoc(FB.doc(FB.db,"users",cred.user.uid),{email:e, role:"admin", isPremium:true, status:"active", displayName:"Super Admin", createdAt:FB.serverTimestamp()});
-showErr("✅ Account created! Now click Enter Master Admin");
-}catch(err){showErr("Create Error: "+err.message + " - If already exists, just login");}
+ try{
+  const e=document.getElementById('email').value, p=document.getElementById('pass').value;
+  const cred=await FB.createUserWithEmailAndPassword(FB.auth,e,p);
+  await FB.setDoc(FB.doc(FB.db,"users",cred.user.uid),{email:e, role:"admin", isPremium:true, status:"active", createdAt:FB.serverTimestamp()});
+  showErr("✅ Created! Now Login");
+ }catch(err){showErr(err.message)}
 };
-
 document.getElementById('loginBtn').onclick=async()=>{
-const e=document.getElementById('email').value, p=document.getElementById('pass').value, pin=document.getElementById('pin').value;
-if(pin==="0701"){ // PIN BYPASS
-document.getElementById('loginDiv').classList.add('hidden'); document.getElementById('adminDiv').classList.remove('hidden'); loadUsers(); loadResources(); loadPagesGrid(); return;
-}
-if(!e||!p) return showErr("Enter email & password OR use PIN 0701");
-try{await FB.signInWithEmailAndPassword(FB.auth,e,p);}catch(err){showErr("Login Error: "+err.message + " | TIP: Use PIN 0701 to bypass OR click Create Account first. "+err.code);}
+ try{
+  const e=document.getElementById('email').value, p=document.getElementById('pass').value;
+  await FB.signInWithEmailAndPassword(FB.auth,e,p);
+ }catch(err){showErr(err.message)}
 };
-
 document.getElementById('logout').onclick=()=>FB.signOut(FB.auth);
-FB.onAuthStateChanged(FB.auth, async(u)=>{
-if(!u){return;} // don't auto hide if PIN used
-document.getElementById('loginDiv').classList.add('hidden'); document.getElementById('adminDiv').classList.remove('hidden'); loadUsers(); loadResources(); loadPagesGrid();
+FB.onAuthStateChanged(FB.auth,(u)=>{
+ if(u){document.getElementById('loginDiv').classList.add('hidden'); document.getElementById('adminDiv').classList.remove('hidden');}
+ else{document.getElementById('loginDiv').classList.remove('hidden'); document.getElementById('adminDiv').classList.add('hidden');}
 });
-
-window.showTab=(t)=>{
-['Subs','Pages','Res'].forEach(k=>document.getElementById('b'+k).className='bg-white border px-5 py-3 rounded-full text-xs font-bold');
-document.getElementById('b'+t.charAt(0).toUpperCase()+t.slice(1)).className='bg-black text-white px-5 py-3 rounded-full text-xs font-bold';
-['tabSubs','tabPages','tabRes'].forEach(id=>document.getElementById(id).classList.add('hidden'));
-document.getElementById('tab'+t).classList.remove('hidden');
-};
-window.loadUsers=async()=>{
-try{
-const snap=await FB.getDocs(FB.collection(FB.db,"users")); allUsers=[]; snap.forEach(d=>allUsers.push({id:d.id,...d.data()}));
-document.getElementById('tUsers').innerText=allUsers.length;
-document.getElementById('tPaid').innerText=allUsers.filter(u=>u.isPremium).length;
-document.getElementById('tPend').innerText=allUsers.filter(u=>u.status==='pending_payment').length;
-document.getElementById('tRev').innerText=(allUsers.filter(u=>u.isPremium).length*500).toLocaleString()+" KES";
-renderSubs();
-}catch(e){document.getElementById('subsBody').innerHTML="<tr><td colspan=4 class='p-4 text-red-500'>"+e.message+"</td></tr>";}
-};
-window.renderSubs=()=>{
-const body=document.getElementById('subsBody'); const q=document.getElementById('searchSub').value.toLowerCase();
-let list=allUsers; if(q) list=list.filter(u=> (u.email||'').toLowerCase().includes(q) || (u.mpesaCode||'').toLowerCase().includes(q));
-if(list.length===0){body.innerHTML="<tr><td colspan=4 class='p-10 text-center text-gray-400'>No users - Go to registration.html and create accounts</td></tr>"; return;}
-body.innerHTML=""; list.slice(0,100).forEach(u=>{
-body.innerHTML+=`<tr class="border-b"><td class="p-3"><p class="font-bold text-xs">${u.email}</p><p class="text-[10px]">${u.role||'learner'}</p></td><td class="p-3 font-mono font-bold text-xs">${u.mpesaCode||'-'}</td><td class="p-3"><span class="px-2 py-1 rounded-full text-[10px] ${u.isPremium?'bg-green-100':'bg-yellow-100'}">${u.isPremium?'PAID':'FREE'}</span></td><td class="p-3"><div class="flex gap-1">${!u.isPremium?`<button onclick="approve('${u.id}')" class="bg-green-600 text-white px-3 py-1 rounded-full text-[10px]">Approve</button>`:`<button onclick="revoke('${u.id}')" class="bg-gray-200 px-3 py-1 rounded-full text-[10px]">Revoke</button>`}</div></td></tr>`;
-});
-};
-window.approve=async(id)=>{await FB.updateDoc(FB.doc(FB.db,"users",id),{isPremium:true, status:"active"}); loadUsers();};
-window.revoke=async(id)=>{await FB.updateDoc(FB.doc(FB.db,"users",id),{isPremium:false, status:"free"}); loadUsers();};
-window.loadPagesGrid=()=>{const g=document.getElementById('pagesGrid'); g.innerHTML=""; PAGES.forEach(p=>{g.innerHTML+=`<div class="border p-4 rounded-xl"><div class="flex justify-between"><span>${p.icon}</span><a href="${p.url}" target="_blank" class="text-[10px] bg-black text-white px-2 py-1 rounded-full">View</a></div><p class="font-bold text-sm mt-2">${p.name}</p><button onclick="window.open('${p.url}','_blank')" class="w-full mt-2 bg-gray-100 py-2 rounded-full text-xs">Open Page</button></div>`;});};
-window.loadResources=async()=>{try{const snap=await FB.getDocs(FB.collection(FB.db,"resources")); const list=document.getElementById('resList'); list.innerHTML=""; snap.forEach(d=>{const r=d.data(); list.innerHTML+=`<div class="border p-3 rounded-xl flex justify-between text-xs"><div><p class="font-bold">${r.title}</p><p class="text-[10px]">${r.grade} • ${r.type}</p></div><a href="${r.link}" target="_blank" class="bg-blue-100 px-3 py-1 rounded-full">View</a></div>`;});}catch(e){}};
-window.addResource=async()=>{const t=document.getElementById('rTitle').value, g=document.getElementById('rGrade').value, ty=document.getElementById('rType').value, l=document.getElementById('rLink').value; if(!t||!l) return alert("Fill"); await FB.addDoc(FB.collection(FB.db,"resources"),{title:t, grade:g, type:ty, link:l, createdAt:FB.serverTimestamp()}); alert("Added"); loadResources();};
+// keep your loadUsers, addResource functions here
 },800);
 </script>
 </body>
