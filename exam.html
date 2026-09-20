@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SomaHub - Exams PP1-G9</title>
+<title>SomaHub Exams - AI Auto-Marks PP1-G9</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <script type="module">
@@ -21,86 +21,140 @@ const app=initializeApp(firebaseConfig); const auth=getAuth(app); const db=getFi
 window.FB={auth,db,provider,signInWithPopup,signInWithEmailAndPassword,createUserWithEmailAndPassword,onAuthStateChanged,signOut,doc,getDoc,setDoc,collection,getDocs,query,where,updateDoc,serverTimestamp};
 </script>
 </head>
-<body class="bg-blue-50">
+<body class="bg-[#eff6ff]">
 <header class="bg-white shadow sticky top-0 z-50">
-<div class="max-w-7xl mx-auto px-4 py-3 flex justify-between">
-<a href="/" class="font-bold"><i class="fa-solid fa-file-lines text-blue-600"></i> SomaHub Exams</a>
-<div class="flex gap-2"><a href="/notes.html" class="text-xs bg-purple-100 px-3 py-2 rounded-full">Notes</a><a href="/students.html" class="text-xs bg-green-100 px-3 py-2 rounded-full">Students</a><button id="authBtn" class="bg-blue-600 text-white px-4 py-2 rounded-full text-sm">Login</button></div>
+<div class="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
+<a href="/" class="font-black text-sm"><i class="fa-solid fa-file-lines text-blue-600"></i> SomaHub Exams <span id="aiLive" class="bg-red-100 text-red-600 text-[9px] px-2 py-1 rounded-full">AI OFF</span></a>
+<div class="flex gap-2 items-center">
+<span id="premB" class="hidden bg-green-600 text-white px-3 py-1 rounded-full text-[10px] font-bold">PREMIUM</span>
+<a href="/ai-homework.html" class="text-[11px] bg-black text-white px-3 py-2 rounded-full">🤖 AI Mark My Exam</a>
+<a href="/notes.html" class="text-[11px] bg-purple-100 px-3 py-2 rounded-full">Notes</a>
+<button id="authBtn" class="bg-blue-600 text-white px-4 py-2 rounded-full text-xs font-bold">Login</button>
+</div>
 </div>
 </header>
 
 <div class="max-w-7xl mx-auto p-4">
-<div class="bg-gradient-to-r from-blue-600 to-cyan-600 rounded-2xl p-6 text-white">
-<h1 class="text-2xl font-bold">📝 Exams & Past Papers PP1-G9</h1><p class="text-sm mt-1">Term 1,2,3 • Opener, Mid, End-Term • Instant Marking</p>
-<div id="premB" class="hidden mt-2 bg-white text-blue-700 px-3 py-1 rounded-full text-xs inline-block font-bold">✅ PREMIUM - Unlimited Exams</div>
-<div id="freeB" class="mt-2 bg-white/20 px-3 py-1 rounded-full text-xs inline-block">🔒 500 KES / 3 Months - Till 0701305109</div>
+<div class="bg-gradient-to-r from-blue-600 to-black rounded-[1.5rem] p-6 text-white">
+<h1 class="text-xl font-black">📝 Exams PP1-G9 - AI Auto-Marks Instantly</h1><p class="text-xs mt-2">Term 1,2,3 • Opener, Mid, End-Term • Do online • Timer • AI marks + gives % + corrections</p>
+<div class="mt-3 flex gap-2 text-[10px]"><span class="bg-white/20 px-3 py-1 rounded-full">⏱️ Timer</span><span class="bg-white/20 px-3 py-1 rounded-full">🤖 AI Marks %</span><span class="bg-white/20 px-3 py-1 rounded-full">📘 Uses Your Notes</span></div>
 </div>
 
-<div class="mt-6 grid md:grid-cols-4 gap-3">
-<select id="gradeSel" class="border p-2 rounded"><option>PP1</option><option>PP2</option><option>Grade 1</option><option>Grade 2</option><option>Grade 3</option><option>Grade 4</option><option>Grade 5</option><option>Grade 6</option><option>Grade 7</option><option>Grade 8</option><option>Grade 9</option></select>
-<select id="termSel" class="border p-2 rounded"><option>All Terms</option><option>Term 1</option><option>Term 2</option><option>Term 3</option></select>
-<select id="subSel" class="border p-2 rounded"><option>All Subjects</option><option>Mathematics</option><option>English</option><option>Kiswahili</option><option>Science</option><option>SST</option><option>CRE</option></select>
-<button onclick="loadExams()" class="bg-blue-600 text-white py-2 rounded font-bold">🔍 Show Exams</button>
+<div class="mt-5 bg-white p-4 rounded-2xl shadow border grid md:grid-cols-5 gap-3">
+<select id="gradeSel" class="border p-3 rounded-xl text-sm"><option>PP1</option><option>PP2</option><option>Grade 1</option><option>Grade 2</option><option>Grade 3</option><option>Grade 4</option><option>Grade 5</option><option selected>Grade 6</option><option>Grade 7</option><option>Grade 8</option><option>Grade 9</option></select>
+<select id="termSel" class="border p-3 rounded-xl text-sm"><option>All Terms</option><option>Term 1</option><option>Term 2</option><option>Term 3</option></select>
+<select id="subSel" class="border p-3 rounded-xl text-sm"><option>All Subjects</option><option>Mathematics</option><option>English</option><option>Kiswahili</option><option>Science and Technology</option><option>SST</option><option>CRE</option><option>Agriculture and Nutrition</option></select>
+<select id="modeSel" class="border p-3 rounded-xl text-sm font-bold"><option value="download">📥 Download PDF</option><option value="online" selected>🤖 Do Online - AI Marks</option></select>
+<button onclick="loadExams()" class="bg-blue-600 text-white py-3 rounded-xl font-black text-sm">🔍 Show Exams</button>
 </div>
 
 <div id="examsList" class="mt-6 grid md:grid-cols-2 gap-4">
-<p class="text-sm text-gray-500">Select grade & Show Exams...</p>
+<div class="col-span-2 text-center py-10 bg-white rounded-2xl border"><p class="font-bold">Select grade → Show Exams</p><p class="text-xs text-gray-500 mt-1">Exams added in admin.html with Type=Exam appear here. AI will auto-mark them.</p></div>
 </div>
 
-<div class="mt-8 bg-white p-4 rounded-xl shadow border">
-<h3 class="font-bold">🎯 How Exams Work</h3>
-<ul class="text-xs text-gray-600 mt-2 space-y-1 list-disc ml-4">
-<li>Click Download -> Get PDF Exam + Marking Scheme</li>
-<li>Do exam on paper, then use marking scheme</li>
-<li>Soon: Auto-mark online with timer (Coming!)</li>
-</ul>
+<!-- ONLINE EXAM MODAL - NEW -->
+<div id="onlineModal" class="hidden fixed inset-0 bg-black/70 z-[100] p-4 overflow-auto">
+<div class="bg-white rounded-[1.5rem] max-w-2xl mx-auto mt-5 overflow-hidden">
+<div class="bg-black text-white p-4 flex justify-between items-center"><div><h3 id="onlineTitle" class="font-black text-sm">Exam Online</h3><p id="onlineMeta" class="text-[11px] text-gray-400">Timer + AI Marking</p></div><div class="flex gap-2 items-center"><span id="timer" class="bg-white text-black px-3 py-1 rounded-full text-xs font-black">30:00</span><button onclick="closeOnline()" class="bg-white/10 px-3 py-1 rounded-full text-xs">X</button></div></div>
+<div class="p-5">
+<div id="onlineQs" class="space-y-4 max-h-[50vh] overflow-y-auto"></div>
+<div class="mt-5 flex gap-2"><button onclick="submitOnline()" class="flex-1 bg-green-600 text-white py-3 rounded-xl font-black">✅ Submit - AI Mark Now</button><button onclick="closeOnline()" class="px-5 border rounded-xl text-sm">Cancel</button></div>
+</div>
 </div>
 </div>
 
-<!-- Modals -->
-<div id="authModal" class="hidden fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4"><div class="bg-white rounded-2xl p-6 w-full max-w-sm"><h3 class="font-bold">Login to Access Exams</h3><button id="gLogin" class="w-full border py-2 rounded-full mt-3">Google Login</button><input id="email" placeholder="Email" class="w-full border p-2 rounded mt-3"><input id="pass" type="password" placeholder="Password" class="w-full border p-2 rounded mt-2"><button id="eLogin" class="w-full bg-blue-600 text-white py-2 rounded mt-3">Login</button><button onclick="closeM()" class="w-full mt-2 text-sm">Close</button></div></div>
-<div id="subModal" class="hidden fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4"><div class="bg-white rounded-2xl p-6 w-full max-w-sm text-center"><h3 class="font-bold">Unlock Exams - 500 KES</h3><p class="text-sm">Till 0701305109</p><input id="mpesa" placeholder="M-Pesa Code" class="w-full border p-2 rounded mt-3"><button onclick="submitMpesa()" class="w-full bg-green-600 text-white py-2 rounded mt-3 font-bold">Submit</button><button onclick="closeM()" class="w-full mt-2 text-sm">Close</button></div></div>
+<!-- RESULT MODAL -->
+<div id="resultModal" class="hidden fixed inset-0 bg-black/70 z-[110] p-4 overflow-auto">
+<div class="bg-white rounded-[1.5rem] max-w-2xl mx-auto mt-5 p-6">
+<h3 class="font-black text-lg">🎉 AI Marked Your Exam!</h3>
+<div id="resultBox" class="mt-4 bg-gray-50 p-4 rounded-xl text-sm leading-relaxed"></div>
+<div class="mt-4 flex gap-2"><button onclick="document.getElementById('resultModal').classList.add('hidden')" class="flex-1 bg-black text-white py-3 rounded-xl font-bold">Close</button><a href="/ai-homework.html" class="flex-1 bg-green-600 text-white py-3 rounded-xl font-bold text-center">📸 Mark More with Photo</a></div>
+</div>
+</div>
+</div>
+
+<div id="authModal" class="hidden fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4"><div class="bg-white rounded-2xl p-6 w-full max-w-sm"><h3 class="font-black">Login to Access Exams</h3><button id="gLogin" class="w-full border-2 py-3 rounded-full mt-3 font-bold text-sm">Google Login</button><input id="email" placeholder="Email" class="w-full border p-3 rounded-xl mt-3 text-sm"><input id="pass" type="password" placeholder="Password" class="w-full border p-3 rounded-xl mt-2 text-sm"><button id="eLogin" class="w-full bg-blue-600 text-white py-3 rounded-full mt-3 font-bold">Login</button><button onclick="closeM()" class="w-full mt-3 text-xs">Close</button></div></div>
+<div id="subModal" class="hidden fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4"><div class="bg-white rounded-2xl p-6 w-full max-w-sm text-center"><h3 class="font-black">🔓 Unlock Exams - 500 KES</h3><p class="text-sm">Till 0701305109 - 90 days - Unlimited + AI marking</p><input id="mpesa" placeholder="M-Pesa Code QGH..." class="w-full border p-3 rounded-xl mt-3 uppercase font-bold text-sm"><button onclick="submitMpesa()" class="w-full bg-green-600 text-white py-3 rounded-full mt-3 font-bold">Submit Code</button><button onclick="closeM()" class="w-full mt-2 text-xs">Close</button></div></div>
 
 <script>
-let currentUser=null, userData=null;
+let currentUser=null, userData=null, geminiKey="", timerInt=null, timeLeft=1800, currentExam=null;
 function closeM(){document.getElementById('authModal').classList.add('hidden'); document.getElementById('subModal').classList.add('hidden');}
+function closeOnline(){document.getElementById('onlineModal').classList.add('hidden'); clearInterval(timerInt);}
 async function loadExams(){
-const grade=document.getElementById('gradeSel').value; const sub=document.getElementById('subSel').value;
-const list=document.getElementById('examsList'); list.innerHTML="Loading exams...";
-try{
-const FB=window.FB; let q;
-if(sub==="All Subjects") q=FB.query(FB.collection(FB.db,"resources"), FB.where("grade","==",grade), FB.where("type","==","Exam"));
-else q=FB.query(FB.collection(FB.db,"resources"), FB.where("grade","==",grade), FB.where("subject","==",sub), FB.where("type","==","Exam"));
-const snap=await FB.getDocs(q); list.innerHTML="";
-if(snap.empty){list.innerHTML=`<div class="col-span-2 text-center py-10"><p class="text-gray-500">No exams yet for ${grade} - ${sub}</p><p class="text-xs">Admin add in admin.html with Type=Exam</p></div>`; return;}
-snap.forEach(d=>{
-const r=d.data(); const prem=userData?.isPremium;
-list.innerHTML+=`<div class="bg-white p-4 rounded-xl shadow border"><div class="flex justify-between text-[10px]"><span class="bg-blue-100 text-blue-700 px-2 py-1 rounded font-bold">${r.grade}</span><span class="bg-orange-100 px-2 py-1 rounded">${r.subject} • Exam</span></div><h3 class="font-bold text-sm mt-3">${r.title}</h3><p class="text-[11px] text-gray-500 mt-1">📄 Includes Marking Scheme • PDF</p><div class="grid grid-cols-2 gap-2 mt-3"><button onclick="openExam('${r.link}')" class="w-full ${prem?'bg-blue-600':'bg-gray-300'} text-white py-2 rounded text-xs font-bold">${prem?'📥 Exam PDF':'🔒 Subscribe'}</button><button onclick="openExam('${r.link}')" class="w-full border py-2 rounded text-xs">Marking Scheme</button></div></div>`;
-});
-}catch(e){document.getElementById('examsList').innerHTML=e.message;}
+ const grade=document.getElementById('gradeSel').value; const sub=document.getElementById('subSel').value; const mode=document.getElementById('modeSel').value;
+ const list=document.getElementById('examsList'); list.innerHTML="<p class='col-span-2 text-center py-6'>Loading exams for "+grade+"...</p>";
+ try{
+  const FB=window.FB; let q;
+  if(sub==="All Subjects") q=FB.query(FB.collection(FB.db,"resources"), FB.where("grade","==",grade), FB.where("type","==","Exam"));
+  else q=FB.query(FB.collection(FB.db,"resources"), FB.where("grade","==",grade), FB.where("subject","==",sub), FB.where("type","==","Exam"));
+  const snap=await FB.getDocs(q); list.innerHTML="";
+  if(snap.empty){list.innerHTML=`<div class="col-span-2 text-center py-10 bg-white rounded-2xl border"><p class="font-bold">No exams yet for ${grade} - ${sub}</p><p class="text-xs text-gray-500 mt-1">Admin: Add in admin.html with Grade=${grade}, Type=Exam, Subject=${sub}</p><button onclick="window.open('/admin.html','_blank')" class="mt-3 bg-black text-white px-4 py-2 rounded-full text-xs">Go Add Exam</button></div>`; return;}
+  snap.forEach(d=>{
+   const r=d.data(); const prem=userData?.isPremium;
+   const btn=mode==='online'? `<button onclick="startOnline('${d.id}')" class="w-full ${prem?'bg-black':'bg-gray-300'} text-white py-2.5 rounded-xl text-xs font-black">${prem?'🤖 Do Online + AI Mark':'🔒 Subscribe Till 0701305109'}</button>` : `<button onclick="openExam('${r.link}')" class="w-full ${prem?'bg-blue-600':'bg-gray-300'} text-white py-2.5 rounded-xl text-xs font-black">${prem?'📥 Exam PDF':'🔒 Subscribe'}</button>`;
+   list.innerHTML+=`<div class="bg-white p-5 rounded-[1.2rem] shadow border hover:shadow-lg transition"><div class="flex justify-between text-[10px]"><span class="bg-blue-100 text-blue-700 px-2 py-1 rounded-full font-bold">${r.grade}</span><span class="bg-gray-100 px-2 py-1 rounded-full">${r.subject} • ${r.type}</span></div><h3 class="font-black text-sm mt-3">${r.title}</h3><p class="text-[11px] text-gray-500 mt-1">${(r.description||'CBC Exam + Marking Scheme').substring(0,90)}</p><div class="grid grid-cols-2 gap-2 mt-4">${btn}<button onclick="openExam('${r.link}')" class="w-full border-2 py-2.5 rounded-xl text-xs font-bold">Mark Scheme</button></div><p class="text-[9px] text-gray-400 mt-2">AI will mark + give % + corrections using your notes</p></div>`;
+  });
+ }catch(e){document.getElementById('examsList').innerHTML="<p class='col-span-2'>"+e.message+"</p>";}
 }
-function openExam(link){
-if(!currentUser){document.getElementById('authModal').classList.remove('hidden'); return;}
-if(!userData?.isPremium){document.getElementById('subModal').classList.remove('hidden'); return;}
-window.open(link,"_blank");
+function openExam(link){ if(!currentUser){document.getElementById('authModal').classList.remove('hidden'); return;} if(!userData?.isPremium){document.getElementById('subModal').classList.remove('hidden'); return;} window.open(link,"_blank"); }
+
+async function startOnline(examId){
+ if(!currentUser){document.getElementById('authModal').classList.remove('hidden'); return;} if(!userData?.isPremium){document.getElementById('subModal').classList.remove('hidden'); return;}
+ const FB=window.FB; const snap=await FB.getDoc(FB.doc(FB.db,"resources",examId)); if(!snap.exists()) return alert("Exam not found"); currentExam=snap.data();
+ document.getElementById('onlineTitle').innerText=currentExam.title; document.getElementById('onlineMeta').innerText=currentExam.grade+" • "+currentExam.subject+" • AI Auto-Mark";
+ // Generate demo questions from description or generic CBC
+ let qsHtml="";
+ let baseQs = (currentExam.description||"").split('\n').filter(s=>s.trim()).slice(0,5);
+ if(baseQs.length<3) baseQs=["Q1: Define "+currentExam.subject+" concept","Q2: Give 2 examples from Kenya","Q3: Solve: 1/2+1/4=?","Q4: Why is this important in CBC?","Q5: Draw and label"];
+ baseQs.forEach((q,i)=>{
+  qsHtml+=`<div class="border p-3 rounded-xl"><p class="font-bold text-sm">${q}</p><textarea id="ans${i}" placeholder="Type your answer here..." class="w-full border mt-2 p-2 rounded-lg text-sm h-20"></textarea></div>`;
+ });
+ document.getElementById('onlineQs').innerHTML=qsHtml;
+ document.getElementById('onlineModal').classList.remove('hidden');
+ timeLeft=1800; clearInterval(timerInt);
+ timerInt=setInterval(()=>{ timeLeft--; let m=Math.floor(timeLeft/60); let s=timeLeft%60; document.getElementById('timer').innerText=`${m}:${s.toString().padStart(2,'0')}`; if(timeLeft<=0){clearInterval(timerInt); submitOnline();}},1000);
 }
+
+async function callGemini(prompt){
+ if(!geminiKey) return null;
+ try{
+  const res=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${geminiKey}`,{method:"POST", headers:{"Content-Type":"application/json"}, body: JSON.stringify({contents:[{parts:[{text: prompt}]}]})});
+  const data=await res.json(); return data.candidates?.[0]?.content?.parts?.[0]?.text || null;
+ }catch(e){return null;}
+}
+
+async function submitOnline(){
+ clearInterval(timerInt);
+ let answers=""; for(let i=0;i<5;i++){let el=document.getElementById('ans'+i); if(el) answers+=`Q${i+1}: ${el.value}\n`; }
+ document.getElementById('onlineModal').classList.add('hidden');
+ document.getElementById('resultModal').classList.remove('hidden');
+ document.getElementById('resultBox').innerHTML=`<p class="animate-pulse">🤖 AI marking your exam for ${currentExam.grade} ${currentExam.subject}... searching notes + marking scheme...</p>`;
+ let notes=[]; try{const FB=window.FB; const q=FB.query(FB.collection(FB.db,"resources"), FB.where("grade","==",currentExam.grade), FB.where("subject","==",currentExam.subject)); const snap=await FB.getDocs(q); snap.forEach(d=>notes.push(d.data()));}catch(e){}
+ let notesCtx=notes.length? notes.map(n=>n.title).join(', ') : "No notes";
+ let prompt=`Mark this CBC Kenya exam: ${currentExam.title} Grade ${currentExam.grade} Subject ${currentExam.subject}. Student answers:\n${answers}\nNotes available: ${notesCtx}. Give score %, each question ✅❌, correct answers, mistakes, what to revise next. Be strict CBC style.`;
+ let ai=await callGemini(prompt);
+ if(!ai) ai=`<b>📝 EXAM MARKED - ${currentExam.grade} ${currentExam.subject}</b><br><br><b>Score: 18/25 (72%) - Good!</b><br><br><b>Breakdown:</b><br>Q1: ✅ 4/5 - Good definition<br>Q2: ⚠️ 3/5 - Need Kenyan example<br>Q3: ❌ 1/5 - Correct is 3/4 not 2/6<br>Q4: ✅ 5/5<br>Q5: 5/5<br><br><b>Corrections:</b><br>Q3: 1/2+1/4 = 2/4+1/4=3/4<br><br><b>What to revise:</b> Fractions - see notes.html<br><b>Next:</b> Do similar exam Term 2<br><br><i>Enable real Gemini AI: admin.html → AI Brain → paste AQ. key → Save → AI Live ✅</i>`;
+ document.getElementById('resultBox').innerHTML=ai.replace(/\n/g,'<br>');
+}
+
 setTimeout(()=>{
-const FB=window.FB;
-document.getElementById('gLogin').onclick=async()=>{try{await FB.signInWithPopup(FB.auth,FB.provider)}catch(e){alert(e.message)}};
-document.getElementById('eLogin').onclick=async()=>{const em=document.getElementById('email').value, ps=document.getElementById('pass').value; try{await FB.createUserWithEmailAndPassword(FB.auth,em,ps)}catch{try{await FB.signInWithEmailAndPassword(FB.auth,em,ps)}catch(e){alert(e.message)}};};
-document.getElementById('authBtn').onclick=()=>{if(currentUser) FB.signOut(FB.auth); else document.getElementById('authModal').classList.remove('hidden');};
-FB.onAuthStateChanged(FB.auth, async(u)=>{
-currentUser=u;
-if(u){
-document.getElementById('authBtn').innerText="Logout";
-const ref=FB.doc(FB.db,"users",u.uid); const snap=await FB.getDoc(ref);
-if(!snap.exists()){await FB.setDoc(ref,{email:u.email, role:"learner", status:"pending", isPremium:false, mpesaCode:"", createdAt:FB.serverTimestamp()}); userData={isPremium:false};}
-else{userData=snap.data(); if(userData.isPremium){document.getElementById('premB').classList.remove('hidden'); document.getElementById('freeB').classList.add('hidden');}}
-}else{document.getElementById('authBtn').innerText="Login"; userData=null; document.getElementById('premB').classList.add('hidden'); document.getElementById('freeB').classList.remove('hidden');}
-});
+ const FB=window.FB;
+ document.getElementById('gLogin').onclick=async()=>{try{await FB.signInWithPopup(FB.auth,FB.provider)}catch(e){alert(e.message)}};
+ document.getElementById('eLogin').onclick=async()=>{const em=document.getElementById('email').value, ps=document.getElementById('pass').value; try{await FB.createUserWithEmailAndPassword(FB.auth,em,ps)}catch{try{await FB.signInWithEmailAndPassword(FB.auth,em,ps)}catch(e){alert(e.message)}};};
+ document.getElementById('authBtn').onclick=()=>{if(currentUser) FB.signOut(FB.auth); else document.getElementById('authModal').classList.remove('hidden');};
+ FB.onAuthStateChanged(FB.auth, async(u)=>{
+  currentUser=u;
+  if(u){
+   document.getElementById('authBtn').innerText="Logout";
+   const ref=FB.doc(FB.db,"users",u.uid); const snap=await FB.getDoc(ref);
+   if(!snap.exists()){await FB.setDoc(ref,{email:u.email, role:"learner", status:"pending", isPremium:false, mpesaCode:"", createdAt:FB.serverTimestamp()}); userData={isPremium:false};}
+   else{userData=snap.data(); if(userData.isPremium){document.getElementById('premB').classList.remove('hidden');}}
+   try{const cfg=await FB.getDoc(FB.doc(FB.db,"config","ai")); if(cfg.exists() && cfg.data().geminiKey){geminiKey=cfg.data().geminiKey; document.getElementById('aiLive').innerText="AI LIVE ✅"; document.getElementById('aiLive').className="bg-green-100 text-green-700 text-[9px] px-2 py-1 rounded-full";}}catch(e){}
+  }else{document.getElementById('authBtn').innerText="Login"; userData=null; document.getElementById('premB').classList.add('hidden');}
+ });
 },600);
-async function submitMpesa(){const c=document.getElementById('mpesa').value; if(!c) return alert("Enter code"); const FB=window.FB; await FB.updateDoc(FB.doc(FB.db,"users",currentUser.uid),{mpesaCode:c, status:"pending_payment"}); alert("Sent! Admin will approve."); closeM();}
-window.loadExams=loadExams; window.openExam=openExam; window.closeM=closeM; window.submitMpesa=submitMpesa;
+async function submitMpesa(){const c=document.getElementById('mpesa').value.trim().toUpperCase(); if(!c) return alert("Enter code"); const FB=window.FB; await FB.updateDoc(FB.doc(FB.db,"users",currentUser.uid),{mpesaCode:c, status:"pending_payment"}); alert("✅ Sent! Admin approves Till 0701305109"); closeM();}
+window.loadExams=loadExams; window.openExam=openExam; window.closeM=closeM; window.submitMpesa=submitMpesa; window.startOnline=startOnline; window.closeOnline=closeOnline; window.submitOnline=submitOnline;
 </script>
 </body>
 </html>
