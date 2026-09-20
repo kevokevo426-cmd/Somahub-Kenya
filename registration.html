@@ -4,6 +4,7 @@
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Create account - SomaHub</title>
 <script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import { getAuth, createUserWithEmailAndPassword, updateProfile } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
@@ -13,84 +14,128 @@ const app=initializeApp(cfg); window.FB={auth:getAuth(app),db:getFirestore(app),
 </script>
 </head>
 <body class="bg-[#f6f7f9] flex justify-center p-4">
-<div class="w-full max-w-[400px] mt-6">
-<div class="flex justify-between"><p class="font-black">SomaHub</p><a href="/" class="text-xs border bg-white px-3 py-1 rounded-full">Home</a></div>
-
-<h1 class="text-[26px] font-black mt-8">Create account</h1>
+<div class="w-full max-w-[380px] mt-6">
+<p class="font-black">SomaHub</p>
+<h1 class="text-[26px] font-black mt-6">Create account</h1>
 <p class="text-xs text-gray-500 mt-1">CBC / CBE • Grade 1-9 • International coming soon</p>
 
+<!-- 1. SELECT BUTTON -->
 <div class="flex gap-2 mt-5">
 <button id="bS" onclick="role='student';render()" class="flex-1 bg-black text-white rounded-full py-3 text-xs font-bold">Student</button>
 <button id="bP" onclick="role='parent';render()" class="flex-1 bg-white border rounded-full py-3 text-xs font-bold">Parent</button>
 <button id="bT" onclick="role='teacher';render()" class="flex-1 bg-white border rounded-full py-3 text-xs font-bold">Teacher</button>
 </div>
 
-<div class="bg-white rounded-2xl p-5 mt-4 border">
-<div class="space-y-3">
+<!-- STEP 1 -->
+<div id="step1" class="bg-white rounded-2xl p-5 mt-4 border space-y-3">
 <input id="name" placeholder="Full name" class="w-full bg-gray-50 rounded-xl p-3 text-sm outline-none">
-<input id="phone" placeholder="Phone" class="w-full bg-gray-50 rounded-xl p-3 text-sm outline-none">
+
+<!-- 2. Email -->
 <input id="email" placeholder="Email" class="w-full bg-gray-50 rounded-xl p-3 text-sm outline-none">
-<input id="email2" placeholder="Confirm email" class="w-full bg-gray-50 rounded-xl p-3 text-sm outline-none">
-<input id="pass" type="password" placeholder="Password" class="w-full bg-gray-50 rounded-xl p-3 text-sm outline-none">
-<input id="pass2" type="password" placeholder="Confirm password" class="w-full bg-gray-50 rounded-xl p-3 text-sm outline-none">
 
-<div id="fs" class="space-y-3 pt-3 border-t">
-<select id="grade" class="w-full bg-gray-50 rounded-xl p-3 text-sm outline-none"><option>Grade 1</option><option>Grade 2</option><option>Grade 3</option><option>Grade 4</option><option>Grade 5</option><option selected>Grade 6</option><option>Grade 7</option><option>Grade 8</option><option>Grade 9</option></select>
-<div class="grid grid-cols-2 gap-2"><input id="county" placeholder="County" class="bg-gray-50 rounded-xl p-3 text-sm outline-none"><input id="town" placeholder="Town" class="bg-gray-50 rounded-xl p-3 text-sm outline-none"></div>
+<!-- 3. Password + eye -->
+<div class="relative">
+<input id="pass" type="password" placeholder="Password" class="w-full bg-gray-50 rounded-xl p-3 text-sm outline-none pr-10">
+<button onclick="tog('pass','e1')" class="absolute right-3 top-3.5 text-gray-400"><i id="e1" class="fa-regular fa-eye text-sm"></i></button>
 </div>
-
-<div id="fp" class="hidden space-y-3 pt-3 border-t">
-<input id="childIndex" placeholder="Child admission number *" class="w-full bg-gray-50 rounded-xl p-3 text-sm outline-none uppercase">
-<p class="text-[10px] text-gray-400">Enter the number given to your child after registration.</p>
+<!-- 4. Password + eye -->
+<div class="relative">
+<input id="pass2" type="password" placeholder="Confirm password" class="w-full bg-gray-50 rounded-xl p-3 text-sm outline-none pr-10">
+<button onclick="tog('pass2','e2')" class="absolute right-3 top-3.5 text-gray-400"><i id="e2" class="fa-regular fa-eye text-sm"></i></button>
 </div>
 
-<div id="ft" class="hidden space-y-3 pt-3 border-t">
-<select id="level" class="w-full bg-gray-50 rounded-xl p-3 text-sm outline-none"><option>Lower Primary</option><option>Upper Primary</option><option>Junior Secondary</option></select>
-<input id="school" placeholder="School" class="w-full bg-gray-50 rounded-xl p-3 text-sm outline-none">
+<!-- 5. Referral ID -->
+<input id="referral" placeholder="Referral ID (Optional)" class="w-full bg-gray-50 rounded-xl p-3 text-sm outline-none uppercase">
+
+<!-- 6. Terms check -->
+<label class="flex items-center gap-2 text-[11px]"><input id="terms" type="checkbox" class="rounded"> I agree to Terms & Privacy</label>
+
+<!-- 7. Confirm button -->
+<button id="btn1" onclick="step1Go()" class="w-full bg-black text-white py-3.5 rounded-full font-bold text-sm">Confirm</button>
+<p id="msg1" class="text-xs text-center text-red-500"></p>
 </div>
 
-<button id="btn" onclick="reg()" class="w-full bg-black text-white py-3.5 rounded-full font-bold text-sm mt-2">Create account</button>
-<p id="msg" class="text-xs text-center text-gray-500 mt-2"></p>
+<!-- STEP 2: Additional info -->
+<div id="step2" class="hidden bg-white rounded-2xl p-5 mt-4 border space-y-3">
+<h2 class="font-black text-sm">Additional information</h2>
+<p id="roleLabel" class="text-[11px] text-gray-500"></p>
+
+<!-- STUDENT -->
+<div id="fs" class="space-y-3">
+<input id="sCountry" placeholder="Country *" value="Kenya" class="w-full bg-gray-50 rounded-xl p-3 text-sm">
+<input id="sCounty" placeholder="County *" class="w-full bg-gray-50 rounded-xl p-3 text-sm">
+<input id="sTown" placeholder="Town *" class="w-full bg-gray-50 rounded-xl p-3 text-sm">
+<input id="sSchool" placeholder="School (Optional)" class="w-full bg-gray-50 rounded-xl p-3 text-sm">
+<select id="sGrade" class="w-full bg-gray-50 rounded-xl p-3 text-sm"><option>Grade 1</option><option>Grade 2</option><option>Grade 3</option><option>Grade 4</option><option>Grade 5</option><option selected>Grade 6</option><option>Grade 7</option><option>Grade 8</option><option>Grade 9</option></select>
 </div>
+
+<!-- TEACHER -->
+<div id="ft" class="hidden space-y-3">
+<input id="tCountry" placeholder="Country *" value="Kenya" class="w-full bg-gray-50 rounded-xl p-3 text-sm">
+<input id="tCounty" placeholder="County *" class="w-full bg-gray-50 rounded-xl p-3 text-sm">
+<input id="tTown" placeholder="Town *" class="w-full bg-gray-50 rounded-xl p-3 text-sm">
+<input id="tSchool" placeholder="School *" class="w-full bg-gray-50 rounded-xl p-3 text-sm">
+<input id="tTSC" placeholder="TSC Number (Optional)" class="w-full bg-gray-50 rounded-xl p-3 text-sm">
+<select id="tLevel" class="w-full bg-gray-50 rounded-xl p-3 text-sm"><option>Lower Primary</option><option>Upper Primary</option><option>Junior Secondary</option></select>
 </div>
-<p class="text-[10px] text-center text-gray-400 mt-4">After registration you'll get your admission number and full details inside.</p>
+
+<!-- PARENT -->
+<div id="fp" class="hidden space-y-3">
+<input id="pIndex" placeholder="Student Index Number * - e.g SHKE00500" class="w-full bg-gray-50 rounded-xl p-3 text-sm uppercase font-bold">
+</div>
+
+<button id="btn2" onclick="finalReg()" class="w-full bg-black text-white py-3.5 rounded-full font-bold text-sm">Finish registration</button>
+<p id="msg2" class="text-xs text-center text-red-500"></p>
+</div>
 </div>
 
 <script>
-let role='student';
+let role='student', tmpUser=null, tmpName="", tmpEmail="", tmpReferral="";
 function render(){
  bS.className=role==='student'?'flex-1 bg-black text-white rounded-full py-3 text-xs font-bold':'flex-1 bg-white border rounded-full py-3 text-xs font-bold';
  bP.className=role==='parent'?'flex-1 bg-black text-white rounded-full py-3 text-xs font-bold':'flex-1 bg-white border rounded-full py-3 text-xs font-bold';
  bT.className=role==='teacher'?'flex-1 bg-black text-white rounded-full py-3 text-xs font-bold':'flex-1 bg-white border rounded-full py-3 text-xs font-bold';
- fs.classList.toggle('hidden',role!=='student'); fp.classList.toggle('hidden',role!=='parent'); ft.classList.toggle('hidden',role!=='teacher');
 }
-async function reg(){
- const FB=window.FB, m=msg, b=btn;
- const name=document.getElementById('name').value.trim(), phone=document.getElementById('phone').value.trim();
- const email=document.getElementById('email').value.trim(), email2=document.getElementById('email2').value.trim();
+function tog(id,eye){ const e=document.getElementById(id), ic=document.getElementById(eye); e.type=e.type==='password'?'text':'password'; ic.classList.toggle('fa-eye'); ic.classList.toggle('fa-eye-slash'); }
+async function step1Go(){
+ const FB=window.FB;
+ const name=document.getElementById('name').value.trim();
+ const email=document.getElementById('email').value.trim();
  const pass=document.getElementById('pass').value.trim(), pass2=document.getElementById('pass2').value.trim();
- if(!name||!email||!pass) return m.innerText="Fill required fields";
- if(email!==email2) return m.innerText="Emails don't match";
- if(pass!==pass2) return m.innerText="Passwords don't match";
- let ex={}, pre="SHKE", ctr="students", col="student_index", from=500;
- if(role==='parent'){ const c=childIndex.value.trim().toUpperCase(); if(!c) return m.innerText="Child admission number required"; ex={childIndex:c}; pre="SHKEP"; ctr="parents"; col="parent_index"; from=100; }
- else if(role==='teacher'){ ex={level:level.value,school:school.value.trim()}; pre="SHKET"; ctr="teachers"; col="teacher_index"; from=100; }
- else{ ex={grade:grade.value,county:county.value.trim(),town:town.value.trim()}; }
- b.innerText="Creating..."; b.disabled=true;
+ const referral=document.getElementById('referral').value.trim().toUpperCase();
+ const terms=document.getElementById('terms').checked;
+ if(!name||!email||!pass) return msg1.innerText="Fill all required";
+ if(pass!==pass2) return msg1.innerText="Passwords don't match";
+ if(!terms) return msg1.innerText="Accept Terms";
+ btn1.innerText="Creating..."; btn1.disabled=true;
  try{
   const cr=await FB.createUserWithEmailAndPassword(FB.auth,email,pass);
   await FB.updateProfile(cr.user,{displayName:name});
+  tmpUser=cr.user; tmpName=name; tmpEmail=email; tmpReferral=referral;
+  step1.classList.add('hidden'); step2.classList.remove('hidden');
+  roleLabel.innerText = role==='student'?'Student' : role==='parent'?'Parent' : 'Teacher';
+  fs.classList.toggle('hidden',role!=='student'); fp.classList.toggle('hidden',role!=='parent'); ft.classList.toggle('hidden',role!=='teacher');
+ }catch(e){ msg1.innerText=e.message; btn1.innerText="Confirm"; btn1.disabled=false; }
+}
+async function finalReg(){
+ const FB=window.FB;
+ let ex={referral:tmpReferral}, pre="SHKE", ctr="students", col="student_index", from=500;
+ if(role==='student'){ ex={...ex, country:sCountry.value.trim(), county:sCounty.value.trim(), town:sTown.value.trim(), school:sSchool.value.trim(), grade:sGrade.value}; if(!ex.country||!ex.county||!ex.town) return msg2.innerText="Country County Town required"; }
+ else if(role==='teacher'){ ex={...ex, country:tCountry.value.trim(), county:tCounty.value.trim(), town:tTown.value.trim(), school:tSchool.value.trim(), tsc:tTSC.value.trim(), level:tLevel.value}; if(!ex.country||!ex.county||!ex.town||!ex.school) return msg2.innerText="Country County Town School required"; pre="SHKET"; ctr="teachers"; col="teacher_index"; from=100; }
+ else{ const idx=pIndex.value.trim().toUpperCase(); if(!idx) return msg2.innerText="Student Index required"; ex={...ex, childIndex:idx}; pre="SHKEP"; ctr="parents"; col="parent_index"; from=100; }
+ btn2.innerText="Finishing..."; btn2.disabled=true;
+ try{
   let finalId=pre+String(from).padStart(5,'0');
   await FB.runTransaction(FB.db, async(t)=>{
    const r=FB.doc(FB.db,"counters",ctr); const s=await t.get(r); let n=from; if(s.exists()) n=s.data().count||from;
    finalId=pre+String(n).padStart(5,'0'); t.set(r,{count:n+1},{merge:true});
-   t.set(FB.doc(FB.db,"users",cr.user.uid),{uid:cr.user.uid,email,name,phone,role:role==='student'?'learner':role,indexNumber:finalId,...ex,createdAt:FB.serverTimestamp()});
-   t.set(FB.doc(FB.db,col,finalId),{indexNumber:finalId,userId:cr.user.uid,email,name,...ex,createdAt:FB.serverTimestamp()});
+   t.set(FB.doc(FB.db,"users",tmpUser.uid),{uid:tmpUser.uid,email:tmpEmail,name:tmpName,role:role==='student'?'learner':role,indexNumber:finalId,...ex,createdAt:FB.serverTimestamp()});
+   t.set(FB.doc(FB.db,col,finalId),{indexNumber:finalId,userId:tmpUser.uid,email:tmpEmail,name:tmpName,...ex,createdAt:FB.serverTimestamp()});
   });
-  m.innerText="Done. Redirecting..."; setTimeout(()=>location.href="/dashboard.html",900);
- }catch(e){ m.innerText=e.message; b.innerText="Create account"; b.disabled=false; }
+  document.body.innerHTML=`<div class="min-h-screen flex justify-center items-center p-6 bg-[#f6f7f9]"><div class="bg-white rounded-[2rem] p-8 max-w-[360px] w-full text-center border"><div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mx-auto">✓</div><h2 class="font-black mt-4">Account created</h2><div class="mt-6 bg-black text-white p-4 rounded-2xl"><p class="text-[10px] opacity-60">YOUR ADMISSION NUMBER</p><p class="text-2xl font-black mt-1 tracking-widest">${finalId}</p></div><button onclick="location.href='/dashboard.html'" class="w-full bg-black text-white py-3 rounded-full font-bold text-sm mt-6">Go to dashboard</button></div></div>`;
+ }catch(e){ msg2.innerText=e.message; btn2.innerText="Finish registration"; btn2.disabled=false; }
 }
-window.render=render; window.reg=reg; render();
+window.render=render; window.tog=tog; window.step1Go=step1Go; window.finalReg=finalReg; render();
 </script>
 </body>
 </html>
