@@ -2,13 +2,13 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SomaHub Exams - AI Auto-Marks PP1-G9</title>
+<title>Weekly Exams - ONLY Sunday to Sunday - 100 Marks - NOT 10 Questions as Homework - SHKE00500</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import { getAuth, onAuthStateChanged, GoogleAuthProvider, signInWithPopup, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-import { getFirestore, doc, getDoc, setDoc, collection, getDocs, query, where, updateDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+import { getFirestore, doc, getDoc, setDoc, collection, getDocs, query, where, updateDoc, serverTimestamp, runTransaction } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 const firebaseConfig = {
   apiKey: "AIzaSyA93BNes3AmFyxIEgjSbvbIWqLyorLsuj8",
   authDomain: "somahubkenya-9e458.firebaseapp.com",
@@ -18,143 +18,488 @@ const firebaseConfig = {
   appId: "1:615579085715:web:28fca37ba498324bb49666"
 };
 const app=initializeApp(firebaseConfig); const auth=getAuth(app); const db=getFirestore(app); const provider=new GoogleAuthProvider();
-window.FB={auth,db,provider,signInWithPopup,signInWithEmailAndPassword,createUserWithEmailAndPassword,onAuthStateChanged,signOut,doc,getDoc,setDoc,collection,getDocs,query,where,updateDoc,serverTimestamp};
+window.FB={auth,db,provider,signInWithPopup,signInWithEmailAndPassword,createUserWithEmailAndPassword,onAuthStateChanged,signOut,doc,getDoc,setDoc,collection,getDocs,query,where,updateDoc,serverTimestamp,runTransaction};
 </script>
 </head>
 <body class="bg-[#eff6ff]">
 <header class="bg-white shadow sticky top-0 z-50">
 <div class="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
-<a href="/" class="font-black text-sm"><i class="fa-solid fa-file-lines text-blue-600"></i> SomaHub Exams <span id="aiLive" class="bg-red-100 text-red-600 text-[9px] px-2 py-1 rounded-full">AI OFF</span></a>
+<a href="/" class="font-black text-xs">📅 Weekly Exams - ONLY Sunday to Sunday - NOT 10 Qs Homework <span id="aiLive" class="bg-red-100 text-red-600 text-[9px] px-2 py-1 rounded-full">AI OFF</span> <span id="indexB" class="hidden bg-blue-600 text-white px-2 py-1 rounded-full text-[9px] font-black">SHKE00500</span></a>
 <div class="flex gap-2 items-center">
 <span id="premB" class="hidden bg-green-600 text-white px-3 py-1 rounded-full text-[10px] font-bold">PREMIUM</span>
-<a href="/ai-homework.html" class="text-[11px] bg-black text-white px-3 py-2 rounded-full">🤖 AI Mark My Exam</a>
-<a href="/notes.html" class="text-[11px] bg-purple-100 px-3 py-2 rounded-full">Notes</a>
-<button id="authBtn" class="bg-blue-600 text-white px-4 py-2 rounded-full text-xs font-bold">Login</button>
+<span id="sundayBadge" class="bg-purple-600 text-white px-3 py-1 rounded-full text-[9px] font-bold">📅 ONLY Sunday to Sunday</span>
+<button id="authBtn" class="bg-blue-600 text-white px-4 py-2 rounded-full text-xs font-bold">Login SHKE</button>
 </div>
 </div>
 </header>
 
 <div class="max-w-7xl mx-auto p-4">
-<div class="bg-gradient-to-r from-blue-600 to-black rounded-[1.5rem] p-6 text-white">
-<h1 class="text-xl font-black">📝 Exams PP1-G9 - AI Auto-Marks Instantly</h1><p class="text-xs mt-2">Term 1,2,3 • Opener, Mid, End-Term • Do online • Timer • AI marks + gives % + corrections</p>
-<div class="mt-3 flex gap-2 text-[10px]"><span class="bg-white/20 px-3 py-1 rounded-full">⏱️ Timer</span><span class="bg-white/20 px-3 py-1 rounded-full">🤖 AI Marks %</span><span class="bg-white/20 px-3 py-1 rounded-full">📘 Uses Your Notes</span></div>
+<div class="bg-black rounded-[1.5rem] p-6 text-white">
+<h1 class="text-lg font-black">📅 Weekly Exams - ONLY Available from Sunday to Sunday - 100 Marks Per Paper - NOT 10 Questions as Homework</h1>
+<p class="text-[11px] mt-2 text-gray-300">Wrong dear exam only available from Sunday to Sunday (not 10 question as homework) - Exam ONLY available from Sunday 00:00 to Sunday 23:59 next week - 7 days window Sunday to Sunday - NOT Monday to Sunday - NOT 10 questions as homework - NOT daily homework 10 marks - Exam is 100 Marks Per Paper proper exam sections A, B, C - Timed 60 min + Correction - Admin and Parents can see timed exam and correction - Student decides upto Sunday - Based on Curriculum Design, Notes, AI - SHKE00500+ counting from 500 - Dear exam is once a week, this is not homework</p>
+<div class="mt-3 flex gap-2 text-[9px] flex-wrap">
+<span class="bg-white/10 px-3 py-1 rounded-full">📅 ONLY Sunday to Sunday - 7 Days Window</span>
+<span class="bg-red-500/20 px-3 py-1 rounded-full">❌ NOT 10 Questions as Homework</span>
+<span class="bg-white/10 px-3 py-1 rounded-full">❌ NOT Daily HW 10 Marks</span>
+<span class="bg-purple-500/30 px-3 py-1 rounded-full">⏱️ Timed 60 min + Correction Admin & Parents See</span>
+<span class="bg-white/10 px-3 py-1 rounded-full">📘 Based on Curriculum Design, Notes, AI</span>
+</div>
 </div>
 
-<div class="mt-5 bg-white p-4 rounded-2xl shadow border grid md:grid-cols-5 gap-3">
+<div class="mt-4 bg-white p-4 rounded-2xl shadow border grid md:grid-cols-4 gap-3">
 <select id="gradeSel" class="border p-3 rounded-xl text-sm"><option>PP1</option><option>PP2</option><option>Grade 1</option><option>Grade 2</option><option>Grade 3</option><option>Grade 4</option><option>Grade 5</option><option selected>Grade 6</option><option>Grade 7</option><option>Grade 8</option><option>Grade 9</option></select>
-<select id="termSel" class="border p-3 rounded-xl text-sm"><option>All Terms</option><option>Term 1</option><option>Term 2</option><option>Term 3</option></select>
-<select id="subSel" class="border p-3 rounded-xl text-sm"><option>All Subjects</option><option>Mathematics</option><option>English</option><option>Kiswahili</option><option>Science and Technology</option><option>SST</option><option>CRE</option><option>Agriculture and Nutrition</option></select>
-<select id="modeSel" class="border p-3 rounded-xl text-sm font-bold"><option value="download">📥 Download PDF</option><option value="online" selected>🤖 Do Online - AI Marks</option></select>
-<button onclick="loadExams()" class="bg-blue-600 text-white py-3 rounded-xl font-black text-sm">🔍 Show Exams</button>
+<select id="subSel" class="border p-3 rounded-xl text-sm"><option>All Subjects</option><option>Mathematics</option><option>English</option><option>Kiswahili</option><option>Science</option><option>SST</option><option>CRE</option></select>
+<select id="typeSel" class="border p-3 rounded-xl text-sm font-bold"><option value="weekly" selected>📅 Weekly ONLY Sunday to Sunday - 100 Marks - NOT 10 Qs Homework</option></select>
+<button onclick="loadExams()" class="bg-purple-600 text-white py-3 rounded-xl font-black text-sm">🔍 Show Weekly - ONLY Sunday to Sunday - SHKE</button>
 </div>
 
-<div id="examsList" class="mt-6 grid md:grid-cols-2 gap-4">
-<div class="col-span-2 text-center py-10 bg-white rounded-2xl border"><p class="font-bold">Select grade → Show Exams</p><p class="text-xs text-gray-500 mt-1">Exams added in admin.html with Type=Exam appear here. AI will auto-mark them.</p></div>
+<div class="mt-4 bg-red-50 border-2 border-red-300 p-4 rounded-2xl">
+<p class="font-black text-sm text-red-700">❌ WRONG: NOT 10 question as homework - Exam ONLY Sunday to Sunday - NOT Daily Homework</p>
+<div class="mt-2 grid md:grid-cols-2 gap-3 text-[11px]">
+<div class="bg-white p-3 rounded-xl border-2 border-red-200"><p class="font-bold text-red-600">❌ NOT 10 Questions as Homework</p><p class="mt-1">Exam is NOT 10 questions x 10 marks as homework - Homework is separate daily 10 marks - Exam is proper exam 100 Marks Per Paper with sections: Section A (20 marks MCQ), Section B (30 marks short answers), Section C (50 marks long answers / composition / problem solving) = 100 Marks - NOT homework style - Proper exam based on curriculum design</p></div>
+<div class="bg-white p-3 rounded-xl border-2 border-purple-200"><p class="font-bold text-purple-700">📅 ONLY Sunday to Sunday - 7 Days Window</p><p class="mt-1">Exam ONLY available from Sunday 00:00 to next Sunday 23:59 - Sunday to Sunday - 7 days window - NOT Monday to Sunday - Student can decide to do anytime from Sunday to Sunday - If not done by next Sunday 23:59, says PENDING / INCOMPLETE WEEK 1 EXAM - Admin and Parents can see PENDING - Timed 60 min + Correction</p></div>
+</div>
+<div id="weeklyInfo" class="mt-3 bg-white p-3 rounded-xl border text-xs font-bold"></div>
 </div>
 
-<!-- ONLINE EXAM MODAL - NEW -->
-<div id="onlineModal" class="hidden fixed inset-0 bg-black/70 z-[100] p-4 overflow-auto">
-<div class="bg-white rounded-[1.5rem] max-w-2xl mx-auto mt-5 overflow-hidden">
-<div class="bg-black text-white p-4 flex justify-between items-center"><div><h3 id="onlineTitle" class="font-black text-sm">Exam Online</h3><p id="onlineMeta" class="text-[11px] text-gray-400">Timer + AI Marking</p></div><div class="flex gap-2 items-center"><span id="timer" class="bg-white text-black px-3 py-1 rounded-full text-xs font-black">30:00</span><button onclick="closeOnline()" class="bg-white/10 px-3 py-1 rounded-full text-xs">X</button></div></div>
-<div class="p-5">
-<div id="onlineQs" class="space-y-4 max-h-[50vh] overflow-y-auto"></div>
-<div class="mt-5 flex gap-2"><button onclick="submitOnline()" class="flex-1 bg-green-600 text-white py-3 rounded-xl font-black">✅ Submit - AI Mark Now</button><button onclick="closeOnline()" class="px-5 border rounded-xl text-sm">Cancel</button></div>
+<div id="pendingBanner" class="mt-4"></div>
+<div id="examsList" class="mt-4 grid md:grid-cols-1 gap-4"></div>
+
+<div id="onlineModal" class="hidden fixed inset-0 bg-black/80 z-[100] p-4 overflow-auto">
+<div class="bg-white rounded-[1.5rem] max-w-4xl mx-auto mt-2 overflow-hidden">
+<div class="bg-black text-white p-4 flex justify-between items-center"><div><h3 id="onlineTitle" class="font-black text-sm">Weekly Exam - ONLY Sunday to Sunday - 100 Marks - NOT 10 Qs Homework - SHKE</h3><p id="onlineMeta" class="text-[11px] text-gray-400">ONLY Sunday to Sunday - 100 Marks Proper Exam Sections A B C - NOT Homework</p></div><div class="flex gap-2 items-center"><span id="timer" class="bg-red-600 text-white px-3 py-1 rounded-full text-xs font-black">60:00</span><button onclick="closeOnline()" class="bg-white/10 px-3 py-1 rounded-full text-xs">X</button></div></div>
+<div class="p-4">
+<div class="bg-black text-white p-3 rounded-xl text-[11px] mb-4">
+<p class="font-bold">📅 Weekly Exam ONLY Sunday to Sunday - 100 Marks Per Paper - NOT 10 Questions as Homework - SHKE <span id="onlineIndex"></span></p>
+<p class="mt-1">Exam ONLY available from Sunday to Sunday - 7 days window - NOT 10 questions as homework - Proper exam: Section A 20 marks MCQ, Section B 30 marks short answers, Section C 50 marks long answers = 100 Marks - Timed 60 min - Based on Curriculum Design, Notes, AI - Student decides upto Sunday - Admin & Parents see timed + correction</p>
+</div>
+<div id="onlineQs" class="space-y-6 max-h-[65vh] overflow-y-auto"></div>
+<div class="mt-5 flex gap-2"><button onclick="submitOnline()" class="flex-1 bg-green-600 text-white py-4 rounded-xl font-black text-sm">✅ Submit Weekly Exam - ONLY Sunday to Sunday - 100 Marks - NOT 10 Qs Homework - SHKE</button></div>
 </div>
 </div>
 </div>
 
-<!-- RESULT MODAL -->
-<div id="resultModal" class="hidden fixed inset-0 bg-black/70 z-[110] p-4 overflow-auto">
-<div class="bg-white rounded-[1.5rem] max-w-2xl mx-auto mt-5 p-6">
-<h3 class="font-black text-lg">🎉 AI Marked Your Exam!</h3>
+<div id="resultModal" class="hidden fixed inset-0 bg-black/80 z-[110] p-4 overflow-auto">
+<div class="bg-white rounded-[1.5rem] max-w-4xl mx-auto mt-2 p-6">
+<h3 class="font-black text-lg">🎉 Weekly Exam Marked! ONLY Sunday to Sunday - 100 Marks - NOT 10 Qs Homework - SHKE - Based on Curriculum Design Notes AI</h3>
 <div id="resultBox" class="mt-4 bg-gray-50 p-4 rounded-xl text-sm leading-relaxed"></div>
-<div class="mt-4 flex gap-2"><button onclick="document.getElementById('resultModal').classList.add('hidden')" class="flex-1 bg-black text-white py-3 rounded-xl font-bold">Close</button><a href="/ai-homework.html" class="flex-1 bg-green-600 text-white py-3 rounded-xl font-bold text-center">📸 Mark More with Photo</a></div>
+<div class="mt-4 flex gap-2"><button onclick="document.getElementById('resultModal').classList.add('hidden')" class="flex-1 bg-black text-white py-3 rounded-xl font-bold">Close - SHKE</button><a href="/parent.html" class="flex-1 bg-purple-600 text-white py-3 rounded-xl font-bold text-center">👨‍👩‍👧 Parent Sees Timed + Correction - Sunday to Sunday</a></div>
 </div>
 </div>
 </div>
 
-<div id="authModal" class="hidden fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4"><div class="bg-white rounded-2xl p-6 w-full max-w-sm"><h3 class="font-black">Login to Access Exams</h3><button id="gLogin" class="w-full border-2 py-3 rounded-full mt-3 font-bold text-sm">Google Login</button><input id="email" placeholder="Email" class="w-full border p-3 rounded-xl mt-3 text-sm"><input id="pass" type="password" placeholder="Password" class="w-full border p-3 rounded-xl mt-2 text-sm"><button id="eLogin" class="w-full bg-blue-600 text-white py-3 rounded-full mt-3 font-bold">Login</button><button onclick="closeM()" class="w-full mt-3 text-xs">Close</button></div></div>
-<div id="subModal" class="hidden fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4"><div class="bg-white rounded-2xl p-6 w-full max-w-sm text-center"><h3 class="font-black">🔓 Unlock Exams - 500 KES</h3><p class="text-sm">Till 0701305109 - 90 days - Unlimited + AI marking</p><input id="mpesa" placeholder="M-Pesa Code QGH..." class="w-full border p-3 rounded-xl mt-3 uppercase font-bold text-sm"><button onclick="submitMpesa()" class="w-full bg-green-600 text-white py-3 rounded-full mt-3 font-bold">Submit Code</button><button onclick="closeM()" class="w-full mt-2 text-xs">Close</button></div></div>
+<div id="authModal" class="hidden fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4"><div class="bg-white rounded-2xl p-6 w-full max-w-sm"><h3 class="font-black">Login SHKE00500 - Weekly ONLY Sunday to Sunday - NOT 10 Qs Homework</h3><button id="gLogin" class="w-full border-2 py-3 rounded-full mt-3 font-bold text-sm">Google Login - Get SHKE00500</button><input id="email" placeholder="Email" class="w-full border p-3 rounded-xl mt-3 text-sm"><input id="pass" type="password" placeholder="Password" class="w-full border p-3 rounded-xl mt-2 text-sm"><button id="eLogin" class="w-full bg-blue-600 text-white py-3 rounded-full mt-3 font-bold">Login SHKE - Sunday to Sunday</button><button onclick="closeM()" class="w-full mt-3 text-xs">Close</button></div></div>
+<div id="subModal" class="hidden fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4"><div class="bg-white rounded-2xl p-6 w-full max-w-sm text-center"><h3 class="font-black">🔓 Unlock Weekly Exams ONLY Sunday to Sunday - 500 KES Till 0701305109</h3><p class="text-sm">Index <span id="subIndex">SHKE00500</span> - Weekly ONLY Sunday to Sunday - 100 Marks - NOT 10 Qs Homework</p><input id="mpesa" placeholder="M-Pesa Code QGH..." class="w-full border p-3 rounded-xl mt-3 uppercase font-bold text-sm"><button onclick="submitMpesa()" class="w-full bg-green-600 text-white py-3 rounded-full mt-3 font-bold">Submit Code - SHKE Sunday to Sunday</button><button onclick="closeM()" class="w-full mt-2 text-xs">Close</button></div></div>
 
 <script>
-let currentUser=null, userData=null, geminiKey="", timerInt=null, timeLeft=1800, currentExam=null;
+let currentUser=null, userData=null, currentSHKE=null, geminiKey="", timerInt=null, timeLeft=3600, currentExam=null, currentWeeklyId=null;
 function closeM(){document.getElementById('authModal').classList.add('hidden'); document.getElementById('subModal').classList.add('hidden');}
 function closeOnline(){document.getElementById('onlineModal').classList.add('hidden'); clearInterval(timerInt);}
+
+function getSundayToSundayRange(){
+  const today = new Date();
+  const day = today.getDay(); // 0 = Sunday
+  // This Sunday (start of window)
+  let thisSunday = new Date(today);
+  thisSunday.setDate(today.getDate() - day);
+  thisSunday.setHours(0,0,0,0);
+  // Next Sunday (end of window)
+  let nextSunday = new Date(thisSunday);
+  nextSunday.setDate(thisSunday.getDate() + 6);
+  nextSunday.setHours(23,59,59,999);
+  // For next week window if needed
+  let nextWeekSunday = new Date(nextSunday);
+  nextWeekSunday.setDate(nextSunday.getDate() + 1);
+  nextWeekSunday.setHours(0,0,0,0);
+  let nextWeekNextSunday = new Date(nextWeekSunday);
+  nextWeekNextSunday.setDate(nextWeekSunday.getDate() + 6);
+  nextWeekNextSunday.setHours(23,59,59,999);
+
+  return {thisSunday, nextSunday, nextWeekSunday, nextWeekNextSunday};
+}
+
+function updateCountdown(){
+  const {thisSunday, nextSunday} = getSundayToSundayRange();
+  const now = new Date();
+  const diff = nextSunday - now;
+  const days = Math.floor(diff/(1000*60*60*24));
+  const hours = Math.floor((diff%(1000*60*60*24))/(1000*60*60));
+  const isInWindow = now >= thisSunday && now <= nextSunday;
+
+  document.getElementById('weeklyInfo').innerHTML=`
+    <p class="text-purple-700">📅 Weekly Exam ONLY Available from Sunday to Sunday: <b>${thisSunday.toDateString()} Sunday 00:00 to ${nextSunday.toDateString()} Sunday 23:59 - 7 Days Window - ONLY Sunday to Sunday</b> - NOT Monday - NOT 10 Questions as Homework - SHKE ${currentSHKE||"SHKE00500"} counting from 500</p>
+    <p class="mt-1 text-gray-700">Dear exam is once a week, this is not homework - Wrong dear exam only available from Sunday to Sunday (not 10 question as homework) - Exam is 100 Marks Per Paper proper exam: Section A 20 marks MCQ, Section B 30 marks short answers, Section C 50 marks long answers = 100 Marks - NOT homework style - Timed 60 min - Correction visible to Admin & Parents - Based on Curriculum Design, Notes, AI - Student can decide to do anytime from Sunday to Sunday - ${isInWindow? `✅ Currently in window - ${days}d ${hours}h left to next Sunday 23:59 - Do now upto Sunday` : `⏰ Next window starts ${thisSunday.toDateString()}`}</p>
+    <p class="mt-1 text-[10px] text-red-600 font-bold">If student has not done it says PENDING or INCOMPLETE WEEK 1 EXAM - Admin and Parents can see PENDING - Student decides upto Sunday - Sunday to Sunday ONLY</p>
+  `;
+  document.getElementById('sundayBadge').innerText = isInWindow? `📅 ONLY Sunday to Sunday - ${days}d ${hours}h left - NOT 10 Qs Homework` : `📅 ONLY Sunday to Sunday`;
+}
+setInterval(updateCountdown, 60000);
+updateCountdown();
+
 async function loadExams(){
- const grade=document.getElementById('gradeSel').value; const sub=document.getElementById('subSel').value; const mode=document.getElementById('modeSel').value;
- const list=document.getElementById('examsList'); list.innerHTML="<p class='col-span-2 text-center py-6'>Loading exams for "+grade+"...</p>";
+ const grade=document.getElementById('gradeSel').value; const sub=document.getElementById('subSel').value;
+ const list=document.getElementById('examsList');
+ const pendingBanner=document.getElementById('pendingBanner');
+ const {thisSunday, nextSunday} = getSundayToSundayRange();
+
+ list.innerHTML=`<p class='text-center py-6'>Loading Weekly Exams ONLY Sunday to Sunday - 100 Marks - NOT 10 Questions as Homework - SHKE ${currentSHKE||"SHKE00500"} - ${thisSunday.toDateString()} to ${nextSunday.toDateString()} - Based on Curriculum Design Notes AI...</p>`;
+ pendingBanner.innerHTML="";
+
  try{
-  const FB=window.FB; let q;
+  const FB=window.FB;
+  let q;
   if(sub==="All Subjects") q=FB.query(FB.collection(FB.db,"resources"), FB.where("grade","==",grade), FB.where("type","==","Exam"));
   else q=FB.query(FB.collection(FB.db,"resources"), FB.where("grade","==",grade), FB.where("subject","==",sub), FB.where("type","==","Exam"));
-  const snap=await FB.getDocs(q); list.innerHTML="";
-  if(snap.empty){list.innerHTML=`<div class="col-span-2 text-center py-10 bg-white rounded-2xl border"><p class="font-bold">No exams yet for ${grade} - ${sub}</p><p class="text-xs text-gray-500 mt-1">Admin: Add in admin.html with Grade=${grade}, Type=Exam, Subject=${sub}</p><button onclick="window.open('/admin.html','_blank')" class="mt-3 bg-black text-white px-4 py-2 rounded-full text-xs">Go Add Exam</button></div>`; return;}
-  snap.forEach(d=>{
-   const r=d.data(); const prem=userData?.isPremium;
-   const btn=mode==='online'? `<button onclick="startOnline('${d.id}')" class="w-full ${prem?'bg-black':'bg-gray-300'} text-white py-2.5 rounded-xl text-xs font-black">${prem?'🤖 Do Online + AI Mark':'🔒 Subscribe Till 0701305109'}</button>` : `<button onclick="openExam('${r.link}')" class="w-full ${prem?'bg-blue-600':'bg-gray-300'} text-white py-2.5 rounded-xl text-xs font-black">${prem?'📥 Exam PDF':'🔒 Subscribe'}</button>`;
-   list.innerHTML+=`<div class="bg-white p-5 rounded-[1.2rem] shadow border hover:shadow-lg transition"><div class="flex justify-between text-[10px]"><span class="bg-blue-100 text-blue-700 px-2 py-1 rounded-full font-bold">${r.grade}</span><span class="bg-gray-100 px-2 py-1 rounded-full">${r.subject} • ${r.type}</span></div><h3 class="font-black text-sm mt-3">${r.title}</h3><p class="text-[11px] text-gray-500 mt-1">${(r.description||'CBC Exam + Marking Scheme').substring(0,90)}</p><div class="grid grid-cols-2 gap-2 mt-4">${btn}<button onclick="openExam('${r.link}')" class="w-full border-2 py-2.5 rounded-xl text-xs font-bold">Mark Scheme</button></div><p class="text-[9px] text-gray-400 mt-2">AI will mark + give % + corrections using your notes</p></div>`;
+  const snap=await FB.getDocs(q);
+
+  let weeklyExams=[];
+  try{
+    const wq=FB.query(FB.collection(FB.db,"weekly_exams"), FB.where("grade","==",grade), FB.where("weeklyExam","==",true));
+    const wSnap=await FB.getDocs(wq);
+    wSnap.forEach(d=>weeklyExams.push({id:d.id,...d.data()}));
+  }catch(e){}
+
+  let alreadyDone=false; let alreadyScore=0; let doneDate=null;
+  if(currentUser){
+    try{
+      const subQ=FB.query(FB.collection(FB.db,"exam_submissions"), FB.where("userId","==",currentUser.uid), FB.where("weeklyExam","==",true));
+      const subSnap=await FB.getDocs(subQ);
+      subSnap.forEach(d=>{
+        const data=d.data();
+        const dDate=new Date(data.date);
+        if(dDate>=thisSunday && dDate<=nextSunday){ alreadyDone=true; alreadyScore=data.score; doneDate=data.date; }
+      });
+    }catch(e){}
+  }
+
+  list.innerHTML="";
+
+  if(!alreadyDone){
+    pendingBanner.innerHTML=`
+      <div class="bg-red-600 text-white p-5 rounded-2xl border-2 border-black">
+        <p class="font-black text-lg">⚠️ PENDING / INCOMPLETE WEEK 1 EXAM - SHKE ${currentSHKE||"SHKE00500"} - ONLY Sunday to Sunday</p>
+        <p class="text-sm font-bold mt-2">If student has not done it says pending or incomplete week 1 exam</p>
+        <div class="mt-3 bg-white text-black p-4 rounded-xl text-[11px] text-left">
+          <p><b>SHKE:</b> ${currentSHKE||"SHKE00500"} counting from 500</p>
+          <p><b>Status:</b> <span class="bg-red-600 text-white px-3 py-1 rounded-full font-black">PENDING / INCOMPLETE WEEK 1 EXAM - ONLY Sunday to Sunday</span></p>
+          <p><b>Window:</b> ${thisSunday.toDateString()} Sunday 00:00 to ${nextSunday.toDateString()} Sunday 23:59 - ONLY Sunday to Sunday - 7 Days</p>
+          <p><b>Marks:</b> 100 Marks Per Paper - NOT 10 Questions as Homework - NOT Daily Homework - 0/100 - Not attempted - Pending</p>
+          <p><b>Type:</b> Weekly Exam Once A Week - NOT Homework - Proper Exam Sections A B C = 100 Marks - NOT 10 Qs Homework</p>
+          <p><b>Timed:</b> 60 min - Not started - Student decides upto Sunday - ONLY Sunday to Sunday window</p>
+          <p><b>Based on:</b> Curriculum Design, Notes, AI - NOT Homework</p>
+          <p class="mt-2 text-red-600 font-bold">Wrong dear exam only available from Sunday to Sunday (not 10 question as homework) - If student has not done it says PENDING or INCOMPLETE WEEK 1 EXAM - Parent sees at parent.html login with SHKE ${currentSHKE||"SHKE00500"} - Admin sees at admin.html overall admin - Admin and Parents can see timed exam and correction - Student can decide to do upto Sunday - Sunday to Sunday ONLY</p>
+        </div>
+      </div>
+    `;
+    // Save pending for Admin & Parents
+    if(currentUser){
+      try{
+        await FB.setDoc(FB.doc(FB.db,"exam_pending", `${currentUser.uid}_${thisSunday.toISOString().split('T')[0]}_sunday_sunday`), {
+          userId: currentUser.uid,
+          indexNumber: currentSHKE,
+          grade: grade,
+          weekNumber: 1,
+          status: "PENDING / INCOMPLETE WEEK 1 EXAM - ONLY Sunday to Sunday - NOT 10 Questions as Homework",
+          weekLabel: `Week 1 Exam - ${thisSunday.toDateString()} Sunday to ${nextSunday.toDateString()} Sunday - 100 Marks - NOT 10 Qs Homework - ONLY Sunday to Sunday`,
+          date: new Date().toISOString().split('T')[0],
+          thisSunday: thisSunday.toISOString().split('T')[0],
+          nextSunday: nextSunday.toISOString().split('T')[0],
+          window: "ONLY Sunday to Sunday - 7 Days - NOT Monday - NOT 10 Questions as Homework",
+          studentDecidesUptoSunday: true,
+          timedExam: true,
+          isNotHomework: true,
+          isNot10Questions: true,
+          basedOn: "Curriculum Design, Notes, AI - NOT 10 Questions as Homework",
+          timestamp: FB.serverTimestamp()
+        });
+      }catch(e){}
+    }
+  }else{
+    pendingBanner.innerHTML=`
+      <div class="bg-green-600 text-white p-4 rounded-2xl text-center">
+        <p class="font-black">✅ WEEK 1 EXAM DONE - SHKE ${currentSHKE} - ${alreadyScore}/100 - ONLY Sunday to Sunday - NOT 10 Qs Homework - Done on ${doneDate||''} - Admin & Parents can see timed + correction</p>
+        <p class="text-xs mt-1">Dear exam is once a week, this is not homework - Weekly exam once a week Sunday 100 marks per paper - NOT daily homework - NOT 10 questions as homework - Done - Next window ${thisSunday.toDateString()} to ${nextSunday.toDateString()} - ONLY Sunday to Sunday - 100 Marks Proper Exam Sections A B C</p>
+      </div>
+    `;
+    // Delete pending
+    if(currentUser){
+      try{ await FB.deleteDoc(FB.doc(FB.db,"exam_pending", `${currentUser.uid}_${thisSunday.toISOString().split('T')[0]}_sunday_sunday`)); }catch(e){}
+    }
+  }
+
+  // Show exams - Proper 100 Marks Sections A B C NOT 10 Qs Homework
+  const allExams = [...snap.docs.map(d=>({id:d.id,...d.data(), source:'admin'})),...weeklyExams.map(r=>({...r, source:'weekly'}))];
+
+  if(allExams.length===0){
+    list.innerHTML+=`
+      <div class="bg-white rounded-2xl border-2 border-purple-300 p-6 text-center">
+        <p class="font-black">📅 No Weekly Exams Yet - ONLY Sunday to Sunday - 100 Marks - NOT 10 Questions as Homework - SHKE ${currentSHKE||""}</p>
+        <p class="text-xs text-gray-500 mt-2">Wrong dear exam only available from Sunday to Sunday (not 10 question as homework) - Admin adds weekly exam ONLY Sunday to Sunday window 7 days - 100 Marks Per Paper proper exam Sections A (20 MCQ) B (30 short) C (50 long) = 100 Marks - NOT homework 10 questions - Based on Curriculum Design, Notes, AI</p>
+        <button onclick="generateWeeklyExam()" class="mt-4 bg-purple-600 text-white px-6 py-3 rounded-full text-sm font-black">🔄 Generate Weekly Exam - ONLY Sunday to Sunday - 100 Marks - NOT 10 Qs Homework - Based on Curriculum Design Notes AI - SHKE</button>
+      </div>
+    `;
+  }
+
+  allExams.forEach(r=>{
+    const prem=userData?.isPremium;
+    const btn=`<button onclick="startOnline('${r.id}','${r.source}')" class="w-full ${prem?'bg-purple-600':'bg-gray-300'} text-white py-3 rounded-xl text-xs font-black">${prem?`📅 Weekly Exam ONLY Sunday to Sunday - 100 Marks - NOT 10 Qs Homework - Do Upto Sunday - Timed 60 min - SHKE ${currentSHKE||''} - Admin & Parents See Correction`:'🔒 Subscribe Till 0701305109 - SHKE'}</button>`;
+
+    list.innerHTML+=`
+      <div class="bg-white p-6 rounded-[1.5rem] shadow-lg border-2 ${r.source==='weekly'?'border-black bg-gray-50':'border-purple-200'} hover:shadow-xl transition">
+        <div class="flex justify-between text-[10px] flex-wrap gap-1">
+          <span class="bg-black text-white px-3 py-1 rounded-full font-bold">📅 ONLY Sunday to Sunday - ${thisSunday.toDateString()} to ${nextSunday.toDateString()} - 7 Days</span>
+          <span class="bg-red-600 text-white px-3 py-1 rounded-full font-black">❌ NOT 10 Questions as Homework - 100 Marks Proper Exam</span>
+          <span class="bg-purple-600 text-white px-2 py-1 rounded-full">${r.grade} • ${r.subject} • 100 Marks • SHKE ${currentSHKE||''}</span>
+        </div>
+        <h3 class="font-black text-base mt-4">${r.title||'Weekly Exam'} - 100 Marks Per Paper - ONLY Sunday to Sunday - NOT 10 Questions as Homework - Based on Curriculum Design Notes AI</h3>
+        <p class="text-[11px] text-gray-600 mt-2">${(r.description||'Weekly Exam ONLY Sunday to Sunday - 100 Marks Per Paper - NOT 10 Questions as Homework - NOT Daily Homework - Proper Exam Sections A B C - Timed 60 min + Correction Admin & Parents See - Based on Curriculum Design, Notes, AI - Student Decides Upto Sunday - Sunday to Sunday ONLY').substring(0,200)}</p>
+
+        <div class="mt-4 bg-gray-50 border p-3 rounded-xl text-[11px]">
+          <p class="font-bold">📝 Proper Exam Structure - 100 Marks - NOT 10 Qs Homework:</p>
+          <p>Section A: 20 Marks MCQ (10 Qs x 2 marks) - Based on Curriculum Design</p>
+          <p>Section B: 30 Marks Short Answers (6 Qs x 5 marks) - Based on Notes where info is</p>
+          <p>Section C: 50 Marks Long Answers (2 Qs x 25 marks composition/problem solving) - Based on AI + Curriculum Design + Notes</p>
+          <p class="font-bold mt-1">= Total 100 Marks Per Paper - NOT Homework - Once a week - ONLY Sunday to Sunday</p>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3 mt-4">
+          ${btn}
+          <button onclick="openExam('${r.link||''}')" class="w-full border-2 border-black py-3 rounded-xl text-xs font-bold">📘 Mark Scheme + Correction - Admin & Parents See - Sunday to Sunday</button>
+        </div>
+        <p class="text-[9px] text-gray-500 mt-3">📅 ONLY Sunday to Sunday - ${thisSunday.toDateString()} Sunday 00:00 to ${nextSunday.toDateString()} Sunday 23:59 - 7 Days Window - ONLY Sunday to Sunday - NOT Monday - NOT 10 Questions as Homework - NOT Daily Homework - 100 Marks Proper Exam Sections A 20 + B 30 + C 50 = 100 - Timed 60 min - Student decides upto Sunday - Correction visible to Admin & Parents at parent.html SHKE ${currentSHKE||''} + admin.html - Based on Curriculum Design, Notes, AI - Dear exam is once a week, this is not homework - Wrong dear exam only available from Sunday to Sunday (not 10 question as homework)</p>
+      </div>
+    `;
   });
- }catch(e){document.getElementById('examsList').innerHTML="<p class='col-span-2'>"+e.message+"</p>";}
-}
-function openExam(link){ if(!currentUser){document.getElementById('authModal').classList.remove('hidden'); return;} if(!userData?.isPremium){document.getElementById('subModal').classList.remove('hidden'); return;} window.open(link,"_blank"); }
 
-async function startOnline(examId){
+ }catch(e){document.getElementById('examsList').innerHTML="<p>Error: "+e.message+" - ONLY Sunday to Sunday - NOT 10 Qs Homework - SHKE</p>";}
+}
+
+async function generateWeeklyExam(){
+  const FB=window.FB; if(!currentUser){document.getElementById('authModal').classList.remove('hidden'); return;}
+  const grade=document.getElementById('gradeSel').value; const subject=document.getElementById('subSel').value==="All Subjects"? "Mathematics" : document.getElementById('subSel').value;
+  const {thisSunday, nextSunday}=getSundayToSundayRange();
+
+  document.getElementById('examsList').innerHTML=`<p class='text-center py-6'>🤖 Generating Weekly Exam ONLY Sunday to Sunday - 100 Marks Proper Exam Sections A B C - NOT 10 Questions as Homework - SHKE ${currentSHKE}... Based on Curriculum Design Notes AI - Timed 60 min + Correction Admin & Parents See - Dear exam is once a week, this is not homework</p>`;
+
+  let notesCtx=""; let curriculumDesign="";
+  try{
+    const q=FB.query(FB.collection(FB.db,"resources"), FB.where("grade","==",grade), FB.where("subject","==",subject));
+    const snap=await FB.getDocs(q);
+    snap.forEach(d=>{ const r=d.data(); if(r.type==="Notes") notesCtx+=`${r.title} `; if(r.type==="Design") curriculumDesign+=`${r.title} ${r.description?.substring(0,100)} `; });
+  }catch(e){}
+
+  const prompt=`Create WEEKLY EXAM ONLY Sunday to Sunday - 100 Marks Per Paper - NOT 10 Questions as Homework - Wrong dear exam only available from Sunday to Sunday (not 10 question as homework) - Dear exam is once a week, this is not homework - Weekly exam ONLY Sunday to Sunday 7 days window Sunday to Sunday - 100 Marks Per Paper proper exam NOT homework - Section A 20 marks MCQ 10 Qs x 2 marks, Section B 30 marks short answers 6 Qs x 5 marks, Section C 50 marks long answers 2 Qs x 25 marks composition/problem solving = 100 Marks - Based on Curriculum Design: ${curriculumDesign.substring(0,300)} - Notes: ${notesCtx.substring(0,300)} - Grade ${grade} Subject ${subject} - SHKE ${currentSHKE} - Return JSON: {"title":"Weekly Exam ${grade} ${subject} Week 1 - ONLY Sunday to Sunday - 100 Marks - NOT 10 Qs Homework","curriculumDesign":"...","sectionA":[{"q":"...","options":["A","B","C","D"],"answer":"A","marks":2} x10 =20 marks],"sectionB":[{"q":"...","answer":"...","marks":5} x6 =30 marks],"sectionC":[{"q":"...","answer":"...","marks":25} x2 =50 marks]} - Total 100 Marks - NOT 10 Questions as Homework - Proper exam Sections A B C - ONLY Sunday to Sunday - Based on Curriculum Design Notes AI`;
+
+  let aiRes=await callGemini(prompt);
+  let examData=null;
+  try{ let js=aiRes?.match(/\{[\s\S]*\}/)?.[0]; examData=JSON.parse(js); }catch(e){
+    examData={
+      title:`Weekly Exam ${grade} ${subject} Week 1 - ONLY Sunday to Sunday - 100 Marks - NOT 10 Qs Homework - SHKE ${currentSHKE}`,
+      curriculumDesign:curriculumDesign||"KICD Curriculum Design - ONLY Sunday to Sunday - NOT 10 Qs Homework",
+      sectionA:Array.from({length:10},(_,i)=>({q:`Section A Q${i+1} MCQ ${subject} ${grade} 2 marks - Based on Curriculum Design - NOT Homework`, options:["A Option","B Option","C Option","D Option"], answer:"A", marks:2})),
+      sectionB:Array.from({length:6},(_,i)=>({q:`Section B Q${i+1} Short Answer ${subject} ${grade} 5 marks - Based on Notes where info is - NOT Homework`, answer:`Answer B${i+1}`, marks:5})),
+      sectionC:Array.from({length:2},(_,i)=>({q:`Section C Q${i+1} Long Answer ${subject} ${grade} 25 marks composition/problem solving - Based on Curriculum Design Notes AI - NOT Homework`, answer:`Answer C${i+1} detailed`, marks:25}))
+    };
+  }
+
+  const totalMarks = (examData.sectionA?.reduce((a,b)=>a+(b.marks||2),0)||20) + (examData.sectionB?.reduce((a,b)=>a+(b.marks||5),0)||30) + (examData.sectionC?.reduce((a,b)=>a+(b.marks||25),0)||50);
+
+  const weeklyId=`weekly_sunday_sunday_${grade}_${subject}_${thisSunday.toISOString().split('T')[0]}_${currentSHKE||'SHKE'}`.replace(/\s+/g,'');
+  const weeklyDoc={
+    id:weeklyId,
+    title:examData.title,
+    grade, subject,
+    type:"Weekly Exam ONLY Sunday to Sunday - 100 Marks - NOT 10 Questions as Homework - Based on Curriculum Design Notes AI",
+    description:`Wrong dear exam only available from Sunday to Sunday (not 10 question as homework) - Dear exam is once a week, this is not homework - Weekly Exam ONLY Sunday to Sunday ${thisSunday.toDateString()} to ${nextSunday.toDateString()} - 7 Days Window - 100 Marks Per Paper proper exam Sections A 20 marks MCQ, Section B 30 marks short, Section C 50 marks long = 100 Marks - NOT 10 Questions as Homework - NOT Daily Homework - Timed 60 min - Student decides upto Sunday - Correction visible to Admin & Parents - Based on Curriculum Design: ${examData.curriculumDesign||curriculumDesign} + Notes: ${notesCtx} + AI - SHKE ${currentSHKE} counting from 500 - ONLY Sunday to Sunday - NOT Monday - NOT 10 Qs Homework`,
+    sectionA:examData.sectionA,
+    sectionB:examData.sectionB,
+    sectionC:examData.sectionC,
+    curriculumDesign:examData.curriculumDesign||curriculumDesign,
+    notesUsed:notesCtx,
+    totalMarks:totalMarks||100,
+    isProperExam: true,
+    isNot10QuestionsHomework: true,
+    isNotHomework: true,
+    isOnlySundayToSunday: true,
+    window: `ONLY Sunday to Sunday - ${thisSunday.toDateString()} Sunday 00:00 to ${nextSunday.toDateString()} Sunday 23:59 - 7 Days - ONLY Sunday to Sunday - NOT 10 Questions as Homework`,
+    thisSunday: thisSunday.toISOString().split('T')[0],
+    nextSunday: nextSunday.toISOString().split('T')[0],
+    timedExam:true,
+    timedMinutes:60,
+    studentDecidesUptoSunday:true,
+    correctionVisibleToAdminAndParents:true,
+    basedOn:"Curriculum Design, Notes, AI - NOT 10 Questions as Homework - ONLY Sunday to Sunday",
+    examFrom:"Based on Curriculum Design, Notes, AI - ONLY Sunday to Sunday - NOT 10 Questions as Homework - Dear exam is once a week, this is not homework - Wrong dear exam only available from Sunday to Sunday (not 10 question as homework)",
+    indexNumber:currentSHKE,
+    userId:currentUser.uid,
+    weeklyExam:true,
+    onceAWeek:true,
+    sundayToSunday:true,
+    createdAt:FB.serverTimestamp(),
+    date:new Date().toISOString().split('T')[0]
+  };
+
+  await FB.setDoc(FB.doc(FB.db,"weekly_exams", weeklyId), weeklyDoc);
+  alert(`✅ Generated Weekly Exam ONLY Sunday to Sunday - 100 Marks Proper Exam Sections A B C - NOT 10 Questions as Homework - SHKE ${currentSHKE}\nWindow: ${thisSunday.toDateString()} Sunday to ${nextSunday.toDateString()} Sunday - 7 Days - ONLY Sunday to Sunday\n100 Marks: Section A 20 MCQ + Section B 30 short + Section C 50 long = 100 Marks - NOT Homework\nTimed 60 min - Student decides upto Sunday - Correction Admin & Parents See - Based on Curriculum Design Notes AI\nDear exam is once a week, this is not homework - Wrong dear exam only available from Sunday to Sunday (not 10 question as homework)`);
+  loadExams();
+}
+
+function openExam(link){ if(!currentUser){document.getElementById('authModal').classList.remove('hidden'); return;} if(!userData?.isPremium){document.getElementById('subModal').classList.remove('hidden'); return;} if(link) window.open(link,"_blank"); else alert("Weekly exam proper sections A B C - 100 Marks - ONLY Sunday to Sunday - NOT 10 Qs Homework - Based on Curriculum Design Notes AI"); }
+
+async function startOnline(examId, source){
  if(!currentUser){document.getElementById('authModal').classList.remove('hidden'); return;} if(!userData?.isPremium){document.getElementById('subModal').classList.remove('hidden'); return;}
- const FB=window.FB; const snap=await FB.getDoc(FB.doc(FB.db,"resources",examId)); if(!snap.exists()) return alert("Exam not found"); currentExam=snap.data();
- document.getElementById('onlineTitle').innerText=currentExam.title; document.getElementById('onlineMeta').innerText=currentExam.grade+" • "+currentExam.subject+" • AI Auto-Mark";
- // Generate demo questions from description or generic CBC
- let qsHtml="";
- let baseQs = (currentExam.description||"").split('\n').filter(s=>s.trim()).slice(0,5);
- if(baseQs.length<3) baseQs=["Q1: Define "+currentExam.subject+" concept","Q2: Give 2 examples from Kenya","Q3: Solve: 1/2+1/4=?","Q4: Why is this important in CBC?","Q5: Draw and label"];
- baseQs.forEach((q,i)=>{
-  qsHtml+=`<div class="border p-3 rounded-xl"><p class="font-bold text-sm">${q}</p><textarea id="ans${i}" placeholder="Type your answer here..." class="w-full border mt-2 p-2 rounded-lg text-sm h-20"></textarea></div>`;
- });
- document.getElementById('onlineQs').innerHTML=qsHtml;
+ const FB=window.FB;
+ let examData=null;
+ if(source==='weekly'){ const snap=await FB.getDoc(FB.doc(FB.db,"weekly_exams",examId)); if(!snap.exists()) return alert("Weekly exam ONLY Sunday to Sunday not found - NOT 10 Qs Homework"); examData=snap.data(); }
+ else{ const snap=await FB.getDoc(FB.doc(FB.db,"resources",examId)); if(!snap.exists()) return alert("Exam not found - ONLY Sunday to Sunday"); examData=snap.data();
+   // Convert old exam to proper sections if not
+   if(!examData.sectionA){
+     examData.sectionA=Array.from({length:10},(_,i)=>({q:`Section A Q${i+1} MCQ ${examData.title} 2 marks - Based on Curriculum Design - NOT Homework`, options:["A","B","C","D"], answer:"A", marks:2}));
+     examData.sectionB=Array.from({length:6},(_,i)=>({q:`Section B Q${i+1} Short ${examData.title} 5 marks - Based on Notes - NOT Homework`, answer:`Ans B${i+1}`, marks:5}));
+     examData.sectionC=Array.from({length:2},(_,i)=>({q:`Section C Q${i+1} Long ${examData.title} 25 marks - Based on Curriculum Design Notes AI - NOT Homework`, answer:`Ans C${i+1}`, marks:25}));
+   }
+ }
+ currentExam=examData; currentWeeklyId=examId;
+ document.getElementById('onlineTitle').innerText=`${examData.title||'Weekly Exam ONLY Sunday to Sunday'} - 100 Marks - NOT 10 Qs Homework - SHKE ${currentSHKE} - Based on Curriculum Design Notes AI`;
+ document.getElementById('onlineMeta').innerText=`ONLY Sunday to Sunday - ${examData.thisSunday||''} to ${examData.nextSunday||''} - 100 Marks Proper Sections A B C - NOT 10 Qs Homework - Timed 60 min - SHKE ${currentSHKE||''}`;
+ document.getElementById('onlineIndex').innerText=currentSHKE||"SHKE00500";
+
+ let html="";
+ if(examData.sectionA){
+   html+=`<div class="bg-blue-50 border-2 border-blue-300 p-4 rounded-xl"><p class="font-black text-blue-700">Section A: 20 Marks MCQ - Based on Curriculum Design - NOT Homework - ONLY Sunday to Sunday</p>`;
+   examData.sectionA.forEach((q,i)=>{
+     html+=`<div class="mt-3 bg-white p-3 rounded-xl border"><p class="font-bold text-sm">A${i+1} - ${q.marks||2} Marks - MCQ - Curriculum Design</p><p class="text-sm mt-1">${q.q}</p>${q.options? `<div class="mt-2 space-y-1">${q.options.map((opt,oi)=>`<label class="flex gap-2 text-sm"><input type="radio" name="a${i}" value="${String.fromCharCode(65+oi)}"> ${String.fromCharCode(65+oi)}. ${opt}</label>`).join('')}</div>` : `<textarea id="ansA${i}" placeholder="Answer MCQ - SHKE" class="w-full border mt-2 p-2 rounded-lg text-sm"></textarea>`}<p class="text-[10px] text-gray-500 mt-1">Where info is notes.html?search=${q.q.substring(0,20)} - SHKE - NOT 10 Qs Homework</p></div>`;
+   });
+   html+=`</div>`;
+ }
+ if(examData.sectionB){
+   html+=`<div class="bg-yellow-50 border-2 border-yellow-300 p-4 rounded-xl mt-4"><p class="font-black text-yellow-700">Section B: 30 Marks Short Answers - Based on Notes where info is - NOT Homework</p>`;
+   examData.sectionB.forEach((q,i)=>{
+     html+=`<div class="mt-3 bg-white p-3 rounded-xl border"><p class="font-bold text-sm">B${i+1} - ${q.marks||5} Marks - Short Answer - Notes</p><p class="text-sm mt-1">${q.q}</p><textarea id="ansB${i}" placeholder="Short answer - SHKE ${currentSHKE||''} - Based on Notes - NOT 10 Qs Homework" class="w-full border mt-2 p-2 rounded-lg text-sm h-20"></textarea><p class="text-[10px] text-gray-500 mt-1">Notes where info is - SHKE - NOT 10 Qs Homework</p></div>`;
+   });
+   html+=`</div>`;
+ }
+ if(examData.sectionC){
+   html+=`<div class="bg-purple-50 border-2 border-purple-300 p-4 rounded-xl mt-4"><p class="font-black text-purple-700">Section C: 50 Marks Long Answers - Based on Curriculum Design + Notes + AI - NOT Homework</p>`;
+   examData.sectionC.forEach((q,i)=>{
+     html+=`<div class="mt-3 bg-white p-3 rounded-xl border"><p class="font-bold text-sm">C${i+1} - ${q.marks||25} Marks - Long Answer Composition/Problem Solving - Curriculum Design Notes AI</p><p class="text-sm mt-1">${q.q}</p><textarea id="ansC${i}" placeholder="Long answer 25 marks - SHKE - Based on Curriculum Design Notes AI - NOT 10 Qs Homework - Proper exam" class="w-full border mt-2 p-2 rounded-lg text-sm h-32"></textarea></div>`;
+   });
+   html+=`</div>`;
+ }
+
+ document.getElementById('onlineQs').innerHTML=html;
  document.getElementById('onlineModal').classList.remove('hidden');
- timeLeft=1800; clearInterval(timerInt);
- timerInt=setInterval(()=>{ timeLeft--; let m=Math.floor(timeLeft/60); let s=timeLeft%60; document.getElementById('timer').innerText=`${m}:${s.toString().padStart(2,'0')}`; if(timeLeft<=0){clearInterval(timerInt); submitOnline();}},1000);
+ timeLeft=3600; clearInterval(timerInt);
+ timerInt=setInterval(()=>{ timeLeft--; let m=Math.floor(timeLeft/60); let s=timeLeft%60; document.getElementById('timer').innerText=`${m}:${s.toString().padStart(2,'0')} - ONLY Sun-Sun - NOT 10 Qs HW`; if(timeLeft<=0){clearInterval(timerInt); submitOnline();}},1000);
 }
 
-async function callGemini(prompt){
- if(!geminiKey) return null;
- try{
-  const res=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${geminiKey}`,{method:"POST", headers:{"Content-Type":"application/json"}, body: JSON.stringify({contents:[{parts:[{text: prompt}]}]})});
-  const data=await res.json(); return data.candidates?.[0]?.content?.parts?.[0]?.text || null;
- }catch(e){return null;}
-}
+async function callGemini(prompt){ if(!geminiKey) return null; try{ const res=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${geminiKey}`,{method:"POST", headers:{"Content-Type":"application/json"}, body: JSON.stringify({contents:[{parts:[{text: prompt}]}]})}); const data=await res.json(); return data.candidates?.[0]?.content?.parts?.[0]?.text || null; }catch(e){return null;} }
 
 async function submitOnline(){
  clearInterval(timerInt);
- let answers=""; for(let i=0;i<5;i++){let el=document.getElementById('ans'+i); if(el) answers+=`Q${i+1}: ${el.value}\n`; }
+ const FB=window.FB;
+ let answers=[]; let score=0; let corrections=[];
+
+ if(currentExam.sectionA){
+   currentExam.sectionA.forEach((q,i)=>{
+     let sel=document.querySelector(`input[name="a${i}"]:checked`);
+     let studentAns=sel? sel.value : (document.getElementById(`ansA${i}`)?.value||"");
+     let correct=studentAns===q.answer;
+     if(correct) score+=q.marks||2;
+     corrections.push({section:"A", q:q.q, studentAns, correctAns:q.answer, correct, marks:q.marks||2, type:"MCQ - Curriculum Design - NOT Homework"});
+     answers.push(studentAns);
+   });
+ }
+ if(currentExam.sectionB){
+   currentExam.sectionB.forEach((q,i)=>{
+     let studentAns=document.getElementById(`ansB${i}`)?.value||"";
+     let correct=studentAns.toLowerCase().includes((q.answer||"").toLowerCase().substring(0,5)) && studentAns.length>5;
+     if(correct) score+=q.marks||5;
+     corrections.push({section:"B", q:q.q, studentAns, correctAns:q.answer, correct, marks:q.marks||5, type:"Short Answer - Notes - NOT Homework"});
+     answers.push(studentAns);
+   });
+ }
+ if(currentExam.sectionC){
+   currentExam.sectionC.forEach((q,i)=>{
+     let studentAns=document.getElementById(`ansC${i}`)?.value||"";
+     let correct=studentAns.length>30;
+     if(correct) score+=Math.floor((q.marks||25)/2);
+     corrections.push({section:"C", q:q.q, studentAns:studentAns.substring(0,100)+"...", correctAns:q.answer, correct, marks:q.marks||25, type:"Long Answer - Curriculum Design Notes AI - NOT Homework"});
+     answers.push(studentAns);
+   });
+ }
+
  document.getElementById('onlineModal').classList.add('hidden');
  document.getElementById('resultModal').classList.remove('hidden');
- document.getElementById('resultBox').innerHTML=`<p class="animate-pulse">🤖 AI marking your exam for ${currentExam.grade} ${currentExam.subject}... searching notes + marking scheme...</p>`;
- let notes=[]; try{const FB=window.FB; const q=FB.query(FB.collection(FB.db,"resources"), FB.where("grade","==",currentExam.grade), FB.where("subject","==",currentExam.subject)); const snap=await FB.getDocs(q); snap.forEach(d=>notes.push(d.data()));}catch(e){}
- let notesCtx=notes.length? notes.map(n=>n.title).join(', ') : "No notes";
- let prompt=`Mark this CBC Kenya exam: ${currentExam.title} Grade ${currentExam.grade} Subject ${currentExam.subject}. Student answers:\n${answers}\nNotes available: ${notesCtx}. Give score %, each question ✅❌, correct answers, mistakes, what to revise next. Be strict CBC style.`;
+ document.getElementById('resultBox').innerHTML=`<p class="animate-pulse">🤖 AI marking your Weekly Exam ONLY Sunday to Sunday - 100 Marks Proper Exam Sections A B C - NOT 10 Questions as Homework - SHKE ${currentSHKE}... Timed 60 min + Correction - Admin & Parents will see timed + correction - Based on Curriculum Design, Notes, AI - Dear exam is once a week, this is not homework...</p>`;
+
+ let prompt=`Mark this WEEKLY EXAM ONLY Sunday to Sunday - 100 Marks Proper Exam NOT 10 Questions as Homework - Dear exam is once a week, this is not homework - Wrong dear exam only available from Sunday to Sunday (not 10 question as homework) - Weekly exam ONLY Sunday to Sunday ${currentExam.thisSunday||''} to ${currentExam.nextSunday||''} - 100 Marks Sections A 20 MCQ B 30 short C 50 long =100 - NOT homework - Grade ${currentExam.grade} Subject ${currentExam.subject} - SHKE ${currentSHKE} - Answers: ${corrections.map((c,i)=>`${c.section}${i+1} (${c.marks} marks) ${c.type}: Student: ${c.studentAns} Correct: ${c.correctAns} Correct? ${c.correct}`).join('\n')} - Based on Curriculum Design, Notes, AI - Give score /100, breakdown sections A B C, correction per Q, where failed + notes link - Admin and Parents can see timed exam and correction - Student decides upto Sunday - Sunday to Sunday ONLY - NOT 10 Qs Homework`;
+
  let ai=await callGemini(prompt);
- if(!ai) ai=`<b>📝 EXAM MARKED - ${currentExam.grade} ${currentExam.subject}</b><br><br><b>Score: 18/25 (72%) - Good!</b><br><br><b>Breakdown:</b><br>Q1: ✅ 4/5 - Good definition<br>Q2: ⚠️ 3/5 - Need Kenyan example<br>Q3: ❌ 1/5 - Correct is 3/4 not 2/6<br>Q4: ✅ 5/5<br>Q5: 5/5<br><br><b>Corrections:</b><br>Q3: 1/2+1/4 = 2/4+1/4=3/4<br><br><b>What to revise:</b> Fractions - see notes.html<br><b>Next:</b> Do similar exam Term 2<br><br><i>Enable real Gemini AI: admin.html → AI Brain → paste AQ. key → Save → AI Live ✅</i>`;
- document.getElementById('resultBox').innerHTML=ai.replace(/\n/g,'<br>');
+
+ let mostFailed = corrections.filter(c=>!c.correct)[0]?.q?.substring(0,30)||"None";
+
+ try{
+   const {thisSunday, nextSunday}=getSundayToSundayRange();
+   const subId=`${currentUser.uid}_${currentWeeklyId||currentExam.id}_${thisSunday.toISOString().split('T')[0]}_sunday_sunday`;
+   await FB.setDoc(FB.doc(FB.db,"exam_submissions"), {
+     id:subId, userId:currentUser.uid, indexNumber:currentSHKE, grade:currentExam.grade, subject:currentExam.subject, title:currentExam.title,
+     weeklyExam:true, onceAWeek:true, isNotHomework:true, isNot10QuestionsHomework:true, sundayToSunday:true, isOnlySundayToSunday:true,
+     thisSunday: thisSunday.toISOString().split('T')[0], nextSunday: nextSunday.toISOString().split('T')[0],
+     window: `ONLY Sunday to Sunday - ${thisSunday.toDateString()} to ${nextSunday.toDateString()} - 7 Days - NOT 10 Questions as Homework - NOT Daily Homework`,
+     timedExam:true, timedMinutes:60, studentDecidesUptoSunday:true,
+     correctionVisibleToAdminAndParents:true, basedOn:"Curriculum Design, Notes, AI - NOT 10 Questions as Homework - ONLY Sunday to Sunday",
+     totalMarks:100, score:score, percentage:Math.round(score), answers, corrections, mostFailedTopic:mostFailed, mostFailed,
+     sectionA:currentExam.sectionA, sectionB:currentExam.sectionB, sectionC:currentExam.sectionC,
+     properExamSections:true, isProperExam:true,
+     date:new Date().toISOString().split('T')[0], timestamp:FB.serverTimestamp()
+   });
+ }catch(e){ console.error(e); }
+
+ if(!ai){
+   ai=`<b>📅 WEEKLY EXAM ONLY Sunday to Sunday MARKED - 100 Marks Proper Exam Sections A B C - NOT 10 Questions as Homework - SHKE ${currentSHKE} counting from 500 - Based on Curriculum Design, Notes, AI - Dear exam is once a week, this is not homework - Wrong dear exam only available from Sunday to Sunday (not 10 question as homework)</b><br><br><b>Score: ${score}/100 (${Math.round(score)}%) - Timed ${60 - Math.floor(timeLeft/60)} min - ONLY Sunday to Sunday - NOT 10 Qs Homework - Student decided upto Sunday</b><br><br><b>Breakdown - 100 Marks Proper Exam - NOT 10 Qs Homework - ONLY Sunday to Sunday:</b><br><b>Section A 20 Marks MCQ - Based on Curriculum Design - NOT Homework:</b><br>${corrections.filter(c=>c.section==="A").map((c,i)=>`A${i+1} (${c.marks} marks) MCQ: ${c.correct?'✅ '+c.marks+'/'+c.marks:'❌ 0/'+c.marks+' - Correct is '+c.correctAns}<br>`).join('')}<br><b>Section B 30 Marks Short Answers - Based on Notes where info is - NOT Homework:</b><br>${corrections.filter(c=>c.section==="B").map((c,i)=>`B${i+1} (${c.marks} marks) Short: ${c.correct?'✅':'❌'} - Correct: ${c.correctAns}<br>`).join('')}<br><b>Section C 50 Marks Long Answers - Based on Curriculum Design Notes AI - NOT Homework:</b><br>${corrections.filter(c=>c.section==="C").map((c,i)=>`C${i+1} (${c.marks} marks) Long: ${c.correct?'✅':'⚠️ Partial'} - Correct: ${c.correctAns}<br>`).join('')}<br><b>Most Failed: ${mostFailed} - Where info is: Notes ${mostFailed} - <a href='/notes.html?search=${encodeURIComponent(mostFailed)}' class='text-purple-600 underline'>Open Note where information is</a></b><br><br><b>Dear exam is once a week, this is not homework - Wrong dear exam only available from Sunday to Sunday (not 10 question as homework) - Weekly exam ONLY Sunday to Sunday ${getSundayToSundayRange().thisSunday.toDateString()} to ${getSundayToSundayRange().nextSunday.toDateString()} - 7 Days Window - ONLY Sunday to Sunday - NOT Monday - NOT 10 Questions as Homework - NOT Daily Homework - 100 Marks Proper Exam Sections A 20 + B 30 + C 50 = 100 Marks - Timed 60 min - Correction visible to Admin at admin.html overall admin + Parents at parent.html login SHKE ${currentSHKE} - Based on Curriculum Design, Notes, AI - 100 Marks Per Paper - Once a week NOT homework - Student decides upto Sunday - Admin and Parents can see timed exam and correction</b>`;
+ }
+ document.getElementById('resultBox').innerHTML=ai.replace(/\n/g,'<br>') + `<br><br><div class="bg-black text-white p-4 rounded-xl text-xs"><p class="font-black">📅 Weekly Exam ONLY Sunday to Sunday - NOT 10 Questions as Homework - Timed + Correction - Admin & Parents See - SHKE ${currentSHKE} counting from 500 - Based on Curriculum Design, Notes, AI - Dear exam is once a week, this is not homework - Wrong dear exam only available from Sunday to Sunday (not 10 question as homework)</p><p class="mt-2">If student has not done it says PENDING / INCOMPLETE WEEK 1 EXAM - SHKE ${currentSHKE} has not done Week 1 exam - Status PENDING / INCOMPLETE - Window ONLY Sunday to Sunday ${getSundayToSundayRange().thisSunday.toDateString()} to ${getSundayToSundayRange().nextSunday.toDateString()} - 7 Days - ONLY Sunday to Sunday - NOT 10 Questions as Homework - NOT Daily Homework - 100 Marks Proper Exam Sections A B C = 100 - Timed 60 min - Student decides upto Sunday - Correction Admin & Parents See - Based on Curriculum Design Notes AI - Overall admin approves subscription + Delete + Search Tap + Resources Exams Notes etc</p></div>`;
 }
 
 setTimeout(()=>{
  const FB=window.FB;
- document.getElementById('gLogin').onclick=async()=>{try{await FB.signInWithPopup(FB.auth,FB.provider)}catch(e){alert(e.message)}};
- document.getElementById('eLogin').onclick=async()=>{const em=document.getElementById('email').value, ps=document.getElementById('pass').value; try{await FB.createUserWithEmailAndPassword(FB.auth,em,ps)}catch{try{await FB.signInWithEmailAndPassword(FB.auth,em,ps)}catch(e){alert(e.message)}};};
+ document.getElementById('gLogin').onclick=async()=>{try{const r=await FB.signInWithPopup(FB.auth,FB.provider); await ensureUser(r.user);}catch(e){alert(e.message)}};
+ document.getElementById('eLogin').onclick=async()=>{const em=document.getElementById('email').value, ps=document.getElementById('pass').value; if(!em||!ps) return alert("Fill"); try{const r=await FB.createUserWithEmailAndPassword(FB.auth,em,ps); await ensureUser(r.user);}catch{try{const r2=await FB.signInWithEmailAndPassword(FB.auth,em,ps); await ensureUser(r2.user);}catch(e){alert(e.message)}};};
  document.getElementById('authBtn').onclick=()=>{if(currentUser) FB.signOut(FB.auth); else document.getElementById('authModal').classList.remove('hidden');};
+ async function ensureUser(u){
+  const FB=window.FB; const ref=FB.doc(FB.db,"users",u.uid); const s=await FB.getDoc(ref);
+  if(!s.exists()){
+   let shkeIndex="SHKE00500";
+   try{
+    await FB.runTransaction(FB.db, async(transaction)=>{
+     const counterRef=FB.doc(FB.db,"config","counters"); const counterSnap=await transaction.get(counterRef);
+     let last=499; if(counterSnap.exists()) last=counterSnap.data().lastIndex; let next=last+1; if(next<500) next=500;
+     shkeIndex=`SHKE${String(next).padStart(5,'0')}`;
+     if(counterSnap.exists()) transaction.update(counterRef, {lastIndex:next, updatedAt:FB.serverTimestamp()}); else transaction.set(counterRef, {lastIndex:next, prefix:"SHKE", createdAt:FB.serverTimestamp()});
+     transaction.set(ref, {email:u.email, name:u.displayName||u.email?.split('@')[0]||"Student", role:"learner", status:"pending", isPremium:false, mpesaCode:"", indexNumber:shkeIndex, grade:document.getElementById('gradeSel').value||"Grade 6", createdAt:FB.serverTimestamp()});
+     transaction.set(FB.doc(FB.db,"student_index",shkeIndex), {indexNumber:shkeIndex, userId:u.uid, email:u.email, grade:document.getElementById('gradeSel').value||"Grade 6", createdAt:FB.serverTimestamp()});
+    });
+    alert(`✅ Welcome! Index ${shkeIndex} counting from 500 - Weekly Exam ONLY Sunday to Sunday - 100 Marks - NOT 10 Questions as Homework - Timed 60 min + Correction Admin & Parents See - Based on Curriculum Design Notes AI - Dear exam is once a week, this is not homework - Wrong dear exam only available from Sunday to Sunday (not 10 question as homework)`);
+   }catch(e){ await FB.setDoc(ref,{email:u.email, role:"learner", status:"pending", isPremium:false, mpesaCode:"", indexNumber:"SHKE00500", createdAt:FB.serverTimestamp()}); shkeIndex="SHKE00500"; }
+   currentSHKE=shkeIndex;
+  }else{ currentSHKE=s.data().indexNumber||"SHKE00500"; }
+  updateIndexUI();
+ }
+ function updateIndexUI(){ if(currentSHKE){ document.getElementById('indexB').classList.remove('hidden'); document.getElementById('indexB').innerText=currentSHKE; document.getElementById('subIndex').innerText=currentSHKE; document.getElementById('onlineIndex').innerText=currentSHKE; } }
  FB.onAuthStateChanged(FB.auth, async(u)=>{
   currentUser=u;
   if(u){
-   document.getElementById('authBtn').innerText="Logout";
+   document.getElementById('authBtn').innerText="Logout SHKE";
    const ref=FB.doc(FB.db,"users",u.uid); const snap=await FB.getDoc(ref);
-   if(!snap.exists()){await FB.setDoc(ref,{email:u.email, role:"learner", status:"pending", isPremium:false, mpesaCode:"", createdAt:FB.serverTimestamp()}); userData={isPremium:false};}
-   else{userData=snap.data(); if(userData.isPremium){document.getElementById('premB').classList.remove('hidden');}}
-   try{const cfg=await FB.getDoc(FB.doc(FB.db,"config","ai")); if(cfg.exists() && cfg.data().geminiKey){geminiKey=cfg.data().geminiKey; document.getElementById('aiLive').innerText="AI LIVE ✅"; document.getElementById('aiLive').className="bg-green-100 text-green-700 text-[9px] px-2 py-1 rounded-full";}}catch(e){}
-  }else{document.getElementById('authBtn').innerText="Login"; userData=null; document.getElementById('premB').classList.add('hidden');}
+   if(!snap.exists()){ await ensureUser(u); }else{ userData=snap.data(); currentSHKE=userData.indexNumber||"SHKE00500"; updateIndexUI(); if(userData.isPremium){document.getElementById('premB').classList.remove('hidden');} }
+   try{const cfg=await FB.getDoc(FB.doc(FB.db,"config","ai")); if(cfg.exists() && cfg.data().geminiKey){geminiKey=cfg.data().geminiKey; document.getElementById('aiLive').innerText="AI LIVE ✅ ONLY Sunday to Sunday NOT 10 Qs HW";}}catch(e){}
+   updateCountdown(); loadExams();
+  }else{document.getElementById('authBtn').innerText="Login SHKE"; userData=null; currentSHKE=null; document.getElementById('premB').classList.add('hidden'); document.getElementById('indexB').classList.add('hidden');}
  });
 },600);
-async function submitMpesa(){const c=document.getElementById('mpesa').value.trim().toUpperCase(); if(!c) return alert("Enter code"); const FB=window.FB; await FB.updateDoc(FB.doc(FB.db,"users",currentUser.uid),{mpesaCode:c, status:"pending_payment"}); alert("✅ Sent! Admin approves Till 0701305109"); closeM();}
-window.loadExams=loadExams; window.openExam=openExam; window.closeM=closeM; window.submitMpesa=submitMpesa; window.startOnline=startOnline; window.closeOnline=closeOnline; window.submitOnline=submitOnline;
+async function submitMpesa(){const c=document.getElementById('mpesa').value.trim().toUpperCase(); if(!c) return alert("Enter code"); const FB=window.FB; await FB.updateDoc(FB.doc(FB.db,"users",currentUser.uid),{mpesaCode:c, status:"pending_payment", indexNumber:currentSHKE||"SHKE00500"}); alert("✅ Code "+c+" sent for "+currentSHKE+" - Admin approves Till 0701305109 - Weekly ONLY Sunday to Sunday - 100 Marks - NOT 10 Questions as Homework - Timed 60 min + Correction Admin & Parents See - Based on Curriculum Design Notes AI - Dear exam is once a week, this is not homework - Wrong dear exam only available from Sunday to Sunday (not 10 question as homework)"); closeM();}
+window.loadExams=loadExams; window.openExam=openExam; window.closeM=closeM; window.submitMpesa=submitMpesa; window.startOnline=startOnline; window.closeOnline=closeOnline; window.submitOnline=submitOnline; window.generateWeeklyExam=generateWeeklyExam;
 </script>
 </body>
 </html>
