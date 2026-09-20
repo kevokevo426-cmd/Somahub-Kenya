@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SomaHub - Notes PP1-G9 Fixed</title>
+<title>SomaHub Notes - Fixed + AI Search + YouTube + Homework from Notes</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <script type="module">
@@ -16,110 +16,138 @@ window.FB={auth,db,provider,signInWithPopup,signInWithEmailAndPassword,createUse
 </head>
 <body class="bg-purple-50">
 <header class="bg-white shadow sticky top-0 z-50">
-<div class="max-w-7xl mx-auto px-4 py-3 flex justify-between">
-<a href="/" class="font-bold"><i class="fa-solid fa-book text-purple-600"></i> SomaHub Notes</a>
-<div class="flex gap-2"><a href="/students.html" class="text-xs bg-blue-100 px-3 py-2 rounded-full">Exams</a><a href="/teachers.html" class="text-xs bg-orange-100 px-3 py-2 rounded-full">Teachers</a><button id="authBtn" class="bg-purple-600 text-white px-4 py-2 rounded-full text-sm">Login</button></div>
+<div class="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
+<a href="/" class="font-black text-sm"><i class="fa-solid fa-book text-purple-600"></i> SomaHub Notes <span id="aiLive" class="bg-red-100 text-red-600 text-[9px] px-2 py-1 rounded-full">AI OFF</span></a>
+<div class="flex gap-2 items-center">
+<span id="premB" class="hidden bg-green-600 text-white px-3 py-1 rounded-full text-[10px] font-bold">PREMIUM</span>
+<a href="/ai-homework.html" class="text-[11px] bg-black text-white px-3 py-2 rounded-full">🤖 AI Mark</a>
+<a href="/exams.html" class="text-[11px] bg-blue-100 px-3 py-2 rounded-full">Exams</a>
+<button id="authBtn" class="bg-purple-600 text-white px-4 py-2 rounded-full text-xs font-bold">Login</button>
+</div>
 </div>
 </header>
 
 <div class="max-w-7xl mx-auto p-4">
-<div class="bg-gradient-to-r from-purple-600 to-pink-600 rounded-2xl p-6 text-white">
-<h1 class="text-2xl font-bold">📚 Revision Notes - PP1 to Grade 9</h1><p class="text-sm mt-1">Summarized CBC Notes • Science and Technology • Agriculture and Nutrition • C/A</p>
-<div id="premB" class="hidden mt-2 bg-white text-purple-700 px-3 py-1 rounded-full text-xs inline-block font-bold">✅ PREMIUM</div>
-<div id="freeB" class="mt-2 bg-white/20 px-3 py-1 rounded-full text-xs inline-block">🔒 500 KES / 3 Months - Till 0701305109</div>
+<div class="bg-gradient-to-r from-purple-600 to-black rounded-[1.5rem] p-6 text-white">
+<h1 class="text-xl font-black">📚 Notes PP1-G9 - Fixed + AI Search Word + YouTube + Homework from Notes</h1>
+<p class="text-xs mt-2 text-purple-100">Fixed CBC filter • Search word meaning from notes • YouTube video of process • AI sets homework/exam from notes according to level</p>
+<div class="mt-4 bg-white rounded-xl p-2 flex gap-2">
+<input id="wordSearch" placeholder="🔍 Search word e.g 'photosynthesis' or 'fraction' or 'Mau Mau'" class="flex-1 p-3 rounded-xl text-sm text-black outline-none">
+<button onclick="searchWord()" class="bg-purple-600 text-white px-5 py-3 rounded-xl font-black text-xs">Search in Notes</button>
+<button onclick="searchYouTube()" class="bg-red-600 text-white px-5 py-3 rounded-xl font-black text-xs"><i class="fa-brands fa-youtube"></i> Video</button>
+</div>
 </div>
 
-<div class="mt-6 grid md:grid-cols-3 gap-4">
-<div><label class="text-xs font-bold">Grade</label><select id="gradeSel" class="w-full border p-2 rounded mt-1"><option>PP1</option><option>PP2</option><option>Grade 1</option><option>Grade 2</option><option>Grade 3</option><option>Grade 4</option><option>Grade 5</option><option>Grade 6</option><option selected>Grade 7</option><option>Grade 8</option><option>Grade 9</option></select></div>
-<div><label class="text-xs font-bold">Subject - CBC Correct</label><select id="subSel" class="w-full border p-2 rounded mt-1 font-bold">
-<option value="All">All Subjects</option>
-<option value="Mathematics">Mathematics</option>
-<option value="English">English</option>
-<option value="Kiswahili">Kiswahili</option>
-<option value="Science and Technology">Science and Technology</option>
-<option value="SST">SST - Social Studies</option>
-<option value="CRE">CRE</option>
-<option value="Agriculture and Nutrition">Agriculture and Nutrition</option>
-<option value="Creative Arts">Creative Arts (C/A)</option>
-<option value="Pre-Technical">Pre-Technical Studies</option>
-</select></div>
-<div class="flex items-end"><button onclick="loadNotes()" class="w-full bg-purple-600 text-white py-2 rounded font-bold">🔍 Show Notes</button></div>
+<div class="mt-5 bg-white p-4 rounded-2xl shadow border grid md:grid-cols-4 gap-3">
+<div><label class="text-[10px] font-bold">Grade</label><select id="gradeSel" class="w-full border p-3 rounded-xl mt-1 text-sm"><option>PP1</option><option>PP2</option><option>Grade 1</option><option>Grade 2</option><option>Grade 3</option><option>Grade 4</option><option>Grade 5</option><option>Grade 6</option><option selected>Grade 7</option><option>Grade 8</option><option>Grade 9</option></select></div>
+<div><label class="text-[10px] font-bold">Subject - CBC Correct</label><select id="subSel" class="w-full border p-3 rounded-xl mt-1 text-sm font-bold"><option value="All">All Subjects</option><option value="Mathematics">Mathematics</option><option value="English">English</option><option value="Kiswahili">Kiswahili</option><option value="Science and Technology">Science and Technology</option><option value="SST">SST - Social Studies</option><option value="CRE">CRE</option><option value="Agriculture and Nutrition">Agriculture and Nutrition</option><option value="Creative Arts">Creative Arts (C/A)</option><option value="Pre-Technical">Pre-Technical Studies</option></select></div>
+<button onclick="loadNotes()" class="bg-purple-600 text-white py-3 rounded-xl font-black text-sm mt-5">🔍 Show Notes</button>
+<button onclick="aiSetHomework()" class="bg-black text-white py-3 rounded-xl font-black text-sm mt-5">🤖 AI Set HW from Notes</button>
 </div>
+
+<div id="wordResult" class="mt-5 hidden bg-white rounded-2xl shadow border p-5"></div>
+<div id="youtubeResult" class="mt-4 hidden bg-white rounded-2xl shadow border p-5"></div>
+<div id="aiHomeworkResult" class="mt-4 hidden bg-gradient-to-br from-green-50 to-white rounded-2xl shadow border border-green-200 p-5"></div>
 
 <div id="notesList" class="mt-6 grid md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
 </div>
 
-<div id="authModal" class="hidden fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4"><div class="bg-white rounded-2xl p-6 w-full max-w-sm"><h3 class="font-bold">Login to Download Notes</h3><button id="gLogin" class="w-full border py-2 rounded-full mt-3">Google Login</button><input id="email" placeholder="Email" class="w-full border p-2 rounded mt-3"><input id="pass" type="password" placeholder="Password" class="w-full border p-2 rounded mt-2"><button id="eLogin" class="w-full bg-purple-600 text-white py-2 rounded mt-3">Login</button><button onclick="closeM()" class="w-full mt-2 text-sm">Close</button></div></div>
-<div id="subModal" class="hidden fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4"><div class="bg-white rounded-2xl p-6 w-full max-w-sm text-center"><h3 class="font-bold">Unlock Notes - 500 KES</h3><p class="text-sm">Till 0701305109</p><input id="mpesa" placeholder="M-Pesa Code" class="w-full border p-2 rounded mt-3"><button onclick="submitMpesa()" class="w-full bg-green-600 text-white py-2 rounded mt-3 font-bold">Submit</button><button onclick="closeM()" class="w-full mt-2 text-sm">Close</button></div></div>
+<div id="authModal" class="hidden fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4"><div class="bg-white rounded-2xl p-6 w-full max-w-sm"><h3 class="font-black">Login to Download</h3><button id="gLogin" class="w-full border-2 py-3 rounded-full mt-3 font-bold text-sm">Google Login</button><input id="email" placeholder="Email" class="w-full border p-3 rounded-xl mt-3 text-sm"><input id="pass" type="password" placeholder="Password" class="w-full border p-3 rounded-xl mt-2 text-sm"><button id="eLogin" class="w-full bg-purple-600 text-white py-3 rounded-full mt-3 font-bold">Login</button><button onclick="closeM()" class="w-full mt-2 text-xs">Close</button></div></div>
+<div id="subModal" class="hidden fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4"><div class="bg-white rounded-2xl p-6 w-full max-w-sm text-center"><h3 class="font-black">🔓 Unlock Notes - 500 KES</h3><p class="text-sm">Till 0701305109</p><input id="mpesa" placeholder="M-Pesa Code" class="w-full border p-3 rounded-xl mt-3 uppercase font-bold text-sm"><button onclick="submitMpesa()" class="w-full bg-green-600 text-white py-3 rounded-full mt-3 font-bold">Submit</button><button onclick="closeM()" class="w-full mt-2 text-xs">Close</button></div></div>
 
 <script>
-let currentUser=null, userData=null;
+let currentUser=null, userData=null, geminiKey="", allNotes=[];
 function closeM(){document.getElementById('authModal').classList.add('hidden'); document.getElementById('subModal').classList.add('hidden');}
-
-const subjectKeywords = {
-  "Mathematics": ["math"],
-  "English": ["english"],
-  "Kiswahili": ["kiswahili", "swahili"],
-  "Science and Technology": ["science", "technology", "integrated"],
-  "SST": ["sst", "social", "studies"],
-  "CRE": ["cre", "christian"],
-  "Agriculture and Nutrition": ["agri", "nutrition"],
-  "Creative Arts": ["creative", "arts", "c/a", "art"],
-  "Pre-Technical": ["pre-technical", "technical"]
-};
+const subjectKeywords = {"Mathematics":["math"],"English":["english"],"Kiswahili":["kiswahili","swahili"],"Science and Technology":["science","technology","integrated"],"SST":["sst","social","studies"],"CRE":["cre","christian"],"Agriculture and Nutrition":["agri","nutrition"],"Creative Arts":["creative","arts","c/a","art"],"Pre-Technical":["pre-technical","technical"]};
 
 async function loadNotes(){
-const grade=document.getElementById('gradeSel').value; const sub=document.getElementById('subSel').value;
-const list=document.getElementById('notesList'); list.innerHTML="Loading notes...";
-try{
-const FB=window.FB;
-// FIXED: Query only by grade and type, filter subject in code to work with both old and new data
-let q = FB.query(FB.collection(FB.db,"resources"), FB.where("grade","==",grade));
-const snap=await FB.getDocs(q); list.innerHTML="";
-let filtered=[];
-snap.forEach(d=>{
-  const r=d.data();
-  if(r.type && r.type!=="Notes") return; // only notes
-  const titleField = (r.title || r.subject || "").toLowerCase();
-  if(sub==="All") filtered.push(r);
-  else {
-    const keys = subjectKeywords[sub] || [sub.toLowerCase()];
-    if(keys.some(k=> titleField.includes(k))) filtered.push(r);
-  }
-});
-
-if(filtered.length===0){list.innerHTML=`<div class="col-span-3 text-center py-10"><p class="text-gray-500">No notes yet for ${grade} - ${sub}</p><p class="text-xs mt-2">Admin: Add in admin.html with subject "${sub}"</p></div>`; return;}
-
-filtered.forEach(r=>{
-const prem=userData?.isPremium;
-const displaySub = r.subject || r.title || sub;
-list.innerHTML+=`<div class="bg-white p-4 rounded-xl shadow border hover:shadow-lg"><div class="flex justify-between text-[10px]"><span class="bg-purple-100 text-purple-700 px-2 py-1 rounded">${r.grade}</span><span class="bg-gray-100 px-2 py-1 rounded">${displaySub}</span></div><h3 class="font-bold text-sm mt-2">${r.title || r.subject}</h3><p class="text-[11px] text-gray-500 mt-1">📄 PDF Notes • Ready to download</p><button onclick="openNote('${r.link}')" class="w-full mt-3 ${prem?'bg-purple-600':'bg-gray-300'} text-white py-2 rounded text-xs font-bold">${prem?'📥 Open Notes':'🔒 Subscribe to View'}</button></div>`;
-});
-}catch(e){document.getElementById('notesList').innerHTML="<p class='text-red-500'>"+e.message+"</p>";}
+ const grade=document.getElementById('gradeSel').value; const sub=document.getElementById('subSel').value;
+ const list=document.getElementById('notesList'); list.innerHTML="<p class='col-span-3 text-center py-6'>Loading notes for "+grade+"...</p>";
+ try{
+  const FB=window.FB; let q = FB.query(FB.collection(FB.db,"resources"), FB.where("grade","==",grade));
+  const snap=await FB.getDocs(q); allNotes=[]; list.innerHTML="";
+  let filtered=[];
+  snap.forEach(d=>{ const r=d.data(); r.id=d.id; if(r.type && r.type!=="Notes") return; const titleField=(r.title||r.subject||"").toLowerCase(); if(sub==="All") filtered.push(r); else { const keys=subjectKeywords[sub]||[sub.toLowerCase()]; if(keys.some(k=>titleField.includes(k))|| (r.subject||"").toLowerCase().includes(sub.toLowerCase())) filtered.push(r); } });
+  allNotes=filtered;
+  if(filtered.length===0){list.innerHTML=`<div class="col-span-3 text-center py-10 bg-white rounded-2xl border"><p class="font-bold">No notes yet for ${grade} - ${sub}</p><p class="text-xs mt-2">Admin: Add in admin.html with subject "${sub}" Grade ${grade}</p><p class="text-[10px] text-gray-400 mt-1">Your fixed filter working - shows notes even if subject field different</p></div>`; return;}
+  renderNotes(filtered);
+ }catch(e){document.getElementById('notesList').innerHTML="<p class='text-red-500 col-span-3'>"+e.message+"</p>";}
 }
-function openNote(link){
-if(!currentUser){document.getElementById('authModal').classList.remove('hidden'); return;}
-if(!userData?.isPremium){document.getElementById('subModal').classList.remove('hidden'); return;}
-window.open(link,"_blank");
+
+function renderNotes(notes){
+ const list=document.getElementById('notesList'); list.innerHTML="";
+ notes.forEach(r=>{
+  const prem=userData?.isPremium; const displaySub=r.subject||r.title||"";
+  list.innerHTML+=`<div class="bg-white p-4 rounded-2xl shadow border hover:shadow-lg transition"><div class="flex justify-between text-[10px]"><span class="bg-purple-100 text-purple-700 px-2 py-1 rounded-full font-bold">${r.grade}</span><span class="bg-gray-100 px-2 py-1 rounded-full">${displaySub.substring(0,25)}</span></div><h3 class="font-black text-sm mt-3">${r.title||r.subject}</h3><p class="text-[11px] text-gray-500 mt-2">${(r.description||'CBC Notes').substring(0,110)}...</p><button onclick="openNote('${r.link}')" class="w-full mt-3 ${prem?'bg-purple-600':'bg-gray-300'} text-white py-2.5 rounded-xl text-xs font-black">${prem?'📖 Open Notes':'🔒 Subscribe Till 0701305109'}</button><div class="mt-2 grid grid-cols-2 gap-2 text-[10px]"><button onclick="aiSetFromOne('${r.id}')" class="bg-black text-white py-2 rounded-full font-bold">📝 HW from this</button><button onclick="aiExplain('${r.id}')" class="border py-2 rounded-full font-bold">🤖 AI Explain Level</button></div></div>`;
+ });
 }
+
+function openNote(link){ if(!currentUser){document.getElementById('authModal').classList.remove('hidden'); return;} if(!userData?.isPremium){document.getElementById('subModal').classList.remove('hidden'); return;} window.open(link,"_blank"); }
+
+async function callGemini(prompt){ if(!geminiKey) return null; try{const res=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${geminiKey}`,{method:"POST", headers:{"Content-Type":"application/json"}, body: JSON.stringify({contents:[{parts:[{text: prompt}]}]})}); const data=await res.json(); return data.candidates?.[0]?.content?.parts?.[0]?.text||null;}catch(e){return null;} }
+
+async function searchWord(){
+ const word=document.getElementById('wordSearch').value.trim(); if(!word) return alert("Type word e.g photosynthesis");
+ if(allNotes.length===0) await loadNotes();
+ const res=allNotes.filter(n=> (n.title+n.description+n.subject).toLowerCase().includes(word.toLowerCase()));
+ const box=document.getElementById('wordResult'); box.classList.remove('hidden');
+ if(res.length===0){
+  box.innerHTML=`<h3 class="font-black">🔍 "${word}" - Not in your notes exactly</h3><p class="text-xs text-gray-500">AI will explain according to ${document.getElementById('gradeSel').value} level + comparison</p><div id="aiWordExp" class="mt-3 bg-gray-50 p-4 rounded-xl text-sm animate-pulse">🤖 AI explaining "${word}" for ${document.getElementById('gradeSel').value}...</div>`;
+  let ai=await callGemini(`Explain word "${word}" for Kenyan CBC ${document.getElementById('gradeSel').value} simple English + Kiswahili, meaning, comparison PP1 vs ${document.getElementById('gradeSel').value}, level info.`);
+  document.getElementById('aiWordExp').innerHTML=ai? ai.replace(/\n/g,'<br>') : `<b>${word}</b> means... (Add Gemini key in admin.html → AI Brain for real AI)`;
+ }else{
+  box.innerHTML=`<h3 class="font-black">🔍 "${word}" Found in ${res.length} Notes (Fixed filter)</h3><div class="mt-3 grid gap-3">${res.map(r=>`<div class="border p-3 rounded-xl bg-purple-50"><b class="text-sm">${r.title}</b> - ${r.grade} ${r.subject}<br><small>${r.description?.substring(0,150)}</small><br><button onclick="openNote('${r.link}')" class="mt-2 bg-purple-600 text-white px-3 py-1 rounded-full text-xs">Read Note</button></div>`).join('')}</div><div id="aiWordExp" class="mt-4 bg-black text-white p-4 rounded-xl text-sm"><b>🤖 Meaning for ${document.getElementById('gradeSel').value} + Level Comparison:</b><br><span class="animate-pulse">Explaining...</span></div>`;
+  let ai=await callGemini(`For CBC ${document.getElementById('gradeSel').value}, explain "${word}" meaning, level comparison PP1 vs ${document.getElementById('gradeSel').value}, info according to level. Notes: ${res.map(r=>r.title).join(', ')}`);
+  if(ai) document.getElementById('aiWordExp').innerHTML=`<b>🤖 Meaning for ${document.getElementById('gradeSel').value} + Comparison:</b><br>${ai.replace(/\n/g,'<br>')}`;
+ }
+ box.scrollIntoView({behavior:'smooth'});
+}
+
+function searchYouTube(){
+ const word=document.getElementById('wordSearch').value.trim(); if(!word) return alert("Type word first");
+ const grade=document.getElementById('gradeSel').value; const box=document.getElementById('youtubeResult'); box.classList.remove('hidden');
+ const ytQuery=encodeURIComponent(word+" "+grade+" CBC Kenya explained process");
+ box.innerHTML=`<h3 class="font-black">🎥 YouTube - "${word}" Process for ${grade}</h3><p class="text-xs text-gray-500">Videos showing process / meaning</p><div class="mt-3"><iframe class="w-full h-[220px] rounded-xl" src="https://www.youtube.com/embed?listType=search&list=${ytQuery}" frameborder="0" allowfullscreen></iframe><a href="https://www.youtube.com/results?search_query=${ytQuery}" target="_blank" class="mt-3 block bg-red-600 text-white p-3 rounded-xl text-center font-bold text-sm">📺 Open in YouTube: ${word} ${grade}</a></div>`;
+ box.scrollIntoView({behavior:'smooth'});
+}
+
+async function aiSetHomework(){
+ if(allNotes.length===0) await loadNotes();
+ if(allNotes.length===0) return alert("No notes for this grade - Add in admin.html");
+ if(!currentUser){document.getElementById('authModal').classList.remove('hidden'); return;}
+ const grade=document.getElementById('gradeSel').value; const sub=document.getElementById('subSel').value;
+ const box=document.getElementById('aiHomeworkResult'); box.classList.remove('hidden');
+ box.innerHTML=`<h3 class="font-black">🤖 AI Setting Homework FROM Notes - ${grade} ${sub}</h3><p class="text-xs text-gray-600">Using ${allNotes.length} notes - level-based</p><div class="mt-3 bg-white p-4 rounded-xl text-sm animate-pulse">Reading notes: ${allNotes.map(n=>n.title).join(', ').substring(0,100)}... Creating homework according to ${grade} level + comparison...</div>`;
+ let ctx=allNotes.map(n=>`${n.title}: ${n.description?.substring(0,100)}`).join('\n');
+ let ai=await callGemini(`From these CBC notes for ${grade} ${sub}:\n${ctx}\n\nCreate: 1) 5 Homework Qs according to ${grade} level, 2) 5 Exam Qs, 3) Answers + marking scheme, 4) Comparison what PP1 learns vs ${grade} on same topic. CBC format.`);
+ if(!ai) ai=`<b>📝 HOMEWORK FROM NOTES - ${grade} ${sub} (Demo - Add Gemini key)</b><br>From: ${allNotes.map(n=>n.title).join(', ')}<br><br>Homework (${grade} level):<br>1. Define... (2m)<br>2. 2 examples Kenya (2m)<br>3. Importance (2m)<br>4. Draw label (2m)<br>5. Compare with lower grade (2m)<br><br><i>Add Gemini key in admin.html → AI Brain for real homework FROM your notes</i>`;
+ box.innerHTML=`<h3 class="font-black">🤖 Homework & Exam FROM Your Notes - ${grade}</h3><div class="mt-3 bg-white p-4 rounded-xl text-sm leading-relaxed">${ai.replace(/\n/g,'<br>')}</div><div class="mt-3 flex gap-2"><button onclick="navigator.clipboard.writeText(document.getElementById('aiHomeworkResult').innerText);alert('Copied')" class="bg-black text-white px-4 py-2 rounded-full text-xs font-bold">Copy</button><a href="/ai-homework.html" class="bg-green-600 text-white px-4 py-2 rounded-full text-xs font-bold">📸 Mark Answers</a></div>`;
+ box.scrollIntoView({behavior:'smooth'});
+}
+
+async function aiSetFromOne(id){ const note=allNotes.find(n=>n.id===id); const grade=document.getElementById('gradeSel').value; const box=document.getElementById('aiHomeworkResult'); box.classList.remove('hidden'); box.innerHTML=`<h3 class="font-black">📝 From: ${note.title}</h3><div class="mt-3 bg-white p-4 rounded-xl text-sm animate-pulse">Creating homework...</div>`; let ai=await callGemini(`From note Title:${note.title} Desc:${note.description} Grade ${note.grade} Subject ${note.subject}. Create 5 homework + 5 exam for ${grade} level with answers + comparison.`); box.innerHTML=`<h3 class="font-black">📝 Homework From: ${note.title}</h3><div class="mt-3 bg-white p-4 rounded-xl text-sm">${ai? ai.replace(/\n/g,'<br>') : 'Add Gemini key for real AI'}</div>`; box.scrollIntoView({behavior:'smooth'}); }
+async function aiExplain(id){ const note=allNotes.find(n=>n.id===id); const grade=document.getElementById('gradeSel').value; const box=document.getElementById('wordResult'); box.classList.remove('hidden'); box.innerHTML=`<h3 class="font-black">🤖 Explains: ${note.title} for ${grade}</h3><div class="mt-3 bg-black text-white p-4 rounded-xl text-sm animate-pulse">Explaining according to level...</div>`; let ai=await callGemini(`Explain ${note.title} - ${note.description} for CBC ${grade} level. Meaning, comparison PP1 vs ${grade}, simple English + Kiswahili, Kenyan example.`); box.innerHTML=`<h3 class="font-black">🤖 ${note.title} - For ${grade} Level</h3><div class="mt-3 bg-black text-white p-4 rounded-xl text-sm">${ai? ai.replace(/\n/g,'<br>') : 'Add Gemini key in admin.html → AI Brain'}</div>`; box.scrollIntoView({behavior:'smooth'}); }
+
 setTimeout(()=>{
-const FB=window.FB;
-document.getElementById('gLogin').onclick=async()=>{try{await FB.signInWithPopup(FB.auth,FB.provider)}catch(e){alert(e.message)}};
-document.getElementById('eLogin').onclick=async()=>{const em=document.getElementById('email').value, ps=document.getElementById('pass').value; try{await FB.createUserWithEmailAndPassword(FB.auth,em,ps)}catch{try{await FB.signInWithEmailAndPassword(FB.auth,em,ps)}catch(e){alert(e.message)}};};
-document.getElementById('authBtn').onclick=()=>{if(currentUser) FB.signOut(FB.auth); else document.getElementById('authModal').classList.remove('hidden');};
-FB.onAuthStateChanged(FB.auth, async(u)=>{
-currentUser=u;
-if(u){
-document.getElementById('authBtn').innerText="Logout";
-const ref=FB.doc(FB.db,"users",u.uid); const snap=await FB.getDoc(ref);
-if(!snap.exists()){await FB.setDoc(ref,{email:u.email, role:"learner", status:"pending", isPremium:false, mpesaCode:"", createdAt:FB.serverTimestamp()}); userData={isPremium:false};}
-else{userData=snap.data(); if(userData.isPremium){document.getElementById('premB').classList.remove('hidden'); document.getElementById('freeB').classList.add('hidden');}}
-}else{document.getElementById('authBtn').innerText="Login"; userData=null; document.getElementById('premB').classList.add('hidden'); document.getElementById('freeB').classList.remove('hidden');}
-});
-loadNotes();
+ const FB=window.FB;
+ document.getElementById('gLogin').onclick=async()=>{try{await FB.signInWithPopup(FB.auth,FB.provider)}catch(e){alert(e.message)}};
+ document.getElementById('eLogin').onclick=async()=>{const em=document.getElementById('email').value, ps=document.getElementById('pass').value; try{await FB.createUserWithEmailAndPassword(FB.auth,em,ps)}catch{try{await FB.signInWithEmailAndPassword(FB.auth,em,ps)}catch(e){alert(e.message)}};};
+ document.getElementById('authBtn').onclick=()=>{if(currentUser) FB.signOut(FB.auth); else document.getElementById('authModal').classList.remove('hidden');};
+ FB.onAuthStateChanged(FB.auth, async(u)=>{
+  currentUser=u;
+  if(u){
+   document.getElementById('authBtn').innerText="Logout";
+   const ref=FB.doc(FB.db,"users",u.uid); const snap=await FB.getDoc(ref);
+   if(!snap.exists()){await FB.setDoc(ref,{email:u.email, role:"learner", status:"pending", isPremium:false, mpesaCode:"", createdAt:FB.serverTimestamp()}); userData={isPremium:false};}
+   else{userData=snap.data(); if(userData.isPremium){document.getElementById('premB').classList.remove('hidden');}}
+   try{const cfg=await FB.getDoc(FB.doc(FB.db,"config","ai")); if(cfg.exists() && cfg.data().geminiKey){geminiKey=cfg.data().geminiKey; document.getElementById('aiLive').innerText="AI LIVE ✅"; document.getElementById('aiLive').className="bg-green-100 text-green-700 text-[9px] px-2 py-1 rounded-full";}}catch(e){}
+  }else{document.getElementById('authBtn').innerText="Login"; userData=null; document.getElementById('premB').classList.add('hidden');}
+ });
+ loadNotes();
+ document.getElementById('wordSearch').addEventListener('keypress',(e)=>{if(e.key==='Enter') searchWord();});
 },600);
-async function submitMpesa(){const c=document.getElementById('mpesa').value; if(!c) return alert("Enter code"); const FB=window.FB; await FB.updateDoc(FB.doc(FB.db,"users",currentUser.uid),{mpesaCode:c, status:"pending_payment"}); alert("Sent!"); closeM();}
-window.loadNotes=loadNotes; window.openNote=openNote; window.closeM=closeM; window.submitMpesa=submitMpesa;
+async function submitMpesa(){const c=document.getElementById('mpesa').value.trim().toUpperCase(); if(!c) return alert("Enter code"); const FB=window.FB; await FB.updateDoc(FB.doc(FB.db,"users",currentUser.uid),{mpesaCode:c, status:"pending_payment"}); alert("✅ Sent Till 0701305109"); closeM();}
+window.loadNotes=loadNotes; window.openNote=openNote; window.closeM=closeM; window.submitMpesa=submitMpesa; window.searchWord=searchWord; window.searchYouTube=searchYouTube; window.aiSetHomework=aiSetHomework; window.aiSetFromOne=aiSetFromOne; window.aiExplain=aiExplain;
 </script>
 </body>
 </html>
