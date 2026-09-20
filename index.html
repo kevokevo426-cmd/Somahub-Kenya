@@ -2,153 +2,89 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SomaHub - Where Learning Clicks - Global Homeschool & School - PP1 to Grade 12 - AI Photo Marker + Composition Studio</title>
+<title>SomaHub - CBC / CBE Grade 1-9</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;700;800&display=swap" rel="stylesheet">
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-import { getAuth, onAuthStateChanged, GoogleAuthProvider, signInWithPopup, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-import { getFirestore, doc, getDoc, setDoc, collection, getDocs, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-const firebaseConfig = { apiKey: "AIzaSyA93BNes3AmFyxIEgjSbvbIWqLyorLsuj8", authDomain: "somahubkenya-9e458.firebaseapp.com", projectId: "somahubkenya-9e458", storageBucket: "somahubkenya-9e458.firebasestorage.app", messagingSenderId: "615579085715", appId: "1:615579085715:web:28fca37ba498324bb49666" };
-const app=initializeApp(firebaseConfig); const auth=getAuth(app); const db=getFirestore(app); const provider=new GoogleAuthProvider();
-window.FB={auth,db,provider,signInWithPopup,signInWithEmailAndPassword,createUserWithEmailAndPassword,onAuthStateChanged,signOut,doc,getDoc,setDoc,collection,getDocs,serverTimestamp};
-</script>
 <style>body{font-family:'Plus Jakarta Sans',sans-serif}</style>
 </head>
 <body class="bg-[#0a0a0a] text-white">
-<header class="bg-[#141414]/90 backdrop-blur border-b border-white/10 sticky top-0 z-50">
-<div class="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
-<a href="/" class="font-black text-sm flex items-center gap-2"><div class="bg-white text-black w-8 h-8 rounded-xl flex items-center justify-center font-black">SH</div> SomaHub <span id="aiLive" class="bg-white/10 text-white/60 text-[9px] px-2 py-1 rounded-full ml-2">AI LIVE • GLOBAL</span><span class="hidden md:inline text-[9px] bg-green-500 text-black px-2 py-1 rounded-full font-bold ml-2">HOMESCHOOL • PP1-G12 • SHKE00500+</span></a>
-<div class="flex gap-2 items-center">
-<a href="#features" class="hidden md:block text-[11px] bg-white/10 px-3 py-2 rounded-full">Features</a>
-<a href="#homeschool" class="hidden md:block text-[11px] bg-white/10 px-3 py-2 rounded-full">Homeschool</a>
-<span id="premB" class="hidden bg-green-500 text-black px-3 py-1 rounded-full text-[10px] font-bold">PREMIUM ✅ SHKE</span>
-<a href="/wallet.html" class="text-[11px] bg-white/10 px-3 py-2 rounded-full hidden md:block">Till 0701305109</a>
-<button id="authBtn" class="bg-white text-black px-5 py-2 rounded-full text-xs font-black">Log In / Sign In - SHKE</button>
+<header class="sticky top-0 z-50 bg-[#0a0a0a]/90 backdrop-blur border-b border-white/10">
+<div class="max-w-6xl mx-auto px-4 py-3 flex justify-between items-center">
+<p class="font-black flex items-center gap-2"><span class="bg-white text-black w-7 h-7 rounded-lg flex items-center justify-center text-xs">SH</span> SomaHub</p>
+<div class="flex gap-2">
+<a href="/registration.html" class="bg-white text-black px-5 py-2 rounded-full text-xs font-bold">Get started</a>
+<a href="/login.html" class="bg-white/10 px-5 py-2 rounded-full text-xs">Log in</a>
 </div>
 </div>
 </header>
 
-<div class="max-w-7xl mx-auto p-4">
-<!-- HERO - INTERNATIONAL -->
-<div class="bg-gradient-to-br from-green-600 via-[#0a0a0a] to-purple-700 rounded-[2.5rem] p-8 md:p-12 text-white relative overflow-hidden">
-<div class="absolute top-0 right-0 w-96 h-96 bg-white/10 rounded-full blur-3xl"></div>
-<div class="absolute bottom-0 left-0 w-96 h-96 bg-green-500/20 rounded-full blur-3xl"></div>
-<div class="relative grid md:grid-cols-2 gap-10 items-center">
-<div>
-<div class="inline-flex gap-2 text-[10px] font-black"><span class="bg-white text-black px-3 py-1 rounded-full">🌍 CBC • IGCSE • Common Core • Homeschool</span><span class="bg-yellow-400 text-black px-3 py-1 rounded-full">Trusted by 5,000+ families in 12 countries</span></div>
-<h1 class="text-4xl md:text-6xl font-black leading-[0.95] mt-6">Learning that finally <span class="text-green-300">keeps up</span> with your child.</h1>
-<p class="text-sm mt-5 text-white/70 leading-relaxed max-w-xl">SomaHub is your co-teacher for homeschool and after-school. From Monday to Friday we do focused 10-mark practice. Weekends are free — Saturday to prep notes, Sunday to rest, revise, or take your weekly mastery exam. One ID. Every subject. Real feedback.</p>
-<div class="mt-7 flex flex-wrap gap-2 text-[10px] font-bold"><span class="bg-white/20 backdrop-blur px-4 py-2 rounded-full border border-white/10">📅 Mon-Fri Only - No Burnout Weekends</span><span class="bg-white text-black px-4 py-2 rounded-full">📅 Weekly Mastery: Sunday to Sunday - 100 Marks - NOT 10 Qs Homework</span><span class="bg-purple-500/30 px-4 py-2 rounded-full border border-purple-400/30">📸 Snap handwritten work - AI reads & marks</span></div>
-<div class="mt-8 flex gap-3">
-<a href="/daily-hw.html" class="bg-white text-black px-8 py-4 rounded-full font-black text-sm"><i class="fa-solid fa-camera"></i> Start - Get SHKE00500 Auto</a>
-<a href="#features" class="bg-white/10 border border-white/20 px-8 py-4 rounded-full font-bold text-sm">See how it works →</a>
-</div>
-<p class="text-[10px] text-white/50 mt-4">First learner SHKE00500 counting from 500 • Mon-Fri HW Only • No HW Sunday Rest Day or Exam or Notes or Search • Weekly ONLY Sunday to Sunday • SHKE Monitor + Admin Chat</p>
-</div>
-<div class="bg-[#141414] rounded-[1.5rem] p-5 border border-white/10 shadow-2xl">
-<div class="flex justify-between items-center"><p class="font-black text-sm">Live Student Monitor - SHKE00500 - International</p><span class="bg-green-500 text-black text-[10px] px-2 py-1 rounded-full font-black animate-pulse">🔴 Live</span></div>
-<div class="mt-4 space-y-3 text-xs">
-<div class="bg-white/5 p-4 rounded-xl border border-white/10"><p class="font-bold">📅 Today - Monday - Daily HW 10 Marks - Mon-Fri ONLY - SHKE00500</p><p class="text-white/60 mt-1">Mathematics 7/10 - Most failed: Fractions - Where: Notes → Fractions - Link: notes.html?search=Fractions - No HW Sunday Rest Day</p></div>
-<div class="bg-red-500/10 p-4 rounded-xl border-2 border-red-500/30"><p class="font-bold text-red-300">⚠️ PENDING / INCOMPLETE WEEK 1 EXAM - SHKE00500 - ONLY Sunday to Sunday - NOT 10 Qs Homework</p><p class="text-white/60 mt-1 text-[11px]">If student has not done it says pending or incomplete week 1 exam - Weekly ONLY Sunday to Sunday - 100 Marks - Proper exam Sections A B C = 100 - Student decides upto Sunday - Timed 60 min + Correction - Admin & Parents can see</p></div>
-<div class="bg-purple-500/10 p-4 rounded-xl border border-purple-500/20"><p class="font-bold text-purple-300">✍️ Composition Studio - Grammar Bold + (Brackets) + Strict/Moderate/Fairly</p><p class="text-white/60 mt-1 text-[11px]">We <b>go</b> (went) to Mombasa - Grammar mistakes in bold + alternative in brackets - Marks as set by teacher 40 → Strict 15 Moderate 25 Fairly 32 - Awarding changes - SHKE</p></div>
-</div>
-<div class="mt-5 grid grid-cols-3 gap-2 text-center text-[10px]"><div class="bg-white/5 p-3 rounded-xl"><p class="font-black text-lg">10 min</p><p class="text-white/50">Daily check</p></div><div class="bg-white/5 p-3 rounded-xl"><p class="font-black text-lg">60 min</p><p class="text-white/50">Weekly timed</p></div><div class="bg-green-500 text-black p-3 rounded-xl font-bold"><p class="font-black text-lg">100%</p><p>Marked</p></div></div>
-</div>
+<div class="max-w-6xl mx-auto p-4">
+<!-- HERO -->
+<div class="bg-[#141414] rounded-[2rem] p-8 md:p-12 border border-white/10">
+<p class="text-[11px] tracking-widest font-bold text-gray-400">CBC / CBE • GRADE 1-9 • INTERNATIONAL COMING SOON</p>
+<h1 class="text-4xl md:text-5xl font-black leading-[0.95] mt-4 max-w-2xl">Learning that keeps up with your child.</h1>
+<p class="text-sm text-white/60 mt-4 max-w-xl leading-relaxed">Daily 10-mark practice, Mon-Fri. Weekends are for rest, revision, or weekly exam. Snap handwritten work and get instant marking.</p>
+<div class="mt-6 flex gap-3">
+<a href="/registration.html" class="bg-white text-black px-7 py-3.5 rounded-full font-bold text-sm">Create account</a>
+<a href="#how" class="bg-white/10 px-7 py-3.5 rounded-full font-bold text-sm">How it works</a>
 </div>
 </div>
 
-<!-- 4 MAIN PAGES - INTERNATIONAL -->
-<div class="mt-8 grid md:grid-cols-4 gap-4" id="features">
-<a href="/notes.html" class="bg-[#141414] border border-purple-500/30 p-6 rounded-[1.5rem] hover:bg-[#1f1f1f] transition">
-<div class="flex justify-between"><span class="bg-purple-500/20 text-purple-300 text-[10px] px-3 py-1 rounded-full font-bold">FOUNDATION</span><i class="fa-solid fa-book text-purple-400"></i></div>
-<h3 class="font-black mt-4 text-sm">📚 Smart Notes - Where Every Answer Lives</h3><p class="text-[11px] text-gray-400 mt-2 leading-relaxed">Colored CBC, IGCSE, Common Core notes PP1-G12. Every daily and weekly question links back to the exact note where it was taught. Search any word → AI explains by level + YouTube process video.</p>
-<div class="mt-4 text-[10px] text-purple-400 font-bold">Notes → Homework → Exams correct flow →</div>
-</a>
-
-<a href="/exams.html" class="bg-[#141414] border border-blue-500/30 p-6 rounded-[1.5rem] hover:bg-[#1f1f1f] transition">
-<div class="flex justify-between"><span class="bg-blue-500/20 text-blue-300 text-[10px] px-3 py-1 rounded-full font-bold">SUNDAY TO SUNDAY</span><i class="fa-solid fa-file-lines text-blue-400"></i></div>
-<h3 class="font-black mt-4 text-sm">📝 Weekly Mastery - 100 Marks - NOT 10 Qs Homework</h3><p class="text-[11px] text-gray-400 mt-2 leading-relaxed">Once a week ONLY Sunday to Sunday - 7-day window - NOT Monday - NOT 10 questions as homework - Proper exam Sections A 20 MCQ + B 30 short + C 50 long = 100 Marks - Timed 60 min + Correction - If not done says PENDING / INCOMPLETE WEEK 1 EXAM - Student decides upto Sunday.</p>
-<div class="mt-4 text-[10px] text-blue-400 font-bold">Sunday to Sunday - Student decides upto Sunday →</div>
-</a>
-
-<a href="/ai-homework.html" class="bg-[#141414] border-2 border-green-500/40 p-6 rounded-[1.5rem] hover:bg-[#1f1f1f] transition ring-1 ring-green-500/20 relative overflow-hidden">
-<div class="absolute top-0 right-0 bg-green-500 text-black text-[9px] px-3 py-1 rounded-bl-xl font-black">INTERNATIONAL FAVORITE</div>
-<div class="flex justify-between"><span class="bg-green-500 text-black text-[10px] px-3 py-1 rounded-full font-black">AI PHOTO MARKER</span><i class="fa-solid fa-camera text-green-400"></i></div>
-<h3 class="font-black mt-4 text-sm">📸 Snap & Mark - Handwriting? No Problem.</h3><p class="text-[11px] text-gray-400 mt-2 leading-relaxed">Snap handwritten homework, exam, or composition. Our intelligent marker reads handwriting, marks instantly, gives % + correction + where you failed + note link + remedy. No typing. Works in any language.</p>
-<div class="mt-4 text-[10px] text-green-400 font-bold">Snap → AI marks real + correction + notes link →</div>
-</a>
-
-<a href="/teachers.html" class="bg-[#141414] border border-yellow-500/30 p-6 rounded-[1.5rem] hover:bg-[#1f1f1f] transition">
-<div class="flex justify-between"><span class="bg-yellow-500/20 text-yellow-300 text-[10px] px-3 py-1 rounded-full font-bold">COMPOSITION STUDIO</span><i class="fa-solid fa-pen-nib text-yellow-400"></i></div>
-<h3 class="font-black mt-4 text-sm">✍️ Composition Studio - Bold + (Brackets) + Strict/Moderate/Fairly</h3><p class="text-[11px] text-gray-400 mt-2 leading-relaxed">Special place for writing. Highlights grammar mistakes in <b>bold</b> + better word in (brackets) next to it. Teacher sets total marks 40 → Choose Strict 15/40, Moderate 25/40, Fairly 32/40 - Awarding changes. Teacher comment included.</p>
-<div class="mt-4 text-[10px] text-yellow-400 font-bold">Grammar bold + (alternative) + marks set by teacher →</div>
-</a>
+<!-- 3 CARDS ONLY - Brief -->
+<div class="mt-6 grid md:grid-cols-3 gap-4" id="how">
+<div class="bg-[#141414] border border-white/10 p-6 rounded-[1.5rem]">
+<p class="text-[10px] font-bold tracking-widest text-purple-400">NOTES</p>
+<h3 class="font-bold mt-2">Smart Notes</h3>
+<p class="text-xs text-white/50 mt-2">CBC/CBE notes for G1-9. Every question links to where it was taught.</p>
 </div>
-
-<!-- DIAGRAM - HOW IT WORKS -->
-<div class="mt-10 bg-white text-black rounded-[2rem] p-8">
-<h2 class="text-2xl font-black text-center">How SomaHub Works - From Mon-Fri to Sunday Mastery - SHKE00500+ Diagram</h2>
-<p class="text-xs text-gray-500 text-center mt-2 max-w-3xl mx-auto">From Monday to Friday (no homework on Sunday is rest day or can complete exam or ready notes or do search) - Mon-Fri HW Only - No HW Saturday Sunday - Sunday Rest Day or Exam or Notes or Search - Weekly ONLY Sunday to Sunday - International - Homeschool + School - SHKE00500+ counting from 500</p>
-<div class="mt-8 grid md:grid-cols-5 gap-4 text-xs">
-<div class="bg-black text-white p-5 rounded-2xl text-center"><p class="text-2xl">1️⃣</p><p class="font-black mt-2">Register - Get SHKE00500 Auto</p><p class="mt-2 text-white/60">First SHKE00500 counting from 500 - Global ID for learner, parent, teacher - Homeschool + School - International - Admin Chat + Student Monitor</p></div>
-<div class="bg-green-50 border-2 border-green-200 p-5 rounded-2xl text-center"><p class="text-2xl">2️⃣</p><p class="font-black mt-2">Daily HW Mon-Fri ONLY - 10 Marks - No HW Sunday Rest</p><p class="mt-2 text-gray-600">Photo → intelligent marker → 10 marks → correction + notes link where failed + most failed + remedy - If Monday pending Tuesday double 20 marks - If complete wait tomorrow Mon-Fri - No HW Sat Sun</p></div>
-<div class="bg-purple-50 border-2 border-purple-200 p-5 rounded-2xl text-center"><p class="text-2xl">3️⃣</p><p class="font-black mt-2">Weekly Mastery ONLY Sunday to Sunday - 100 Marks - NOT 10 Qs HW</p><p class="mt-2 text-gray-600">Sunday to Sunday 7 days - NOT Monday - NOT 10 Qs Homework - Sections A 20 MCQ + B 30 short + C 50 long = 100 - Timed 60 min + Correction - If not done PENDING / INCOMPLETE WEEK 1 EXAM - Student decides upto Sunday</p></div>
-<div class="bg-yellow-50 border-2 border-yellow-200 p-5 rounded-2xl text-center"><p class="text-2xl">4️⃣</p><p class="font-black mt-2">Photo Marker + Composition Bold + (Brackets) + Strict/Moderate/Fairly</p><p class="mt-2 text-gray-600">Snap handwritten - OCR - Mark - Composition: We <b>go</b> (went) - Bold + (alternative) - Marks as set by teacher 40 → Strict 15 Moderate 25 Fairly 32 Awarding changes - Teacher comment</p></div>
-<div class="bg-blue-50 border-2 border-blue-200 p-5 rounded-2xl text-center"><p class="text-2xl">5️⃣</p><p class="font-black mt-2">Parent SHKE Login - Live Monitor + Human Admin Chat</p><p class="mt-2 text-gray-600">Parent login SHKE00500 - Monitor Mon-Fri HW + Weekly Sunday to Sunday PENDING + Most failed + Remedy + Notes link + Chat with real human admin - Overall admin appears as Human Assistant - International - Homeschool</p></div>
+<div class="bg-[#141414] border border-white/10 p-6 rounded-[1.5rem]">
+<p class="text-[10px] font-bold tracking-widest text-green-400">PRACTICE</p>
+<h3 class="font-bold mt-2">Daily + Weekly</h3>
+<p class="text-xs text-white/50 mt-2">Mon-Fri short practice. Sunday-to-Sunday weekly mastery (100 marks).</p>
+</div>
+<div class="bg-[#141414] border border-white/10 p-6 rounded-[1.5rem]">
+<p class="text-[10px] font-bold tracking-widest text-yellow-400">MARKING</p>
+<h3 class="font-bold mt-2">Snap & Mark</h3>
+<p class="text-xs text-white/50 mt-2">Take a photo of handwritten work. Get marks, corrections, and help.</p>
 </div>
 </div>
 
-<!-- FOR LEARNERS TEACHERS PARENTS - INTERNATIONAL -->
-<div class="mt-8 grid md:grid-cols-3 gap-4" id="homeschool">
-<div class="bg-[#141414] border border-white/10 p-6 rounded-[1.5rem]"><p class="text-[10px] font-black tracking-widest text-green-400">FOR LEARNERS - GLOBAL - SHKE00500+</p><h3 class="font-black mt-2">Own your SHKE. Own your growth.</h3><p class="text-[11px] text-gray-400 mt-3 leading-relaxed">Whether in Nairobi, Houston, London, or Dubai - you get SHKE00500 auto. Mon-Fri 15-min practice, weekends free. Snap homework, get instant feedback with exact note link. Build a portfolio, not just scores.</p><div class="mt-4 bg-white/5 p-3 rounded-xl text-[11px] border border-white/5"><p>SHKE00500 → 7/10 Monday → correction + Fractions note → Weekly 78/100 Sunday to Sunday → Composition 32/40 Fairly</p></div></div>
-<div class="bg-[#141414] border border-white/10 p-6 rounded-[1.5rem]"><p class="text-[10px] font-black tracking-widest text-orange-400">FOR TEACHERS / TUTORS - INTERNATIONAL</p><h3 class="font-black mt-2">Mark 30x faster. Teach 10x better.</h3><p class="text-[11px] text-gray-400 mt-3 leading-relaxed">Upload 30 handwritten books. Intelligent marker does the rest. Composition studio: set total marks 40, choose Strict/Moderate/Fairly - awarding changes instantly. Spend time teaching, not grading. Works for CBC, IGCSE, Common Core.</p><div class="mt-4 bg-white/5 p-3 rounded-xl text-[11px] border border-white/5"><p>Set 40 → Strict 15/40 Moderate 25/40 Fairly 32/40 → Teacher comment + AI comment + bold + (brackets)</p></div></div>
-<div class="bg-[#141414] border border-white/10 p-6 rounded-[1.5rem]"><p class="text-[10px] font-black tracking-widest text-blue-400">FOR PARENTS / HOMESCHOOL - SHKE LOGIN</p><h3 class="font-black mt-2">Finally, you can see everything.</h3><p class="text-[11px] text-gray-400 mt-3 leading-relaxed">Enter child's SHKE00500. See Mon-Fri daily 10 marks, weekly mastery Sunday to Sunday (PENDING if not done), most-failed topics with direct note link, and chat with real human admin - not a bot. From Monday to Friday (no homework on Sunday is rest day or can complete exam or ready notes or do search).</p><div class="mt-4 bg-blue-500/10 p-3 rounded-xl text-[11px] border border-blue-500/20"><p>SHKE00500 login → Today Done? → Pending 1 → Weekly PENDING → Remedy Fractions note → Admin chat live</p></div></div>
-</div>
-
-<!-- STATS -->
-<div class="mt-8 bg-[#141414] border border-white/10 rounded-[1.5rem] p-6 flex flex-col md:flex-row justify-between items-center gap-4">
-<div class="flex gap-8 text-center"><div><p class="text-2xl font-black" id="statNotes">0</p><p class="text-[10px] text-gray-400">Smart Notes - Where answers live</p></div><div><p class="text-2xl font-black" id="statExams">0</p><p class="text-[10px] text-gray-400">Weekly Mastery Exams - Sunday to Sunday</p></div><div><p class="text-2xl font-black">PP1-G12</p><p class="text-[10px] text-gray-400">Global Levels - CBC IGCSE Common Core</p></div><div><p class="text-2xl font-black text-green-400">MON-FRI ONLY</p><p class="text-[10px] text-gray-400">No HW Weekends - Rest or Revise</p></div></div>
-<div class="bg-white text-black px-6 py-3 rounded-full font-black text-sm">💰 Till 0701305109 - 500 KES / $5 per term - Homeschool & School</div>
+<!-- HOW IT WORKS - Brief -->
+<div class="mt-8 bg-white text-black rounded-[1.8rem] p-8">
+<h2 class="text-xl font-black">How it works</h2>
+<div class="mt-6 grid md:grid-cols-4 gap-4 text-xs">
+<div class="bg-black text-white p-5 rounded-2xl"><p class="font-black">1. Create account</p><p class="text-white/60 mt-2">Choose student, parent, or teacher.</p></div>
+<div class="bg-gray-100 p-5 rounded-2xl"><p class="font-black">2. Learn</p><p class="text-gray-600 mt-2">Read notes. No overload.</p></div>
+<div class="bg-gray-100 p-5 rounded-2xl"><p class="font-black">3. Practice</p><p class="text-gray-600 mt-2">Daily 10 marks. Weekly 100 marks.</p></div>
+<div class="bg-gray-100 p-5 rounded-2xl"><p class="font-black">4. Get feedback</p><p class="text-gray-600 mt-2">Instant marking + where to improve.</p></div>
 </div>
 </div>
 
-<!-- READY TO START - LOG IN SIGN IN AT BOTTOM AFTER SCROLLING THROUGH - IXL STYLE -->
-<div class="mt-12 bg-white text-black rounded-t-[2.5rem] p-10">
-<div class="max-w-5xl mx-auto text-center">
-<h2 class="text-3xl md:text-4xl font-black">Ready to make learning click? - International - Homeschool & School - SHKE00500+</h2>
-<p class="text-sm text-gray-600 mt-4 max-w-2xl mx-auto">Join families in 12 countries who left endless homework battles behind. Mon-Fri focused practice, restful weekends, Sunday-to-Sunday mastery. One SHKE ID. Global curriculum. Local heart. From Monday to Friday (no homework on Sunday is rest day or can complete exam or ready notes or do search).</p>
-
-<div class="mt-10 grid md:grid-cols-3 gap-6 text-left">
-<div class="bg-black text-white p-6 rounded-[1.5rem]"><p class="font-black flex items-center gap-2"><i class="fa-solid fa-graduation-cap text-green-400"></i> Learner - Get SHKE00500 Auto</p><p class="text-xs text-white/60 mt-3">Get SHKE00500 auto counting from 500 at registration - Daily HW Mon-Fri ONLY 10 Marks - No HW Saturday Sunday - Sunday rest day or exam or notes or search - Weekly ONLY Sunday to Sunday 100 Marks NOT 10 Qs Homework - Photo marking + Composition bold + (brackets) + Strict/Moderate/Fairly - Student Monitor + Admin Chat - International - Homeschool + School</p><a href="/daily-hw.html" class="mt-5 block bg-white text-black py-3 rounded-full text-center font-black text-sm">Log In - Learner - SHKE00500 - Mon-Fri + Sunday Rest</a><p class="text-[10px] text-white/40 mt-3">First SHKE00500 counting from 500 - Mon-Fri HW Only - No HW Sunday Rest Day - Weekly ONLY Sunday to Sunday</p></div>
-<div class="bg-[#f5f5f5] border-2 p-6 rounded-[1.5rem]"><p class="font-black flex items-center gap-2"><i class="fa-solid fa-chalkboard-user text-orange-600"></i> Teacher / Tutor - International</p><p class="text-xs text-gray-600 mt-3">Photo marker which includes photos - Snap handwritten - OCR - Mark + correction + notes link - Composition Studio: highlights grammar mistakes in bold + alternative word in brackets + award marks as set by teacher + teacher comment + Strict/Moderate/Fairly awarding changes - Works for CBC, IGCSE, Common Core - Homeschool & School - Global</p><a href="/teachers.html" class="mt-5 block bg-black text-white py-3 rounded-full text-center font-black text-sm">Sign In - Teacher - Photo Marker + Composition Studio</a><p class="text-[10px] text-gray-400 mt-3">AI photo marking + Composition bold + (brackets) + Strict Moderate Fairly - International - Homeschool</p></div>
-<div class="bg-blue-600 text-white p-6 rounded-[1.5rem]"><p class="font-black flex items-center gap-2"><i class="fa-solid fa-users"></i> Parent / Homeschool - SHKE Login - Live Monitor</p><p class="text-xs text-blue-100 mt-3">Enter child's SHKE00500 - Monitor Daily HW Mon-Fri 10 Marks + Weekly ONLY Sunday to Sunday 100 Marks NOT 10 Qs Homework PENDING / INCOMPLETE WEEK 1 EXAM if not done + Most failed + Remedy + Notes link where information is + Admin chat + Student monitor - Live monitor - Overall admin appears as Human Assistant - International - From Monday to Friday (no homework on Sunday is rest day...)</p><a href="/parent.html" class="mt-5 block bg-white text-blue-600 py-3 rounded-full text-center font-black text-sm">Sign In - Parent - SHKE00500 Login - Live Monitor</a><p class="text-[10px] text-blue-200 mt-3">SHKE00500 login - Admin Chat + Student Monitor - Mon-Fri + Sunday Rest + Weekly Sunday to Sunday - International</p></div>
+<!-- ROLES - Separated, no cross details -->
+<div class="mt-6 grid md:grid-cols-3 gap-4">
+<div class="bg-[#141414] border border-white/10 p-6 rounded-[1.5rem]">
+<p class="text-[10px] font-bold text-gray-400">FOR LEARNERS</p>
+<h3 class="font-bold mt-1">Practice at your pace</h3>
+<p class="text-xs text-white/50 mt-2">Daily tasks, instant feedback. Details inside after you log in.</p>
+</div>
+<div class="bg-[#141414] border border-white/10 p-6 rounded-[1.5rem]">
+<p class="text-[10px] font-bold text-gray-400">FOR PARENTS</p>
+<h3 class="font-bold mt-1">Track progress</h3>
+<p class="text-xs text-white/50 mt-2">See daily and weekly results and guidance. Details inside.</p>
+</div>
+<div class="bg-[#141414] border border-white/10 p-6 rounded-[1.5rem]">
+<p class="text-[10px] font-bold text-gray-400">FOR TEACHERS</p>
+<h3 class="font-bold mt-1">Save marking time</h3>
+<p class="text-xs text-white/50 mt-2">Tools to help you mark faster. Details inside your portal.</p>
+</div>
 </div>
 
-<div class="mt-12 pt-8 border-t text-[11px] text-gray-500 flex flex-col md:flex-row justify-between gap-4">
-<p>© 2026 SomaHub - Global Homeschool & School - PP1-G12 - CBC IGCSE Common Core - Mon-Fri HW Only - No HW Weekends - Sunday Rest or Weekly Mastery Sunday to Sunday - SHKE00500+ counting from 500 - Admin Chat + Student Monitor - Overall admin Human Assistant</p>
-<p><a href="/admin.html" class="underline">Admin - AI Brain</a> • <a href="/teachers.html" class="underline">Teachers - Photo Marker + Composition</a> • <a href="/students.html" class="underline">Students SHKE Monitor</a> • <a href="/wallet.html" class="underline">Till 0701305109</a> • <a href="mailto:support@somahub.co.ke" class="underline">support@somahub.co.ke</a></p>
-</div>
-</div>
+<div class="mt-10 text-center">
+<p class="text-xs text-white/40">CBC / CBE Grade 1-9 • International curriculum coming soon</p>
+<a href="/registration.html" class="mt-4 inline-block bg-white text-black px-8 py-3 rounded-full font-bold text-sm">Get started</a>
 </div>
 
-<script>
-let currentUser=null;
-setTimeout(()=>{
- const FB=window.FB;
- document.getElementById('authBtn').onclick=()=>{if(currentUser) FB.signOut(FB.auth); else window.location.href='/daily-hw.html';};
- FB.onAuthStateChanged(FB.auth, async(u)=>{
-  currentUser=u;
-  if(u){
-   document.getElementById('authBtn').innerText="Logout SHKE - "+(u.email||'').substring(0,10);
-   const ref=FB.doc(FB.db,"users",u.uid); const snap=await FB.getDoc(ref);
-   if(snap.exists() && snap.data().isPremium){document.getElementById('premB').classList.remove('hidden');}
-   try{const cfg=await FB.getDoc(FB.doc(FB.db,"config","ai")); if(cfg.exists() && cfg.data().geminiKey){document.getElementById('aiLive').innerText="AI LIVE ✅ GLOBAL • HOMESCHOOL • SHKE00500+"; document.getElementById('aiLive').className="bg-green-500 text-black text-[9px] px-2 py-1 rounded-full ml-2 font-black";}}catch(e){}
-  }else{document.getElementById('authBtn').innerText="Log In / Sign In - SHKE - International"; document.getElementById('premB').classList.add('hidden');}
-  try{const s1=await FB.getDocs(FB.collection(FB.db,"resources")); let n=0,e=0; s1.forEach(d=>{const r=d.data(); if(r.type==="Notes") n++; if(r.type==="Exam") e++;}); document.getElementById('statNotes').innerText=n; document.getElementById('statExams').innerText=e;}catch(e){}
- });
-},500);
-</script>
+</div>
 </body>
 </html>
