@@ -1,9 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SomaHub - CBC Fixed Admin</title>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SomaHub - PRO Admin + AI Brain</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <script type="module">
@@ -23,216 +22,140 @@ const auth = getAuth(app);
 const db = getFirestore(app);
 window.FB = { auth, db, onAuthStateChanged, signInWithEmailAndPassword, signOut, doc, getDoc, setDoc, collection, getDocs, updateDoc, deleteDoc, addDoc, serverTimestamp, query, where };
 </script>
-<style>
-.tab-active { background:black; color:white; }
-.tab-inactive { background:white; color:black; border:1px solid #e5e7eb; }
-</style>
+<style>.tab-active{background:black;color:white}.tab-inactive{background:white;color:black;border:1px solid #e5e7eb}</style>
 </head>
 <body class="bg-gray-100 min-h-screen">
 <div class="bg-black text-white p-4 flex justify-between items-center sticky top-0 z-50">
-  <h1 class="font-black text-lg">CBC Fixed Admin ✅</h1>
-  <button id="logoutBtn" class="bg-red-600 px-5 py-2 rounded-full text-sm font-bold">Logout</button>
+  <h1 class="font-black text-lg"><i class="fa-solid fa-robot text-green-400"></i> SomaHub PRO + AI ✅</h1>
+  <div class="flex gap-2"><span id="aiStatus" class="bg-red-500/20 text-red-400 px-3 py-1 rounded-full text-[10px] font-bold">AI OFF - Add Key</span><button id="logoutBtn" class="bg-red-600 px-4 py-2 rounded-full text-xs font-bold">Logout</button></div>
 </div>
+
 <div class="p-4 grid grid-cols-4 gap-3">
-  <div class="bg-white p-4 rounded-2xl shadow text-center"><p class="text-xs">USERS</p><p id="statUsers" class="text-2xl font-black">0</p></div>
-  <div class="bg-green-50 p-4 rounded-2xl shadow text-center"><p class="text-xs">PAID</p><p id="statPaid" class="text-2xl font-black">0</p></div>
-  <div class="bg-yellow-50 p-4 rounded-2xl shadow text-center"><p class="text-xs">PENDING</p><p id="statPending" class="text-2xl font-black">0</p></div>
-  <div class="bg-blue-50 p-4 rounded-2xl shadow text-center"><p class="text-xs">REVENUE</p><p id="statRev" class="text-xl font-black">0 KES</p></div>
+  <div class="bg-white p-4 rounded-2xl shadow text-center"><p class="text-[10px]">USERS</p><p id="statUsers" class="text-2xl font-black">0</p></div>
+  <div class="bg-green-50 p-4 rounded-2xl shadow text-center"><p class="text-[10px]">PAID</p><p id="statPaid" class="text-2xl font-black text-green-600">0</p></div>
+  <div class="bg-yellow-50 p-4 rounded-2xl shadow text-center"><p class="text-[10px]">PENDING M-Pesa</p><p id="statPending" class="text-2xl font-black">0</p></div>
+  <div class="bg-black text-white p-4 rounded-2xl shadow text-center"><p class="text-[10px] text-green-400">REVENUE</p><p id="statRev" class="text-xl font-black">0 KES</p><p class="text-[9px] mt-1 text-gray-400">Till 0701305109</p></div>
 </div>
-<div class="px-4 flex gap-2">
-  <button onclick="showTab('subs')" id="btnSubs" class="tab-active px-5 py-2 rounded-full text-sm font-bold">💰 Subs</button>
-  <button onclick="showTab('resources')" id="btnResources" class="tab-inactive px-5 py-2 rounded-full text-sm font-bold">📚 Resources</button>
-  <button onclick="showTab('pages')" id="btnPages" class="tab-inactive px-5 py-2 rounded-full text-sm font-bold">📄 Pages</button>
+
+<div class="px-4 flex gap-2 overflow-x-auto pb-2">
+  <button onclick="showTab('subs')" id="btnSubs" class="tab-active px-5 py-2 rounded-full text-sm font-bold whitespace-nowrap">💰 Subs</button>
+  <button onclick="showTab('resources')" id="btnResources" class="tab-inactive px-5 py-2 rounded-full text-sm font-bold whitespace-nowrap">📚 Resources</button>
+  <button onclick="showTab('ai')" id="btnAi" class="tab-inactive px-5 py-2 rounded-full text-sm font-bold whitespace-nowrap border-green-500">🤖 AI Brain</button>
+  <button onclick="showTab('pages')" id="btnPages" class="tab-inactive px-5 py-2 rounded-full text-sm font-bold whitespace-nowrap">📄 Pages</button>
 </div>
+
+<!-- SUBS TAB -->
 <div id="tabSubs" class="p-4">
   <div class="bg-white rounded-2xl shadow p-4">
-    <h2 class="font-black mb-3">💰 Approvals - Till 0701305109</h2>
-    <div class="flex gap-2 mb-4">
-      <input id="searchUser" placeholder="Search" class="border rounded-full px-4 py-2 flex-1">
-      <button onclick="loadSubs()" class="bg-black text-white px-6 py-2 rounded-full text-sm">Refresh</button>
-    </div>
-    <div class="overflow-auto">
-      <table class="w-full text-sm">
-        <thead><tr class="bg-gray-100"><th class="p-3 text-left">User</th><th>M-Pesa</th><th>Status</th><th>Action</th></tr></thead>
-        <tbody id="subsBody"><tr><td colspan="4" class="p-4 text-center">Loading...</td></tr></tbody>
-      </table>
-    </div>
+    <h2 class="font-black mb-3">💰 Approvals - Till 0701305109 - 500 KES / 3 Months</h2>
+    <div class="flex gap-2 mb-4"><input id="searchUser" placeholder="Search email or M-Pesa" class="border rounded-full px-4 py-2 flex-1 text-sm"><button onclick="loadSubs()" class="bg-black text-white px-6 py-2 rounded-full text-sm">Refresh</button></div>
+    <div class="overflow-auto"><table class="w-full text-sm"><thead><tr class="bg-gray-100"><th class="p-3 text-left">User</th><th>M-Pesa</th><th>Status</th><th>Action</th></tr></thead><tbody id="subsBody"><tr><td colspan="4" class="p-4 text-center">Loading...</td></tr></tbody></table></div>
   </div>
 </div>
+
+<!-- RESOURCES TAB -->
 <div id="tabResources" class="p-4 hidden">
   <div class="bg-white rounded-2xl shadow p-4">
-    <h2 class="font-black mb-3">📚 Add Resource - Colored Notes</h2>
+    <h2 class="font-black mb-3">📚 Add Resource - AI Will Use This to Answer + Mark</h2>
     <div class="grid gap-3">
-      <input id="resTitle" placeholder="Title e.g. SST - Historical Agriculture" class="border p-3 rounded-xl">
+      <input id="resTitle" placeholder="Title e.g. SST Grade 7 - Historical Agriculture" class="border p-3 rounded-xl text-sm">
       <div class="grid grid-cols-2 gap-2">
-        <select id="resGrade" class="border p-3 rounded-xl"><option>PP1</option><option>PP2</option><option>Grade 1</option><option>Grade 2</option><option>Grade 3</option><option>Grade 4</option><option>Grade 5</option><option>Grade 6</option><option selected>Grade 7</option><option>Grade 8</option><option>Grade 9</option></select>
-        <select id="resSubject" class="border p-3 rounded-xl">
-          <option>Mathematics</option><option>English</option><option>Kiswahili</option><option>Science and Technology</option><option>SST</option><option>CRE</option><option>Agriculture and Nutrition</option><option>Creative Arts</option>
-        </select>
+        <select id="resGrade" class="border p-3 rounded-xl text-sm"><option>PP1</option><option>PP2</option><option>Grade 1</option><option>Grade 2</option><option>Grade 3</option><option>Grade 4</option><option>Grade 5</option><option>Grade 6</option><option selected>Grade 7</option><option>Grade 8</option><option>Grade 9</option></select>
+        <select id="resSubject" class="border p-3 rounded-xl text-sm"><option>Mathematics</option><option>English</option><option>Kiswahili</option><option>Science and Technology</option><option selected>SST</option><option>CRE</option><option>Agriculture and Nutrition</option><option>Creative Arts</option></select>
       </div>
-      <select id="resType" class="border p-3 rounded-xl"><option selected>Notes</option><option>Exam</option><option>Scheme</option><option>Lesson Plan</option></select>
-      <input id="resLink" placeholder="Google Drive Link - Must be Anyone with link" class="border p-3 rounded-xl">
-      <textarea id="resDesc" placeholder="Add Mnemonic e.g. MBYWS = Maize Beans Yams Wheat Sorghum | Formula: Time = Degrees x 4" class="border p-3 rounded-xl h-20"></textarea>
-      <button onclick="addResource()" class="bg-purple-600 text-white py-3 rounded-xl font-black">+ Add Resource</button>
+      <div class="grid grid-cols-2 gap-2"><select id="resType" class="border p-3 rounded-xl text-sm"><option selected>Notes</option><option>Exam</option><option>Scheme</option><option>Lesson Plan</option></select><input id="resLink" placeholder="Drive Link - Anyone with link" class="border p-3 rounded-xl text-sm"></div>
+      <textarea id="resDesc" placeholder="Mnemonic + Formula e.g. MBYWS=Maize Beans... | AI will use this to mark exam" class="border p-3 rounded-xl h-20 text-sm"></textarea>
+      <button onclick="addResource()" class="bg-purple-600 text-white py-3 rounded-xl font-black">+ Add Resource (AI Learns It)</button>
     </div>
     <div id="resList" class="mt-6 space-y-3"></div>
   </div>
 </div>
-<div id="tabPages" class="p-4 hidden">
-  <div class="bg-white rounded-2xl shadow p-4">
-    <h2 class="font-black">📄 Notes.html Status</h2>
-    <p class="text-sm mt-2">If notes.html shows No notes yet, make sure Subject matches: Use SST, Science and Technology exactly.</p>
-    <button onclick="window.open('/notes.html','_blank')" class="mt-3 bg-black text-white px-4 py-2 rounded-full text-sm">Open Notes Page</button>
+
+<!-- AI TAB - NEW PERFECT -->
+<div id="tabAi" class="p-4 hidden">
+  <div class="bg-gradient-to-br from-green-50 to-black text-white rounded-2xl shadow p-5 border border-green-500/20">
+    <h2 class="font-black text-black">🤖 SomaHub AI Brain - Gemini + Your Notes + Exams</h2>
+    <p class="text-xs text-gray-600 mt-1">AI that marks exams, homework, answers teacher & student questions like you. Connects to Google + your resources collection.</p>
+
+    <div class="mt-4 bg-white rounded-xl p-4 text-black">
+      <label class="text-xs font-black">🔑 Gemini API Key (from aistudio.google.com)</label>
+      <p class="text-[10px] text-gray-500 mb-2">Paste your AQ. key here. Get from: https://aistudio.google.com/app/apikey → Create API key → Copy</p>
+      <div class="flex gap-2">
+        <input id="geminiKey" type="password" placeholder="AQ.Ab8RN6... or AIzaSy..." class="border p-3 rounded-xl flex-1 text-sm font-mono">
+        <button onclick="toggleKey()" class="bg-gray-100 px-4 rounded-xl text-xs"><i class="fa-solid fa-eye"></i></button>
+      </div>
+      <button onclick="saveKey()" class="w-full bg-green-600 text-white py-3 rounded-xl font-black mt-3"><i class="fa-solid fa-floppy-disk"></i> Save AI Key - Make AI Live</button>
+      <button onclick="testKey()" class="w-full bg-black text-white py-2 rounded-xl font-bold mt-2 text-sm">🧪 Test AI - Mark Sample Exam</button>
+      <p id="keyMsg" class="text-xs mt-2"></p>
+    </div>
+
+    <div class="mt-4 grid grid-cols-1 md:grid-cols-3 gap-2 text-xs">
+      <div class="bg-white p-3 rounded-xl text-black"><b>🎓 Student Mode</b><p class="text-[10px] text-gray-500 mt-1">Explains PP1-G9 in simple English + Kiswahili + Kenyan example</p></div>
+      <div class="bg-white p-3 rounded-xl text-black"><b>👩‍🏫 Teacher Mode</b><p class="text-[10px] text-gray-500 mt-1">Schemes, lesson plans, CBC, TPAD, QASO KICD format</p></div>
+      <div class="bg-white p-3 rounded-xl text-black border border-green-500"><b>📝 Mark Exam + HW</b><p class="text-[10px] text-gray-500 mt-1">Paste exam + answers → AI gives %, corrections, next revision</p></div>
+    </div>
+
+    <div class="mt-4 bg-black p-3 rounded-xl">
+      <p class="text-[10px] font-bold text-green-400">🔗 How AI Works:</p>
+      <p class="text-[10px] text-gray-300 mt-1">1. You save Gemini key here → 2. Saved to Firestore config/ai → 3. ai-assistant.html reads it → 4. AI searches your resources collection + Google → 5. Marks exams/homework automatically → 6. Students pay 500 KES Till 0701305109 to unlock unlimited.</p>
+      <div class="mt-3 flex gap-2"><button onclick="window.open('/ai-assistant.html','_blank')" class="bg-white text-black px-4 py-2 rounded-full text-xs font-bold">Open AI Assistant →</button><button onclick="loadAiConfig()" class="bg-white/10 px-4 py-2 rounded-full text-xs">Refresh Status</button></div>
+    </div>
   </div>
 </div>
 
-<!-- EDIT MODAL ADDED HERE -->
+<div id="tabPages" class="p-4 hidden">
+  <div class="bg-white rounded-2xl shadow p-4">
+    <h2 class="font-black">📄 Pages Status</h2>
+    <div class="mt-3 space-y-2 text-sm">
+      <div class="flex justify-between border p-3 rounded-xl"><span>notes.html</span><button onclick="window.open('/notes.html','_blank')" class="bg-black text-white px-3 py-1 rounded-full text-xs">Open</button></div>
+      <div class="flex justify-between border p-3 rounded-xl"><span>exams.html</span><button onclick="window.open('/exams.html','_blank')" class="bg-black text-white px-3 py-1 rounded-full text-xs">Open</button></div>
+      <div class="flex justify-between border p-3 rounded-xl bg-green-50 border-green-200"><span>ai-assistant.html - NEW AI</span><button onclick="window.open('/ai-assistant.html','_blank')" class="bg-green-600 text-white px-3 py-1 rounded-full text-xs">Open AI</button></div>
+    </div>
+  </div>
+</div>
+
 <div id="editModal" class="hidden fixed inset-0 bg-black/70 z-[100] p-4 overflow-auto">
   <div class="bg-white rounded-2xl shadow-xl p-5 max-w-md mx-auto mt-10">
     <h2 class="font-black text-lg mb-3">✏️ Edit Resource</h2>
-    <input id="editId" type="hidden">
-    <label class="text-xs font-bold">Title</label>
-    <input id="editTitle" class="border p-3 rounded-xl w-full mb-2">
-    <div class="grid grid-cols-2 gap-2">
-      <div><label class="text-xs font-bold">Grade</label><select id="editGrade" class="border p-3 rounded-xl w-full mb-2"><option>PP1</option><option>PP2</option><option>Grade 1</option><option>Grade 2</option><option>Grade 3</option><option>Grade 4</option><option>Grade 5</option><option>Grade 6</option><option>Grade 7</option><option>Grade 8</option><option>Grade 9</option></select></div>
-      <div><label class="text-xs font-bold">Subject</label><select id="editSubject" class="border p-3 rounded-xl w-full mb-2"><option>Mathematics</option><option>English</option><option>Kiswahili</option><option>Science and Technology</option><option>SST</option><option>CRE</option><option>Agriculture and Nutrition</option><option>Creative Arts</option></select></div>
-    </div>
-    <label class="text-xs font-bold">Drive Link</label>
-    <input id="editLink" class="border p-3 rounded-xl w-full mb-2">
-    <label class="text-xs font-bold">Mnemonic / Description</label>
-    <textarea id="editDesc" class="border p-3 rounded-xl w-full h-24 mb-3"></textarea>
-    <button onclick="saveEdit()" class="bg-green-600 text-white w-full py-3 rounded-xl font-black mb-2">💾 Save Changes</button>
-    <button onclick="closeEdit()" class="bg-black text-white w-full py-3 rounded-xl font-bold mb-2">Cancel</button>
-    <button onclick="deleteRes(document.getElementById('editId').value)" class="bg-red-100 text-red-600 w-full py-2 rounded-xl text-sm">🗑️ Delete This Note</button>
+    <input id="editId" type="hidden"><label class="text-xs font-bold">Title</label><input id="editTitle" class="border p-3 rounded-xl w-full mb-2 text-sm">
+    <div class="grid grid-cols-2 gap-2"><div><label class="text-xs font-bold">Grade</label><select id="editGrade" class="border p-3 rounded-xl w-full mb-2 text-sm"><option>PP1</option><option>PP2</option><option>Grade 1</option><option>Grade 2</option><option>Grade 3</option><option>Grade 4</option><option>Grade 5</option><option>Grade 6</option><option>Grade 7</option><option>Grade 8</option><option>Grade 9</option></select></div><div><label class="text-xs font-bold">Subject</label><select id="editSubject" class="border p-3 rounded-xl w-full mb-2 text-sm"><option>Mathematics</option><option>English</option><option>Kiswahili</option><option>Science and Technology</option><option>SST</option><option>CRE</option><option>Agriculture and Nutrition</option><option>Creative Arts</option></select></div></div>
+    <label class="text-xs font-bold">Drive Link</label><input id="editLink" class="border p-3 rounded-xl w-full mb-2 text-sm"><label class="text-xs font-bold">Description</label><textarea id="editDesc" class="border p-3 rounded-xl w-full h-24 mb-3 text-sm"></textarea>
+    <button onclick="saveEdit()" class="bg-green-600 text-white w-full py-3 rounded-xl font-black mb-2">💾 Save</button><button onclick="closeEdit()" class="bg-black text-white w-full py-3 rounded-xl font-bold mb-2">Cancel</button><button onclick="deleteRes(document.getElementById('editId').value)" class="bg-red-100 text-red-600 w-full py-2 rounded-xl text-sm">🗑️ Delete</button>
   </div>
 </div>
 
 <script>
 let currentUser=null;
 function showTab(name){
-  document.getElementById('tabSubs').classList.add('hidden');
-  document.getElementById('tabResources').classList.add('hidden');
-  document.getElementById('tabPages').classList.add('hidden');
-  document.getElementById('btnSubs').className='tab-inactive px-5 py-2 rounded-full text-sm font-bold';
-  document.getElementById('btnResources').className='tab-inactive px-5 py-2 rounded-full text-sm font-bold';
-  document.getElementById('btnPages').className='tab-inactive px-5 py-2 rounded-full text-sm font-bold';
+  ['Subs','Resources','Ai','Pages'].forEach(t=>{
+    document.getElementById('tab'+t)?.classList.add('hidden');
+    document.getElementById('btn'+t)?.classList.remove('tab-active'); document.getElementById('btn'+t)?.classList.add('tab-inactive');
+  });
   document.getElementById('tab'+name.charAt(0).toUpperCase()+name.slice(1)).classList.remove('hidden');
-  document.getElementById('btn'+name.charAt(0).toUpperCase()+name.slice(1)).className='tab-active px-5 py-2 rounded-full text-sm font-bold';
-  if(name==='subs') loadSubs();
-  if(name==='resources') loadResources();
+  document.getElementById('btn'+name.charAt(0).toUpperCase()+name.slice(1)).className='tab-active px-5 py-2 rounded-full text-sm font-bold whitespace-nowrap';
+  if(name==='subs') loadSubs(); if(name==='resources') loadResources(); if(name==='ai') loadAiConfig();
 }
 async function loadSubs(){
-  const FB=window.FB;
-  const snap=await FB.getDocs(FB.collection(FB.db,'users'));
-  let users=0, paid=0, pending=0, rev=0;
-  let html='';
-  snap.forEach(d=>{
-    const u=d.data(); users++;
-    if(u.isPremium){ paid++; rev+=500; }
-    else if(u.mpesaCode){ pending++; }
-    html+=`<tr class="border-b"><td class="p-3">${u.email||d.id}</td><td>${u.mpesaCode||'-'}</td><td>${u.isPremium?'PAID':'PENDING'}</td><td><button onclick="approveUser('${d.id}')" class="bg-green-600 text-white px-3 py-1 rounded-full text-xs">${u.isPremium?'Revoke':'Approve'}</button></td></tr>`;
-  });
-  document.getElementById('statUsers').innerText=users;
-  document.getElementById('statPaid').innerText=paid;
-  document.getElementById('statPending').innerText=pending;
-  document.getElementById('statRev').innerText=rev+' KES';
-  document.getElementById('subsBody').innerHTML=html||'<tr><td colspan=4 class=p-4 text-center>No users</td></tr>';
+  const FB=window.FB; const snap=await FB.getDocs(FB.collection(FB.db,'users')); let users=0, paid=0, pending=0, rev=0, html='';
+  snap.forEach(d=>{ const u=d.data(); users++; if(u.isPremium){paid++; rev+=500;} else if(u.mpesaCode){pending++;} html+=`<tr class="border-b"><td class="p-3">${u.email||d.id}</td><td class="text-[11px] font-mono">${u.mpesaCode||'-'}</td><td><span class="${u.isPremium?'bg-green-100 text-green-700':'bg-yellow-100 text-yellow-700'} px-2 py-1 rounded-full text-[10px] font-bold">${u.isPremium?'PAID':'PENDING'}</span></td><td><button onclick="approveUser('${d.id}')" class="${u.isPremium?'bg-red-100 text-red-600':'bg-green-600 text-white'} px-3 py-1 rounded-full text-xs font-bold">${u.isPremium?'Revoke':'Approve 500'}</button></td></tr>`; });
+  document.getElementById('statUsers').innerText=users; document.getElementById('statPaid').innerText=paid; document.getElementById('statPending').innerText=pending; document.getElementById('statRev').innerText=rev+' KES'; document.getElementById('subsBody').innerHTML=html||'<tr><td colspan=4 class=p-4 text-center>No users</td></tr>';
 }
-async function approveUser(uid){
-  const FB=window.FB;
-  const ref=FB.doc(FB.db,'users',uid);
-  const snap=await FB.getDoc(ref);
-  const isPremium=snap.data()?.isPremium;
-  await FB.updateDoc(ref,{isPremium:!isPremium, approvedAt:FB.serverTimestamp()});
-  loadSubs();
-}
-async function addResource(){
-  const FB=window.FB;
-  const data={
-    title:document.getElementById('resTitle').value,
-    grade:document.getElementById('resGrade').value,
-    subject:document.getElementById('resSubject').value,
-    type:document.getElementById('resType').value,
-    link:document.getElementById('resLink').value,
-    description:document.getElementById('resDesc').value,
-    createdAt:FB.serverTimestamp()
-  };
-  if(!data.title||!data.link){ alert('Title and Link required'); return; }
-  await FB.addDoc(FB.collection(FB.db,'resources'), data);
-  alert('Added!');
-  document.getElementById('resTitle').value='';
-  document.getElementById('resLink').value='';
-  document.getElementById('resDesc').value='';
-  loadResources();
-}
-async function loadResources(){
-  const FB=window.FB;
-  const snap=await FB.getDocs(FB.collection(FB.db,'resources'));
-  let html='';
-  snap.forEach(d=>{
-    const r=d.data();
-    html+=`<div class="border p-4 rounded-xl bg-gray-50">
-      <div class="flex justify-between items-start">
-        <div class="flex-1">
-          <b class="text-sm">${r.title||'No Title'}</b><br>
-          <small class="text-xs text-gray-600">${r.grade||''} - ${r.subject||''} - ${r.type||''}</small><br>
-          <small class="text-xs">${(r.description||'').substring(0,80)}</small>
-        </div>
-        <div class="flex flex-col gap-1 ml-2">
-          <a href="${r.link||'#'}" target="_blank" class="bg-blue-600 text-white px-3 py-1 rounded-full text-[10px] text-center font-bold">VIEW</a>
-          <button onclick="openEdit('${d.id}')" class="bg-black text-white px-3 py-1 rounded-full text-[10px] font-bold">EDIT</button>
-          <button onclick="deleteRes('${d.id}')" class="bg-red-100 text-red-600 px-3 py-1 rounded-full text-[10px] font-bold">DEL</button>
-        </div>
-      </div>
-    </div>`;
-  });
-  document.getElementById('resList').innerHTML=html||'<p class="text-center text-sm">No notes yet</p>';
-}
-async function openEdit(id){
-  const FB=window.FB;
-  const snap=await FB.getDoc(FB.doc(FB.db,'resources',id));
-  const r=snap.data();
-  document.getElementById('editId').value=id;
-  document.getElementById('editTitle').value=r.title||'';
-  document.getElementById('editGrade').value=r.grade||'Grade 7';
-  document.getElementById('editSubject').value=r.subject||'SST';
-  document.getElementById('editLink').value=r.link||'';
-  document.getElementById('editDesc').value=r.description||'';
-  document.getElementById('editModal').classList.remove('hidden');
-}
-function closeEdit(){
-  document.getElementById('editModal').classList.add('hidden');
-}
-async function saveEdit(){
-  const FB=window.FB;
-  const id=document.getElementById('editId').value;
-  await FB.updateDoc(FB.doc(FB.db,'resources',id),{
-    title:document.getElementById('editTitle').value,
-    grade:document.getElementById('editGrade').value,
-    subject:document.getElementById('editSubject').value,
-    link:document.getElementById('editLink').value,
-    description:document.getElementById('editDesc').value
-  });
-  alert('✅ Saved!');
-  closeEdit();
-  loadResources();
-}
-async function deleteRes(id){
-  if(!confirm('Delete this note?')) return;
-  const FB=window.FB;
-  await FB.deleteDoc(FB.doc(FB.db,'resources',id));
-  closeEdit();
-  loadResources();
-}
-setTimeout(()=>{
-  const FB=window.FB;
-  FB.onAuthStateChanged(FB.auth, u=>{
-    if(!u){ window.location.href='/login.html'; return; }
-    currentUser=u; loadSubs();
-  });
-  document.getElementById('logoutBtn').onclick=()=>{ FB.signOut(FB.auth); window.location.href='/'; };
-},500);
-window.showTab=showTab; window.loadSubs=loadSubs; window.approveUser=approveUser; window.addResource=addResource; window.deleteRes=deleteRes; window.openEdit=openEdit; window.closeEdit=closeEdit; window.saveEdit=saveEdit;
+async function approveUser(uid){ const FB=window.FB; const ref=FB.doc(FB.db,'users',uid); const snap=await FB.getDoc(ref); const isPremium=snap.data()?.isPremium; await FB.updateDoc(ref,{isPremium:!isPremium, approvedAt:FB.serverTimestamp()}); loadSubs(); }
+async function addResource(){ const FB=window.FB; const data={title:document.getElementById('resTitle').value, grade:document.getElementById('resGrade').value, subject:document.getElementById('resSubject').value, type:document.getElementById('resType').value, link:document.getElementById('resLink').value, description:document.getElementById('resDesc').value, createdAt:FB.serverTimestamp()}; if(!data.title||!data.link){alert('Title and Link required'); return;} await FB.addDoc(FB.collection(FB.db,'resources'), data); alert('✅ Added! AI will use this to answer & mark'); document.getElementById('resTitle').value=''; document.getElementById('resLink').value=''; document.getElementById('resDesc').value=''; loadResources(); }
+async function loadResources(){ const FB=window.FB; const snap=await FB.getDocs(FB.collection(FB.db,'resources')); let html=''; snap.forEach(d=>{ const r=d.data(); html+=`<div class="border p-4 rounded-xl bg-gray-50"><div class="flex justify-between items-start"><div class="flex-1"><b class="text-sm">${r.title||'No Title'}</b><br><small class="text-xs text-gray-600">${r.grade||''} - ${r.subject||''} - ${r.type||''}</small><br><small class="text-xs">${(r.description||'').substring(0,80)}</small></div><div class="flex flex-col gap-1 ml-2"><a href="${r.link||'#'}" target="_blank" class="bg-blue-600 text-white px-3 py-1 rounded-full text-[10px] text-center font-bold">VIEW</a><button onclick="openEdit('${d.id}')" class="bg-black text-white px-3 py-1 rounded-full text-[10px] font-bold">EDIT</button><button onclick="deleteRes('${d.id}')" class="bg-red-100 text-red-600 px-3 py-1 rounded-full text-[10px] font-bold">DEL</button></div></div></div>`; }); document.getElementById('resList').innerHTML=html||'<p class="text-center text-sm">No notes yet - Add first resource</p>'; }
+async function openEdit(id){ const FB=window.FB; const snap=await FB.getDoc(FB.doc(FB.db,'resources',id)); const r=snap.data(); document.getElementById('editId').value=id; document.getElementById('editTitle').value=r.title||''; document.getElementById('editGrade').value=r.grade||'Grade 7'; document.getElementById('editSubject').value=r.subject||'SST'; document.getElementById('editLink').value=r.link||''; document.getElementById('editDesc').value=r.description||''; document.getElementById('editModal').classList.remove('hidden'); }
+function closeEdit(){ document.getElementById('editModal').classList.add('hidden'); }
+async function saveEdit(){ const FB=window.FB; const id=document.getElementById('editId').value; await FB.updateDoc(FB.doc(FB.db,'resources',id),{title:document.getElementById('editTitle').value, grade:document.getElementById('editGrade').value, subject:document.getElementById('editSubject').value, link:document.getElementById('editLink').value, description:document.getElementById('editDesc').value}); alert('✅ Saved!'); closeEdit(); loadResources(); }
+async function deleteRes(id){ if(!confirm('Delete?')) return; const FB=window.FB; await FB.deleteDoc(FB.doc(FB.db,'resources',id)); closeEdit(); loadResources(); }
+
+// AI CONFIG
+async function loadAiConfig(){ const FB=window.FB; try{ const snap=await FB.getDoc(FB.doc(FB.db,'config','ai')); if(snap.exists() && snap.data().geminiKey){ const k=snap.data().geminiKey; document.getElementById('geminiKey').value=k; document.getElementById('aiStatus').innerText='AI LIVE ✅ '+k.substring(0,10)+'...'; document.getElementById('aiStatus').className='bg-green-500/20 text-green-400 px-3 py-1 rounded-full text-[10px] font-bold'; document.getElementById('keyMsg').innerHTML='<span class=text-green-600>✅ AI Key saved - ai-assistant.html will use real Gemini to mark exams</span>'; } }catch(e){} }
+async function saveKey(){ const FB=window.FB; const k=document.getElementById('geminiKey').value.trim(); if(!k){alert('Paste Gemini Key from aistudio.google.com'); return;} if(k.length<20){alert('Invalid key - should start with AQ. or AIza'); return;} await FB.setDoc(FB.doc(FB.db,'config','ai'),{geminiKey:k, updatedAt:FB.serverTimestamp()}); document.getElementById('keyMsg').innerHTML='<span class=text-green-600>✅ Saved! AI is now LIVE - Go to ai-assistant.html</span>'; document.getElementById('aiStatus').innerText='AI LIVE ✅'; document.getElementById('aiStatus').className='bg-green-500/20 text-green-400 px-3 py-1 rounded-full text-[10px] font-bold'; alert('✅ AI Key saved! Your ai-assistant.html now marks exams & homework with real AI'); }
+async function testKey(){ const k=document.getElementById('geminiKey').value.trim(); if(!k){alert('Paste key first'); return;} document.getElementById('keyMsg').innerText='🧪 Testing Gemini...'; try{ const res=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${k}`,{method:"POST", headers:{"Content-Type":"application/json"}, body: JSON.stringify({contents:[{parts:[{text:"Mark this Grade 6 exam: Q1: 1/2+1/4=? Student answer: 2/6"}]}]})}); const data=await res.json(); if(data.candidates){document.getElementById('keyMsg').innerHTML='<span class=text-green-600>✅ AI Working! Sample: '+data.candidates[0].content.parts[0].text.substring(0,150)+'...</span>';} else {document.getElementById('keyMsg').innerHTML='<span class=text-red-600>❌ Error: '+JSON.stringify(data).substring(0,200)+'</span>';} }catch(e){document.getElementById('keyMsg').innerHTML='<span class=text-red-600>❌ Failed: '+e.message+'</span>';} }
+function toggleKey(){ const i=document.getElementById('geminiKey'); i.type=i.type==='password'?'text':'password'; }
+
+setTimeout(()=>{ const FB=window.FB; FB.onAuthStateChanged(FB.auth, u=>{ if(!u){ window.location.href='/login.html'; return; } currentUser=u; loadSubs(); loadAiConfig(); }); document.getElementById('logoutBtn').onclick=()=>{ FB.signOut(FB.auth); window.location.href='/'; }; },500);
+window.showTab=showTab; window.loadSubs=loadSubs; window.approveUser=approveUser; window.addResource=addResource; window.deleteRes=deleteRes; window.openEdit=openEdit; window.closeEdit=closeEdit; window.saveEdit=saveEdit; window.saveKey=saveKey; window.testKey=testKey; window.toggleKey=toggleKey; window.loadAiConfig=loadAiConfig;
 </script>
 </body>
 </html>
