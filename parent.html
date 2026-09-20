@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Parent Portal - SHKE00500 Login - Monitor Daily HW 10 Marks + Weekly Exams + Chat Admin</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import { getFirestore, doc, getDoc, setDoc, collection, getDocs, query, where, orderBy, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+const firebaseConfig = {
+  apiKey: "AIzaSyA93BNes3AmFyxIEgjSbvbIWqLyorLsuj8",
+  authDomain: "somahubkenya-9e458.firebaseapp.com",
+  projectId: "somahubkenya-9e458",
+  storageBucket: "somahubkenya-9e458.firebasestorage.app",
+  messagingSenderId: "615579085715",
+  appId: "1:615579085715:web:28fca37ba498324bb49666"
+};
+const app=initializeApp(firebaseConfig); const db=getFirestore(app);
+window.FB={db,doc,getDoc,setDoc,collection,getDocs,query,where,orderBy,serverTimestamp};
+</script>
+</head>
+<body class="bg-[#f0fdf4] min-h-screen">
+<header class="bg-white shadow sticky top-0 z-40">
+<div class="max-w-5xl mx-auto px-4 py-3 flex justify-between items-center">
+<a href="/" class="font-black text-sm"><i class="fa-solid fa-users text-blue-600"></i> Parent Portal - SHKE00500 Monitor</a>
+<div class="flex gap-2 items-center">
+<span class="bg-blue-600 text-white px-3 py-1 rounded-full text-[10px] font-bold">SHKE00500 Login</span>
+<a href="/daily-hw.html" class="text-[11px] bg-green-100 px-3 py-2 rounded-full">Student Daily HW</a>
+</div>
+</div>
+</header>
+
+<div class="p-4 max-w-5xl mx-auto">
+<!-- LOGIN WITH SHKE INDEX -->
+<div id="loginBox" class="bg-white rounded-[1.5rem] p-8 shadow border max-w-md mx-auto text-center">
+<div class="bg-blue-600 w-16 h-16 rounded-full flex items-center justify-center mx-auto"><i class="fa-solid fa-id-card text-white text-2xl"></i></div>
+<h2 class="font-black text-lg mt-4">👨‍👩‍👧 Parent Login - Student SHKE Index</h2>
+<p class="text-xs text-gray-500 mt-2">Enter child's index number given at registration - Counting from 500<br><b>First student SHKE00500, second SHKE00501...</b></p>
+<input id="indexInput" placeholder="SHKE00500" class="w-full bg-gray-50 border-2 border-blue-200 p-4 rounded-xl text-center font-black text-xl mt-6 tracking-widest uppercase" maxlength="9">
+<button onclick="parentLogin()" class="w-full bg-blue-600 text-white py-4 rounded-xl font-black mt-4">🔓 Login with SHKE00500 & Monitor Child</button>
+<p class="text-[10px] text-gray-400 mt-3">No index? Child gets SHKE00500 auto at registration in ai-assistant.html - Admin can see in admin.html → Users → SHKE index</p>
+<div class="mt-6 p-3 bg-blue-50 rounded-xl text-left text-xs">
+<p class="font-bold">What you will see after login with SHKE00500:</p>
+<p class="mt-1">✅ Daily HW 10 marks each subject - Marks + correction + notes link where failed</p>
+<p>✅ If Monday pending → Tuesday double 20 marks</p>
+<p>✅ If complete → "Today completed wait tomorrow"</p>
+<p>✅ Weekly exams marks - If didn't do exam you see pending</p>
+<p>✅ Most failed question + remedy + which notes has information</p>
+<p>✅ Chat with admin/teacher about child performance</p>
+</div>
+</div>
+
+<!-- DASHBOARD -->
+<div id="dashboard" class="hidden">
+<div class="bg-white rounded-[1.5rem] p-5 shadow border flex justify-between items-center">
+<div>
+<p class="font-black text-sm" id="childName">Child: SHKE00500 -...</p>
+<p class="text-xs text-gray-500" id="childInfo">Grade:... | Index: SHKE00500 | Email:...</p>
+<p class="text-[10px] text-blue-600 font-bold mt-1" id="indexDisplay">SHKE Index: SHKE00500 - Counting from 500</p>
+</div>
+<button onclick="logoutParent()" class="bg-black text-white px-4 py-2 rounded-full text-xs">Logout SHKE</button>
+</div>
+
+<!-- STATS -->
+<div class="mt-5 grid grid-cols-2 md:grid-cols-4 gap-3">
+<div class="bg-white rounded-2xl p-4 shadow border text-center"><p class="text-[10px] text-gray-400">Today HW 10 Marks</p><p id="todayHWStat" class="font-black text-xl mt-1">-</p><p id="todayHWSub" class="text-[10px] text-gray-400">Completed?</p></div>
+<div class="bg-white rounded-2xl p-4 shadow border text-center border-red-200"><p class="text-[10px] text-gray-400">Pending HW → Double</p><p id="pendingStat" class="font-black text-xl mt-1 text-red-600">0</p><p class="text-[10px] text-gray-400">Mon pending → Tue 20 marks</p></div>
+<div class="bg-white rounded-2xl p-4 shadow border text-center"><p class="text-[10px] text-gray-400">Weekly Exams Avg</p><p id="weeklyAvg" class="font-black text-xl mt-1">-</p><p class="text-[10px] text-gray-400">Exam + HW</p></div>
+<div class="bg-white rounded-2xl p-4 shadow border text-center border-yellow-200"><p class="text-[10px] text-gray-400">Most Failed Topic</p><p id="mostFailedStat" class="font-black text-xs mt-1">-</p><p class="text-[10px] text-gray-400">Needs remedy + notes</p></div>
+</div>
+
+<!-- DAILY HW PERFORMANCE 10 MARKS -->
+<div class="mt-6 grid md:grid-cols-2 gap-5">
+<div class="bg-white rounded-[1.5rem] p-5 shadow border">
+<div class="flex justify-between items-center"><p class="font-black text-sm">📝 Daily HW Performance - 10 Marks Each Subject - SHKE</p><button onclick="loadDailyHW()" class="bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-xs">Refresh</button></div>
+<p class="text-[11px] text-gray-500 mt-1">Shows correction + where child failed + notes link where information is + remedy</p>
+<div id="dailyHWList" class="mt-4 space-y-3 max-h-[500px] overflow-y-auto"></div>
+</div>
+
+<div class="bg-white rounded-[1.5rem] p-5 shadow border">
+<div class="flex justify-between items-center"><p class="font-black text-sm">📝 Weekly Exams + Marks - SHKE</p><button onclick="loadWeeklyExams()" class="bg-purple-100 text-purple-700 px-3 py-1 rounded-full text-xs">Refresh</button></div>
+<p class="text-[11px] text-gray-500 mt-1">If child didn't do exam you see pending + marks of both exam and HW</p>
+<div id="weeklyList" class="mt-4 space-y-3 max-h-[500px] overflow-y-auto"></div>
+</div>
+</div>
+
+<!-- REMEDY + NOTES LINK -->
+<div class="mt-6 bg-yellow-50 border border-yellow-200 rounded-[1.5rem] p-5">
+<p class="font-black text-sm text-yellow-700">💊 Remedy - Most Failed Questions + Notes Link Where Information Is - SHKE <span id="remedyIndex"></span></p>
+<p class="text-[11px] text-gray-500 mt-1">If student fails, you see which note has information + direct link to notes.html?search=noteTitle</p>
+<div id="remedyList" class="mt-3 space-y-2 text-xs"></div>
+</div>
+
+<!-- ALERTS - NOT DONE HW/EXAM -->
+<div class="mt-6 bg-red-50 border border-red-200 rounded-[1.5rem] p-5">
+<p class="font-black text-sm text-red-700">⚠️ Alerts - If Child Didn't Do HW/Exam - SHKE Pending → Double</p>
+<p class="text-[11px] text-gray-500 mt-1">Monday pending → Tuesday double work 20 marks - If complete says today's work completed wait tomorrow</p>
+<div id="alertsList" class="mt-3 space-y-2 text-xs"></div>
+</div>
+
+<!-- CHAT WITH ADMIN - ADMIN CAN COMMUNICATE TO PARENT -->
+<div class="mt-6 bg-white rounded-[1.5rem] p-5 shadow border border-green-200">
+<p class="font-black text-sm">💬 Chat with Admin / Teacher - About Child SHKE <span id="chatIndex"></span> Performance</p>
+<p class="text-[11px] text-gray-500 mt-1">Admin can communicate to parent: send remedy, alerts about pending HW, weekly exam results, most failed topics. You can ask questions.</p>
+<div id="chatBox" class="mt-4 bg-gray-50 rounded-xl p-4 h-[350px] overflow-y-auto space-y-3 border"></div>
+<div class="flex gap-2 mt-4">
+<input id="parentMsg" placeholder="Ask teacher about SHKE child - e.g Why failed Fractions?..." class="flex-1 border p-3 rounded-full text-sm">
+<button onclick="sendParentMsg()" class="bg-green-600 text-white px-6 py-3 rounded-full text-sm font-bold">Send to Admin</button>
+</div>
+<div class="mt-3 flex gap-2 flex-wrap">
+<button onclick="quickMsg('My child SHKE not understanding Fractions - help with notes link?')" class="bg-blue-50 text-blue-700 border border-blue-200 px-3 py-1 rounded-full text-[11px]">Fractions help + notes?</button>
+<button onclick="quickMsg('Why pending HW SHKE? Monday pending → Tuesday double?')" class="bg-red-50 text-red-700 border border-red-200 px-3 py-1 rounded-full text-[11px]">Pending HW → Double?</button>
+<button onclick="quickMsg('Request meeting about SHKE performance - most failed topic?')" class="bg-yellow-50 text-yellow-700 border border-yellow-200 px-3 py-1 rounded-full text-[11px]">Meeting about failed?</button>
+<button onclick="quickMsg('My child completed today HW? Show marks + correction + notes link')" class="bg-green-50 text-green-700 border border-green-200 px-3 py-1 rounded-full text-[11px]">Today completed?</button>
+</div>
+</div>
+</div>
+</div>
+
+<script>
+let childData=null, childUserId=null, currentIndex=null;
+
+async function parentLogin(){
+  const FB=window.FB;
+  let idx=document.getElementById('indexInput').value.trim().toUpperCase();
+  if(!idx) return alert("Enter SHKE index e.g SHKE00500");
+  if(!idx.startsWith('SHKE')) idx="SHKE"+idx.replace(/[^0-9]/g,'').padStart(5,'0');
+  if(idx.length<9) idx=idx.padStart(9,'0').replace('SHKE00','SHKE0'); // Ensure SHKE00500 format
+
+  try{
+    // Find by student_index first (SHKE00500)
+    const idxRef=FB.doc(FB.db,"student_index", idx);
+    const idxSnap=await FB.getDoc(idxRef);
+    if(idxSnap.exists()){
+      childData=idxSnap.data(); childUserId=childData.userId; currentIndex=idx;
+    }else{
+      // Try users collection
+      const q=FB.query(FB.collection(FB.db,"users"), FB.where("indexNumber","==",idx));
+      const snap=await FB.getDocs(q);
+      if(snap.empty) return alert(`Index ${idx} not found. First student is SHKE00500 counting from 500. Ask admin to check admin.html → Users → SHKE index. Make sure child registered and got SHKE00500 auto.`);
+      let d=null; snap.forEach(x=>{d=x.data(); childUserId=x.id;});
+      childData=d; currentIndex=idx;
+    }
+
+    document.getElementById('loginBox').classList.add('hidden');
+    document.getElementById('dashboard').classList.remove('hidden');
+    document.getElementById('childName').innerText=`Child: ${childData.name||childData.email||'Student'} - ${idx}`;
+    document.getElementById('childInfo').innerText=`Grade: ${childData.grade||'Grade 7'} | Email: ${childData.email||''} | Counting from 500`;
+    document.getElementById('indexDisplay').innerText=`SHKE Index: ${idx} - Counting from 500 - First SHKE00500`;
+    document.getElementById('chatIndex').innerText=idx;
+    document.getElementById('remedyIndex').innerText=idx;
+
+    loadDailyHW(); loadWeeklyExams(); loadAlerts(); loadChat();
+    setInterval(loadChat, 5000);
+
+  }catch(e){ alert("Error: "+e.message); }
+}
+
+async function loadDailyHW(){
+  const FB=window.FB; if(!childUserId) return;
+  try{
+    const q=FB.query(FB.collection(FB.db,"homework_submissions"), FB.where("userId","==",childUserId), FB.orderBy("timestamp","desc"));
+    const snap=await FB.getDocs(q); let all=[]; snap.forEach(d=>all.push(d.data()));
+
+    const today=new Date().toISOString().split('T')[0];
+    const todaySubs=all.filter(s=>s.date===today);
+    if(todaySubs.length>0){
+      const avg=Math.round(todaySubs.reduce((a,b)=>a+b.score,0)/todaySubs.length);
+      document.getElementById('todayHWStat').innerHTML=`<span class="text-green-600">${todaySubs.length} Done ✅</span>`;
+      document.getElementById('todayHWSub').innerText=`Avg ${avg}/10 - Today's work completed wait tomorrow`;
+    }else{
+      document.getElementById('todayHWStat').innerHTML=`<span class="text-red-600">0 Pending ⚠️</span>`;
+      document.getElementById('todayHWSub').innerText=`Not done - Will be double tomorrow 20 marks`;
+    }
+
+    // Pending HW → Double logic: Check last 7 days
+    let pendingList=[];
+    for(let i=1;i<=7;i++){
+      let d=new Date(); d.setDate(d.getDate()-i); let ds=d.toISOString().split('T')[0]; let dayName=d.toLocaleDateString('en-US',{weekday:'long'});
+      const hwExists=all.some(s=>s.date===ds);
+      // If no submission that day, check if daily_homework existed
+      if(!hwExists){
+        // Assume HW existed if within last 3 days
+        if(i<=3) pendingList.push({date:ds, day:dayName});
+      }
+    }
+    document.getElementById('pendingStat').innerText=pendingList.length>0? `${pendingList.length} Pending ⚠️` : "0 ✅";
+
+    let failedTopics={}; all.forEach(s=>{ if(s.mostFailedTopic && s.mostFailedTopic!=="None" && s.mostFailedTopic!=="None - Good job!") failedTopics[s.mostFailedTopic]=(failedTopics[s.mostFailedTopic]||0)+1; });
+    let mostFailed=Object.entries(failedTopics).sort((a,b)=>b[1]-a[1])[0]?.[0]||"None - Good! ✅";
+    document.getElementById('mostFailedStat').innerText=mostFailed;
+
+    // Daily HW List with correction + notes link where failed
+    document.getElementById('dailyHWList').innerHTML=all.slice(0,20).map(s=>`
+      <div class="border rounded-xl p-3 ${s.score>=7?'border-green-200 bg-green-50':s.score>=5?'border-yellow-200 bg-yellow-50':'border-red-200 bg-red-50'}">
+        <div class="flex justify-between items-start">
+          <div><p class="font-bold text-xs">${s.date} - ${s.subject} - ${s.score}/10 ${s.score>=7?'✅':s.score<=4?'❌':'⚠️'} - SHKE ${s.indexNumber||currentIndex}</p><p class="text-[11px] text-gray-600">Most failed: ${s.mostFailedTopic} | Wrong: ${s.corrections?.filter(c=>!c.correct).length||0}/10</p></div>
+          <span class="font-black ${s.score>=7?'text-green-600':s.score<=4?'text-red-600':'text-yellow-600'}">${s.score}/10</span>
+        </div>
+        <div class="mt-2 space-y-1">
+          ${s.corrections?.filter(c=>!c.correct).slice(0,3).map(c=>`
+            <div class="bg-white p-2 rounded-lg border text-[11px]"><p>❌ Failed: ${c.q.substring(0,60)}... | Correct: ${c.correctAns}</p><p class="text-purple-600 font-bold">📚 Where information is: Notes → ${c.noteTitle} - <a href="/notes.html?search=${encodeURIComponent(c.noteTitle)}" target="_blank" class="underline">Open Note ${c.noteTitle}</a> - Direct link where info is</p></div>
+          `).join('')||'<p class="text-[11px] text-green-600">✅ Perfect - No failed - All correct!</p>'}
+        </div>
+        ${s.corrections?.filter(c=>!c.correct).length>3? `<p class="text-[10px] text-gray-400 mt-1">+${s.corrections.filter(c=>!c.correct).length-3} more failed - See remedy below</p>`:''}
+      </div>
+    `).join('') || '<p class="text-xs text-gray-400 text-center py-4">No daily HW yet - Child not started 10 marks daily HW at ai-assistant.html - SHKE needs to do daily HW</p>';
+
+    // Remedy - most failed + notes link
+    let failedQs=[]; all.forEach(s=>{ s.corrections?.filter(c=>!c.correct).forEach(c=>{ failedQs.push({subject:s.subject, q:c.q, correct:c.correctAns, note:c.noteTitle, date:s.date, studentAns:c.studentAns}); }); });
+    document.getElementById('remedyList').innerHTML=failedQs.slice(0,15).map(f=>`
+      <div class="bg-white p-3 rounded-xl border border-yellow-200">
+        <p class="font-bold">${f.subject} - ${f.date} - SHKE ${currentIndex}</p>
+        <p class="mt-1">Q: ${f.q.substring(0,100)}...</p>
+        <p class="text-red-600">Student failed: ${f.studentAns||'No answer'} ❌</p>
+        <p class="text-green-600 font-bold">Correct: ${f.correct} ✅</p>
+        <p class="text-purple-600 mt-1">📚 <b>Where information is - Direct to notes where that information is:</b> Search Notes → <span class="bg-purple-600 text-white px-2 py-1 rounded-full text-[10px]">${f.note}</span> - <a href="/notes.html?search=${encodeURIComponent(f.note)}" target="_blank" class="bg-purple-600 text-white px-3 py-1 rounded-full text-[10px]">📖 Open Note ${f.note} - Where info is</a></p>
+        <p class="text-[10px] text-gray-500 mt-1">Remedy: Revise note ${f.note} - Parent help child - Admin can also send remedy via chat</p>
+      </div>
+    `).join('') || '<p class="text-xs text-green-600">✅ No failed questions - Child doing great in all subjects - No remedy needed!</p>';
+
+  }catch(e){ document.getElementById('dailyHWList').innerHTML=`<p class="text-xs text-red-400">Error: ${e.message} - Need Firestore index: homework_submissions userId+timestamp - Create in console</p>`; }
+}
+
+async function loadWeeklyExams(){
+  const FB=window.FB; if(!childUserId) return;
+  try{
+    const q=FB.query(FB.collection(FB.db,"exam_submissions"), FB.where("userId","==",childUserId), FB.orderBy("timestamp","desc"));
+    const snap=await FB.getDocs(q); let all=[]; snap.forEach(d=>all.push(d.data()));
+    let avg=all.length>0? Math.round(all.reduce((a,b)=>a+b.score,0)/all.reduce((a,b)=>a+b.total,0)*100):0;
+    document.getElementById('weeklyAvg').innerText=all.length>0? `${avg}% (${all.length} exams)` : "0% No exams";
+
+    // Also include daily HW avg
+    const hwQ=FB.query(FB.collection(FB.db,"homework_submissions"), FB.where("userId","==",childUserId), FB.orderBy("timestamp","desc"));
+    const hwSnap=await FB.getDocs(hwQ); let hwAll=[]; hwSnap.forEach(d=>hwAll.push(d.data()));
+    let hwAvg=hwAll.length>0? Math.round(hwAll.reduce((a,b)=>a+b.score,0)/hwAll.length*10)/10 : 0;
+
+    document.getElementById('weeklyList').innerHTML=`
+      <div class="bg-blue-50 border border-blue-200 p-3 rounded-xl">
+        <p class="font-bold text-xs">📊 Combined Performance SHKE ${currentIndex}</p>
+        <p class="text-[11px]">Weekly Exams Avg: ${avg}% | Daily HW Avg: ${hwAvg}/10</p>
+        <p class="text-[10px] text-gray-500">Both exam and homework marks shown - Parent can see both</p>
+      </div>
+      ${all.slice(0,15).map(e=>`
+        <div class="border rounded-xl p-3 bg-white ${e.score/e.total>=0.5?'border-green-200':'border-red-200'}">
+          <div class="flex justify-between"><p class="font-bold text-xs">${e.subject||'Exam'} - ${e.date||''} - ${e.score}/${e.total}</p><p class="font-black ${e.score/e.total>=0.5?'text-green-600':'text-red-600'}">${Math.round(e.score/e.total*100)}%</p></div>
+          <p class="text-[11px] text-gray-600 mt-1">Most failed: ${e.mostFailed||e.mostFailedTopic||'-'} | ${e.corrections?.filter(c=>!c.correct).length||0} wrong</p>
+          ${e.mostFailed? `<p class="text-[10px] text-purple-600">📚 Notes where info is: ${e.mostFailed} - <a href="/notes.html?search=${encodeURIComponent(e.mostFailed)}" class="underline">Open Note</a></p>`:''}
+        </div>
+      `).join('') || '<p class="text-xs text-gray-400 text-center py-4">No weekly exams yet - Child not done exam - If child didn\'t do exam he or she can see pending here - Admin can set exam FROM Notes</p>'}
+      <div class="mt-3 bg-gray-50 p-3 rounded-xl border">
+        <p class="font-bold text-xs">📝 Daily HW 10 Marks - Both Marks</p>
+        ${hwAll.slice(0,5).map(s=>`<p class="text-[11px] mt-1">${s.date} ${s.subject} ${s.score}/10 ${s.score>=7?'✅':'❌'} - Most failed ${s.mostFailedTopic}</p>`).join('')||'No daily HW'}
+      </div>
+    `;
+  }catch(e){
+    document.getElementById('weeklyList').innerHTML=`<p class="text-xs text-gray-400">No weekly exams yet or error: ${e.message} - Daily HW shown below</p>`;
+    document.getElementById('weeklyAvg').innerText="Daily only";
+  }
+}
+
+async function loadAlerts(){
+  const FB=window.FB; if(!childUserId) return;
+  try{
+    const q=FB.query(FB.collection(FB.db,"homework_submissions"), FB.where("userId","==",childUserId), FB.orderBy("timestamp","desc"));
+    const snap=await FB.getDocs(q); let all=[]; snap.forEach(d=>all.push(d.data()));
+    let alerts=[];
+    const today=new Date().toISOString().split('T')[0];
+    const hasToday=all.some(s=>s.date===today);
+    if(!hasToday) alerts.push(`⚠️ Today ${today} Daily HW 10 marks not done - Index ${currentIndex} - Tomorrow double work 20 marks (Today 10 + Tomorrow 10) - Parent alert - Child must do now at ai-assistant.html`);
+
+    for(let i=1;i<=3;i++){
+      let d=new Date(); d.setDate(d.getDate()-i); let ds=d.toISOString().split('T')[0]; let dayName=d.toLocaleDateString('en-US',{weekday:'long'});
+      let has=all.some(s=>s.date===ds);
+      if(!has){
