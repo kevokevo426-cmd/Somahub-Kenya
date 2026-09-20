@@ -2,79 +2,199 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SomaHub Admin - CORRECT Flow + Missing Topics + Meta AI</title>
+<title>Admin - SHKE00500 Index + Parent Chat + Daily HW</title>
 <script src="https://cdn.tailwindcss.com"></script>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-import { getFirestore, doc, getDoc, setDoc, updateDoc, deleteDoc, collection, getDocs, query, orderBy, where, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+import { getFirestore, doc, getDoc, setDoc, updateDoc, deleteDoc, collection, getDocs, query, orderBy, where, serverTimestamp, runTransaction } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 const firebaseConfig = { apiKey: "AIzaSyA93BNes3AmFyxIEgjSbvbIWqLyorLsuj8", authDomain: "somahubkenya-9e458.firebaseapp.com", projectId: "somahubkenya-9e458", storageBucket: "somahubkenya-9e458.firebasestorage.app", messagingSenderId: "615579085715", appId: "1:615579085715:web:28fca37ba498324bb49666" };
 const app=initializeApp(firebaseConfig); const auth=getAuth(app); const db=getFirestore(app);
-window.FB={auth,db,onAuthStateChanged,doc,getDoc,setDoc,updateDoc,deleteDoc,collection,getDocs,query,orderBy,where,serverTimestamp};
+window.FB={auth,db,onAuthStateChanged,doc,getDoc,setDoc,updateDoc,deleteDoc,collection,getDocs,query,orderBy,where,serverTimestamp,runTransaction};
 </script>
 </head>
 <body class="bg-[#0a0a0a] text-white min-h-screen">
 <header class="bg-[#141414] border-b border-white/10 p-4 flex justify-between items-center">
-<div><h1 class="font-black">SomaHub Admin</h1><p class="text-[10px] text-gray-400">📘→📅→📖→📚→📝 Correct Opposite Flow</p></div>
-<div class="flex gap-2"><span id="aiStatus" class="bg-red-500/20 text-red-400 text-[10px] px-3 py-1 rounded-full">AI OFF</span><button onclick="location.href='/'" class="bg-white text-black px-4 py-1.5 rounded-full text-xs font-bold">Site</button></div>
+<div><h1 class="font-black">Admin SHKE00500 → Counting</h1><p class="text-[10px] text-gray-400">Index auto at registration SHKE00500 from 500 - Parent login with SHKE index</p></div>
+<span id="aiStatus" class="bg-red-500/20 text-red-400 text-[10px] px-3 py-1 rounded-full">AI OFF</span>
 </header>
+
 <div class="flex gap-2 p-4 overflow-x-auto border-b border-white/10 text-xs">
-<button onclick="showTab('resources')" id="tResources" class="bg-white text-black px-4 py-2 rounded-full font-bold">📚 Resources</button>
-<button onclick="showTab('missing')" id="tMissing" class="bg-red-600 text-white px-4 py-2 rounded-full font-bold">⚠️ Missing <span id="missingCount" class="bg-white text-red-600 px-1.5 rounded-full ml-1">0</span></button>
-<button onclick="showTab('users')" id="tUsers" class="bg-white/10 px-4 py-2 rounded-full">👥 Users M-Pesa</button>
+<button onclick="showTab('users')" id="tUsers" class="bg-white text-black px-4 py-2 rounded-full font-bold">👥 Users SHKE00500+ + Parent Chat</button>
+<button onclick="showTab('parentChat')" id="tParentChat" class="bg-green-600 text-white px-4 py-2 rounded-full font-bold">💬 Parent Chat <span id="msgCount" class="bg-white text-green-600 px-1.5 rounded-full ml-1">0</span></button>
+<button onclick="showTab('daily')" id="tDaily" class="bg-white/10 px-4 py-2 rounded-full">📝 Daily HW 10 Marks Monitor</button>
+<button onclick="showTab('resources')" id="tResources" class="bg-white/10 px-4 py-2 rounded-full">📚 Resources Correct Flow</button>
 <button onclick="showTab('ai')" id="tAi" class="bg-white/10 px-4 py-2 rounded-full">🧠 AI Brain</button>
 </div>
-<div id="tabResources" class="p-4">
+
+<div id="tabUsers" class="p-4">
 <div class="bg-[#141414] border border-white/10 p-4 rounded-2xl">
-<p class="font-bold text-sm">➕ Add Resource - CORRECT Flow</p>
-<p class="text-[10px] text-gray-400 mt-1">📘 Designs WHAT → 📅 Schemes WHEN → 📖 Plans HOW → 📚 Notes CONTENT (source) → 📝 Exams TEST FROM Notes (opposite)</p>
-<div class="grid md:grid-cols-5 gap-2 mt-4">
-<select id="rGrade" class="bg-black border border-white/10 p-3 rounded-xl text-xs"><option>PP1</option><option>PP2</option><option>Grade 1</option><option>Grade 2</option><option>Grade 3</option><option>Grade 4</option><option>Grade 5</option><option>Grade 6</option><option selected>Grade 7</option><option>Grade 8</option><option>Grade 9</option></select>
-<select id="rSubject" class="bg-black border border-white/10 p-3 rounded-xl text-xs"><option>Mathematics</option><option>English</option><option>Kiswahili</option><option>Science</option><option>SST</option><option>CRE</option><option>Agriculture</option><option>All Subjects</option></select>
-<select id="rType" class="bg-black border border-white/10 p-3 rounded-xl text-xs font-bold" onchange="updateTypeHint()"><option>Curriculum Design</option><option>Scheme of Work</option><option>Lesson Plan</option><option selected>Notes</option><option>Exam</option></select>
-<input id="rTitle" placeholder="Title e.g Photosynthesis" class="bg-black border border-white/10 p-3 rounded-xl text-xs md:col-span-2">
+<div class="flex justify-between items-center">
+<div><p class="font-bold text-sm">👥 Users - Index Auto SHKE00500 from 500 at Registration</p><p class="text-[10px] text-gray-400 mt-1">When student registers, auto gets SHKE00500, SHKE00501... Parent logs in at parent.html with SHKE index. Counting from 500.</p></div>
+<button onclick="loadUsers()" class="bg-white/10 px-3 py-1 rounded-full text-xs">Refresh</button>
 </div>
-<div id="typeHint" class="mt-3 p-3 bg-purple-500/10 border border-purple-500/20 rounded-xl text-xs">📚 <b>Notes</b> = CONTENT - meaning, student reads. Source for Exams + Marking scheme (Correct opposite).</div>
-<textarea id="rDesc" placeholder="Description/Content" class="w-full bg-black border border-white/10 p-3 rounded-xl text-xs mt-3 h-24"></textarea>
-<div class="grid md:grid-cols-2 gap-2 mt-2"><input id="rFile" placeholder="File link PDF optional" class="bg-black border border-white/10 p-3 rounded-xl text-xs"><input id="rVideo" placeholder="YouTube video link optional" class="bg-black border border-white/10 p-3 rounded-xl text-xs"></div>
-<button onclick="addResource()" class="w-full bg-white text-black py-3 rounded-full font-bold mt-3 text-sm">Add to Correct Flow</button>
+
+<div class="mt-4 grid grid-cols-4 gap-2 text-[10px]">
+<div class="bg-black p-3 rounded-xl border border-white/10 text-center"><p class="font-black text-lg" id="totalUsers">0</p><p>Total Students</p></div>
+<div class="bg-blue-500/20 p-3 rounded-xl text-center"><p class="font-black text-lg" id="lastIndex">SHKE00500</p><p>Last Index Given</p></div>
+<div class="bg-green-500/20 p-3 rounded-xl text-center"><p class="font-black text-lg" id="nextIndex">SHKE00501</p><p>Next Index</p></div>
+<div class="bg-purple-500/20 p-3 rounded-xl text-center"><p class="font-black text-lg" id="withIndex">0</p><p>With SHKE Index</p></div>
 </div>
-<div class="mt-6 bg-[#141414] border border-white/10 p-4 rounded-2xl"><div class="flex justify-between items-center"><p class="font-bold text-sm">📚 All Resources Grouped</p><button onclick="loadResources()" class="bg-white/10 px-3 py-1 rounded-full text-xs">Refresh</button></div><div id="resourceStats" class="grid grid-cols-5 gap-2 mt-3 text-[10px]"></div><div id="resourceList" class="mt-4 space-y-2 max-h-[400px] overflow-y-auto"></div></div>
+
+<div class="mt-4 bg-black p-3 rounded-xl border border-white/10">
+<p class="font-bold text-xs">Set Next Index Counter (Starts at 500)</p>
+<div class="flex gap-2 mt-2"><input id="counterInput" placeholder="500" class="bg-[#1f1f1f] border border-white/10 p-2 rounded-lg text-xs w-24"><button onclick="setCounter()" class="bg-blue-600 px-4 py-2 rounded-lg text-xs font-bold">Set Counter to 500 (SHKE00500 start)</button><button onclick="initCounter()" class="bg-white/10 px-4 py-2 rounded-lg text-xs">Init Counter if not exist</button></div>
+<p class="text-[10px] text-gray-400 mt-2">Current counter in config/counters lastIndex. First student gets SHKE00500 when lastIndex=500. Next SHKE00501 when lastIndex=501.</p>
 </div>
-<div id="tabMissing" class="hidden p-4">
-<div class="bg-[#141414] border border-red-500/30 p-4 rounded-2xl">
-<div class="flex justify-between items-center"><div><p class="font-bold text-sm">⚠️ Missing Topics - NOT in Designs+Notes (Correct Sources)</p><p class="text-[10px] text-gray-400 mt-1">When student searches word and 0 in Designs+Notes, Meta AI fallback answers + saves here to add as Notes.</p></div><button onclick="loadMissing()" class="bg-red-600 px-4 py-2 rounded-full text-xs font-bold">Refresh</button></div>
-<div id="missingStats" class="grid grid-cols-3 gap-2 mt-4 text-[10px]"></div>
-<div id="missingList" class="mt-4 space-y-3"></div>
-</div>
-</div>
-<div id="tabUsers" class="hidden p-4"><div class="bg-[#141414] border border-white/10 p-4 rounded-2xl"><div class="flex justify-between items-center"><p class="font-bold text-sm">👥 Users & M-Pesa Till 0701305109</p><button onclick="loadUsers()" class="bg-white/10 px-3 py-1 rounded-full text-xs">Refresh</button></div><div id="userList" class="mt-4 space-y-2"></div></div></div>
-<div id="tabAi" class="hidden p-4">
-<div class="bg-[#141414] border border-green-500/20 p-4 rounded-2xl">
-<p class="font-bold text-sm">🧠 AI Brain - Meta AI Fallback Part of Project</p>
-<div class="mt-3 p-3 bg-black rounded-xl border border-white/10"><p class="text-xs font-bold">Gemini API Key</p><p class="text-[10px] text-gray-400 mt-1">aistudio.google.com → API Keys → Create → Paste</p><input id="geminiKey" placeholder="AQ..." class="w-full bg-[#1f1f1f] border border-white/10 p-3 rounded-xl text-xs mt-2"><button onclick="saveAi()" class="w-full bg-green-600 text-white py-3 rounded-full font-bold mt-3 text-sm">Save AI LIVE ✅</button><p id="aiKeyStatus" class="text-[10px] text-gray-400 mt-2">Checking...</p></div>
-<div class="mt-4 p-3 bg-[#1f1f1f] rounded-xl text-xs"><p class="font-bold">Correct Opposite Logic:</p><div class="mt-2 text-[11px] space-y-1 text-gray-300"><p>✅ SearchWord = Designs+Notes ONLY (not Exams) | ✅ SetExam = Notes→Exam | ✅ Mark = Notes as scheme</p><p>⚠️ Not found → Meta AI Fallback + YouTube + saves Missing</p></div></div>
-<div class="mt-4 grid grid-cols-2 gap-2 text-[10px]"><div class="bg-black p-3 rounded-xl border border-white/10"><p class="font-bold">Test Flow</p><button onclick="testFlow()" class="mt-2 w-full bg-white text-black py-2 rounded-full font-bold">Test</button><div id="flowTest" class="mt-2 text-[9px] text-gray-400"></div></div><div class="bg-black p-3 rounded-xl border border-white/10"><p class="font-bold">Missing Count</p><p id="missingCountAi" class="text-2xl font-black mt-1">0</p></div></div>
+
+<div id="userList" class="mt-4 space-y-3"></div>
 </div>
 </div>
+
+<div id="tabParentChat" class="hidden p-4">
+<div class="bg-[#141414] border border-green-500/30 p-4 rounded-2xl">
+<p class="font-bold text-sm">💬 Parent Chat - Admin ↔ Parent via SHKE Index</p>
+<div class="grid md:grid-cols-3 gap-4 mt-4">
+<div class="bg-black border border-white/10 p-3 rounded-xl">
+<p class="font-bold text-xs">Parent Index e.g SHKE00500</p>
+<input id="chatIndexFilter" placeholder="SHKE00500" class="w-full bg-[#1f1f1f] border border-white/10 p-2.5 rounded-xl text-xs mt-2 uppercase">
+<button onclick="loadParentChat()" class="w-full bg-green-600 py-2 rounded-full text-xs font-bold mt-2">Load Chat SHKE00500</button>
+<div id="parentInfoChat" class="mt-3 text-[11px] text-gray-400"></div>
+<div class="mt-4">
+<p class="font-bold text-[11px]">Quick to Parent:</p>
+<button onclick="quickAdminMsg('Your child SHKE index pending HW - Monday pending → Tuesday double 20 marks')" class="w-full text-left bg-white/5 p-2 rounded-lg text-[11px] mt-2">⚠️ Pending → Double</button>
+<button onclick="quickAdminMsg('💊 Remedy: Your child failed Fractions - Revise Notes: Fractions - SHKE student needs help')" class="w-full text-left bg-white/5 p-2 rounded-lg text-[11px] mt-1">💊 Remedy Fractions</button>
+<button onclick="quickAdminMsg('📝 Weekly Exam SHKE student scored 45% - Most failed Algebra - Check parent.html')" class="w-full text-left bg-white/5 p-2 rounded-lg text-[11px] mt-1">📝 Weekly result</button>
+</div>
+</div>
+<div class="md:col-span-2 bg-black border border-white/10 p-3 rounded-xl">
+<p class="font-bold text-xs">Chat with Parent Index: <span id="currentChatIndex">SHKE00500</span></p>
+<div id="adminChatBox" class="mt-3 bg-[#0a0a0a] rounded-xl p-3 h-[350px] overflow-y-auto space-y-2 border border-white/10"></div>
+<div class="flex gap-2 mt-3"><input id="adminMsg" placeholder="Message to parent SHKE00500..." class="flex-1 bg-[#1f1f1f] border border-white/10 p-3 rounded-full text-xs"><button onclick="sendAdminMsg()" class="bg-green-600 px-5 py-3 rounded-full text-xs font-bold">Send</button></div>
+</div>
+</div>
+<div class="mt-4"><p class="font-bold text-xs">All Parent Messages</p><div id="allMessages" class="mt-2 space-y-2 max-h-[300px] overflow-y-auto"></div></div>
+</div>
+</div>
+
+<div id="tabDaily" class="hidden p-4"><div class="bg-[#141414] border border-white/10 p-4 rounded-2xl"><div class="flex justify-between items-center"><p class="font-bold text-sm">📝 Daily HW Monitor SHKE</p><button onclick="loadDailyMonitor()" class="bg-white/10 px-3 py-1 rounded-full text-xs">Refresh</button></div><div id="dailyStats" class="grid grid-cols-4 gap-2 mt-4 text-[10px]"></div><div id="dailyMonitorList" class="mt-4 space-y-2"></div></div></div>
+
+<div id="tabResources" class="hidden p-4"><div class="bg-[#141414] border border-white/10 p-4 rounded-2xl"><p class="font-bold text-sm">📚 Resources Correct Flow Designs→Notes→Exams</p><div id="resourceStats" class="grid grid-cols-5 gap-2 mt-3 text-[10px]"></div><div id="resourceList" class="mt-4 space-y-2 max-h-[400px] overflow-y-auto"></div></div></div>
+
+<div id="tabAi" class="hidden p-4"><div class="bg-[#141414] border border-green-500/20 p-4 rounded-2xl"><input id="geminiKey" placeholder="AQ..." class="w-full bg-[#1f1f1f] border border-white/10 p-3 rounded-xl text-xs mt-2"><button onclick="saveAi()" class="w-full bg-green-600 text-white py-3 rounded-full font-bold mt-3 text-sm">Save AI LIVE</button></div></div>
+
 <script>
-function showTab(t){ document.getElementById('tabResources').classList.toggle('hidden', t!=='resources'); document.getElementById('tabMissing').classList.toggle('hidden', t!=='missing'); document.getElementById('tabUsers').classList.toggle('hidden', t!=='users'); document.getElementById('tabAi').classList.toggle('hidden', t!=='ai'); document.getElementById('tResources').className = t==='resources'? 'bg-white text-black px-4 py-2 rounded-full font-bold' : 'bg-white/10 px-4 py-2 rounded-full'; document.getElementById('tMissing').className = t==='missing'? 'bg-red-600 text-white px-4 py-2 rounded-full font-bold' : 'bg-white/10 px-4 py-2 rounded-full'; document.getElementById('tUsers').className = t==='users'? 'bg-white text-black px-4 py-2 rounded-full font-bold' : 'bg-white/10 px-4 py-2 rounded-full'; document.getElementById('tAi').className = t==='ai'? 'bg-white text-black px-4 py-2 rounded-full font-bold' : 'bg-white/10 px-4 py-2 rounded-full'; if(t==='missing') loadMissing(); if(t==='resources') loadResources(); if(t==='users') loadUsers(); }
-function updateTypeHint(){ const type=document.getElementById('rType').value; const hints={"Curriculum Design":"📘 <b>Design</b>=WHAT (KICD Strand Outcomes)","Scheme of Work":"📅 <b>Scheme</b>=WHEN Week 1-12","Lesson Plan":"📖 <b>Plan</b>=HOW 40 min","Notes":"📚 <b>Notes</b>=CONTENT meaning - Source for Exams + Marking scheme (Opposite)","Exam":"📝 <b>Exam</b>=TEST FROM Notes (not source for meaning)"}; document.getElementById('typeHint').innerHTML=hints[type]||""; }
-async function addResource(){ const FB=window.FB; const grade=document.getElementById('rGrade').value; const subject=document.getElementById('rSubject').value; const type=document.getElementById('rType').value; const title=document.getElementById('rTitle').value.trim(); const desc=document.getElementById('rDesc').value.trim(); const file=document.getElementById('rFile').value.trim(); const video=document.getElementById('rVideo').value.trim(); if(!title ||!desc) return alert("Title+Desc"); try{ await FB.setDoc(FB.doc(FB.collection(FB.db,"resources")), {grade, subject, type, title, description:desc, fileUrl:file, videoUrl:video, createdAt:FB.serverTimestamp()}); alert(`✅ Added ${type} ${grade} ${title} Correct flow`); document.getElementById('rTitle').value=""; document.getElementById('rDesc').value=""; document.getElementById('rFile').value=""; document.getElementById('rVideo').value=""; loadResources(); }catch(e){ alert(e.message); } }
-async function loadResources(){ const FB=window.FB; try{ const snap=await FB.getDocs(FB.collection(FB.db,"resources")); let all=[]; snap.forEach(d=>all.push({...d.data(), id:d.id})); let designs=all.filter(r=>r.type==="Curriculum Design").length; let schemes=all.filter(r=>(r.type||"").includes("Scheme")).length; let plans=all.filter(r=>r.type==="Lesson Plan").length; let notes=all.filter(r=>r.type==="Notes").length; let exams=all.filter(r=>r.type==="Exam").length; document.getElementById('resourceStats').innerHTML=`<div class="bg-teal-500/20 p-2 rounded-xl text-center"><p class="font-black text-lg">${designs}</p><p>📘 Designs WHAT</p></div><div class="bg-yellow-500/20 p-2 rounded-xl text-center"><p class="font-black text-lg">${schemes}</p><p>📅 Schemes WHEN</p></div><div class="bg-indigo-500/20 p-2 rounded-xl text-center"><p class="font-black text-lg">${plans}</p><p>📖 Plans HOW</p></div><div class="bg-purple-500/20 p-2 rounded-xl text-center"><p class="font-black text-lg">${notes}</p><p>📚 Notes CONTENT</p></div><div class="bg-blue-500/20 p-2 rounded-xl text-center"><p class="font-black text-lg">${exams}</p><p>📝 Exams TEST</p></div>`; let byGrade={}; all.forEach(r=>{ if(!byGrade[r.grade]) byGrade[r.grade]=[]; byGrade[r.grade].push(r); }); document.getElementById('resourceList').innerHTML=Object.entries(byGrade).map(([grade, arr])=>`<div class="bg-black p-3 rounded-xl border border-white/10"><p class="font-bold text-xs">${grade} - ${arr.length} (Designs ${arr.filter(r=>r.type==="Curriculum Design").length} → Notes ${arr.filter(r=>r.type==="Notes").length} → Exams ${arr.filter(r=>r.type==="Exam").length} FROM Notes)</p><div class="mt-2 space-y-1">${arr.slice(0,10).map(r=>`<div class="flex justify-between items-center bg-[#1f1f1f] p-2 rounded-lg text-[11px]"><div><span class="text-[9px] px-2 py-1 rounded-full ${r.type==='Curriculum Design'?'bg-teal-500/20 text-teal-400':r.type==='Notes'?'bg-purple-500/20 text-purple-400':r.type==='Exam'?'bg-blue-500/20 text-blue-400':'bg-white/10'}">${r.type}</span> <b>${r.title}</b> - ${r.description.substring(0,50)}...</div><button onclick="deleteRes('${r.id}')" class="text-red-400 px-2">X</button></div>`).join('')}</div></div>`).join('')||'<p class="text-xs text-gray-400">No resources</p>'; }catch(e){ document.getElementById('resourceList').innerHTML=`Error: ${e.message}`; } }
-async function deleteRes(id){ if(!confirm("Delete?")) return; const FB=window.FB; await FB.deleteDoc(FB.doc(FB.db,"resources",id)); loadResources(); }
-async function loadMissing(){ const FB=window.FB; try{ const snap=await FB.getDocs(FB.query(FB.collection(FB.db,"missing_topics"), FB.orderBy("timestamp","desc"))); let all=[]; snap.forEach(d=>all.push({...d.data(), id:d.id})); document.getElementById('missingCount').innerText=all.length; document.getElementById('missingCountAi').innerText=all.length; let byGrade={}; let byTerm={}; all.forEach(r=>{ byGrade[r.grade]=(byGrade[r.grade]||0)+1; let t=(r.searchTerm||"").toLowerCase(); byTerm[t]=(byTerm[t]||0)+1; }); document.getElementById('missingStats').innerHTML=`<div class="bg-red-500/20 p-3 rounded-xl text-center"><p class="font-black text-xl">${all.length}</p><p>Total Missing</p></div><div class="bg-yellow-500/20 p-3 rounded-xl text-center"><p class="font-black text-xl">${Object.keys(byGrade).length}</p><p>Grades ${Object.entries(byGrade).map(([g,c])=>`${g}:${c}`).join(' ')}</p></div><div class="bg-purple-500/20 p-3 rounded-xl text-center"><p class="font-black text-xl">${Object.keys(byTerm).length}</p><p>Unique</p></div>`; let sortedTerms=Object.entries(byTerm).sort((a,b)=>b[1]-a[1]).slice(0,5); document.getElementById('missingList').innerHTML=`<div class="bg-black p-3 rounded-xl border border-yellow-500/20"><p class="font-bold text-xs">🔥 Top Searched NOT in Designs+Notes:</p><div class="mt-2 flex flex-wrap gap-2">${sortedTerms.map(([term,count])=>`<span class="bg-yellow-500/20 text-yellow-400 px-3 py-1 rounded-full text-xs">${term} (${count}x)</span>`).join('')||'No data'}</div></div>${all.map(r=>`<div class="bg-black p-3 rounded-xl border border-white/10"><div class="flex justify-between items-start"><div class="flex-1"><p class="font-bold text-xs">🔍 "${r.searchTerm||r.query?.substring(0,30)}" for ${r.grade||'Unknown'}</p><p class="text-[11px] text-gray-400 mt-1">${r.query?.substring(0,100)}...</p><p class="text-[10px] text-gray-500 mt-1">${r.found||''} | ${r.timestamp?.toDate?.()?.toLocaleString()||''}</p></div><div class="flex flex-col gap-1 ml-3"><button onclick="addMissingAsNote('${r.id}')" class="bg-purple-600 text-white px-3 py-1.5 rounded-full text-[10px] font-bold">➕ As Notes</button><button onclick="addMissingAsDesign('${r.id}')" class="bg-teal-600 text-white px-3 py-1.5 rounded-full text-[10px] font-bold">➕ As Design</button><button onclick="deleteMissing('${r.id}')" class="bg-white/10 px-3 py-1.5 rounded-full text-[10px]">Del</button></div></div>${r.answer? `<div class="mt-2 bg-[#1f1f1f] p-2 rounded-lg text-[11px]"><p class="font-bold text-[10px]">Meta AI Answer:</p><p class="text-gray-300 mt-1">${r.answer.substring(0,200)}...</p></div>`:''}</div>`).join('')||'<p class="text-xs text-center py-8">✅ No missing - All found in Designs+Notes</p>'}`; }catch(e){ document.getElementById('missingList').innerHTML=`<div class="bg-black p-4 rounded-xl text-xs">Error: ${e.message}<br>Make rule: allow read,write missing_topics if auth!=null</div>`; } }
-async function addMissingAsNote(id){ const FB=window.FB; const snap=await FB.getDoc(FB.doc(FB.db,"missing_topics",id)); if(!snap.exists()) return; const data=snap.data(); document.getElementById('rGrade').value=data.grade||"Grade 7"; document.getElementById('rType').value="Notes"; document.getElementById('rTitle').value=data.searchTerm||""; document.getElementById('rDesc').value=data.answer||`Content for ${data.searchTerm} ${data.grade} CBC`; updateTypeHint(); showTab('resources'); }
-async function addMissingAsDesign(id){ const FB=window.FB; const snap=await FB.getDoc(FB.doc(FB.db,"missing_topics",id)); const data=snap.data(); document.getElementById('rGrade').value=data.grade||"Grade 7"; document.getElementById('rType').value="Curriculum Design"; document.getElementById('rTitle').value=data.searchTerm||""; document.getElementById('rDesc').value=`Strand: ${data.searchTerm}\nOutcome: Explain ${data.searchTerm}`; updateTypeHint(); showTab('resources'); }
-async function deleteMissing(id){ if(!confirm("Delete?")) return; const FB=window.FB; await FB.deleteDoc(FB.doc(FB.db,"missing_topics",id)); loadMissing(); }
-async function loadUsers(){ const FB=window.FB; try{ const snap=await FB.getDocs(FB.collection(FB.db,"users")); let html=""; snap.forEach(d=>{ const u=d.data(); html+=`<div class="bg-black p-3 rounded-xl border border-white/10 flex justify-between items-center text-xs"><div><p class="font-bold">${u.email} - ${u.mpesaCode||'No code'}</p><p class="text-[10px] text-gray-400">${u.status||'pending'} | Premium:${u.isPremium?'YES':'NO'}</p></div><div class="flex gap-1"><button onclick="approveUser('${d.id}')" class="bg-green-600 px-3 py-1 rounded-full text-[10px] font-bold">Approve</button><button onclick="rejectUser('${d.id}')" class="bg-white/10 px-3 py-1 rounded-full text-[10px]">Reject</button></div></div>`; }); document.getElementById('userList').innerHTML=html||"No users"; }catch(e){ document.getElementById('userList').innerHTML=`Error: ${e.message}`; } }
+function showTab(t){
+  ['users','parentChat','daily','resources','ai'].forEach(x=>{
+    document.getElementById('tab'+x.charAt(0).toUpperCase()+x.slice(1)).classList.toggle('hidden', t!==x);
+    const btn=document.getElementById('t'+x.charAt(0).toUpperCase()+x.slice(1));
+    if(btn) btn.className = t===x? (x==='parentChat'?'bg-green-600 text-white px-4 py-2 rounded-full font-bold':'bg-white text-black px-4 py-2 rounded-full font-bold') : 'bg-white/10 px-4 py-2 rounded-full';
+  });
+  if(t==='users') loadUsers(); if(t==='resources') loadResources(); if(t==='daily') loadDailyMonitor(); if(t==='parentChat') loadAllMessages();
+}
+
+async function initCounter(){
+  const FB=window.FB;
+  try{
+    const ref=FB.doc(FB.db,"config","counters");
+    const snap=await FB.getDoc(ref);
+    if(!snap.exists()){
+      await FB.setDoc(ref,{lastIndex:500, prefix:"SHKE", createdAt:FB.serverTimestamp()});
+      alert("✅ Counter initialized at 500 → First student SHKE00500");
+    }else{
+      alert(`Counter exists: lastIndex=${snap.data().lastIndex} → Next ${snap.data().prefix}${String(snap.data().lastIndex).padStart(5,'0')}`);
+    }
+    loadUsers();
+  }catch(e){ alert(e.message); }
+}
+
+async function setCounter(){
+  const FB=window.FB;
+  const val=parseInt(document.getElementById('counterInput').value);
+  if(isNaN(val)) return alert("Enter number e.g 500");
+  try{
+    await FB.setDoc(FB.doc(FB.db,"config","counters"),{lastIndex:val, prefix:"SHKE", updatedAt:FB.serverTimestamp()}, {merge:true});
+    alert(`✅ Counter set to ${val} → Next index SHKE${String(val).padStart(5,'0')}`);
+    loadUsers();
+  }catch(e){ alert(e.message); }
+}
+
+async function loadUsers(){
+  const FB=window.FB;
+  try{
+    const counterSnap=await FB.getDoc(FB.doc(FB.db,"config","counters"));
+    let lastIdx=500; if(counterSnap.exists()) lastIdx=counterSnap.data().lastIndex;
+    document.getElementById('lastIndex').innerText=`SHKE${String(lastIdx).padStart(5,'0')}`;
+    document.getElementById('nextIndex').innerText=`SHKE${String(lastIdx+1).padStart(5,'0')}`;
+
+    const snap=await FB.getDocs(FB.collection(FB.db,"users"));
+    let all=[]; snap.forEach(d=>all.push({...d.data(), id:d.id}));
+    document.getElementById('totalUsers').innerText=all.length;
+    document.getElementById('withIndex').innerText=all.filter(u=>u.indexNumber).length;
+
+    let html=""; all.sort((a,b)=> (a.indexNumber||"").localeCompare(b.indexNumber||"")).forEach(u=>{
+      const shke=u.indexNumber||"No SHKE";
+      html+=`<div class="bg-black p-4 rounded-xl border border-white/10">
+        <div class="flex justify-between items-start">
+          <div><p class="font-bold text-xs">📘 ${shke} - ${u.email||u.name||'Student'}</p><p class="text-[11px] text-gray-400">Grade: ${u.grade||'Grade 7'} | Premium: ${u.isPremium?'YES':'NO'} | M-Pesa: ${u.mpesaCode||'-'}</p><p class="text-[10px] text-gray-500">UID: ${u.id} | Index: ${shke}</p></div>
+          <div class="flex gap-1"><button onclick="approveUser('${u.id}')" class="bg-green-600 px-3 py-1 rounded-full text-[10px]">Approve</button><button onclick="chatWithParent('${shke}','${u.id}')" class="bg-blue-600 px-3 py-1 rounded-full text-[10px]">💬 Chat</button></div>
+        </div>
+        <div class="mt-3 grid md:grid-cols-3 gap-2">
+          <div class="flex gap-1"><input id="idx_${u.id}" value="${shke.startsWith('SHKE')?shke:''}" placeholder="SHKE00500" class="flex-1 bg-[#1f1f1f] border border-white/10 p-2 rounded-lg text-xs uppercase"><button onclick="setIndex('${u.id}')" class="bg-blue-600 px-3 py-2 rounded-lg text-[10px] font-bold">Set SHKE</button></div>
+          <div class="flex gap-1"><button onclick="regenerateIndex('${u.id}')" class="flex-1 bg-yellow-600 py-2 rounded-lg text-[10px] font-bold">🔄 Auto SHKE Next</button><button onclick="viewChildHW('${u.id}')" class="flex-1 bg-purple-600 py-2 rounded-lg text-[10px] font-bold">📝 HW 10 Marks</button></div>
+          <div class="flex gap-1"><button onclick="sendParentAlert('${u.id}','${shke}')" class="flex-1 bg-red-600 py-2 rounded-lg text-[10px] font-bold">⚠️ Alert Parent Pending Double</button></div>
+        </div>
+      </div>`;
+    });
+    document.getElementById('userList').innerHTML=html||"No users - Students get SHKE00500 at registration auto";
+  }catch(e){ document.getElementById('userList').innerHTML=`Error: ${e.message}`; }
+}
+
+async function regenerateIndex(uid){
+  const FB=window.FB;
+  try{
+    await FB.runTransaction(FB.db, async(transaction)=>{
+      const counterRef=FB.doc(FB.db,"config","counters");
+      const counterSnap=await transaction.get(counterRef);
+      let last=counterSnap.exists()? counterSnap.data().lastIndex : 499;
+      let next=last+1;
+      let shke=`SHKE${String(next).padStart(5,'0')}`;
+      transaction.update(counterRef, {lastIndex:next});
+      transaction.update(FB.doc(FB.db,"users",uid), {indexNumber:shke});
+      transaction.set(FB.doc(FB.db,"student_index",shke), {indexNumber:shke, userId:uid, createdAt:FB.serverTimestamp()});
+    });
+    alert("✅ New SHKE index assigned auto counting from 500");
+    loadUsers();
+  }catch(e){ alert(e.message); }
+}
+
+async function setIndex(uid){
+  const FB=window.FB; const idx=document.getElementById(`idx_${uid}`)?.value.trim().toUpperCase(); if(!idx) return alert("Enter SHKE e.g SHKE00500");
+  try{ await FB.updateDoc(FB.doc(FB.db,"users",uid),{indexNumber:idx}); await FB.setDoc(FB.doc(FB.db,"student_index",idx),{indexNumber:idx, userId:uid, createdAt:FB.serverTimestamp()}); alert(`✅ ${idx} set - Parent login with ${idx}`); loadUsers(); }catch(e){ alert(e.message); }
+}
+function chatWithParent(indexNumber, uid){ if(!indexNumber||!indexNumber.startsWith('SHKE')) return alert("Set SHKE index first e.g SHKE00500"); document.getElementById('chatIndexFilter').value=indexNumber; showTab('parentChat'); loadParentChat(); }
 async function approveUser(id){ const FB=window.FB; await FB.updateDoc(FB.doc(FB.db,"users",id),{isPremium:true, status:"approved"}); loadUsers(); }
-async function rejectUser(id){ const FB=window.FB; await FB.updateDoc(FB.doc(FB.db,"users",id),{isPremium:false, status:"rejected"}); loadUsers(); }
-async function saveAi(){ const FB=window.FB; const key=document.getElementById('geminiKey').value.trim(); if(!key) return alert("Enter key"); try{ await FB.setDoc(FB.doc(FB.db,"config","ai"),{geminiKey:key, updatedAt:FB.serverTimestamp(), correctFlow:"Designs->Notes for meaning, Notes->Exam, Notes as scheme"}, {merge:true}); document.getElementById('aiStatus').innerText="AI LIVE ✅ CORRECT"; document.getElementById('aiStatus').className="bg-green-500/20 text-green-400 text-[10px] px-3 py-1 rounded-full"; document.getElementById('aiKeyStatus').innerText="✅ Saved - Correct flow active"; alert("✅ AI LIVE Correct Flow"); }catch(e){ alert(e.message); } }
-async function testFlow(){ const FB=window.FB; try{ const snap=await FB.getDocs(FB.query(FB.collection(FB.db,"resources"), FB.where("grade","==","Grade 7"))); let c={designs:0, notes:0, exams:0, plans:0}; snap.forEach(d=>{ const t=d.data().type; if(t==="Curriculum Design") c.designs++; else if(t==="Notes") c.notes++; else if(t==="Exam") c.exams++; else if(t==="Lesson Plan") c.plans++; }); document.getElementById('flowTest').innerHTML=`G7 Designs:${c.designs} Notes:${c.notes} Exams:${c.exams}<br>SearchWord=Designs+Notes=${c.designs+c.notes} (Correct)<br>SetExam=Notes→Exam<br>Mark=Notes as scheme`; }catch(e){ document.getElementById('flowTest').innerText=e.message; } }
-setTimeout(async()=>{ const FB=window.FB; FB.onAuthStateChanged(FB.auth, async(u)=>{ if(!u) return; const userSnap=await FB.getDoc(FB.doc(FB.db,"users",u.uid)); if(!userSnap.exists() || userSnap.data().email!=="kelvinkeseko20@gmail.com"){ document.body.innerHTML='Not admin'; return; } loadResources(); loadMissing(); try{ const cfg=await FB.getDoc(FB.doc(FB.db,"config","ai")); if(cfg.exists() && cfg.data().geminiKey){ document.getElementById('aiStatus').innerText="AI LIVE ✅ CORRECT"; document.getElementById('aiStatus').className="bg-green-500/20 text-green-400 text-[10px] px-3 py-1 rounded-full"; document.getElementById('geminiKey').value=cfg.data().geminiKey; } }catch(e){} updateTypeHint(); }); },500);
-window.showTab=showTab; window.addResource=addResource; window.loadResources=loadResources; window.deleteRes=deleteRes; window.loadMissing=loadMissing; window.addMissingAsNote=addMissingAsNote; window.addMissingAsDesign=addMissingAsDesign; window.deleteMissing=deleteMissing; window.loadUsers=loadUsers; window.approveUser=approveUser; window.rejectUser=rejectUser; window.saveAi=saveAi; window.testFlow=testFlow; window.updateTypeHint=updateTypeHint;
+async function viewChildHW(uid){ const FB=window.FB; const q=FB.query(FB.collection(FB.db,"homework_submissions"), FB.where("userId","==",uid), FB.orderBy("timestamp","desc")); const snap=await FB.getDocs(q); let all=[]; snap.forEach(d=>all.push(d.data())); alert(`SHKE Child HW: ${all.length}\nLast: ${all[0]?.date} ${all[0]?.subject} ${all[0]?.score}/10`); }
+async function sendParentAlert(uid, shke){ const FB=window.FB; if(!shke.startsWith('SHKE')) return alert("No SHKE"); const msg=`⚠️ Parent of ${shke}: Your child has pending HW - Monday pending → Tuesday double 20 marks. Please ensure child does daily 10 marks HW. Check parent.html with ${shke}`; await FB.setDoc(FB.doc(FB.collection(FB.db,"parent_messages")), {indexNumber:shke, childUserId:uid, from:"admin", to:"parent", message:msg, timestamp:FB.serverTimestamp(), type:"alert"}); alert(`✅ Alert sent to parent ${shke}`); }
+
+let currentChatIndex=null;
+async function loadParentChat(){
+  const FB=window.FB; const idx=document.getElementById('chatIndexFilter').value.trim().toUpperCase(); if(!idx) return; currentChatIndex=idx; document.getElementById('currentChatIndex').innerText=idx;
+  try{
+    const userQ=FB.query(FB.collection(FB.db,"users"), FB.where("indexNumber","==",idx)); const userSnap=await FB.getDocs(userQ); let userData=null; userSnap.forEach(d=>userData=d.data());
+    document.getElementById('parentInfoChat').innerHTML=userData? `Child: ${userData.email}<br>Grade: ${userData.grade}<br>SHKE: ${idx}` : `SHKE ${idx} not found`;
+    const q=FB.query(FB.collection(FB.db,"parent_messages"), FB.where("indexNumber","==",idx), FB.orderBy("timestamp","asc")); const snap=await FB.getDocs(q); let html=""; snap.forEach(d=>{ const m=d.data(); const isAdmin=m.from==="admin"; html+=`<div class="flex ${isAdmin?'justify-end':'justify-start'}"><div class="${isAdmin?'bg-green-600':'bg-[#1f1f1f] border border-white/10'} p-2.5 rounded-2xl max-w-[80%] text-xs"><p class="font-bold text-[10px]">${isAdmin?'Admin':'Parent'}</p><p>${m.message}</p></div></div>`; }); document.getElementById('adminChatBox').innerHTML=html||'No messages'; }catch(e){}
+}
+async function sendAdminMsg(){ const FB=window.FB; const txt=document.getElementById('adminMsg').value.trim(); if(!txt||!currentChatIndex) return; await FB.setDoc(FB.doc(FB.collection(FB.db,"parent_messages")), {indexNumber:currentChatIndex, from:"admin", to:"parent", message:txt, timestamp:FB.serverTimestamp()}); document.getElementById('adminMsg').value=""; loadParentChat(); loadAllMessages(); }
+function quickAdminMsg(t){ document.getElementById('adminMsg').value=t; }
+async function loadAllMessages(){ const FB=window.FB; try{ const q=FB.query(FB.collection(FB.db,"parent_messages"), FB.orderBy("timestamp","desc")); const snap=await FB.getDocs(q); let all=[]; snap.forEach(d=>all.push(d.data())); document.getElementById('msgCount').innerText=all.length; document.getElementById('allMessages').innerHTML=all.slice(0,20).map(m=>`<div class="bg-black p-3 rounded-xl border border-white/10 text-xs flex justify-between"><div><p class="font-bold">${m.indexNumber} ${m.from}→${m.to}</p><p>${m.message.substring(0,100)}</p></div><button onclick="document.getElementById('chatIndexFilter').value='${m.indexNumber}'; loadParentChat();" class="bg-green-600 px-3 py-1 rounded-full text-[10px] h-fit">Open</button></div>`).join(''); }catch(e){} }
+async function loadDailyMonitor(){ const FB=window.FB; const q=FB.query(FB.collection(FB.db,"homework_submissions"), FB.orderBy("timestamp","desc")); const snap=await FB.getDocs(q); let all=[]; snap.forEach(d=>all.push(d.data())); document.getElementById('dailyStats').innerHTML=`<div class="bg-green-500/20 p-3 rounded-xl text-center"><p class="font-black text-xl">${all.filter(s=>s.date===new Date().toISOString().split('T')[0]).length}</p><p>Today</p></div><div class="bg-red-500/20 p-3 rounded-xl text-center"><p class="font-black text-xl">${all.filter(s=>s.score<=4).length}</p><p>Failed</p></div>`; document.getElementById('dailyMonitorList').innerHTML=all.slice(0,30).map(s=>`<div class="bg-black p-3 rounded-xl border border-white/10 text-xs flex justify-between"><div><p>${s.date} ${s.grade} ${s.subject} ${s.score}/10 - ${s.mostFailedTopic}</p><p class="text-[10px] text-gray-400">User ${s.userId.substring(0,6)}</p></div><button onclick="sendRemedy('${s.userId}','${s.mostFailedTopic}')" class="bg-yellow-600 px-2 py-1 rounded-full text-[10px]">Remedy</button></div>`).join(''); }
+async function sendRemedy(userId, topic){ const FB=window.FB; const userSnap=await FB.getDoc(FB.doc(FB.db,"users",userId)); const u=userSnap.data(); if(!u.indexNumber) return alert("No SHKE"); await FB.setDoc(FB.doc(FB.collection(FB.db,"parent_messages")), {indexNumber:u.indexNumber, childUserId:userId, from:"admin", to:"parent", message:`💊 Remedy: Failed ${topic} - Revise Notes ${topic}`, timestamp:FB.serverTimestamp()}); alert(`Sent to ${u.indexNumber}`); }
+async function loadResources(){ const FB=window.FB; const snap=await FB.getDocs(FB.collection(FB.db,"resources")); let all=[]; snap.forEach(d=>all.push(d.data())); document.getElementById('resourceStats').innerHTML=`<div class="bg-purple-500/20 p-2 rounded-xl text-center"><p class="font-black">${all.filter(r=>r.type==="Notes").length}</p><p>Notes</p></div>`; }
+async function saveAi(){ const FB=window.FB; const key=document.getElementById('geminiKey').value.trim(); await FB.setDoc(FB.doc(FB.db,"config","ai"),{geminiKey:key}, {merge:true}); document.getElementById('aiStatus').innerText="AI LIVE ✅"; }
+
+setTimeout(()=>{ const FB=window.FB; FB.onAuthStateChanged(FB.auth, async(u)=>{ if(!u){document.body.innerHTML='Login at /'; return;} const snap=await FB.getDoc(FB.doc(FB.db,"users",u.uid)); if(snap.data().email!=="kelvinkeseko20@gmail.com"){document.body.innerHTML='Not admin'; return;} loadUsers(); loadAllMessages(); try{ const cfg=await FB.getDoc(FB.doc(FB.db,"config","ai")); if(cfg.exists()) document.getElementById('geminiKey').value=cfg.data().geminiKey; }catch(e){} }); },500);
+window.showTab=showTab; window.setCounter=setCounter; window.initCounter=initCounter; window.setIndex=setIndex; window.regenerateIndex=regenerateIndex; window.chatWithParent=chatWithParent; window.approveUser=approveUser; window.viewChildHW=viewChildHW; window.sendParentAlert=sendParentAlert; window.loadParentChat=loadParentChat; window.sendAdminMsg=sendAdminMsg; window.quickAdminMsg=quickAdminMsg; window.loadAllMessages=loadAllMessages; window.loadDailyMonitor=loadDailyMonitor; window.sendRemedy=sendRemedy; window.saveAi=saveAi;
 </script>
 </body>
 </html>
