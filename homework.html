@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SomaHub AI - Real Marks Exams & Homework PP1-G9 - SHKE00500</title>
+<title>SomaHub Daily HW - Mon-Fri ONLY - No HW Sunday Rest Day or Exam Notes Search - SHKE00500</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <script type="module">
@@ -24,199 +24,179 @@ window.FB={auth,db,provider,signInWithPopup,signInWithEmailAndPassword,createUse
 <body class="bg-[#f0fdf4] min-h-screen">
 <header class="bg-white shadow sticky top-0 z-40">
 <div class="max-w-5xl mx-auto px-4 py-3 flex justify-between items-center">
-<a href="/" class="font-black text-sm"><i class="fa-solid fa-robot text-green-600"></i> SomaHub AI <span id="aiLive" class="bg-red-100 text-red-600 text-[9px] px-2 py-1 rounded-full">AI OFF</span></a>
+<a href="/" class="font-black text-sm"><i class="fa-solid fa-robot text-green-600"></i> SomaHub Daily HW Mon-Fri <span id="aiLive" class="bg-red-100 text-red-600 text-[9px] px-2 py-1 rounded-full">AI OFF</span></a>
 <div class="flex gap-2 items-center">
 <span id="indexB" class="hidden bg-blue-600 text-white px-3 py-1 rounded-full text-[10px] font-black">SHKE00500</span>
-<span id="premB" class="hidden bg-green-600 text-white px-3 py-1 rounded-full text-[10px] font-bold">PREMIUM</span>
-<span id="freeB" class="bg-black text-white px-3 py-1 rounded-full text-[10px]">Till 0701305109</span>
-<a href="/parent.html" class="text-[11px] bg-blue-100 text-blue-700 px-3 py-2 rounded-full font-bold">👨‍👩‍👧 Parent SHKE Login</a>
-<a href="/notes.html" class="text-[11px] bg-purple-100 px-3 py-2 rounded-full">Notes</a>
-<button id="authBtn" class="bg-green-600 text-white px-4 py-2 rounded-full text-xs font-bold">Login</button>
+<span id="dayBadge" class="bg-black text-white px-3 py-1 rounded-full text-[10px] font-bold">Mon-Fri HW Only</span>
+<a href="/exams.html" class="text-[11px] bg-purple-100 px-3 py-2 rounded-full">📅 Weekly Exam ONLY Sunday to Sunday - Sunday Rest Day</a>
+<button id="authBtn" class="bg-green-600 text-white px-4 py-2 rounded-full text-xs font-bold">Login SHKE</button>
 </div>
 </div>
 </header>
 
 <div class="max-w-5xl mx-auto p-4">
 <div class="bg-gradient-to-r from-green-600 to-black rounded-[1.5rem] p-6 text-white">
-<div class="flex justify-between items-start">
-<div>
-<h1 class="text-xl font-black">🤖 SomaHub AI - SHKE00500 Daily HW 10 Marks</h1>
-<p class="text-xs mt-2 text-green-100">Photo → AI marks → 10 marks each subject daily → Correction + Notes link where failed → Pending Monday → Tuesday double</p>
+<h1 class="text-xl font-black">📅 Daily Homework - From Monday to Friday ONLY - SHKE00500</h1>
+<p class="text-xs mt-2">From Monday to Friday (no homework on Sunday is rest day or can complete exam or ready notes or do search) - Daily HW 10 Marks Mon-Fri ONLY - No HW Saturday Sunday - Sunday is rest day or can complete exam or ready notes or do search - SHKE00500 counting from 500</p>
 <div class="mt-3 flex gap-2 text-[10px] flex-wrap">
-<span class="bg-white/20 px-3 py-1 rounded-full">📸 Homework Photo</span>
-<span class="bg-white/20 px-3 py-1 rounded-full">📝 Daily 10 Marks</span>
-<span class="bg-white/20 px-3 py-1 rounded-full">⚠️ Pending → Double</span>
-<span class="bg-white/20 px-3 py-1 rounded-full">👨‍👩‍👧 Parent SHKE Monitor</span>
-</div>
-</div>
-<div class="bg-white text-black rounded-xl p-3 text-center">
-<p class="text-[10px] font-bold">YOUR INDEX</p>
-<p id="headerIndex" class="font-black text-lg">SHKE-----</p>
-<p class="text-[9px] text-gray-500">Parent login with this</p>
-</div>
+<span class="bg-white/20 px-3 py-1 rounded-full">📅 Mon-Fri ONLY - 10 Marks Daily</span>
+<span class="bg-yellow-500/30 px-3 py-1 rounded-full">❌ No HW Saturday</span>
+<span class="bg-red-500/30 px-3 py-1 rounded-full">❌ No HW Sunday - Rest Day</span>
+<span class="bg-purple-500/30 px-3 py-1 rounded-full">📅 Sunday Rest or Exam or Notes or Search</span>
+<span class="bg-white/20 px-3 py-1 rounded-full">⚠️ Pending Mon → Tue Double 20 Marks</span>
 </div>
 </div>
 
-<!-- DAILY HW 10 MARKS - NEW -->
-<div class="mt-5 bg-white rounded-[1.5rem] p-5 shadow border border-blue-200">
-<div class="flex justify-between items-center">
-<h3 class="font-black text-sm">📅 Daily Homework - 10 Marks Each Subject (SHKE Student)</h3>
-<span id="pendingBadge" class="hidden bg-red-600 text-white px-3 py-1 rounded-full text-[10px] font-bold">⚠️ Pending</span>
+<div id="restDayBox" class="hidden mt-5 bg-gradient-to-r from-purple-600 to-blue-600 rounded-[1.5rem] p-6 text-white text-center">
+<h2 class="text-xl font-black">😴 Sunday Rest Day - No Homework Today - SHKE</h2>
+<p class="text-sm mt-2">From Monday to Friday (no homework on Sunday is rest day or can complete exam or ready notes or do search) - Today is Sunday rest day - No homework - You can:</p>
+<div class="grid md:grid-cols-3 gap-3 mt-4 text-xs">
+<div class="bg-white/20 p-4 rounded-xl"><p class="font-black">📅 Complete Exam</p><p class="mt-1">Weekly Exam ONLY Sunday to Sunday - 100 Marks - NOT 10 Qs Homework - Do exam today Sunday rest day - Student decides upto Sunday - Timed 60 min + Correction Admin & Parents See - Based on Curriculum Design Notes AI</p><a href="/exams.html" class="mt-2 inline-block bg-white text-purple-600 px-4 py-2 rounded-full font-bold">Go to Exams - ONLY Sunday to Sunday</a></div>
+<div class="bg-white/20 p-4 rounded-xl"><p class="font-black">📚 Ready Notes</p><p class="mt-1">Ready notes - Where information is - Notes link where info is - Revise most failed topics - Notes are content source - Designs→Notes→Exams correct flow - Overall admin adds resources exams notes etc</p><a href="/notes.html" class="mt-2 inline-block bg-white text-blue-600 px-4 py-2 rounded-full font-bold">Go to Notes - Ready Notes</a></div>
+<div class="bg-white/20 p-4 rounded-xl"><p class="font-black">🔍 Do Search</p><p class="mt-1">Do search - Search notes, resources, where info is - Search Tap SHKE - Search curriculum design, notes, AI - Overall admin Search Tap - Resources Exams Notes etc</p><a href="/notes.html" class="mt-2 inline-block bg-white text-black px-4 py-2 rounded-full font-bold">Go Search - Notes Search</a></div>
 </div>
-<p class="text-[11px] text-gray-500">AI gives 10 marks daily FROM Notes (correct flow) - If Monday pending, Tuesday double 20 marks - If complete, wait tomorrow</p>
+<p class="text-[10px] mt-4 opacity-80">Monday to Friday daily homework 10 marks - No homework Saturday Sunday - Sunday rest day or can complete exam or ready notes or do search - SHKE00500+ counting from 500 - Admin and Parents can see - Student decides upto Sunday - Based on Curriculum Design Notes AI</p>
+</div>
+
+<div id="satBox" class="hidden mt-5 bg-yellow-50 border-2 border-yellow-300 rounded-[1.5rem] p-6 text-center">
+<h2 class="text-lg font-black text-yellow-700">📚 Saturday - No Homework - Prepare Notes</h2>
+<p class="text-xs mt-2">From Monday to Friday ONLY - Saturday no homework - Ready notes or do search - Sunday rest day or exam - SHKE00500</p>
+</div>
+
+<div id="hwSection" class="mt-5 bg-white rounded-[1.5rem] p-5 shadow border-2 border-blue-200">
+<div class="flex justify-between items-center">
+<h3 class="font-black text-sm">📅 Daily Homework Mon-Fri ONLY - 10 Marks Each Subject - SHKE <span id="headerIndex">SHKE-----</span></h3>
+<span id="pendingBadge" class="hidden bg-red-600 text-white px-3 py-1 rounded-full text-[10px] font-bold">⚠️ Pending Mon-Fri</span>
+</div>
+<p class="text-[11px] text-gray-500 mt-1">From Monday to Friday ONLY - No homework on Sunday is rest day or can complete exam or ready notes or do search - AI gives 10 marks daily Mon-Fri FROM Notes - If Monday pending, Tuesday double 20 marks - If complete, wait tomorrow (Mon-Fri) - Sunday rest day no HW</p>
 <div class="grid grid-cols-3 gap-2 mt-3">
 <select id="dailyGrade" class="border p-3 rounded-xl text-sm"><option>PP1</option><option>Grade 2</option><option>Grade 3</option><option>Grade 4</option><option>Grade 5</option><option selected>Grade 6</option><option>Grade 7</option><option>Grade 8</option><option>Grade 9</option></select>
 <select id="dailySubject" class="border p-3 rounded-xl text-sm"><option>Mathematics</option><option>English</option><option>Kiswahili</option><option>Science</option><option>SST</option></select>
-<button onclick="loadTodayHW()" class="bg-blue-600 text-white py-3 rounded-xl text-xs font-bold">📅 Today 10 Marks</button>
+<button onclick="loadTodayHW()" class="bg-blue-600 text-white py-3 rounded-xl text-xs font-bold">📅 Today HW 10 Marks - Mon-Fri ONLY</button>
 </div>
 <div id="dailyStatus" class="mt-3 p-3 bg-blue-50 rounded-xl text-xs"></div>
 <div id="dailyHWBox" class="hidden mt-3"></div>
-<div id="dailyResult" class="hidden mt-3 p-4 bg-green-50 rounded-xl border border-green-200"></div>
-</div>
-
-<div class="mt-5 grid md:grid-cols-2 gap-5">
-<div class="bg-white rounded-[1.5rem] p-5 shadow border">
-<h3 class="font-black text-sm">📸 Upload Homework / Exam Photo - Mark + Correction + Notes Link</h3>
-<label class="mt-3 border-2 border-dashed border-green-200 rounded-xl p-6 flex flex-col items-center cursor-pointer hover:bg-green-50">
-<i class="fa-solid fa-camera text-2xl text-green-600"></i><span class="text-xs font-bold mt-2">Tap to Snap / Upload</span><span class="text-[10px] text-gray-500">JPG, PNG - handwritten okay</span>
-<input type="file" id="imgInput" accept="image/*" class="hidden">
-</label>
-<div id="preview" class="mt-3 hidden"><img id="prevImg" class="rounded-xl w-full border"><button onclick="clearImg()" class="mt-2 bg-red-100 text-red-600 px-3 py-1 rounded-full text-xs">Remove Photo</button></div>
-<textarea id="question" placeholder="Type exam + student answers e.g:
-Q1: 1/2+1/4=? Student: 3/4
-Or daily HW answers..." class="w-full border p-3 rounded-xl mt-3 h-28 text-sm"></textarea>
-<div class="grid grid-cols-2 gap-2 mt-2">
-<select id="grade" class="border p-3 rounded-xl text-sm"><option>PP1</option><option>PP2</option><option>Grade 1</option><option>Grade 2</option><option>Grade 3</option><option>Grade 4</option><option>Grade 5</option><option selected>Grade 6</option><option>Grade 7</option><option>Grade 8</option><option>Grade 9</option></select>
-<select id="mode" class="border p-3 rounded-xl text-sm font-bold"><option value="markHW">📸 Mark Homework</option><option value="markExam">📝 Mark Exam</option><option value="student">🎓 Explain / Solve</option><option value="teacher">👩‍🏫 Teacher Help</option><option value="dailyHW">📅 Daily HW 10 Marks</option></select>
-</div>
-<button onclick="askAI()" id="solveBtn" class="w-full bg-black text-white py-4 rounded-xl mt-3 font-black text-sm">✨ SOLVE & MARK WITH REAL AI</button>
-</div>
-
-<div class="bg-white rounded-[1.5rem] p-5 shadow border">
-<h3 class="font-black text-sm flex justify-between">💡 AI Answer - Marks + Corrections + Notes Link <span id="scoreBadge" class="hidden bg-green-600 text-white px-3 py-1 rounded-full text-xs">SCORE: 0%</span></h3>
-<div id="aiAnswer" class="text-sm text-gray-700 min-h-[350px] bg-gray-50 p-4 rounded-xl mt-3 overflow-y-auto leading-relaxed">
-<p class="text-gray-400">Your SHKE index will show here after login - Parent monitors with SHKE00500</p>
-<div class="mt-4 p-3 bg-white rounded-xl border text-xs">
-<p class="font-bold">SHKE Daily HW Flow:</p>
-<p class="mt-1">1. Login → Get SHKE00500 auto (counting from 500)</p>
-<p>2. Today HW → 10 marks FROM Notes → Submit → Correction + Notes link where failed</p>
-<p>3. Monday pending → Tuesday double 20 marks</p>
-<p>4. Complete → "Today completed wait tomorrow"</p>
-<p>5. Parent login parent.html with SHKE00500 → Monitor daily + weekly + most failed + chat admin</p>
+<div id="dailyResult" class="hidden mt-3 p-4 bg-green-50 rounded-xl border-2 border-green-200"></div>
 </div>
 </div>
-<div class="mt-3 flex gap-2 flex-wrap"><button onclick="copyAns()" class="text-xs border px-4 py-2 rounded-full font-bold">Copy</button><button onclick="document.getElementById('aiAnswer').innerHTML='Ready...'" class="text-xs border px-4 py-2 rounded-full">Clear</button><a href="/parent.html" class="text-xs bg-blue-600 text-white px-4 py-2 rounded-full">👨‍👩‍👧 Parent SHKE Login</a><a href="/notes.html" class="text-xs bg-purple-600 text-white px-4 py-2 rounded-full">📚 Notes Link</a></div>
-</div>
-</div>
-</div>
-
-<div id="authModal" class="hidden fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4"><div class="bg-white rounded-2xl p-6 w-full max-w-sm"><h3 class="font-black">Login - Get SHKE00500 Index Auto</h3><p class="text-xs text-gray-500">First student SHKE00500, counting from 500 - Parent uses SHKE to monitor</p><button id="gLogin" class="w-full border-2 py-3 rounded-full mt-3 font-bold text-sm">Continue with Google - Get SHKE Index</button><input id="email" placeholder="Email" class="w-full border p-3 rounded-xl mt-3 text-sm"><input id="pass" type="password" placeholder="Password" class="w-full border p-3 rounded-xl mt-2 text-sm"><button id="eLogin" class="w-full bg-black text-white py-3 rounded-full mt-3 font-bold">Login - Get SHKE</button><button onclick="closeM()" class="w-full mt-3 text-xs">Close</button></div></div>
-<div id="subModal" class="hidden fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4"><div class="bg-white rounded-2xl p-6 w-full max-w-sm text-center"><h3 class="font-black">🔓 Unlock - 500 KES Till 0701305109</h3><p class="text-sm mt-1">Index: <span id="subIndex" class="font-black">SHKE00500</span> - 90 Days</p><input id="mpesa" placeholder="M-Pesa Code e.g QGH..." class="w-full border p-3 rounded-xl mt-3 uppercase font-bold text-sm"><button onclick="submitMpesa()" class="w-full bg-green-600 text-white py-3 rounded-full mt-3 font-bold">Submit Code</button><button onclick="closeM()" class="w-full mt-2 text-xs">Close</button></div></div>
 
 <script>
-let currentUser=null, userData=null, count=0, geminiKey="", imgBase64=null, currentSHKE=null, currentDailyHW=null;
-function closeM(){document.getElementById('authModal').classList.add('hidden'); document.getElementById('subModal').classList.add('hidden');}
-function setQ(t){document.getElementById('question').value=t;}
-function clearImg(){document.getElementById('imgInput').value=""; document.getElementById('preview').classList.add('hidden'); imgBase64=null;}
-document.getElementById('imgInput').onchange=(e)=>{
- const f=e.target.files[0]; if(!f) return;
- const r=new FileReader();
- r.onload=()=>{document.getElementById('prevImg').src=r.result; document.getElementById('preview').classList.remove('hidden'); imgBase64=r.result.split(',')[1]; document.getElementById('mode').value='markHW';};
- r.readAsDataURL(f);
-};
+let currentUser=null, userData=null, currentSHKE=null, geminiKey="", currentDailyHW=null;
 
-async function loadResources(grade){
- const FB=window.FB;
- try{
-  const q=FB.query(FB.collection(FB.db,"resources"), FB.where("grade","==",grade));
-  const snap=await FB.getDocs(q); let arr=[]; snap.forEach(d=>arr.push({...d.data(), id:d.id})); return arr.slice(0,5);
- }catch(e){return [];}
+function isWeekend(){
+  const day = new Date().getDay(); // 0 Sunday, 6 Saturday
+  return {isSunday: day===0, isSaturday: day===6, isMonFri: day>=1 && day<=5, dayName: ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"][day], day};
 }
 
-async function callGemini(prompt, imageBase64){
+function updateDayUI(){
+  const {isSunday, isSaturday, isMonFri, dayName, day} = isWeekend();
+  const badge = document.getElementById('dayBadge');
+  const restBox = document.getElementById('restDayBox');
+  const satBox = document.getElementById('satBox');
+  const hwSection = document.getElementById('hwSection');
+
+  if(badge) badge.innerText = `${dayName} - ${isSunday? 'Sunday Rest Day - No HW - Exam or Notes or Search' : isSaturday? 'Saturday - No HW - Ready Notes' : 'Mon-Fri HW ONLY - 10 Marks'}`;
+
+  if(isSunday){
+    if(restBox) restBox.classList.remove('hidden');
+    if(satBox) satBox.classList.add('hidden');
+    if(hwSection) hwSection.classList.add('hidden');
+  }else if(isSaturday){
+    if(satBox) satBox.classList.remove('hidden');
+    if(restBox) restBox.classList.add('hidden');
+    if(hwSection) hwSection.classList.add('hidden');
+  }else{
+    if(restBox) restBox.classList.add('hidden');
+    if(satBox) satBox.classList.add('hidden');
+    if(hwSection) hwSection.classList.remove('hidden');
+  }
+}
+setInterval(updateDayUI, 60000);
+updateDayUI();
+
+async function callGemini(prompt){
  if(!geminiKey) return null;
  try{
-  let parts=[{text: prompt}];
-  if(imageBase64){ parts.push({inline_data:{mime_type:"image/jpeg", data:imageBase64}}); }
-  const res=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${geminiKey}`,{
-   method:"POST", headers:{"Content-Type":"application/json"},
-   body: JSON.stringify({contents:[{parts: parts}]})
-  });
-  const data=await res.json();
-  return data.candidates?.[0]?.content?.parts?.[0]?.text || null;
+  const res=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${geminiKey}`,{method:"POST", headers:{"Content-Type":"application/json"}, body: JSON.stringify({contents:[{parts:[{text: prompt}]}]})});
+  const data=await res.json(); return data.candidates?.[0]?.content?.parts?.[0]?.text || null;
  }catch(e){return null;}
 }
 
-// DAILY HW 10 MARKS - SHKE
 async function loadTodayHW(){
- const FB=window.FB; if(!currentUser) {document.getElementById('authModal').classList.remove('hidden'); return;}
+ const FB=window.FB; if(!currentUser){document.getElementById('authModal')?.classList.remove('hidden'); return;}
+ const {isSunday, isSaturday, isMonFri, dayName} = isWeekend();
+ if(!isMonFri){
+   document.getElementById('dailyStatus').innerHTML = isSunday?
+   `<div class="bg-purple-600 text-white p-4 rounded-xl text-center font-bold">😴 Sunday Rest Day - No Homework Today - SHKE ${currentSHKE}<br><span class="text-xs font-normal">From Monday to Friday (no homework on Sunday is rest day or can complete exam or ready notes or do search) - Today Sunday rest day - No HW - You can complete exam or ready notes or do search - Go to <a href="/exams.html" class="underline">Exams ONLY Sunday to Sunday</a> or <a href="/notes.html" class="underline">Notes</a></span></div>` :
+   `<div class="bg-yellow-500 text-white p-4 rounded-xl text-center font-bold">📚 Saturday - No Homework - Mon-Fri ONLY - SHKE ${currentSHKE}<br><span class="text-xs font-normal">From Monday to Friday ONLY - Saturday no homework - Ready notes or do search - Sunday rest day or exam</span></div>`;
+   return;
+ }
+
  const grade=document.getElementById('dailyGrade').value; const subject=document.getElementById('dailySubject').value;
  const today=new Date().toISOString().split('T')[0];
  const hwId=`${grade}_${today}_${subject}`.replace(/\s+/g,'');
  const subId=`${currentUser.uid}_${hwId}`;
 
- document.getElementById('dailyStatus').innerHTML=`⏳ Checking ${subject} ${grade} Today ${today} - Index ${currentSHKE}...`;
+ document.getElementById('dailyStatus').innerHTML=`⏳ Checking ${subject} ${grade} Today ${today} ${dayName} - Mon-Fri ONLY - Index ${currentSHKE} - No HW Sunday rest day...`;
 
- // Check if already done today
  const subSnap=await FB.getDoc(FB.doc(FB.db,"homework_submissions", subId));
  if(subSnap.exists()){
   const data=subSnap.data();
-  document.getElementById('dailyStatus').innerHTML=`✅ <b>Today's work completed - Wait tomorrow</b><br>Index ${currentSHKE} scored ${data.score}/10 in ${subject} today - Come tomorrow for new HW`;
+  document.getElementById('dailyStatus').innerHTML=`✅ <b>Today's work completed - Wait tomorrow (Mon-Fri ONLY)</b><br>Index ${currentSHKE} scored ${data.score}/10 in ${subject} today ${dayName} - From Monday to Friday ONLY - No HW Sunday rest day - Come tomorrow Mon-Fri for new HW - Sunday rest day or exam or notes or search`;
   showDailyResult(data);
   checkPending(grade, subject);
   return;
  }
 
- // Check if HW exists
  const hwRef=FB.doc(FB.db,"daily_homework", hwId);
  const hwSnap=await FB.getDoc(hwRef);
  if(hwSnap.exists()){
   currentDailyHW=hwSnap.data(); displayDailyHW(currentDailyHW); checkPending(grade, subject); return;
  }
 
- // Generate new 10 marks FROM Notes
- document.getElementById('dailyStatus').innerHTML=`🤖 AI generating 10 marks HW for ${subject} ${grade} FROM Notes (Correct flow)... Index ${currentSHKE}`;
+ document.getElementById('dailyStatus').innerHTML=`🤖 AI generating 10 marks HW for ${subject} ${grade} FROM Notes - Mon-Fri ONLY - ${dayName} - Index ${currentSHKE} - No HW Sunday rest day`;
  let notesCtx=""; let notesList=[];
  try{
   const q=FB.query(FB.collection(FB.db,"resources"), FB.where("grade","==",grade), FB.where("type","==","Notes"));
   const snap=await FB.getDocs(q);
-  snap.forEach(d=>{ const r=d.data(); if(r.subject===subject||subject==="All"){ notesCtx+=`${r.title}: ${r.description?.substring(0,80)}\n`; notesList.push({id:d.id, title:r.title}); } });
+  snap.forEach(d=>{ const r=d.data(); if(r.subject===subject){ notesCtx+=`${r.title}: ${r.description?.substring(0,80)}\n`; notesList.push({id:d.id, title:r.title}); } });
  }catch(e){}
 
- const prompt=`Create DAILY HOMEWORK 10 MARKS for ${grade} ${subject} today ${today} for SHKE student ${currentSHKE}. FROM Notes: ${notesCtx.substring(0,600)}. Return JSON only: {"questions":[{"q":"...","answer":"...","noteTitle":"...","mark":1} x10]}`;
+ const prompt=`Create DAILY HOMEWORK 10 MARKS for ${grade} ${subject} today ${today} ${dayName} Monday to Friday ONLY - No homework Sunday rest day - SHKE ${currentSHKE}. FROM Notes: ${notesCtx.substring(0,600)}. Return JSON only: {"questions":[{"q":"...","answer":"...","noteTitle":"...","mark":1} x10]}`;
  let aiRes=await callGemini(prompt);
  let hwData=null;
  try{ let js=aiRes?.match(/\{[\s\S]*\}/)?.[0]; hwData=JSON.parse(js); }catch(e){
-  hwData={questions:Array.from({length:10},(_,i)=>({q:`Q${i+1} ${subject} ${grade} question ${i+1}`, answer:`Answer ${i+1}`, noteTitle:notesList[0]?.title||"General", mark:1}))};
+  hwData={questions:Array.from({length:10},(_,i)=>({q:`Q${i+1} ${subject} ${grade} Mon-Fri ONLY question ${i+1} - No HW Sunday rest day`, answer:`Answer ${i+1}`, noteTitle:notesList[0]?.title||"General", mark:1}))};
  }
- hwData.id=hwId; hwData.grade=grade; hwData.subject=subject; hwData.date=today; hwData.notesList=notesList; hwData.indexNumber=currentSHKE; hwData.createdAt=FB.serverTimestamp();
+ hwData.id=hwId; hwData.grade=grade; hwData.subject=subject; hwData.date=today; hwData.dayName=dayName; hwData.isMonFriOnly=true; hwData.noHWSundayRestDay=true; hwData.notesList=notesList; hwData.indexNumber=currentSHKE; hwData.createdAt=FB.serverTimestamp();
  await FB.setDoc(FB.doc(FB.db,"daily_homework", hwId), hwData);
  currentDailyHW=hwData; displayDailyHW(hwData); checkPending(grade, subject);
 }
 
 function displayDailyHW(hw){
  document.getElementById('dailyHWBox').classList.remove('hidden');
- document.getElementById('dailyStatus').innerHTML=`📝 <b>Today HW - ${hw.subject} - ${hw.grade} - ${hw.date} - 10 Marks - Index ${currentSHKE}</b><br>Answer all, submit → Correction + Notes link where failed`;
+ document.getElementById('dailyStatus').innerHTML=`📝 <b>Today HW - ${hw.subject} - ${hw.grade} - ${hw.date} ${hw.dayName||''} - 10 Marks - Mon-Fri ONLY - Index ${currentSHKE} - No HW Sunday rest day or can complete exam or ready notes or do search</b><br>From Monday to Friday (no homework on Sunday is rest day) - Answer all, submit → Correction + Notes link where failed - Mon-Fri ONLY`;
  document.getElementById('dailyHWBox').innerHTML=hw.questions.map((q,i)=>`
-  <div class="bg-gray-50 p-3 rounded-xl border mt-2"><p class="text-sm font-bold">Q${i+1} (${q.mark} mark) - Note: ${q.noteTitle}</p><p class="text-xs mt-1">${q.q}</p><input id="dans${i}" placeholder="Your answer" class="w-full border p-2.5 rounded-xl text-xs mt-2"></div>
- `).join('') + `<button onclick="submitDailyHW()" class="w-full bg-blue-600 text-white py-3 rounded-xl font-bold mt-3">Submit Daily HW - Get Marks + Correction + Notes Link (SHKE ${currentSHKE})</button>`;
+  <div class="bg-gray-50 p-3 rounded-xl border mt-2"><p class="text-sm font-bold">Q${i+1} (${q.mark} mark) - Mon-Fri ONLY - Note: ${q.noteTitle} - No HW Sunday Rest Day</p><p class="text-xs mt-1">${q.q}</p><input id="dans${i}" placeholder="Your answer - SHKE ${currentSHKE} - Mon-Fri ONLY" class="w-full border p-2.5 rounded-xl text-xs mt-2"></div>
+ `).join('') + `<button onclick="submitDailyHW()" class="w-full bg-blue-600 text-white py-3 rounded-xl font-bold mt-3">Submit Daily HW Mon-Fri ONLY - 10 Marks - Get Marks + Correction + Notes Link (SHKE ${currentSHKE}) - No HW Sunday Rest Day</button>`;
 }
 
 async function submitDailyHW(){
  const FB=window.FB; if(!currentDailyHW||!currentUser) return;
+ const {isMonFri} = isWeekend(); if(!isMonFri) return alert("From Monday to Friday ONLY - No homework on Sunday is rest day or can complete exam or ready notes or do search - Today no HW - Sunday rest day");
  let answers=[]; let score=0; let corrections=[];
  currentDailyHW.questions.forEach((q,i)=>{
   const ans=document.getElementById(`dans${i}`)?.value.trim()||""; answers.push(ans);
   const correct=ans.toLowerCase()===q.answer.toLowerCase() || (q.answer.toLowerCase().includes(ans.toLowerCase()) && ans.length>2);
   if(correct) score++;
-  corrections.push({q:q.q, studentAns:ans, correctAns:q.answer, correct, noteTitle:q.noteTitle, whereFailed: correct?"":`Failed: ${q.noteTitle}`});
+  corrections.push({q:q.q, studentAns:ans, correctAns:q.answer, correct, noteTitle:q.noteTitle, whereFailed: correct?"":`Failed: ${q.noteTitle} - Mon-Fri ONLY`});
  });
  let failedTopics={}; corrections.filter(c=>!c.correct).forEach(c=>{failedTopics[c.noteTitle]=(failedTopics[c.noteTitle]||0)+1;});
  let mostFailed=Object.entries(failedTopics).sort((a,b)=>b[1]-a[1])[0]?.[0]||"None";
  const subId=`${currentUser.uid}_${currentDailyHW.id}`;
- const sub={userId:currentUser.uid, indexNumber:currentSHKE, grade:currentDailyHW.grade, subject:currentDailyHW.subject, date:currentDailyHW.date, hwId:currentDailyHW.id, answers, score, total:10, corrections, mostFailedTopic:mostFailed, status:"completed", timestamp:FB.serverTimestamp()};
+ const sub={userId:currentUser.uid, indexNumber:currentSHKE, grade:currentDailyHW.grade, subject:currentDailyHW.subject, date:currentDailyHW.date, dayName:currentDailyHW.dayName||new Date().toLocaleDateString('en-US',{weekday:'long'}), isMonFriOnly:true, noHWSundayRestDay:true, hwId:currentDailyHW.id, answers, score, total:10, corrections, mostFailedTopic:mostFailed, status:"completed", timestamp:FB.serverTimestamp()};
  await FB.setDoc(FB.doc(FB.db,"homework_submissions", subId), sub);
- document.getElementById('dailyStatus').innerHTML=`✅ Today's work completed - Wait tomorrow - ${currentSHKE} scored ${score}/10`;
+ document.getElementById('dailyStatus').innerHTML=`✅ Today's work completed - Wait tomorrow (Mon-Fri ONLY) - ${currentSHKE} scored ${score}/10 - From Monday to Friday ONLY - No homework on Sunday is rest day or can complete exam or ready notes or do search`;
  document.getElementById('dailyHWBox').classList.add('hidden');
  showDailyResult(sub);
  checkPending(currentDailyHW.grade, currentDailyHW.subject);
@@ -225,21 +205,21 @@ async function submitDailyHW(){
 function showDailyResult(sub){
  document.getElementById('dailyResult').classList.remove('hidden');
  document.getElementById('dailyResult').innerHTML=`
-  <p class="font-black text-sm">📊 Result SHKE ${sub.indexNumber||currentSHKE} - ${sub.subject} - ${sub.score}/10 - ${sub.score>=7?'Excellent':'Needs revision'}</p>
-  <p class="text-xs mt-1">Most failed: ${sub.mostFailedTopic} - ${sub.corrections.filter(c=>!c.correct).length} wrong</p>
+  <p class="font-black text-sm">📅 Result SHKE ${sub.indexNumber||currentSHKE} - ${sub.subject} - ${sub.score}/10 - Mon-Fri ONLY - No HW Sunday Rest Day</p>
+  <p class="text-xs mt-1">Most failed: ${sub.mostFailedTopic} - Day: ${sub.dayName||''} - Mon-Fri ONLY</p>
   <div class="mt-3 space-y-2">
   ${sub.corrections.map((c,i)=>`
     <div class="bg-white p-3 rounded-xl border ${c.correct?'border-green-200':'border-red-200'}">
-      <p class="text-xs font-bold">Q${i+1}: ${c.q} ${c.correct?'✅':'❌'}</p>
+      <p class="text-xs font-bold">Q${i+1}: ${c.q} ${c.correct?'✅':'❌'} - Mon-Fri ONLY</p>
       <p class="text-[11px]">Your: <span class="${c.correct?'text-green-600':'text-red-600'}">${c.studentAns||'No answer'}</span></p>
-      ${!c.correct? `<p class="text-[11px]">Correct: <span class="text-green-600">${c.correctAns}</span></p><p class="text-[10px] text-yellow-600">❌ Where failed: ${c.whereFailed}</p><p class="text-[10px]">📚 Go to Notes: <span class="bg-purple-600 text-white px-2 py-1 rounded-full text-[9px]">${c.noteTitle}</span> - Search "${c.noteTitle}" in Notes - This is where information is</p>` : ''}
+      ${!c.correct? `<p class="text-[11px]">Correct: <span class="text-green-600">${c.correctAns}</span></p><p class="text-[10px]">📚 Go to Notes: <span class="bg-purple-600 text-white px-2 py-1 rounded-full text-[9px]">${c.noteTitle}</span> - Search "${c.noteTitle}" - Where information is - Mon-Fri ONLY</p>` : ''}
     </div>
   `).join('')}
   </div>
   <div class="mt-3 bg-yellow-50 p-3 rounded-xl border border-yellow-200 text-xs">
-    <p class="font-bold">💊 Remedy for SHKE ${sub.indexNumber}:</p>
+    <p class="font-bold">💊 Remedy Mon-Fri ONLY - SHKE ${sub.indexNumber}:</p>
     <p>Most failed: ${sub.mostFailedTopic} - Revise Notes: ${sub.corrections.filter(c=>!c.correct).map(c=>c.noteTitle).join(', ')||'Perfect!'}</p>
-    <p class="mt-1">Parent will see this at parent.html login with ${sub.indexNumber} - Marks + most failed + remedy + notes link</p>
+    <p class="mt-1">From Monday to Friday ONLY - No homework on Sunday is rest day or can complete exam or ready notes or do search - Parent will see at parent.html login with ${sub.indexNumber} - Mon-Fri ONLY - No HW Sunday rest day</p>
   </div>
  `;
 }
@@ -247,8 +227,11 @@ function showDailyResult(sub){
 async function checkPending(grade, subject){
  const FB=window.FB; if(!currentUser) return;
  let pending=[];
+ // Only check Mon-Fri (no homework Saturday Sunday)
  for(let i=1;i<=7;i++){
-  let d=new Date(); d.setDate(d.getDate()-i); let ds=d.toISOString().split('T')[0]; let dayName=d.toLocaleDateString('en-US',{weekday:'long'});
+  let d=new Date(); d.setDate(d.getDate()-i); let day=d.getDay(); // 0 Sunday, 6 Saturday
+  if(day===0 || day===6) continue; // Skip Saturday Sunday - No HW
+  let ds=d.toISOString().split('T')[0]; let dayName=d.toLocaleDateString('en-US',{weekday:'long'});
   let hwId=`${grade}_${ds}_${subject}`.replace(/\s+/g,'');
   let subRef=FB.doc(FB.db,"homework_submissions", `${currentUser.uid}_${hwId}`);
   let subSnap=await FB.getDoc(subRef);
@@ -258,151 +241,26 @@ async function checkPending(grade, subject){
  }
  if(pending.length>0){
   document.getElementById('pendingBadge').classList.remove('hidden');
-  document.getElementById('pendingBadge').innerText=`⚠️ ${pending.length} Pending`;
-  document.getElementById('dailyStatus').innerHTML+=`<br><br><div class="bg-red-50 border border-red-200 p-2 rounded-xl">⚠️ <b>${pending[0].day} homework pending</b> - ${pending.map(p=>p.day).join(', ')} pending - If not done, Tuesday double work ${10+pending.length*10} marks. Parent sees at parent.html with ${currentSHKE}</div>`;
+  document.getElementById('pendingBadge').innerText=`⚠️ ${pending.length} Pending Mon-Fri`;
+  document.getElementById('dailyStatus').innerHTML+=`<br><br><div class="bg-red-50 border border-red-200 p-2 rounded-xl">⚠️ <b>${pending[0].day} homework pending - Mon-Fri ONLY</b> - ${pending.map(p=>p.day).join(', ')} pending - If Monday pending, Tuesday double 20 marks - From Monday to Friday ONLY - No HW Sunday rest day - Parent sees at parent.html with ${currentSHKE}</div>`;
  }else{
-  document.getElementById('pendingBadge').classList.add('hidden');
+  document.getElementById('pendingBadge')?.classList.add('hidden');
  }
 }
-
-async function askAI(){
- const q=document.getElementById('question').value.trim();
- const grade=document.getElementById('grade').value;
- const mode=document.getElementById('mode').value;
- if(!q &&!imgBase64) return alert("Upload photo or type");
- if(!currentUser){document.getElementById('authModal').classList.remove('hidden'); return;}
- if(!userData?.isPremium && count>=3){document.getElementById('subModal').classList.remove('hidden'); document.getElementById('subIndex').innerText=currentSHKE||"SHKE00500"; return;}
-
- const box=document.getElementById('aiAnswer');
- box.innerHTML=`<p class="animate-pulse">🤖 AI marking for SHKE ${currentSHKE} ${grade}...</p>`;
- document.getElementById('solveBtn').innerText="⏳ AI Marking...";
-
- let notes=await loadResources(grade);
- let notesCtx=notes.length? `School notes for ${grade}: ${notes.map(n=>`${n.title} (ID:${n.id}) - ${n.description?.substring(0,60)}`).join(', ')} - Use these as marking scheme + tell student which note has info` : "No school notes - use CBC general - tell which note to create";
-
- let sys="";
- if(mode==='markExam') sys=`You are SomaHub AI Exam Marker for Kenya CBC ${grade} for student ${currentSHKE}. Mark exam strictly. Give SCORE %, breakdown ✅❌, correct answers, why wrong, where failed + which note has info + link to notes. Notes: ${notesCtx}. Exam: ${q}`;
- else if(mode==='markHW') sys=`You are SomaHub AI Homework Marker with vision for ${grade} CBC student ${currentSHKE}. Mark HW 10 marks, show correction step-by-step, for each failed Q say which note contains info (note title + id) and direct to notes.html?search=title. Notes: ${notesCtx}. Homework: ${q}`;
- else if(mode==='dailyHW') sys=`You are SomaHub Daily HW Generator for ${grade} ${currentSHKE}. Create 10 marks HW FROM Notes: ${notesCtx}. Question: ${q}`;
- else if(mode==='teacher') sys=`You are SomaHub AI Teacher Assistant CBC Kenya ${grade} for ${currentSHKE}. Help with schemes, lesson plans. Notes: ${notesCtx}. Request: ${q}`;
- else sys=`You are SomaHub AI CBC ${grade} for ${currentSHKE}. Explain simply + Kiswahili + Kenyan example. If note exists, say "See your note: [title] - notes.html?search=title" - direct where info is. Notes: ${notesCtx}. Q: ${q}`;
-
- let ans=await callGemini(sys, imgBase64);
-
- setTimeout(()=>{
-  document.getElementById('solveBtn').innerText="✨ SOLVE & MARK WITH REAL AI";
-  if(!ans){
-   ans=`<b>📝 MARKED SHKE ${currentSHKE} - ${grade} (DEMO - Add Gemini Key admin.html)</b><br><br><b>Score: 6/10</b><br>Q1 ✅ Correct<br>Q2 ❌ Wrong - Correct is...<br><b>Where failed:</b> Fractions - Go to Notes: Fractions (Search Fractions in notes.html)<br><br>Parent sees this at parent.html login with ${currentSHKE}`;
-  }
-  box.innerHTML=ans.replace(/\n/g,'<br>') + `<br><br><small>SHKE Index: ${currentSHKE} - Parent monitor at parent.html with ${currentSHKE} - See most failed + remedy + notes link</small>`;
-  let m=ans.match(/(\d+)%|(\d+)\/10/); if(m){document.getElementById('scoreBadge').classList.remove('hidden'); document.getElementById('scoreBadge').innerText='SCORE: '+m[0];}
-  count++;
- },1200);
-}
-
-function copyAns(){navigator.clipboard.writeText(document.getElementById('aiAnswer').innerText); alert("Copied! SHKE "+currentSHKE);}
 
 setTimeout(()=>{
  const FB=window.FB;
- document.getElementById('gLogin').onclick=async()=>{try{const r=await FB.signInWithPopup(FB.auth,FB.provider); await ensureUser(r.user);}catch(e){alert(e.message)}};
- document.getElementById('eLogin').onclick=async()=>{const em=document.getElementById('email').value, ps=document.getElementById('pass').value; if(!em||!ps) return alert("Fill"); try{const r=await FB.createUserWithEmailAndPassword(FB.auth,em,ps); await ensureUser(r.user);}catch{try{const r2=await FB.signInWithEmailAndPassword(FB.auth,em,ps); await ensureUser(r2.user);}catch(e){alert(e.message)}}};
- document.getElementById('authBtn').onclick=()=>{if(currentUser) FB.signOut(FB.auth); else document.getElementById('authModal').classList.remove('hidden');};
-
- async function ensureUser(u){
-  const FB=window.FB;
-  const ref=FB.doc(FB.db,"users",u.uid);
-  const s=await FB.getDoc(ref);
-  if(!s.exists()){
-   // AUTO SHKE00500 COUNTING FROM 500
-   let shkeIndex="SHKE00500";
-   try{
-    await FB.runTransaction(FB.db, async(transaction)=>{
-     const counterRef=FB.doc(FB.db,"config","counters");
-     const counterSnap=await transaction.get(counterRef);
-     let last=499;
-     if(counterSnap.exists()) last=counterSnap.data().lastIndex;
-     let next=last+1;
-     if(next<500) next=500; // Start at 500
-     shkeIndex=`SHKE${String(next).padStart(5,'0')}`;
-     if(counterSnap.exists()) transaction.update(counterRef, {lastIndex:next, updatedAt:FB.serverTimestamp()});
-     else transaction.set(counterRef, {lastIndex:next, prefix:"SHKE", createdAt:FB.serverTimestamp()});
-     transaction.set(ref, {
-      email:u.email,
-      name:u.displayName||u.email?.split('@')[0]||"Student",
-      role:"learner",
-      status:"pending",
-      isPremium:false,
-      mpesaCode:"",
-      indexNumber:shkeIndex,
-      grade:document.getElementById('grade').value||"Grade 6",
-      createdAt:FB.serverTimestamp()
-     });
-     transaction.set(FB.doc(FB.db,"student_index",shkeIndex), {
-      indexNumber:shkeIndex,
-      userId:u.uid,
-      email:u.email,
-      grade:document.getElementById('grade').value||"Grade 6",
-      name:u.displayName||"",
-      createdAt:FB.serverTimestamp()
-     });
-    });
-    alert(`✅ Welcome! Your Index Number is ${shkeIndex}\nCounting from 500 - You are #${shkeIndex}\nParent login at /parent.html with ${shkeIndex} to monitor daily 10 marks HW + weekly exams`);
-   }catch(e){
-    console.error(e);
-    await FB.setDoc(ref,{email:u.email, role:"learner", status:"pending", isPremium:false, mpesaCode:"", indexNumber:"SHKE00500", createdAt:FB.serverTimestamp()});
-    shkeIndex="SHKE00500";
-   }
-   currentSHKE=shkeIndex;
-  }else{
-   currentSHKE=s.data().indexNumber||"SHKE00500";
-  }
-  closeM();
-  updateIndexUI();
- }
-
- function updateIndexUI(){
-  if(currentSHKE){
-   document.getElementById('indexB').classList.remove('hidden');
-   document.getElementById('indexB').innerText=currentSHKE;
-   document.getElementById('headerIndex').innerText=currentSHKE;
-  }
- }
-
  FB.onAuthStateChanged(FB.auth, async(u)=>{
   currentUser=u;
   if(u){
-   document.getElementById('authBtn').innerText="Logout";
    const ref=FB.doc(FB.db,"users",u.uid); const snap=await FB.getDoc(ref);
-   if(snap.exists()){
-    userData=snap.data();
-    currentSHKE=userData.indexNumber||"SHKE00500";
-    updateIndexUI();
-    if(userData.isPremium){document.getElementById('premB').classList.remove('hidden'); document.getElementById('freeB').classList.add('hidden');}
-    // If no index (old users), generate SHKE00500+ auto
-    if(!userData.indexNumber){
-     try{
-      await FB.runTransaction(FB.db, async(transaction)=>{
-       const counterRef=FB.doc(FB.db,"config","counters");
-       const counterSnap=await transaction.get(counterRef);
-       let last=counterSnap.exists()? counterSnap.data().lastIndex : 499;
-       let next=last+1; if(next<500) next=500;
-       let shke=`SHKE${String(next).padStart(5,'0')}`;
-       transaction.update(counterRef, {lastIndex:next});
-       transaction.update(ref, {indexNumber:shke});
-       transaction.set(FB.doc(FB.db,"student_index",shke), {indexNumber:shke, userId:u.uid, email:u.email, grade:userData.grade||"Grade 6", createdAt:FB.serverTimestamp()});
-       currentSHKE=shke;
-      });
-      updateIndexUI();
-     }catch(e){}
-    }
-   }
-   try{const cfg=await FB.getDoc(FB.doc(FB.db,"config","ai")); if(cfg.exists() && cfg.data().geminiKey){geminiKey=cfg.data().geminiKey; document.getElementById('aiLive').innerText="AI LIVE ✅"; document.getElementById('aiLive').className="bg-green-100 text-green-700 text-[9px] px-2 py-1 rounded-full";}}catch(e){}
-  }else{document.getElementById('authBtn').innerText="Login"; userData=null; currentSHKE=null; document.getElementById('premB').classList.add('hidden'); document.getElementById('freeB').classList.remove('hidden'); document.getElementById('indexB').classList.add('hidden'); document.getElementById('headerIndex').innerText="SHKE-----";}
+   if(snap.exists()){ userData=snap.data(); currentSHKE=userData.indexNumber||"SHKE00500"; document.getElementById('indexB').classList.remove('hidden'); document.getElementById('indexB').innerText=currentSHKE; document.getElementById('headerIndex').innerText=currentSHKE; }
+   try{const cfg=await FB.getDoc(FB.doc(FB.db,"config","ai")); if(cfg.exists() && cfg.data().geminiKey){geminiKey=cfg.data().geminiKey; document.getElementById('aiLive').innerText="AI LIVE ✅ Mon-Fri ONLY";}}catch(e){}
+   updateDayUI();
+  }
  });
-},500);
-
-async function submitMpesa(){const c=document.getElementById('mpesa').value.trim().toUpperCase(); if(!c) return alert("Enter code"); if(!currentUser) return alert("Login"); const FB=window.FB; await FB.updateDoc(FB.doc(FB.db,"users",currentUser.uid),{mpesaCode:c, status:"pending_payment", indexNumber:currentSHKE||"SHKE00500"}); alert("✅ Code "+c+" sent for "+currentSHKE+" - Admin will approve Till 0701305109 - Parent can monitor with "+currentSHKE); closeM();}
-window.askAI=askAI; window.closeM=closeM; window.submitMpesa=submitMpesa; window.setQ=setQ; window.copyAns=copyAns; window.clearImg=clearImg; window.loadTodayHW=loadTodayHW; window.submitDailyHW=submitDailyHW;
+},600);
+window.loadTodayHW=loadTodayHW; window.submitDailyHW=submitDailyHW;
 </script>
 </body>
 </html>
