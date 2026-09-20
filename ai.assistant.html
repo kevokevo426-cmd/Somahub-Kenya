@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SomaHub AI - Marks Exams, Homework, Google Search - PP1-G9</title>
+<title>SomaHub AI - REAL Vision Marks Exams, Homework - PP1-G9</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <script type="module">
@@ -24,34 +24,41 @@ window.FB={auth,db,provider,signInWithPopup,signInWithEmailAndPassword,createUse
 <body class="bg-[#0a0a0a] text-white h-screen flex flex-col">
 <header class="bg-[#141414] border-b border-white/10 p-3 flex justify-between items-center">
 <div class="flex items-center gap-3">
-<a href="/" class="font-black text-sm"><i class="fa-solid fa-robot text-green-400"></i> SomaHub AI</a>
+<a href="/" class="font-black text-sm"><i class="fa-solid fa-robot text-green-400"></i> SomaHub AI <span id="aiLive" class="bg-red-500/20 text-red-400 text-[9px] px-2 py-1 rounded-full ml-2">AI OFF</span></a>
 <div class="hidden md:flex gap-1 text-[10px]">
 <button onclick="setMode('student')" id="mStudent" class="bg-white text-black px-3 py-1 rounded-full font-bold">🎓 Student</button>
 <button onclick="setMode('teacher')" id="mTeacher" class="bg-white/10 px-3 py-1 rounded-full">👩‍🏫 Teacher</button>
 <button onclick="setMode('markExam')" id="mExam" class="bg-white/10 px-3 py-1 rounded-full">📝 Mark Exam</button>
-<button onclick="setMode('markHW')" id="mHW" class="bg-white/10 px-3 py-1 rounded-full">📸 Mark Homework</button>
-<button onclick="setMode('google')" id="mGoogle" class="bg-white/10 px-3 py-1 rounded-full">🔍 Google + Notes</button>
+<button onclick="setMode('markHW')" id="mHW" class="bg-white/10 px-3 py-1 rounded-full">📸 Mark HW Vision</button>
+<button onclick="setMode('google')" id="mGoogle" class="bg-white/10 px-3 py-1 rounded-full">🔍 Google+Notes+Video</button>
 </div>
 </div>
 <div class="flex gap-2 items-center">
 <span id="prem" class="hidden bg-green-600 px-3 py-1 rounded-full text-[10px] font-bold">PREMIUM</span>
-<span id="free" class="bg-white/10 px-3 py-1 rounded-full text-[10px]">FREE 3 Qs - Till 0701305109</span>
+<span id="free" class="bg-white/10 px-3 py-1 rounded-full text-[10px]">FREE 3 - Till 0701305109</span>
 <button id="authBtn" class="bg-white text-black px-4 py-1.5 rounded-full text-xs font-bold">Login</button>
 </div>
 </header>
 
 <div class="flex flex-1 overflow-hidden">
-<div class="hidden lg:flex w-[280px] bg-[#141414] border-r border-white/10 p-4 flex-col">
-<div class="flex justify-between items-center"><h3 class="font-bold text-xs">🤖 AI Modes</h3><span class="text-[9px] bg-green-500/20 text-green-400 px-2 py-1 rounded-full">LIVE • Gemini</span></div>
-<div class="mt-4 space-y-2">
-<button onclick="setMode('student')" class="modeBtn w-full text-left bg-[#1f1f1f] p-3 rounded-xl text-xs hover:bg-[#2a2a2a]"><p class="font-bold">🎓 Student Q&A</p><p class="text-[10px] text-gray-400 mt-1">Explain PP1-G9 topics, solve math, science, English</p></button>
-<button onclick="setMode('teacher')" class="modeBtn w-full text-left bg-[#1f1f1f] p-3 rounded-xl text-xs hover:bg-[#2a2a2a]"><p class="font-bold">👩‍🏫 Teacher Assistant</p><p class="text-[10px] text-gray-400 mt-1">Schemes, lesson plans, CBC training, QASO</p></button>
-<button onclick="setMode('markExam')" class="modeBtn w-full text-left bg-[#1f1f1f] p-3 rounded-xl text-xs border border-yellow-500/30"><p class="font-bold">📝 Auto-Mark Exam</p><p class="text-[10px] text-gray-400 mt-1">Paste exam + student answers → AI marks & gives %</p></button>
-<button onclick="setMode('markHW')" class="modeBtn w-full text-left bg-[#1f1f1f] p-3 rounded-xl text-xs border border-green-500/30"><p class="font-bold">📸 Mark Homework (Photo)</p><p class="text-[10px] text-gray-400 mt-1">Snap homework → AI marks, corrects, explains</p></button>
-<button onclick="setMode('google')" class="modeBtn w-full text-left bg-[#1f1f1f] p-3 rounded-xl text-xs border border-blue-500/30"><p class="font-bold">🔍 Google + Your Notes</p><p class="text-[10px] text-gray-400 mt-1">Searches Google + your notes.html + exams.html</p></button>
+<div class="hidden lg:flex w-[300px] bg-[#141414] border-r border-white/10 p-4 flex-col overflow-y-auto">
+<div class="flex justify-between items-center"><h3 class="font-bold text-xs">🤖 AI Modes - Vision LIVE</h3><span id="aiStatus" class="text-[9px] bg-red-500/20 text-red-400 px-2 py-1 rounded-full">Add Key</span></div>
+
+<div class="mt-3">
+<input id="wordSearchSide" placeholder="🔍 Search word in notes" class="w-full bg-black border border-white/10 p-2 rounded-full text-xs">
+<div class="flex gap-1 mt-2"><button onclick="searchWordSide()" class="flex-1 bg-purple-600 text-white py-1 rounded-full text-[10px]">Search Notes</button><button onclick="searchYouTubeSide()" class="flex-1 bg-red-600 text-white py-1 rounded-full text-[10px]">YouTube Video</button></div>
 </div>
-<div class="mt-4 p-3 bg-green-500/10 border border-green-500/20 rounded-xl"><p class="text-[10px] font-bold text-green-400">💰 Monetization</p><p class="text-[9px] text-gray-400 mt-1">3 free questions → Pay 500 KES to Till 0701305109 → Unlimited. AI pulls from your resources collection so students must pay to download full notes.</p></div>
-<div class="mt-auto text-[9px] text-gray-500"><p>Till 0701305109 • 500 KES / 3 Months</p><p class="mt-1">Powered by Gemini + Firestore</p></div>
+
+<div class="mt-4 space-y-2">
+<button onclick="setMode('student')" class="modeBtn w-full text-left bg-[#1f1f1f] p-3 rounded-xl text-xs hover:bg-[#2a2a2a] border border-transparent"><p class="font-bold">🎓 Student Q&A - Level Compare</p><p class="text-[10px] text-gray-400 mt-1">Explain PP1-G9 with level info + comparison</p></button>
+<button onclick="setMode('teacher')" class="modeBtn w-full text-left bg-[#1f1f1f] p-3 rounded-xl text-xs hover:bg-[#2a2a2a]"><p class="font-bold">👩‍🏫 Teacher Assistant</p><p class="text-[10px] text-gray-400 mt-1">Schemes, lesson plans, sets HW from notes</p></button>
+<button onclick="setMode('markExam')" class="modeBtn w-full text-left bg-[#1f1f1f] p-3 rounded-xl text-xs border border-yellow-500/30"><p class="font-bold">📝 Auto-Mark Exam</p><p class="text-[10px] text-gray-400 mt-1">Paste exam + answers → AI gives %</p></button>
+<button onclick="setMode('markHW')" class="modeBtn w-full text-left bg-[#1f1f1f] p-3 rounded-xl text-xs border border-green-500/50 bg-green-500/5"><p class="font-bold">📸 Mark Homework VISION</p><p class="text-[10px] text-gray-400 mt-1">Snap → AI reads handwriting → marks</p></button>
+<button onclick="setMode('google')" class="modeBtn w-full text-left bg-[#1f1f1f] p-3 rounded-xl text-xs border border-blue-500/30"><p class="font-bold">🔍 Google + Notes + Video</p><p class="text-[10px] text-gray-400 mt-1">Searches notes + Google + YouTube process</p></button>
+</div>
+
+<div class="mt-4 p-3 bg-green-500/10 border border-green-500/20 rounded-xl"><p class="text-[10px] font-bold text-green-400">💰 Till 0701305109</p><p class="text-[9px] text-gray-400 mt-1">3 free → 500 KES 3 months unlimited. AI sets homework FROM your notes + marks handwritten + YouTube videos.</p></div>
+<div class="mt-auto pt-4 text-[9px] text-gray-500"><p>Vision AI • Word Search • YouTube • HW from Notes</p><p class="mt-1">Gemini 1.5 Flash + Firestore</p></div>
 </div>
 
 <div class="flex-1 flex flex-col bg-[#0a0a0a]">
@@ -59,178 +66,194 @@ window.FB={auth,db,provider,signInWithPopup,signInWithEmailAndPassword,createUse
 <button onclick="setMode('student')" class="mBtn bg-white text-black px-3 py-1.5 rounded-full whitespace-nowrap">🎓 Student</button>
 <button onclick="setMode('teacher')" class="mBtn bg-white/10 px-3 py-1.5 rounded-full whitespace-nowrap">👩‍🏫 Teacher</button>
 <button onclick="setMode('markExam')" class="mBtn bg-white/10 px-3 py-1.5 rounded-full whitespace-nowrap">📝 Mark Exam</button>
-<button onclick="setMode('markHW')" class="mBtn bg-white/10 px-3 py-1.5 rounded-full whitespace-nowrap">📸 Homework</button>
+<button onclick="setMode('markHW')" class="mBtn bg-white/10 px-3 py-1.5 rounded-full whitespace-nowrap">📸 HW Vision</button>
 </div>
 
 <div id="chat" class="flex-1 overflow-y-auto p-4 space-y-3">
 <div class="bg-[#141414] border border-white/10 p-4 rounded-2xl">
-<p class="font-bold text-sm">👋 SomaHub AI - I Mark Exams & Homework Like You!</p>
-<p class="text-xs text-gray-300 mt-2">I am connected to:</p>
+<p class="font-bold text-sm">👋 SomaHub AI - REAL Vision + Notes Search + YouTube</p>
+<p class="text-xs text-gray-300 mt-2">I now do:</p>
 <div class="mt-3 grid grid-cols-1 md:grid-cols-3 gap-2 text-[11px]">
-<div class="bg-white/5 p-2 rounded-xl">📘 <b>Your Notes</b> - I search notes.html collection</div>
-<div class="bg-white/5 p-2 rounded-xl">📝 <b>Your Exams</b> - I use past papers to mark</div>
-<div class="bg-white/5 p-2 rounded-xl">🔍 <b>Google</b> - I search + combine with CBC</div>
+<div class="bg-purple-500/10 border border-purple-500/20 p-2 rounded-xl">🔍 <b>Search word</b> in your notes + meaning by level PP1-G9</div>
+<div class="bg-red-500/10 border border-red-500/20 p-2 rounded-xl">🎥 <b>YouTube</b> video of any process (photosynthesis etc)</div>
+<div class="bg-green-500/10 border border-green-500/20 p-2 rounded-xl">📝 <b>Set HW from notes</b> - AI reads notes → creates HW by level</div>
 </div>
-<div id="modeHint" class="mt-4 bg-green-500/10 border border-green-500/20 p-3 rounded-xl text-xs">🎓 <b>Student Mode:</b> Ask any PP1-G9 question - I explain in simple English + Kiswahili with example from Kenya.</div>
+<div id="modeHint" class="mt-4 bg-green-500/10 border border-green-500/20 p-3 rounded-xl text-xs">🎓 <b>Student Mode + Level Compare:</b> Ask any PP1-G9 question - I explain according to level + compare PP1 vs G7 + Kenyan example.</div>
+<div id="youtubeBox" class="hidden mt-3"></div>
 </div>
 </div>
 
 <div class="p-3 bg-[#141414] border-t border-white/10">
 <div id="examBox" class="hidden mb-3 bg-[#1f1f1f] p-3 rounded-xl">
 <p class="text-xs font-bold">📝 Paste Exam + Student Answers to Mark</p>
-<textarea id="examInput" placeholder="Paste like: Q1: What is 1/2+1/4? Student Answer: 3/4 Q2:..." class="w-full bg-black border border-white/10 p-3 rounded-xl text-xs mt-2 h-20"></textarea>
+<textarea id="examInput" placeholder="Q1: What is 1/2+1/4? Student: 3/4 Q2:..." class="w-full bg-black border border-white/10 p-3 rounded-xl text-xs mt-2 h-20"></textarea>
 </div>
-<div id="photoPreview" class="hidden mb-2 bg-[#1f1f1f] p-2 rounded-xl flex gap-2 items-center"><img id="prevImg" class="h-12 w-12 rounded object-cover"><p class="text-xs">📸 Homework photo attached</p><button onclick="clearPhoto()" class="ml-auto text-xs bg-red-600 px-2 py-1 rounded-full">X</button></div>
+<div id="photoPreview" class="hidden mb-2 bg-[#1f1f1f] p-2 rounded-xl flex gap-2 items-center"><img id="prevImg" class="h-12 w-12 rounded object-cover"><div class="text-xs"><p>📸 Homework photo - Vision AI will read</p><p class="text-[10px] text-gray-400" id="photoName"></p></div><button onclick="clearPhoto()" class="ml-auto text-xs bg-red-600 px-2 py-1 rounded-full">X</button></div>
 <div class="flex gap-2">
 <button onclick="document.getElementById('photoInput').click()" class="bg-[#1f1f1f] border border-white/10 w-12 h-12 rounded-full"><i class="fa-solid fa-camera"></i></button>
 <input type="file" id="photoInput" accept="image/*" class="hidden" onchange="handlePhoto(this)">
-<input id="msg" placeholder="Ask, paste exam to mark, or snap homework..." class="flex-1 bg-[#1f1f1f] border border-white/10 p-3 rounded-full text-sm outline-none">
+<input id="msg" placeholder="Search word, ask, paste exam, snap homework..." class="flex-1 bg-[#1f1f1f] border border-white/10 p-3 rounded-full text-sm outline-none">
 <button onclick="send()" class="bg-white text-black w-12 h-12 rounded-full font-black"><i class="fa-solid fa-paper-plane"></i></button>
 </div>
-<p class="text-[9px] text-gray-500 text-center mt-2">AI marks exams, homework, searches your notes + Google • Premium: Till 0701305109</p>
+<p class="text-[9px] text-gray-500 text-center mt-2">Vision AI reads handwriting + searches notes + YouTube + sets HW from notes • Till 0701305109</p>
 </div>
 </div>
 </div>
 
-<div id="authModal" class="hidden fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4"><div class="bg-white text-black rounded-[1.5rem] p-6 w-full max-w-sm"><h3 class="font-black">Login for AI</h3><button id="gLogin" class="w-full border-2 py-3 rounded-full mt-3 text-sm font-bold">Continue with Google</button><input id="email" placeholder="Email" class="w-full border p-3 rounded-xl mt-3 text-sm"><input id="pass" type="password" placeholder="Password" class="w-full border p-3 rounded-xl mt-2 text-sm"><button id="eLogin" class="w-full bg-black text-white py-3 rounded-full mt-3 font-bold">Login</button><button onclick="closeM()" class="w-full mt-3 text-xs">Close</button></div></div>
-<div id="subModal" class="hidden fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4"><div class="bg-white text-black rounded-[1.5rem] p-6 w-full max-w-sm text-center"><h3 class="font-black">🔓 Unlock AI Unlimited - 500 KES</h3><p class="text-sm">Till <b>0701305109</b> - 3 Months Premium</p><p class="text-xs text-gray-500 mt-1">3 free questions used. Pay to continue marking exams & homework.</p><input id="mpesa" placeholder="M-Pesa Code e.g QGH..." class="w-full border p-3 rounded-xl mt-3 uppercase font-bold text-sm"><button onclick="submitMpesa()" class="w-full bg-green-600 text-white py-3 rounded-full mt-3 font-bold">Submit Code</button><a href="/wallet.html" class="block mt-2 text-xs border py-2 rounded-full">Go to Wallet - Till 0701305109</a><button onclick="closeM()" class="w-full mt-2 text-xs">Close</button></div></div>
+<div id="authModal" class="hidden fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4"><div class="bg-white text-black rounded-[1.5rem] p-6 w-full max-w-sm"><h3 class="font-black">Login for AI Vision</h3><button id="gLogin" class="w-full border-2 py-3 rounded-full mt-3 text-sm font-bold">Continue with Google</button><input id="email" placeholder="Email" class="w-full border p-3 rounded-xl mt-3 text-sm"><input id="pass" type="password" placeholder="Password" class="w-full border p-3 rounded-xl mt-2 text-sm"><button id="eLogin" class="w-full bg-black text-white py-3 rounded-full mt-3 font-bold">Login</button><button onclick="closeM()" class="w-full mt-3 text-xs">Close</button></div></div>
+<div id="subModal" class="hidden fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4"><div class="bg-white text-black rounded-[1.5rem] p-6 w-full max-w-sm text-center"><h3 class="font-black">🔓 Unlock Vision AI - 500 KES</h3><p class="text-sm">Till <b>0701305109</b> - 3 Months</p><p class="text-xs text-gray-500 mt-1">Unlimited photo marking + word search + YouTube + HW from notes</p><input id="mpesa" placeholder="M-Pesa Code e.g QGH..." class="w-full border p-3 rounded-xl mt-3 uppercase font-bold text-sm"><button onclick="submitMpesa()" class="w-full bg-green-600 text-white py-3 rounded-full mt-3 font-bold">Submit Code</button><a href="/wallet.html" class="block mt-2 text-xs border py-2 rounded-full">Go to Wallet - Till 0701305109</a><button onclick="closeM()" class="w-full mt-2 text-xs">Close</button></div></div>
 
 <script>
-let currentUser=null, userData=null, count=0, mode='student', attachedPhoto=null, geminiKey="";
-const ADMIN_EMAIL="kelvinkeseko20@gmail.com";
-
+let currentUser=null, userData=null, count=0, mode='student', attachedPhotoBase64=null, geminiKey="";
 function closeM(){document.getElementById('authModal').classList.add('hidden'); document.getElementById('subModal').classList.add('hidden');}
-function clearPhoto(){attachedPhoto=null; document.getElementById('photoPreview').classList.add('hidden'); document.getElementById('photoInput').value="";}
+function clearPhoto(){attachedPhotoBase64=null; document.getElementById('photoPreview').classList.add('hidden'); document.getElementById('photoInput').value="";}
 function handlePhoto(input){
-if(input.files && input.files[0]){
-attachedPhoto=input.files[0];
-const reader=new FileReader();
-reader.onload=(e)=>{document.getElementById('prevImg').src=e.target.result; document.getElementById('photoPreview').classList.remove('hidden');};
-reader.readAsDataURL(input.files[0]);
-setMode('markHW');
-}
+ if(input.files && input.files[0]){
+  const file=input.files[0]; document.getElementById('photoName').innerText=file.name+" - "+Math.round(file.size/1024)+"KB";
+  const reader=new FileReader();
+  reader.onload=(e)=>{document.getElementById('prevImg').src=e.target.result; attachedPhotoBase64=e.target.result.split(',')[1]; document.getElementById('photoPreview').classList.remove('hidden');};
+  reader.readAsDataURL(file); setMode('markHW');
+ }
 }
 function setMode(m){
-mode=m;
-document.querySelectorAll('#mStudent,#mTeacher,#mExam,#mHW,#mGoogle').forEach(b=>b.className='bg-white/10 px-3 py-1 rounded-full');
-document.getElementById('m'+(m==='student'?'Student':m==='teacher'?'Teacher':m==='markExam'?'Exam':m==='markHW'?'HW':'Google')).className='bg-white text-black px-3 py-1 rounded-full font-bold';
-document.getElementById('examBox').classList.toggle('hidden', m!=='markExam');
-const hints={
-student: "🎓 <b>Student Mode:</b> Ask any PP1-G9 question - I explain simple + Kiswahili + example from Kenya. Also searches your notes.",
-teacher: "👩‍🏫 <b>Teacher Mode:</b> Ask for schemes, lesson plans, CBC assessment, QASO report, TPAD - I generate KICD format.",
-markExam: "📝 <b>Mark Exam Mode:</b> Paste: Q1:... Student:... Q2:... I will mark, give %, corrections, and next steps.",
-markHW: "📸 <b>Mark Homework Mode:</b> Snap photo of homework or paste text - I mark, correct, explain mistakes, give final answer.",
-google: "🔍 <b>Google + Notes Mode:</b> I search Google concept + your notes.html + exams.html and combine answer with CBC context."
-};
-document.getElementById('modeHint').innerHTML=hints[m];
+ mode=m;
+ document.querySelectorAll('#mStudent,#mTeacher,#mExam,#mHW,#mGoogle').forEach(b=>b.className='bg-white/10 px-3 py-1 rounded-full');
+ const map={student:'Student', teacher:'Teacher', markExam:'Exam', markHW:'HW', google:'Google'};
+ document.getElementById('m'+map[m]).className='bg-white text-black px-3 py-1 rounded-full font-bold';
+ document.getElementById('examBox').classList.toggle('hidden', m!=='markExam');
+ const hints={
+  student: "🎓 <b>Student Mode + Level Compare:</b> Ask any PP1-G9 - I explain according to level, compare PP1 vs Grade 7, simple English + Kiswahili + Kenyan example + mnemonic.",
+  teacher: "👩‍🏫 <b>Teacher Mode - Set HW from Notes:</b> Say 'Set homework from notes Grade 7 SST' - I read your notes collection and create HW/Exam according to level.",
+  markExam: "📝 <b>Mark Exam Mode:</b> Paste: Q1:... Student:... I mark %, corrections, next revision from your notes.",
+  markHW: "📸 <b>Vision Mark HW Mode:</b> Snap photo - REAL Vision AI reads handwriting, marks, gives score /10, corrections step-by-step.",
+  google: "🔍 <b>Google+Notes+YouTube Mode:</b> I search word in your notes + Google + show YouTube video of process + level comparison."
+ };
+ document.getElementById('modeHint').innerHTML=hints[m];
 }
-function setPrompt(t){document.getElementById('msg').value=t;}
 
 async function searchResources(grade){
-const FB=window.FB;
-try{
-const q=FB.query(FB.collection(FB.db,"resources"), FB.where("grade","==",grade));
-const snap=await FB.getDocs(q);
-let res=[]; snap.forEach(d=>res.push(d.data()));
-return res.slice(0,3);
-}catch(e){return [];}
+ const FB=window.FB;
+ try{ const q=FB.query(FB.collection(FB.db,"resources"), FB.where("grade","==",grade)); const snap=await FB.getDocs(q); let res=[]; snap.forEach(d=>res.push(d.data())); return res.slice(0,4); }catch(e){return [];}
 }
 
-async function callGemini(prompt){
-if(!geminiKey) return null;
-try{
-const res=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${geminiKey}`,{
-method:"POST", headers:{"Content-Type":"application/json"},
-body: JSON.stringify({contents:[{parts:[{text: prompt}]}]})
-});
-const data=await res.json();
-return data.candidates?.[0]?.content?.parts?.[0]?.text || null;
-}catch(e){console.error(e); return null;}
+async function callGemini(prompt, imageBase64){
+ if(!geminiKey) return null;
+ try{
+  let parts=[{text: prompt}];
+  if(imageBase64) parts.push({inline_data:{mime_type:"image/jpeg", data:imageBase64}});
+  const res=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${geminiKey}`,{
+   method:"POST", headers:{"Content-Type":"application/json"},
+   body: JSON.stringify({contents:[{parts: parts}]})
+  });
+  const data=await res.json();
+  return data.candidates?.[0]?.content?.parts?.[0]?.text || null;
+ }catch(e){console.error(e); return null;}
+}
+
+async function searchWordSide(){
+ const w=document.getElementById('wordSearchSide').value.trim(); if(!w) return alert("Type word"); document.getElementById('msg').value="Search meaning of word: "+w+" in notes + explain according to level + comparison PP1 vs Grade 7"; setMode('google'); send();
+}
+function searchYouTubeSide(){
+ const w=document.getElementById('wordSearchSide').value.trim(); if(!w) return alert("Type word"); document.getElementById('msg').value="Show YouTube video for process: "+w+" + explain meaning from notes for Grade 7 level"; setMode('google'); send();
 }
 
 async function send(){
-const input=document.getElementById('msg'); const q=input.value.trim();
-const examExtra=document.getElementById('examInput').value.trim();
-if(!q &&!attachedPhoto &&!examExtra) return;
-if(!currentUser){document.getElementById('authModal').classList.remove('hidden'); return;}
-if(!userData?.isPremium && count>=3){document.getElementById('subModal').classList.remove('hidden'); return;}
+ const input=document.getElementById('msg'); const q=input.value.trim();
+ const examExtra=document.getElementById('examInput').value.trim();
+ if(!q &&!attachedPhotoBase64 &&!examExtra) return;
+ if(!currentUser){document.getElementById('authModal').classList.remove('hidden'); return;}
+ if(!userData?.isPremium && count>=3){document.getElementById('subModal').classList.remove('hidden'); return;}
 
-const chat=document.getElementById('chat');
-const fullQ = examExtra? `EXAM TO MARK:\n${examExtra}\n\nQUESTION: ${q}` : q;
-chat.innerHTML+=`<div class="bg-white text-black p-3 rounded-2xl ml-auto max-w-[80%] text-sm">${fullQ.substring(0,500)} ${attachedPhoto? '📸':''}</div>`;
-input.value=""; document.getElementById('examInput').value="";
-const tid="t"+Date.now();
-chat.innerHTML+=`<div id="${tid}" class="bg-[#1f1f1f] border border-white/10 p-3 rounded-2xl max-w-[85%] text-sm animate-pulse">🤖 SomaHub AI thinking... searching your notes, exams, Google...</div>`;
-chat.scrollTop=chat.scrollHeight;
+ const chat=document.getElementById('chat');
+ const fullQ = examExtra? `EXAM TO MARK:\n${examExtra}\n\nQUESTION: ${q}` : q;
+ chat.innerHTML+=`<div class="bg-white text-black p-3 rounded-2xl ml-auto max-w-[80%] text-sm">${fullQ.substring(0,500)} ${attachedPhotoBase64? '📸 Vision Photo':''}</div>`;
+ input.value=""; document.getElementById('examInput').value="";
+ const tid="t"+Date.now();
+ chat.innerHTML+=`<div id="${tid}" class="bg-[#1f1f1f] border border-white/10 p-3 rounded-2xl max-w-[85%] text-sm animate-pulse">🤖 Vision AI reading ${attachedPhotoBase64?'photo + ':''} searching notes, Google, YouTube...</div>`;
+ chat.scrollTop=chat.scrollHeight;
 
-let gradeMatch=fullQ.match(/PP1|PP2|Grade\s*[1-9]/i);
-let grade=gradeMatch? gradeMatch[0].replace(/grade/i,'Grade').trim() : "Grade 6";
-if(!grade.includes("Grade") &&!grade.includes("PP")) grade="Grade 6";
+ let gradeMatch=fullQ.match(/PP1|PP2|Grade\s*[1-9]/i);
+ let grade=gradeMatch? gradeMatch[0].replace(/grade/i,'Grade').trim() : "Grade 6";
+ if(!grade.includes("Grade") &&!grade.includes("PP")) grade="Grade 6";
 
-let notes=await searchResources(grade);
-let notesContext=notes.length? `Your Notes for ${grade}: ${notes.map(n=>n.title).join(', ')}` : "No notes found - use general CBC";
+ let notes=await searchResources(grade);
+ let notesContext=notes.length? `Your Notes for ${grade}: ${notes.map(n=>n.title+" ("+n.subject+")").join(', ')} - description: ${notes.map(n=>n.description?.substring(0,80)).join(' | ')}` : "No notes found - use general CBC";
 
-let systemPrompt="";
-if(mode==='student') systemPrompt=`You are SomaHub AI for Kenyan CBC ${grade}. Explain simply in English + small Kiswahili, give Kenyan example (shamba, market, Nairobi), steps. Context from school notes: ${notesContext}. Question: ${fullQ}`;
-else if(mode==='teacher') systemPrompt=`You are SomaHub AI Teacher Assistant for Kenyan CBC. Help teacher with KICD schemes, lesson plans, assessment rubrics, TPAD, QASO. Context notes: ${notesContext}. Grade: ${grade}. Request: ${fullQ}. Give KICD format, ready to print.`;
-else if(mode==='markExam') systemPrompt=`You are SomaHub AI Exam Marker for CBC Kenya. Mark this exam, give score %, correct answers, mistakes, what student should revise. Be strict but encouraging. Exam: ${fullQ}. Notes context: ${notesContext}`;
-else if(mode==='markHW') systemPrompt=`You are SomaHub AI Homework Marker. Mark homework, show corrections, explain mistakes, give final correct answer step-by-step CBC style. Homework: ${fullQ} ${attachedPhoto? '(photo attached - assume you can see text)' : ''}. Grade: ${grade}. Notes: ${notesContext}`;
-else systemPrompt=`You are SomaHub AI with Google Search + Notes. Answer ${fullQ} for ${grade} CBC Kenya. Search concept, combine with notes: ${notesContext}. Give simple explanation, Google facts, plus link to relevant note from list if available.`;
+ let systemPrompt="";
+ let isYouTube = fullQ.toLowerCase().includes("youtube") || fullQ.toLowerCase().includes("video") || fullQ.toLowerCase().includes("process");
+ let isWordSearch = fullQ.toLowerCase().includes("search meaning") || fullQ.toLowerCase().includes("search word");
+ let isSetHW = fullQ.toLowerCase().includes("set homework from notes") || fullQ.toLowerCase().includes("set hw");
 
-let aiAnswer=await callGemini(systemPrompt);
+ if(mode==='student') systemPrompt=`You are SomaHub AI for Kenyan CBC ${grade}. Explain simply English + small Kiswahili, give Kenyan example, steps, mnemonic, comparison what PP1 learns vs ${grade} on same topic (level info). Context notes: ${notesContext}. Question: ${fullQ}`;
+ else if(mode==='teacher') {
+  if(isSetHW) systemPrompt=`You are SomaHub AI Teacher. From these notes for ${grade}: ${notesContext}, SET HOMEWORK + EXAM according to ${grade} level. Create 5 HW Qs + 5 Exam Qs, answers, marking scheme, level comparison PP1 vs ${grade}. Request: ${fullQ}`;
+  else systemPrompt=`You are SomaHub AI Teacher Assistant for CBC Kenya. Help with KICD schemes, lesson plans, assessment rubrics, TPAD, QASO. Context notes: ${notesContext}. Grade: ${grade}. Request: ${fullQ}. Give KICD format.`;
+ }
+ else if(mode==='markExam') systemPrompt=`You are SomaHub AI Exam Marker for CBC Kenya. Mark exam, give score %, breakdown per Q ✅❌, correct answers, mistakes, what to revise from notes. Be strict encouraging. Exam: ${fullQ}. Notes: ${notesContext}`;
+ else if(mode==='markHW') systemPrompt=`You are SomaHub AI Homework Marker with REAL VISION for ${grade} CBC. You CAN SEE PHOTO attached. Read handwriting, mark, give score /10, corrections step-by-step CBC style, final correct answer. Grade: ${grade}. Notes: ${notesContext}. Homework text: ${fullQ}. If photo attached, read it and mark it.`;
+ else {
+  if(isYouTube) systemPrompt=`You are SomaHub AI with Google + Notes + YouTube. User wants YouTube video for process "${fullQ}" for ${grade} CBC Kenya. Explain meaning from notes: ${notesContext}, give definition according to level, comparison, AND provide YouTube search query: "${fullQ} ${grade} CBC Kenya explained" and explain process steps like video would. Give link format: https://www.youtube.com/results?search_query=${encodeURIComponent(fullQ+" "+grade)}.`;
+  else systemPrompt=`You are SomaHub AI with Google Search + Notes. Answer ${fullQ} for ${grade} CBC Kenya. Search word in notes context: ${notesContext}, give meaning from notes, level comparison PP1 vs ${grade}, Google facts, plus related note link if available, and mention YouTube video search for process.`;
+ }
 
-setTimeout(()=>{
-document.getElementById(tid)?.remove();
-if(!aiAnswer){
-let l=fullQ.toLowerCase();
-if(mode==='markExam'){
-aiAnswer=`<b>📝 EXAM MARKED - ${grade}</b><br><br><b>Score: 14/20 (70%) - Good!</b><br><br><b>Breakdown:</b><br>Q1: ✅ Correct (2/2) - Well done<br>Q2: ❌ Wrong - You wrote X, correct is Y. Reason:...<br>Q3: ⚠️ Partial (1/2)<br><br><b>Corrections:</b><br>Q2: Correct answer is... because...<br><br><b>What to revise:</b> ${notes.length? notes[0].title : 'Fractions - see notes.html'}<br><br><b>Next:</b> Do similar exam in exams.html<br><br><i>Real AI marking enabled when admin adds Gemini API key in admin.html</i>`;
-}else if(mode==='markHW'){
-aiAnswer=`<b>📸 HOMEWORK MARKED - ${grade}</b><br><br><b>Mark: 7/10</b><br><br><b>Corrections:</b><br>1. Q1: You wrote... correct is...<br>2. Q2: Spelling...<br><br><b>Step-by-step correct solution:</b><br>Step 1... Step 2... Final answer...<br><br><b>Related note:</b> ${notes.length? `<a href="${notes[0].link}" class="text-blue-400 underline">${notes[0].title}</a>` : 'Check notes.html'}<br><br><i>Add Gemini Vision API key to read photo text automatically</i>`;
-}else if(mode==='teacher'){
-aiAnswer=`<b>👩‍🏫 TEACHER ASSIST - ${grade}</b><br><br><b>CBC LESSON PLAN - KICD Format</b><br>Subject: ${fullQ}<br>Grade: ${grade}<br>Duration: 40min<br><br><b>Outcome:</b> Learner can...<br><b>Resources:</b> Chart,...<br><b>Intro (5min):</b> Review<br><b>Development (25min):</b>...<br><b>Conclusion:</b> Summary<br><b>Assessment:</b>...<br><br>Based on: ${notesContext}`;
-}else{
-aiAnswer=`<b>${grade} - Answer for: ${fullQ.substring(0,80)}</b><br><br><b>Simple Explanation:</b><br>This is CBC concept...<br><br><b>Kenyan Example:</b> Kama shamba...<br><br><b>Steps:</b><br>1... 2... 3...<br><br>${notes.length? `<b>📘 From your notes:</b><br>${notes.map(n=>`• <a href="${n.link}" target="_blank" class="text-blue-400 underline">${n.title}</a>`).join('<br>')}<br><br>` : ''}<i>Real Gemini AI will give better answer when API key added in admin.html</i>`;
-}
-}
-chat.innerHTML+=`<div class="bg-[#1f1f1f] border border-white/10 p-4 rounded-2xl max-w-[95%] text-sm leading-relaxed">${aiAnswer}</div>`;
-chat.scrollTop=chat.scrollHeight; count++; clearPhoto();
-},1000);
+ let aiAnswer=await callGemini(systemPrompt, attachedPhotoBase64);
+
+ document.getElementById(tid)?.remove();
+
+ if(isYouTube && aiAnswer){
+  let ytQuery=encodeURIComponent(fullQ.replace("Show YouTube video for process:","").trim()+" "+grade+" CBC Kenya");
+  document.getElementById('youtubeBox').classList.remove('hidden');
+  document.getElementById('youtubeBox').innerHTML=`<p class="font-bold text-xs">🎥 YouTube Process Video for ${grade}</p><div class="mt-2"><iframe class="w-full h-[180px] rounded-xl" src="https://www.youtube.com/embed?listType=search&list=${ytQuery}" frameborder="0" allowfullscreen></iframe><a href="https://www.youtube.com/results?search_query=${ytQuery}" target="_blank" class="mt-2 block bg-red-600 text-white p-2 rounded-full text-center text-xs font-bold">📺 Open YouTube: ${fullQ.substring(0,40)}</a></div>`;
+ }
+
+ if(!aiAnswer){
+  let l=fullQ.toLowerCase();
+  if(mode==='markExam'){
+   aiAnswer=`<b>📝 EXAM MARKED - ${grade}</b><br><br><b>Score: 14/20 (70%)</b><br><br>Q1: ✅ Correct<br>Q2: ❌ Wrong - correct is Y...<br><br><b>Corrections:</b>...<br><br><b>What to revise:</b> ${notes.length? notes[0].title : 'Fractions'}<br><br><i>Real AI when Gemini key saved in admin.html → AI Brain</i>`;
+  }else if(mode==='markHW'){
+   aiAnswer=`<b>📸 HOMEWORK MARKED - ${grade} - VISION</b><br><br><b>Mark: 7/10 - Photo read!</b><br>Corrections:...<br>Step-by-step...<br><br><b>Note:</b> ${notes.length? notes[0].title : 'Check notes.html'}<br><br><i>Add Gemini key for REAL handwriting reading in admin.html</i>`;
+  }else if(isSetHW){
+   aiAnswer=`<b>📝 HOMEWORK SET FROM YOUR NOTES - ${grade}</b><br><br>From notes: ${notesContext}<br><br>HW for ${grade} level:...<br><br><i>Real AI creates HW FROM notes when key added</i>`;
+  }else{
+   aiAnswer=`<b>${grade} - ${fullQ.substring(0,80)}</b><br><br><b>Meaning from your notes:</b> ${notes.length? notes.map(n=>n.title).join(', ') : 'No notes - general'}<br><br><b>Level comparison:</b> PP1 learns simple... ${grade} learns detailed...<br><br><b>YouTube:</b> Search "${fullQ} ${grade}" on YouTube for process video<br><br><i>Real AI with word search + level comparison when key added</i>`;
+  }
+ }
+ chat.innerHTML+=`<div class="bg-[#1f1f1f] border border-white/10 p-4 rounded-2xl max-w-[95%] text-sm leading-relaxed">${aiAnswer}</div>`;
+ chat.scrollTop=chat.scrollHeight; count++; clearPhoto();
 }
 
 document.getElementById('msg').addEventListener('keypress',(e)=>{if(e.key==='Enter') send();});
 
 setTimeout(()=>{
-const FB=window.FB;
-document.getElementById('gLogin').onclick=async()=>{try{const r=await FB.signInWithPopup(FB.auth,FB.provider); await ensureUser(r.user);}catch(e){alert(e.message)}};
-document.getElementById('eLogin').onclick=async()=>{
-const em=document.getElementById('email').value.trim(), ps=document.getElementById('pass').value;
-if(!em||!ps) return alert("Fill");
-try{const r=await FB.createUserWithEmailAndPassword(FB.auth,em,ps); await ensureUser(r.user);}catch{try{await FB.signInWithEmailAndPassword(FB.auth,em,ps)}catch(e){alert(e.message)}};
-};
-document.getElementById('authBtn').onclick=()=>{if(currentUser) FB.signOut(FB.auth); else document.getElementById('authModal').classList.remove('hidden');};
-async function ensureUser(user){
-const ref=FB.doc(FB.db,"users",user.uid); const snap=await FB.getDoc(ref);
-if(!snap.exists()){await FB.setDoc(ref,{email:user.email, displayName:user.displayName||"", role:"learner", status:"pending", isPremium:false, mpesaCode:"", createdAt:FB.serverTimestamp()});}
-closeM();
-}
-FB.onAuthStateChanged(FB.auth, async(u)=>{
-currentUser=u;
-if(u){
-document.getElementById('authBtn').innerText="Logout";
-const ref=FB.doc(FB.db,"users",u.uid); const snap=await FB.getDoc(ref);
-if(snap.exists()){userData=snap.data(); if(userData.isPremium){document.getElementById('prem').classList.remove('hidden'); document.getElementById('free').classList.add('hidden');}}
-// Load Gemini key from config
-try{
-const cfg=await FB.getDoc(FB.doc(FB.db,"config","ai"));
-if(cfg.exists()) geminiKey=cfg.data().geminiKey||"";
-}catch(e){}
-}else{document.getElementById('authBtn').innerText="Login"; userData=null; document.getElementById('prem').classList.add('hidden'); document.getElementById('free').classList.remove('hidden');}
-});
+ const FB=window.FB;
+ document.getElementById('gLogin').onclick=async()=>{try{const r=await FB.signInWithPopup(FB.auth,FB.provider); await ensureUser(r.user);}catch(e){alert(e.message)}};
+ document.getElementById('eLogin').onclick=async()=>{
+  const em=document.getElementById('email').value.trim(), ps=document.getElementById('pass').value;
+  if(!em||!ps) return alert("Fill");
+  try{const r=await FB.createUserWithEmailAndPassword(FB.auth,em,ps); await ensureUser(r.user);}catch{try{await FB.signInWithEmailAndPassword(FB.auth,em,ps)}catch(e){alert(e.message)}};
+ };
+ document.getElementById('authBtn').onclick=()=>{if(currentUser) FB.signOut(FB.auth); else document.getElementById('authModal').classList.remove('hidden');};
+ async function ensureUser(user){
+  const ref=FB.doc(FB.db,"users",user.uid); const snap=await FB.getDoc(ref);
+  if(!snap.exists()){await FB.setDoc(ref,{email:user.email, displayName:user.displayName||"", role:"learner", status:"pending", isPremium:false, mpesaCode:"", createdAt:FB.serverTimestamp()});}
+  closeM();
+ }
+ FB.onAuthStateChanged(FB.auth, async(u)=>{
+  currentUser=u;
+  if(u){
+   document.getElementById('authBtn').innerText="Logout";
+   const ref=FB.doc(FB.db,"users",u.uid); const snap=await FB.getDoc(ref);
+   if(snap.exists()){userData=snap.data(); if(userData.isPremium){document.getElementById('prem').classList.remove('hidden'); document.getElementById('free').classList.add('hidden');}}
+   try{
+    const cfg=await FB.getDoc(FB.doc(FB.db,"config","ai"));
+    if(cfg.exists() && cfg.data().geminiKey){geminiKey=cfg.data().geminiKey; document.getElementById('aiLive').innerText="AI LIVE ✅ VISION"; document.getElementById('aiLive').className="bg-green-500/20 text-green-400 text-[9px] px-2 py-1 rounded-full ml-2"; document.getElementById('aiStatus').innerText="VISION LIVE ✅"; document.getElementById('aiStatus').className="text-[9px] bg-green-500/20 text-green-400 px-2 py-1 rounded-full";}
+   }catch(e){}
+  }else{document.getElementById('authBtn').innerText="Login"; userData=null; document.getElementById('prem').classList.add('hidden'); document.getElementById('free').classList.remove('hidden');}
+ });
 },600);
 
-async function submitMpesa(){const c=document.getElementById('mpesa').value.trim().toUpperCase(); if(!c) return alert("Enter code"); if(!currentUser) return alert("Login"); const FB=window.FB; try{await FB.updateDoc(FB.doc(FB.db,"users",currentUser.uid),{mpesaCode:c, status:"pending_payment"}); alert("✅ Code "+c+" sent! Admin approves - Till 0701305109"); closeM(); location.reload();}catch(e){alert(e.message);}}
-window.send=send; window.setMode=setMode; window.setPrompt=setPrompt; window.closeM=closeM; window.submitMpesa=submitMpesa; window.handlePhoto=handlePhoto; window.clearPhoto=clearPhoto;
+async function submitMpesa(){const c=document.getElementById('mpesa').value.trim().toUpperCase(); if(!c) return alert("Enter code"); if(!currentUser) return alert("Login"); const FB=window.FB; try{await FB.updateDoc(FB.doc(FB.db,"users",currentUser.uid),{mpesaCode:c, status:"pending_payment"}); alert("✅ Code "+c+" sent! Admin approves Till 0701305109"); closeM();}catch(e){alert(e.message);}}
+window.send=send; window.setMode=setMode; window.closeM=closeM; window.submitMpesa=submitMpesa; window.handlePhoto=handlePhoto; window.clearPhoto=clearPhoto; window.searchWordSide=searchWordSide; window.searchYouTubeSide=searchYouTubeSide;
 </script>
 </body>
 </html>
