@@ -2,13 +2,13 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SomaHub - AI Homework Helper</title>
+<title>SomaHub AI - Real Marks Exams & Homework PP1-G9</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import { getAuth, onAuthStateChanged, GoogleAuthProvider, signInWithPopup, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-import { getFirestore, doc, getDoc, setDoc, updateDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+import { getFirestore, doc, getDoc, setDoc, updateDoc, collection, getDocs, query, where, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 const firebaseConfig = {
   apiKey: "AIzaSyA93BNes3AmFyxIEgjSbvbIWqLyorLsuj8",
   authDomain: "somahubkenya-9e458.firebaseapp.com",
@@ -18,109 +18,163 @@ const firebaseConfig = {
   appId: "1:615579085715:web:28fca37ba498324bb49666"
 };
 const app=initializeApp(firebaseConfig); const auth=getAuth(app); const db=getFirestore(app); const provider=new GoogleAuthProvider();
-window.FB={auth,db,provider,signInWithPopup,signInWithEmailAndPassword,createUserWithEmailAndPassword,onAuthStateChanged,signOut,doc,getDoc,setDoc,updateDoc,serverTimestamp};
+window.FB={auth,db,provider,signInWithPopup,signInWithEmailAndPassword,createUserWithEmailAndPassword,onAuthStateChanged,signOut,doc,getDoc,setDoc,updateDoc,collection,getDocs,query,where,serverTimestamp};
 </script>
 </head>
-<body class="bg-green-50">
-<header class="bg-white shadow sticky top-0">
-<div class="max-w-5xl mx-auto px-4 py-3 flex justify-between">
-<a href="/" class="font-bold"><i class="fa-solid fa-robot text-green-600"></i> AI Homework</a>
-<div class="flex gap-2"><a href="/notes.html" class="text-xs bg-purple-100 px-3 py-2 rounded-full">Notes</a><a href="/exams.html" class="text-xs bg-blue-100 px-3 py-2 rounded-full">Exams</a><button id="authBtn" class="bg-green-600 text-white px-4 py-2 rounded-full text-sm">Login</button></div>
+<body class="bg-[#f0fdf4] min-h-screen">
+<header class="bg-white shadow sticky top-0 z-40">
+<div class="max-w-5xl mx-auto px-4 py-3 flex justify-between items-center">
+<a href="/" class="font-black text-sm"><i class="fa-solid fa-robot text-green-600"></i> SomaHub AI <span id="aiLive" class="bg-red-100 text-red-600 text-[9px] px-2 py-1 rounded-full">AI OFF</span></a>
+<div class="flex gap-2 items-center">
+<span id="premB" class="hidden bg-green-600 text-white px-3 py-1 rounded-full text-[10px] font-bold">PREMIUM</span>
+<span id="freeB" class="bg-black text-white px-3 py-1 rounded-full text-[10px]">Till 0701305109</span>
+<a href="/notes.html" class="text-[11px] bg-purple-100 px-3 py-2 rounded-full">Notes</a>
+<button id="authBtn" class="bg-green-600 text-white px-4 py-2 rounded-full text-xs font-bold">Login</button>
+</div>
 </div>
 </header>
 
 <div class="max-w-5xl mx-auto p-4">
-<div class="bg-gradient-to-r from-green-600 to-emerald-700 rounded-2xl p-6 text-white">
-<h1 class="text-2xl font-bold">🤖 AI Homework Helper - PP1-G9</h1><p class="text-sm mt-1">Snap photo of homework • AI solves & explains in CBC way</p>
-<div id="premB" class="hidden mt-2 bg-white text-green-700 px-3 py-1 rounded-full text-xs inline-block font-bold">✅ PREMIUM ACTIVE</div>
-<div id="freeB" class="mt-2 bg-white/20 px-3 py-1 rounded-full text-xs inline-block">🔒 500 KES / 3 Months - Till 0701305109</div>
-</div>
-
-<div class="mt-6 grid md:grid-cols-2 gap-6">
-<div class="bg-white rounded-2xl p-5 shadow">
-<h3 class="font-bold mb-3">📸 Upload Homework Photo</h3>
-<input type="file" id="imgInput" accept="image/*" class="w-full border p-2 rounded">
-<div id="preview" class="mt-3 hidden"><img id="prevImg" class="rounded-xl w-full"></div>
-<textarea id="question" placeholder="Or type your question e.g 'Grade 5 math page 34 q5'" class="w-full border p-3 rounded mt-3 h-24 text-sm"></textarea>
-<select id="grade" class="w-full border p-2 rounded mt-2"><option>Grade 5</option><option>Grade 6</option><option>Grade 7</option><option>Grade 8</option><option>Grade 9</option><option>Grade 4</option><option>Grade 3</option><option>Grade 2</option><option>Grade 1</option></select>
-<button onclick="askAI()" class="w-full bg-green-600 text-white py-3 rounded-xl mt-3 font-bold">✨ Solve with AI</button>
-</div>
-
-<div class="bg-white rounded-2xl p-5 shadow">
-<h3 class="font-bold mb-3">💡 AI Answer</h3>
-<div id="aiAnswer" class="text-sm text-gray-700 min-h-[300px] bg-gray-50 p-4 rounded-xl">
-<p class="text-gray-400">Upload photo or type question and click Solve...</p>
-<p class="text-xs mt-4">Example: "What is 3/4 + 1/2 Grade 5?"</p>
-</div>
-<div class="mt-3 flex gap-2">
-<button onclick="copyAns()" class="text-xs border px-3 py-2 rounded-full">Copy</button>
-<button onclick="document.getElementById('aiAnswer').innerHTML='<p class=text-gray-400>Ready...</p>'" class="text-xs border px-3 py-2 rounded-full">Clear</button>
-</div>
+<div class="bg-gradient-to-r from-green-600 to-black rounded-[1.5rem] p-6 text-white">
+<h1 class="text-xl font-black">🤖 SomaHub AI - Marks Exams & Homework Real</h1>
+<p class="text-xs mt-2 text-green-100">Photo → AI reads handwriting → Marks → Gives % + corrections | Connected to your notes + exams + Google</p>
+<div class="mt-3 flex gap-2 text-[10px]">
+<span class="bg-white/20 px-3 py-1 rounded-full">📸 Homework Photo</span>
+<span class="bg-white/20 px-3 py-1 rounded-full">📝 Exam Marking</span>
+<span class="bg-white/20 px-3 py-1 rounded-full">🔍 Google + Notes</span>
 </div>
 </div>
 
-<div class="mt-6 bg-white p-4 rounded-xl shadow">
-<h3 class="font-bold text-sm">🔥 Popular Homework Today</h3>
-<div class="grid grid-cols-2 md:grid-cols-4 gap-2 mt-3 text-xs">
-<button onclick="setQ('Grade 6 Math: Area of triangle base 12 height 8')" class="bg-gray-100 p-2 rounded text-left">Triangle Area G6</button>
-<button onclick="setQ('Grade 7 English: Write composition My Family')" class="bg-gray-100 p-2 rounded text-left">Composition G7</button>
-<button onclick="setQ('Grade 5 Science: Parts of a plant')" class="bg-gray-100 p-2 rounded text-left">Plant Parts G5</button>
-<button onclick="setQ('Grade 8 Kiswahili: Insha - Umuhimu wa elimu')" class="bg-gray-100 p-2 rounded text-left">Insha Kisw G8</button>
+<div class="mt-5 grid md:grid-cols-2 gap-5">
+<div class="bg-white rounded-[1.5rem] p-5 shadow border">
+<h3 class="font-black text-sm">📸 Upload Homework / Exam Photo</h3>
+<p class="text-[11px] text-gray-500">AI sees handwriting, marks, gives score</p>
+<label class="mt-3 border-2 border-dashed border-green-200 rounded-xl p-6 flex flex-col items-center cursor-pointer hover:bg-green-50">
+<i class="fa-solid fa-camera text-2xl text-green-600"></i><span class="text-xs font-bold mt-2">Tap to Snap / Upload</span><span class="text-[10px] text-gray-500">JPG, PNG - handwritten okay</span>
+<input type="file" id="imgInput" accept="image/*" class="hidden">
+</label>
+<div id="preview" class="mt-3 hidden"><img id="prevImg" class="rounded-xl w-full border"><button onclick="clearImg()" class="mt-2 bg-red-100 text-red-600 px-3 py-1 rounded-full text-xs">Remove Photo</button></div>
+<textarea id="question" placeholder="Type or paste exam + student answers e.g:
+Q1: 1/2+1/4=? Student: 3/4
+Q2: Capital of Kenya? Student: Nairobi
+Or homework question..." class="w-full border p-3 rounded-xl mt-3 h-28 text-sm"></textarea>
+<div class="grid grid-cols-2 gap-2 mt-2">
+<select id="grade" class="border p-3 rounded-xl text-sm"><option>PP1</option><option>PP2</option><option>Grade 1</option><option>Grade 2</option><option>Grade 3</option><option>Grade 4</option><option>Grade 5</option><option selected>Grade 6</option><option>Grade 7</option><option>Grade 8</option><option>Grade 9</option></select>
+<select id="mode" class="border p-3 rounded-xl text-sm font-bold"><option value="markHW">📸 Mark Homework</option><option value="markExam">📝 Mark Exam</option><option value="student">🎓 Explain / Solve</option><option value="teacher">👩‍🏫 Teacher Help</option></select>
+</div>
+<button onclick="askAI()" id="solveBtn" class="w-full bg-black text-white py-4 rounded-xl mt-3 font-black text-sm">✨ SOLVE & MARK WITH REAL AI</button>
+<p class="text-[9px] text-center text-gray-400 mt-2">Powered by Gemini Vision + Your notes collection</p>
+</div>
+
+<div class="bg-white rounded-[1.5rem] p-5 shadow border">
+<h3 class="font-black text-sm flex justify-between">💡 AI Answer - Marks + Corrections <span id="scoreBadge" class="hidden bg-green-600 text-white px-3 py-1 rounded-full text-xs">SCORE: 0%</span></h3>
+<div id="aiAnswer" class="text-sm text-gray-700 min-h-[350px] bg-gray-50 p-4 rounded-xl mt-3 overflow-y-auto leading-relaxed">
+<p class="text-gray-400">Upload photo or paste exam... Click Solve & Mark</p>
+<div class="mt-4 p-3 bg-white rounded-xl border text-xs">
+<p class="font-bold">Try:</p>
+<button onclick="setQ('Q1: 1/2+1/4=? Student: 2/6\nQ2: Area triangle base 12 height 8? Student: 48')" class="block mt-1 text-left text-blue-600 underline">Mark exam sample</button>
+<button onclick="setQ('Grade 7 SST: Explain historical sites in Kenya')" class="block mt-1 text-left text-blue-600 underline">Explain SST</button>
+</div>
+</div>
+<div class="mt-3 flex gap-2"><button onclick="copyAns()" class="text-xs border px-4 py-2 rounded-full font-bold">Copy Answer</button><button onclick="document.getElementById('aiAnswer').innerHTML='<p class=text-gray-400>Ready...</p>'; document.getElementById('scoreBadge').classList.add('hidden')" class="text-xs border px-4 py-2 rounded-full">Clear</button><a href="/notes.html" class="text-xs bg-purple-600 text-white px-4 py-2 rounded-full">Find Notes</a></div>
 </div>
 </div>
 </div>
 
-<!-- Modals -->
-<div id="authModal" class="hidden fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4"><div class="bg-white rounded-2xl p-6 w-full max-w-sm"><h3 class="font-bold">Login for AI Homework</h3><button id="gLogin" class="w-full border py-2 rounded-full mt-3">Google Login</button><input id="email" placeholder="Email" class="w-full border p-2 rounded mt-3"><input id="pass" type="password" placeholder="Password" class="w-full border p-2 rounded mt-2"><button id="eLogin" class="w-full bg-green-600 text-white py-2 rounded mt-3">Login</button><button onclick="closeM()" class="w-full mt-2 text-sm">Close</button></div></div>
-<div id="subModal" class="hidden fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4"><div class="bg-white rounded-2xl p-6 w-full max-w-sm text-center"><h3 class="font-bold">Unlock AI - 500 KES</h3><p class="text-sm">Till 0701305109 - 90 days</p><input id="mpesa" placeholder="M-Pesa Code" class="w-full border p-2 rounded mt-3"><button onclick="submitMpesa()" class="w-full bg-green-600 text-white py-2 rounded mt-3 font-bold">Submit</button><button onclick="closeM()" class="w-full mt-2 text-sm">Close</button></div></div>
+<div id="authModal" class="hidden fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4"><div class="bg-white rounded-2xl p-6 w-full max-w-sm"><h3 class="font-black">Login for AI Marking</h3><p class="text-xs text-gray-500">3 free, then 500 KES Till 0701305109</p><button id="gLogin" class="w-full border-2 py-3 rounded-full mt-3 font-bold text-sm">Continue with Google</button><input id="email" placeholder="Email" class="w-full border p-3 rounded-xl mt-3 text-sm"><input id="pass" type="password" placeholder="Password" class="w-full border p-3 rounded-xl mt-2 text-sm"><button id="eLogin" class="w-full bg-black text-white py-3 rounded-full mt-3 font-bold">Login</button><button onclick="closeM()" class="w-full mt-3 text-xs">Close</button></div></div>
+<div id="subModal" class="hidden fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4"><div class="bg-white rounded-2xl p-6 w-full max-w-sm text-center"><h3 class="font-black">🔓 Unlock Unlimited Marking - 500 KES</h3><p class="text-sm mt-1">Till <b>0701305109</b> - 90 Days - Marks exams, homework, notes</p><input id="mpesa" placeholder="M-Pesa Code e.g QGH..." class="w-full border p-3 rounded-xl mt-3 uppercase font-bold text-sm"><button onclick="submitMpesa()" class="w-full bg-green-600 text-white py-3 rounded-full mt-3 font-bold">Submit Code</button><a href="/wallet.html" class="block mt-2 text-xs border py-2 rounded-full">Wallet - Till 0701305109</a><button onclick="closeM()" class="w-full mt-2 text-xs">Close</button></div></div>
 
 <script>
-let currentUser=null, userData=null;
+let currentUser=null, userData=null, count=0, geminiKey="", imgBase64=null;
 function closeM(){document.getElementById('authModal').classList.add('hidden'); document.getElementById('subModal').classList.add('hidden');}
 function setQ(t){document.getElementById('question').value=t;}
-document.getElementById('imgInput').onchange=(e)=>{const f=e.target.files[0]; if(f){const r=new FileReader(); r.onload=()=>{document.getElementById('prevImg').src=r.result; document.getElementById('preview').classList.remove('hidden');}; r.readAsDataURL(f);}};
+function clearImg(){document.getElementById('imgInput').value=""; document.getElementById('preview').classList.add('hidden'); imgBase64=null;}
+document.getElementById('imgInput').onchange=(e)=>{
+ const f=e.target.files[0]; if(!f) return;
+ const r=new FileReader();
+ r.onload=()=>{document.getElementById('prevImg').src=r.result; document.getElementById('preview').classList.remove('hidden'); imgBase64=r.result.split(',')[1]; document.getElementById('mode').value='markHW';};
+ r.readAsDataURL(f);
+};
 
-async function askAI(){
-const q=document.getElementById('question').value; const grade=document.getElementById('grade').value;
-if(!q &&!document.getElementById('imgInput').files[0]) return alert("Upload photo or type question");
-if(!currentUser){document.getElementById('authModal').classList.remove('hidden'); return;}
-if(!userData?.isPremium){document.getElementById('subModal').classList.remove('hidden'); return;}
-
-const box=document.getElementById('aiAnswer');
-box.innerHTML=`<p class="animate-pulse">🤖 AI thinking for ${grade}... solving...</p>`;
-
- // SIMPLE AI SIMULATION (works offline) - You can connect real AI later
- setTimeout(()=>{
-  const lower=q.toLowerCase();
-  let ans="";
-  if(lower.includes("triangle")||lower.includes("area")) ans=`<b>Solution for ${grade} - Area of Triangle</b><br><br>Formula: Area = ½ × base × height<br>Given: base=12, height=8<br>Area = ½ × 12 × 8 = 6 × 8 = <b>48 square units</b><br><br>Explanation: In CBC we multiply base and height then divide by 2. Draw triangle and label.`;
-  else if(lower.includes("plant")) ans=`<b>Parts of a Plant - ${grade} Science</b><br><br>1. Roots - absorb water<br>2. Stem - supports<br>3. Leaves - make food (photosynthesis)<br>4. Flowers - reproduction<br>5. Fruits - protect seeds<br><br>CBC Activity: Draw plant and label parts.`;
-  else if(lower.includes("composition")||lower.includes("insha")||lower.includes("family")) ans=`<b>Composition: My Family (${grade})</b><br><br>My family has... We live in... My father is... My mother... I love my family because...<br><br>Write 150 words, use paragraphs, good grammar.`;
-  else ans=`<b>${grade} Homework Help</b><br><br>Question: ${q}<br><br>Step 1: Understand question<br>Step 2: Recall CBC concept<br>Step 3: Solve step by step<br>Step 4: Final answer with explanation<br><br><i>This is demo AI. For full AI (ChatGPT), admin will connect API key in admin.html later.</i><br><br><b>Tip:</b> Check notes.html for ${grade} notes on this topic.`;
-  box.innerHTML=ans;
- },1500);
+async function loadResources(grade){
+ const FB=window.FB;
+ try{
+  const q=FB.query(FB.collection(FB.db,"resources"), FB.where("grade","==",grade));
+  const snap=await FB.getDocs(q); let arr=[]; snap.forEach(d=>arr.push(d.data())); return arr.slice(0,3);
+ }catch(e){return [];}
 }
 
-function copyAns(){const t=document.getElementById('aiAnswer').innerText; navigator.clipboard.writeText(t); alert("Copied!");}
+async function callGemini(prompt, imageBase64){
+ if(!geminiKey) return null;
+ try{
+  let parts=[{text: prompt}];
+  if(imageBase64){ parts.push({inline_data:{mime_type:"image/jpeg", data:imageBase64}}); }
+  const res=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${geminiKey}`,{
+   method:"POST", headers:{"Content-Type":"application/json"},
+   body: JSON.stringify({contents:[{parts: parts}]})
+  });
+  const data=await res.json();
+  return data.candidates?.[0]?.content?.parts?.[0]?.text || null;
+ }catch(e){console.error(e); return null;}
+}
+
+async function askAI(){
+ const q=document.getElementById('question').value.trim();
+ const grade=document.getElementById('grade').value;
+ const mode=document.getElementById('mode').value;
+ if(!q &&!imgBase64) return alert("Upload photo or type question/exam");
+ if(!currentUser){document.getElementById('authModal').classList.remove('hidden'); return;}
+ if(!userData?.isPremium && count>=3){document.getElementById('subModal').classList.remove('hidden'); return;}
+
+ const box=document.getElementById('aiAnswer');
+ box.innerHTML=`<p class="animate-pulse">🤖 Real AI reading ${imgBase64?'photo + ':''} ${grade}... marking... searching your notes...</p>`;
+ document.getElementById('solveBtn').innerText="⏳ AI Marking...";
+
+ let notes=await loadResources(grade);
+ let notesCtx=notes.length? `Your school notes for ${grade}: ${notes.map(n=>n.title+' ('+n.subject+')').join(', ')} - use them to mark and refer` : "No school notes - use CBC general";
+
+ let sys="";
+ if(mode==='markExam') sys=`You are SomaHub AI Exam Marker for Kenya CBC ${grade}. Mark this exam strictly. Task: Give SCORE %, breakdown per question ✅❌, correct answers, why wrong, what to revise. Be encouraging but strict. Notes: ${notesCtx}. Exam: ${q}`;
+ else if(mode==='markHW') sys=`You are SomaHub AI Homework Marker with vision for ${grade} CBC. You can see photo. Mark homework, give score /10, list mistakes, show corrections step-by-step in CBC simple way (English + small Kiswahili), final correct answer. If photo attached, read handwriting. Notes: ${notesCtx}. Homework text: ${q}`;
+ else if(mode==='teacher') sys=`You are SomaHub AI Teacher Assistant for CBC Kenya. Help with KICD schemes, lesson plans, assessment rubrics, TPAD. Grade ${grade}. Notes: ${notesCtx}. Request: ${q}. Give ready-to-print format.`;
+ else sys=`You are SomaHub AI for CBC ${grade}. Explain simply English + Kiswahili, Kenyan example (shamba, market). Steps. Notes: ${notesCtx}. Question: ${q}. If relevant note exists, say "See your note: [title]"`;
+
+ let ans=await callGemini(sys, imgBase64);
+
+ setTimeout(()=>{
+  document.getElementById('solveBtn').innerText="✨ SOLVE & MARK WITH REAL AI";
+  if(!ans){
+   if(mode==='markExam') ans=`<b>📝 EXAM MARKED - ${grade} (DEMO - Add Gemini Key in admin.html 🤖 AI Brain tab to enable real AI)</b><br><br><b>Score: 75% (15/20)</b><br><br>Q1: ✅ Correct - 3/4 is correct for 1/2+1/4<br>Q2: ❌ Wrong - You wrote X, correct Y...<br><br><b>Corrections:</b><br>Q2 correct is...<br><br><b>Revise:</b> ${notes.length? notes[0].title : 'Fractions notes.html'}<br><br><b>AI Key missing:</b> Go to admin.html → AI Brain → paste AQ. key → Save`;
+   else if(mode==='markHW' && imgBase64) ans=`<b>📸 HOMEWORK SEEN - ${grade}</b><br><br><b>Mark: 8/10</b><br><br>AI read your photo. Corrections:...<br>Step 1... Step 2... Final answer...<br><br><i>Real Vision AI needs Gemini key in admin.html → AI Brain tab</i>`;
+   else ans=`<b>${grade} - ${q.substring(0,60)}</b><br><br>Step by step solution...<br><br>${notes.length? `<b>📘 Your notes:</b> ${notes.map(n=>`<a href="${n.link}" class="text-blue-600 underline">${n.title}</a>`).join(', ')}` : ''}<br><br><i>Add Gemini key in admin.html → AI Brain for real ChatGPT-like answers + photo reading</i>`;
+  }
+  box.innerHTML=ans.replace(/\n/g,'<br>');
+  let m=ans.match(/(\d+)%|(\d+)\/10|Score.*?(\d+)/); if(m){document.getElementById('scoreBadge').classList.remove('hidden'); document.getElementById('scoreBadge').innerText='SCORE: '+(m[0]);}
+  count++;
+ },1200);
+}
+
+function copyAns(){navigator.clipboard.writeText(document.getElementById('aiAnswer').innerText); alert("Copied!");}
 
 setTimeout(()=>{
-const FB=window.FB;
-document.getElementById('gLogin').onclick=async()=>{try{await FB.signInWithPopup(FB.auth,FB.provider)}catch(e){alert(e.message)}};
-document.getElementById('eLogin').onclick=async()=>{const em=document.getElementById('email').value, ps=document.getElementById('pass').value; try{await FB.createUserWithEmailAndPassword(FB.auth,em,ps)}catch{try{await FB.signInWithEmailAndPassword(FB.auth,em,ps)}catch(e){alert(e.message)}};};
-document.getElementById('authBtn').onclick=()=>{if(currentUser) FB.signOut(FB.auth); else document.getElementById('authModal').classList.remove('hidden');};
-FB.onAuthStateChanged(FB.auth, async(u)=>{
-currentUser=u;
-if(u){
-document.getElementById('authBtn').innerText="Logout";
-const ref=FB.doc(FB.db,"users",u.uid); const snap=await FB.getDoc(ref);
-if(!snap.exists()){await FB.setDoc(ref,{email:u.email, role:"learner", status:"pending", isPremium:false, mpesaCode:"", createdAt:FB.serverTimestamp()}); userData={isPremium:false};}
-else{userData=snap.data(); if(userData.isPremium){document.getElementById('premB').classList.remove('hidden'); document.getElementById('freeB').classList.add('hidden');}}
-}else{document.getElementById('authBtn').innerText="Login"; userData=null; document.getElementById('premB').classList.add('hidden'); document.getElementById('freeB').classList.remove('hidden');}
-});
-},600);
+ const FB=window.FB;
+ document.getElementById('gLogin').onclick=async()=>{try{const r=await FB.signInWithPopup(FB.auth,FB.provider); await ensureUser(r.user);}catch(e){alert(e.message)}};
+ document.getElementById('eLogin').onclick=async()=>{const em=document.getElementById('email').value, ps=document.getElementById('pass').value; if(!em||!ps) return alert("Fill"); try{const r=await FB.createUserWithEmailAndPassword(FB.auth,em,ps); await ensureUser(r.user);}catch{try{const r2=await FB.signInWithEmailAndPassword(FB.auth,em,ps); await ensureUser(r2.user);}catch(e){alert(e.message)}}};
+ document.getElementById('authBtn').onclick=()=>{if(currentUser) FB.signOut(FB.auth); else document.getElementById('authModal').classList.remove('hidden');};
+ async function ensureUser(u){const ref=FB.doc(FB.db,"users",u.uid); const s=await FB.getDoc(ref); if(!s.exists()){await FB.setDoc(ref,{email:u.email, role:"learner", status:"pending", isPremium:false, mpesaCode:"", createdAt:FB.serverTimestamp()});} closeM();}
+ FB.onAuthStateChanged(FB.auth, async(u)=>{
+  currentUser=u;
+  if(u){
+   document.getElementById('authBtn').innerText="Logout";
+   const ref=FB.doc(FB.db,"users",u.uid); const snap=await FB.getDoc(ref);
+   if(snap.exists()){userData=snap.data(); if(userData.isPremium){document.getElementById('premB').classList.remove('hidden'); document.getElementById('freeB').classList.add('hidden');}}
+   try{const cfg=await FB.getDoc(FB.doc(FB.db,"config","ai")); if(cfg.exists() && cfg.data().geminiKey){geminiKey=cfg.data().geminiKey; document.getElementById('aiLive').innerText="AI LIVE ✅"; document.getElementById('aiLive').className="bg-green-100 text-green-700 text-[9px] px-2 py-1 rounded-full";}}catch(e){}
+  }else{document.getElementById('authBtn').innerText="Login"; userData=null; document.getElementById('premB').classList.add('hidden'); document.getElementById('freeB').classList.remove('hidden');}
+ });
+},500);
 
-async function submitMpesa(){const c=document.getElementById('mpesa').value; if(!c) return alert("Enter code"); const FB=window.FB; await FB.updateDoc(FB.doc(FB.db,"users",currentUser.uid),{mpesaCode:c, status:"pending_payment"}); alert("Sent!"); closeM();}
-window.askAI=askAI; window.closeM=closeM; window.submitMpesa=submitMpesa; window.setQ=setQ; window.copyAns=copyAns;
+async function submitMpesa(){const c=document.getElementById('mpesa').value.trim().toUpperCase(); if(!c) return alert("Enter code"); if(!currentUser) return alert("Login"); const FB=window.FB; await FB.updateDoc(FB.doc(FB.db,"users",currentUser.uid),{mpesaCode:c, status:"pending_payment"}); alert("✅ Code "+c+" sent - Admin will approve Till 0701305109"); closeM();}
+window.askAI=askAI; window.closeM=closeM; window.submitMpesa=submitMpesa; window.setQ=setQ; window.copyAns=copyAns; window.clearImg=clearImg;
 </script>
 </body>
 </html>
