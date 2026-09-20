@@ -2,14 +2,14 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SomaHub - DATA PANEL - Students & Teachers</title>
+<title>SomaHub - DATA PANEL - All Users SHKE Order - Students Exams HW + Teachers + Parents</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-import { getFirestore, doc, collection, getDocs, updateDoc, deleteDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+import { getFirestore, doc, getDoc, collection, getDocs, updateDoc, deleteDoc, query, where, orderBy, serverTimestamp, runTransaction, setDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 const firebaseConfig = {
   apiKey: "AIzaSyA93BNes3AmFyxIEgjSbvbIWqLyorLsuj8",
   authDomain: "somahubkenya-9e458.firebaseapp.com",
@@ -19,79 +19,108 @@ const firebaseConfig = {
   appId: "1:615579085715:web:28fca37ba498324bb49666"
 };
 const app=initializeApp(firebaseConfig); const auth=getAuth(app); const db=getFirestore(app);
-window.FB={auth,db,onAuthStateChanged,signInWithEmailAndPassword,signOut,doc,collection,getDocs,updateDoc,deleteDoc,serverTimestamp};
+window.FB={auth,db,onAuthStateChanged,signInWithEmailAndPassword,signOut,doc,getDoc,collection,getDocs,updateDoc,deleteDoc,query,where,orderBy,serverTimestamp,runTransaction,setDoc};
 </script>
 </head>
 <body class="bg-[#f5f5f7]">
 <div id="loginDiv" class="min-h-screen flex items-center justify-center p-4">
 <div class="bg-white p-8 rounded-[2rem] shadow-2xl max-w-sm w-full">
-<p class="text-3xl">🔐</p><h1 class="text-2xl font-black mt-2">DATA PANEL</h1><p class="text-xs text-gray-500">Students & Teachers Database - NOT Content</p>
-<div class="mt-6 bg-red-50 p-3 rounded-xl border border-red-200"><p class="text-[11px] font-bold text-red-700">⚠️ This is NOT admin.html</p><p class="text-[10px] text-red-600">admin.html = Upload Notes/Exams<br>panel.html = View People + Money<br><br>Only <b>kelvinkeseko20@gmail.com</b> can login</p></div>
+<p class="text-3xl">🔐</p><h1 class="text-2xl font-black mt-2">DATA PANEL - SHKE ORDER</h1><p class="text-xs text-gray-500">All Users Ordered by Index - Students Weekly + HW + Teachers User ID + Parents</p>
+<div class="mt-6 bg-blue-50 p-3 rounded-xl border border-blue-200"><p class="text-[11px] font-bold text-blue-700">📘 SHKE00500 counting from 500 - Ordered by index</p><p class="text-[10px] text-blue-600">Students sorted SHKE00500, SHKE00501... Teachers sorted by User ID - Tap to communicate</p></div>
 <input id="email" placeholder="Admin Email" value="kelvinkeseko20@gmail.com" class="w-full border p-4 rounded-xl mt-4 text-sm">
 <input id="pass" type="password" placeholder="Password" class="w-full border p-4 rounded-xl mt-2 text-sm">
-<button id="loginBtn" class="w-full bg-black text-white py-4 rounded-xl font-black mt-4">Enter Data Panel →</button>
-<p class="text-[10px] text-center mt-3 text-gray-400">Secure - Only SomaHub Owner • Till 0701305109</p>
+<button id="loginBtn" class="w-full bg-black text-white py-4 rounded-xl font-black mt-4">Enter Data Panel - SHKE Order →</button>
 </div>
 </div>
 
 <div id="panelDiv" class="hidden">
 <header class="bg-white border-b sticky top-0 z-50">
 <div class="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
-<div><h1 class="font-black text-lg">📊 DATA PANEL</h1><p class="text-[10px] text-gray-500" id="adminEmailShow">Till 0701305109</p></div>
+<div><h1 class="font-black text-lg">📊 DATA PANEL - Ordered by SHKE Index + Teachers User ID</h1><p class="text-[10px] text-gray-500" id="adminEmailShow">Till 0701305109 - SHKE00500 counting from 500 - Ordered by index</p></div>
 <div class="flex gap-2 items-center">
-<a href="/admin.html" class="text-xs bg-black text-white px-3 py-2 rounded-full">Go to admin.html (Upload Content)</a>
+<a href="/admin.html" class="text-xs bg-black text-white px-3 py-2 rounded-full">Super Admin Human Assistant</a>
 <button id="logout" class="bg-red-500 text-white px-4 py-2 rounded-full text-xs font-bold">Logout</button>
 </div>
 </div>
 </header>
 
 <div class="max-w-7xl mx-auto p-4">
-<div class="bg-black text-white rounded-[1.5rem] p-6 flex flex-col md:flex-row justify-between gap-4">
-<div><p class="text-xs opacity-60">TOTAL REVENUE (Till 0701305109)</p><p id="rev" class="text-4xl font-black">0 KES</p><p id="revDet" class="text-xs mt-1 opacity-70">0 premium x 500</p></div>
-<div class="flex gap-3">
-<div class="bg-white/10 p-4 rounded-2xl text-center min-w-[90px]"><p class="text-xs opacity-60">Students</p><p id="cStudents" class="text-2xl font-black">0</p></div>
-<div class="bg-white/10 p-4 rounded-2xl text-center min-w-[90px]"><p class="text-xs opacity-60">Teachers</p><p id="cTeachers" class="text-2xl font-black">0</p></div>
-<div class="bg-green-500 p-4 rounded-2xl text-center min-w-[90px]"><p class="text-xs">Paid</p><p id="cPaid" class="text-2xl font-black">0</p></div>
+<div class="bg-black text-white rounded-[1.5rem] p-6 flex flex-col lg:flex-row justify-between gap-4">
+<div>
+<p class="text-xs opacity-60">TOTAL USERS - ORDERED BY SHKE INDEX + TEACHERS USER ID</p>
+<p id="rev" class="text-4xl font-black">0 KES</p>
+<p id="revDet" class="text-xs mt-1 opacity-70">0 premium x 500 Till 0701305109</p>
+<p id="shkeInfo" class="text-[11px] mt-2 text-blue-400 font-bold">Last: SHKE00500 Next: SHKE00501 - Counting from 500 - Ordered SHKE00500, SHKE00501...</p>
+</div>
+<div class="grid grid-cols-2 lg:grid-cols-4 gap-3">
+<div class="bg-blue-600 p-4 rounded-2xl text-center min-w-[110px]"><p class="text-xs opacity-80">Total Students SHKE</p><p id="cStudents" class="text-3xl font-black">0</p><p class="text-[9px] opacity-70">Ordered by SHKE index</p></div>
+<div class="bg-orange-500 p-4 rounded-2xl text-center min-w-[110px]"><p class="text-xs opacity-80">Total Teachers</p><p id="cTeachers" class="text-3xl font-black">0</p><p class="text-[9px] opacity-70">Ordered by User ID</p></div>
+<div class="bg-purple-600 p-4 rounded-2xl text-center min-w-[110px]"><p class="text-xs opacity-80">Total Parents SHKE</p><p id="cParents" class="text-3xl font-black">0</p><p class="text-[9px] opacity-70">SHKE login parent.html</p></div>
+<div class="bg-green-500 p-4 rounded-2xl text-center min-w-[110px]"><p class="text-xs">Paid 500 KES</p><p id="cPaid" class="text-3xl font-black">0</p><p class="text-[9px]">Premium Till 0701305109</p></div>
 </div>
 </div>
 
 <div class="grid md:grid-cols-3 gap-4 mt-6">
-<div class="bg-white p-5 rounded-[1.5rem] shadow-sm"><h3 class="font-bold text-sm">Grade Distribution</h3><canvas id="gradeChart" class="mt-4"></canvas></div>
-<div class="bg-white p-5 rounded-[1.5rem] shadow-sm"><h3 class="font-bold text-sm">Role Split</h3><canvas id="roleChart" class="mt-4"></canvas></div>
+<div class="bg-white p-5 rounded-[1.5rem] shadow-sm"><h3 class="font-bold text-sm">Grade Distribution - Students SHKE Ordered</h3><canvas id="gradeChart" class="mt-4"></canvas></div>
+<div class="bg-white p-5 rounded-[1.5rem] shadow-sm"><h3 class="font-bold text-sm">Role Split - Students Teachers Parents SHKE</h3><canvas id="roleChart" class="mt-4"></canvas></div>
 <div class="bg-white p-5 rounded-[1.5rem] shadow-sm">
-<h3 class="font-bold text-sm">🔥 Live Actions</h3>
+<h3 class="font-bold text-sm">🔥 Quick Actions - Tap to Communicate SHKE</h3>
 <div class="mt-4 space-y-2">
-<button onclick="switchTab('payments')" class="w-full bg-yellow-400 p-4 rounded-xl font-bold text-left flex justify-between"><span>⏳ Pending M-Pesa</span><span id="bPending" class="bg-black text-white px-3 py-1 rounded-full text-xs">0</span></button>
-<button onclick="exportCSV()" class="w-full bg-white border-2 p-4 rounded-xl font-bold text-left">📥 Export All Data CSV</button>
-<button onclick="whatsappBlast()" class="w-full bg-green-600 text-white p-4 rounded-xl font-bold text-left">💬 WhatsApp Broadcast List</button>
-<p class="text-[10px] text-gray-400 mt-2">This panel is for PEOPLE data. For NOTES/EXAMS go to admin.html</p>
+<button onclick="switchTab('students')" class="w-full bg-blue-600 text-white p-4 rounded-xl font-bold text-left flex justify-between"><span>🎓 View Students SHKE - Weekly + HW Performance</span><span id="bStudents" class="bg-white text-blue-600 px-3 py-1 rounded-full text-xs">0</span></button>
+<button onclick="switchTab('teachers')" class="w-full bg-orange-500 text-white p-4 rounded-xl font-bold text-left flex justify-between"><span>👩‍🏫 View Teachers - Ordered by User ID</span><span id="bTeachers" class="bg-white text-orange-600 px-3 py-1 rounded-full text-xs">0</span></button>
+<button onclick="switchTab('parents')" class="w-full bg-purple-600 text-white p-4 rounded-xl font-bold text-left flex justify-between"><span>👨‍👩‍👧 View Parents SHKE - Separate Data</span><span id="bParents" class="bg-white text-purple-600 px-3 py-1 rounded-full text-xs">0</span></button>
+<button onclick="exportCSV()" class="w-full bg-black text-white p-4 rounded-xl font-bold text-left">📥 Export All Data CSV - Ordered by SHKE Index + Teachers User ID</button>
 </div>
 </div>
 </div>
 
 <div class="mt-8 bg-white rounded-[1.5rem] shadow-sm p-2 flex gap-2 overflow-x-auto">
-<button onclick="switchTab('students')" id="btnStudents" class="flex-1 bg-blue-600 text-white py-3 rounded-xl font-bold text-sm">🎓 Students</button>
-<button onclick="switchTab('teachers')" id="btnTeachers" class="flex-1 bg-gray-100 py-3 rounded-xl font-bold text-sm">👩‍🏫 Teachers</button>
-<button onclick="switchTab('payments')" id="btnPayments" class="flex-1 bg-gray-100 py-3 rounded-xl font-bold text-sm">💰 M-Pesa</button>
+<button onclick="switchTab('students')" id="btnStudents" class="flex-1 bg-blue-600 text-white py-3 rounded-xl font-bold text-sm">🎓 Students SHKE Ordered <span id="tSCount" class="bg-white text-blue-600 px-2 py-1 rounded-full text-xs ml-1">0</span></button>
+<button onclick="switchTab('teachers')" id="btnTeachers" class="flex-1 bg-gray-100 py-3 rounded-xl font-bold text-sm">👩‍🏫 Teachers User ID <span id="tTeCount" class="bg-white px-2 py-1 rounded-full text-xs ml-1">0</span></button>
+<button onclick="switchTab('parents')" id="btnParents" class="flex-1 bg-gray-100 py-3 rounded-xl font-bold text-sm">👨‍👩‍👧 Parents SHKE <span id="tPCount" class="bg-white px-2 py-1 rounded-full text-xs ml-1">0</span></button>
+<button onclick="switchTab('payments')" id="btnPayments" class="flex-1 bg-gray-100 py-3 rounded-xl font-bold text-sm">💰 M-Pesa Till 0701305109</button>
 </div>
 
 <div class="mt-4 flex gap-2">
-<input id="q" placeholder="Search name, email, M-Pesa code..." class="flex-1 bg-white p-4 rounded-xl shadow-sm text-sm outline-none" oninput="doSearch()">
+<input id="q" placeholder="🔍 Search Tap - Search SHKE00500, name, email, M-Pesa, failed topic, grade..." class="flex-1 bg-white p-4 rounded-xl shadow-sm text-sm outline-none border-2 border-blue-200" oninput="doSearch()">
 <select id="gradeSel" class="bg-white p-4 rounded-xl shadow-sm text-sm" onchange="doSearch()"><option value="">All Grades</option><option>PP1</option><option>PP2</option><option>Grade 1</option><option>Grade 2</option><option>Grade 3</option><option>Grade 4</option><option>Grade 5</option><option>Grade 6</option><option>Grade 7</option><option>Grade 8</option><option>Grade 9</option></select>
+<button onclick="doSearch()" class="bg-blue-600 text-white px-6 py-4 rounded-xl font-bold text-sm">🔍 Search Tap</button>
 </div>
 
-<div id="studentsBox" class="mt-4 grid md:grid-cols-2 lg:grid-cols-3 gap-3"></div>
-<div id="teachersBox" class="hidden mt-4 grid md:grid-cols-2 lg:grid-cols-3 gap-3"></div>
+<!-- STUDENTS - ORDERED BY SHKE INDEX + WEEKLY EXAMS + HOMEWORK PERFORMANCE -->
+<div id="studentsBox" class="mt-4 space-y-3"></div>
+
+<!-- TEACHERS - ORDERED BY USER ID + GIVEN USER ID -->
+<div id="teachersBox" class="hidden mt-4 space-y-3"></div>
+
+<!-- PARENTS - SEPARATELY WITH THEIR DATA -->
+<div id="parentsBox" class="hidden mt-4 space-y-3"></div>
+
 <div id="paymentsBox" class="hidden mt-4 bg-white rounded-[1.5rem] shadow-sm overflow-hidden">
-<table class="w-full text-xs"><thead class="bg-gray-50 text-[10px]"><tr><th class="p-3 text-left">User</th><th class="p-3">Code</th><th class="p-3">Status</th><th class="p-3">Action</th></tr></thead><tbody id="payBody"></tbody></table>
+<table class="w-full text-xs"><thead class="bg-gray-50 text-[10px]"><tr><th class="p-3 text-left">User SHKE Ordered + Email</th><th class="p-3">SHKE Index Ordered</th><th class="p-3">Code Till 0701305109</th><th class="p-3">Status</th><th class="p-3">Tap to Communicate</th></tr></thead><tbody id="payBody"></tbody></table>
+</div>
+</div>
+</div>
+
+<!-- CHAT MODAL - TAP TO COMMUNICATE -->
+<div id="chatModal" class="hidden fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4">
+<div class="bg-white text-black rounded-[1.5rem] p-5 w-full max-w-md shadow-2xl">
+<div class="flex justify-between items-center"><h3 class="font-black text-sm">💬 Tap to Communicate - Human Assistant - SHKE</h3><button onclick="closeChat()" class="bg-black text-white px-3 py-1 rounded-full text-xs">X</button></div>
+<p class="text-[11px] text-gray-500 mt-1" id="chatUserInfo">SHKE00500 - Student - Grade</p>
+<div id="chatHistory" class="mt-3 h-[300px] overflow-y-auto bg-gray-50 p-3 rounded-xl space-y-2 border text-xs"></div>
+<div class="flex gap-2 mt-3"><input id="chatInput" placeholder="Message as Human Assistant Admin to SHKE..." class="flex-1 border p-3 rounded-full text-xs"><button onclick="sendChat()" class="bg-green-600 text-white px-5 py-3 rounded-full text-xs font-bold">Send</button></div>
+<div class="mt-2 flex gap-1 flex-wrap">
+<button onclick="quickChat('Hello! I am Human Assistant Admin monitoring your SHKE performance - How is weekly exam + daily HW 10 marks?')" class="bg-blue-50 text-blue-700 border px-2 py-1 rounded-full text-[10px]">👋 Hello SHKE</button>
+<button onclick="quickChat('💊 Remedy: Most failed Fractions - Revise Notes Fractions - Where info is notes.html?search=Fractions')" class="bg-yellow-50 text-yellow-700 border px-2 py-1 rounded-full text-[10px]">💊 Remedy + Notes</button>
+<button onclick="quickChat('⚠️ Monday pending → Tuesday double 20 marks - Complete now - Today completed wait tomorrow')" class="bg-red-50 text-red-700 border px-2 py-1 rounded-full text-[10px]">⚠️ Pending Double</button>
 </div>
 </div>
 </div>
 
 <script>
-let all=[], filtered=[], current='students';
+let all=[], filtered=[], current='students', allHW=[], allExams=[], currentChatSHKE=null, currentChatUserId=null, currentChatRole=null;
 let gradeChartInst=null, roleChartInst=null;
-const ADMIN_EMAIL = "kelvinkeseko20@gmail.com"; // CHANGE TO YOUR ADMIN GMAIL
+const ADMIN_EMAIL = "kelvinkeseko20@gmail.com";
 
 setTimeout(()=>{
 const FB=window.FB;
@@ -101,9 +130,8 @@ document.getElementById('logout').onclick=()=>FB.signOut(FB.auth);
 
 FB.onAuthStateChanged(FB.auth, async(u)=>{
 if(!u){document.getElementById('loginDiv').classList.remove('hidden'); document.getElementById('panelDiv').classList.add('hidden'); return;}
-// 🔒 ADMIN GUARD - Only your email can see panel
-if(u.email!== ADMIN_EMAIL){ alert("Access Denied: Only "+ADMIN_EMAIL+" can open Data Panel"); FB.signOut(FB.auth); return; }
-document.getElementById('adminEmailShow').innerText = "Admin: "+u.email+" • Till 0701305109";
+if(u.email!== ADMIN_EMAIL){ alert("Only "+ADMIN_EMAIL); FB.signOut(FB.auth); return; }
+document.getElementById('adminEmailShow').innerText = "Admin: "+u.email+" • Till 0701305109 • SHKE00500 counting from 500 • Ordered by index + Teachers User ID • Tap to communicate";
 document.getElementById('loginDiv').classList.add('hidden'); document.getElementById('panelDiv').classList.remove('hidden');
 loadData();
 });
@@ -111,14 +139,39 @@ loadData();
 window.loadData=async()=>{
 try{
 const snap=await FB.getDocs(FB.collection(FB.db,"users")); all=[]; snap.forEach(d=>all.push({id:d.id,...d.data()}));
-document.getElementById('cStudents').innerText=all.filter(x=>x.role!=='teacher').length;
+// ORDER BY SHKE INDEX - SHKE00500, SHKE00501... THEN TEACHERS BY USER ID
+all.sort((a,b)=>{
+  const aIsSHKE = a.indexNumber?.startsWith('SHKE');
+  const bIsSHKE = b.indexNumber?.startsWith('SHKE');
+  if(aIsSHKE && bIsSHKE) return (a.indexNumber||"").localeCompare(b.indexNumber||"");
+  if(aIsSHKE &&!bIsSHKE) return -1;
+  if(!aIsSHKE && bIsSHKE) return 1;
+  return a.id.localeCompare(b.id); // Teachers given User ID order
+});
+
+const hwSnap=await FB.getDocs(FB.collection(FB.db,"homework_submissions")); allHW=[]; hwSnap.forEach(d=>allHW.push(d.data()));
+const examSnap=await FB.getDocs(FB.collection(FB.db,"exam_submissions")); allExams=[]; examSnap.forEach(d=>allExams.push(d.data()));
+
+document.getElementById('cStudents').innerText=all.filter(x=>(x.role||'learner')!=='teacher').length;
 document.getElementById('cTeachers').innerText=all.filter(x=>x.role==='teacher').length;
+document.getElementById('cParents').innerText=new Set(all.filter(x=>x.indexNumber?.startsWith('SHKE')).map(x=>x.indexNumber)).size;
+document.getElementById('bStudents').innerText=all.filter(x=>(x.role||'learner')!=='teacher').length;
+document.getElementById('bTeachers').innerText=all.filter(x=>x.role==='teacher').length;
+document.getElementById('bParents').innerText=new Set(all.filter(x=>x.indexNumber?.startsWith('SHKE')).map(x=>x.indexNumber)).size;
+document.getElementById('tSCount').innerText=all.filter(x=>(x.role||'learner')!=='teacher').length;
+document.getElementById('tTeCount').innerText=all.filter(x=>x.role==='teacher').length;
+document.getElementById('tPCount').innerText=new Set(all.filter(x=>x.indexNumber?.startsWith('SHKE')).map(x=>x.indexNumber)).size;
 document.getElementById('cPaid').innerText=all.filter(x=>x.isPremium).length;
-document.getElementById('bPending').innerText=all.filter(x=>x.status==='pending_payment').length;
+
 document.getElementById('rev').innerText=(all.filter(x=>x.isPremium).length*500).toLocaleString()+" KES";
-document.getElementById('revDet').innerText=all.filter(x=>x.isPremium).length+" premium x 500 • Till 0701305109";
+document.getElementById('revDet').innerText=all.filter(x=>x.isPremium).length+" premium x 500 • Till 0701305109 - Ordered by SHKE index";
+
+const counterSnap=await FB.getDoc(FB.doc(FB.db,"config","counters"));
+let lastIdx=500; if(counterSnap.exists()) lastIdx=counterSnap.data().lastIndex;
+document.getElementById('shkeInfo').innerText=`Last: SHKE${String(lastIdx).padStart(5,'0')} Next: SHKE${String(lastIdx+1).padStart(5,'0')} - Counting from 500 - Ordered SHKE00500, SHKE00501... Teachers ordered by User ID`;
+
 drawCharts(); doSearch();
-}catch(e){ alert("Error loading: "+e.message+"\nCheck Firestore Rules allow admin to read users"); }
+}catch(e){ alert("Error: "+e.message); }
 };
 
 window.drawCharts=()=>{
@@ -126,18 +179,20 @@ const grades=["PP1","PP2","Grade 1","Grade 2","Grade 3","Grade 4","Grade 5","Gra
 const gCounts=grades.map(g=>all.filter(x=>x.grade===g).length);
 if(gradeChartInst) gradeChartInst.destroy();
 if(roleChartInst) roleChartInst.destroy();
-gradeChartInst=new Chart(document.getElementById('gradeChart'),{type:'bar',data:{labels:grades, datasets:[{data:gCounts, backgroundColor:'#000'}]},options:{plugins:{legend:{display:false}}}});
-roleChartInst=new Chart(document.getElementById('roleChart'),{type:'doughnut',data:{labels:['Students','Teachers'], datasets:[{data:[all.filter(x=>x.role!=='teacher').length, all.filter(x=>x.role==='teacher').length], backgroundColor:['#2563eb','#f97316']}]}});
+gradeChartInst=new Chart(document.getElementById('gradeChart'),{type:'bar',data:{labels:grades, datasets:[{label:'Students SHKE Ordered', data:gCounts, backgroundColor:'#2563eb'}]},options:{plugins:{legend:{display:false}}}});
+roleChartInst=new Chart(document.getElementById('roleChart'),{type:'doughnut',data:{labels:['Students SHKE Ordered','Teachers User ID','Parents SHKE'], datasets:[{data:[all.filter(x=>(x.role||'learner')!=='teacher').length, all.filter(x=>x.role==='teacher').length, new Set(all.filter(x=>x.indexNumber?.startsWith('SHKE')).map(x=>x.indexNumber)).size], backgroundColor:['#2563eb','#f97316','#a855f7']}]}});
 };
 
 window.switchTab=(t)=>{
 current=t;
-document.getElementById('studentsBox').classList.add('hidden'); document.getElementById('teachersBox').classList.add('hidden'); document.getElementById('paymentsBox').classList.add('hidden');
+document.getElementById('studentsBox').classList.add('hidden'); document.getElementById('teachersBox').classList.add('hidden'); document.getElementById('parentsBox').classList.add('hidden'); document.getElementById('paymentsBox').classList.add('hidden');
 document.getElementById('btnStudents').className='flex-1 bg-gray-100 py-3 rounded-xl font-bold text-sm';
 document.getElementById('btnTeachers').className='flex-1 bg-gray-100 py-3 rounded-xl font-bold text-sm';
+document.getElementById('btnParents').className='flex-1 bg-gray-100 py-3 rounded-xl font-bold text-sm';
 document.getElementById('btnPayments').className='flex-1 bg-gray-100 py-3 rounded-xl font-bold text-sm';
 if(t==='students'){document.getElementById('studentsBox').classList.remove('hidden'); document.getElementById('btnStudents').className='flex-1 bg-blue-600 text-white py-3 rounded-xl font-bold text-sm';}
 if(t==='teachers'){document.getElementById('teachersBox').classList.remove('hidden'); document.getElementById('btnTeachers').className='flex-1 bg-orange-500 text-white py-3 rounded-xl font-bold text-sm';}
+if(t==='parents'){document.getElementById('parentsBox').classList.remove('hidden'); document.getElementById('btnParents').className='flex-1 bg-purple-600 text-white py-3 rounded-xl font-bold text-sm';}
 if(t==='payments'){document.getElementById('paymentsBox').classList.remove('hidden'); document.getElementById('btnPayments').className='flex-1 bg-yellow-400 text-black py-3 rounded-xl font-bold text-sm';}
 doSearch();
 };
@@ -145,56 +200,211 @@ doSearch();
 window.doSearch=()=>{
 const q=document.getElementById('q').value.toLowerCase(); const g=document.getElementById('gradeSel').value;
 filtered=all.filter(u=>{
-const matchQ=!q || (u.email||'').toLowerCase().includes(q) || (u.displayName||'').toLowerCase().includes(q) || (u.mpesaCode||'').toLowerCase().includes(q);
+const matchQ=!q || (u.email||'').toLowerCase().includes(q) || (u.displayName||'').toLowerCase().includes(q) || (u.mpesaCode||'').toLowerCase().includes(q) || (u.indexNumber||'').toLowerCase().includes(q) || (u.id||'').toLowerCase().includes(q) || (u.grade||'').toLowerCase().includes(q);
 const matchG=!g || u.grade===g;
 return matchQ && matchG;
 });
-renderStudents(); renderTeachers(); renderPayments();
+renderStudents(); renderTeachers(); renderParents(); renderPayments();
 };
 
 window.renderStudents=()=>{
-const box=document.getElementById('studentsBox'); const list=filtered.filter(u=>u.role!=='teacher');
-box.innerHTML=list.length?"" : "<p class='col-span-3 text-center py-10 text-gray-400'>No students</p>";
+const box=document.getElementById('studentsBox');
+let list=filtered.filter(u=>(u.role||'learner')!=='teacher');
+// ORDERED BY SHKE INDEX - SHKE00500, SHKE00501...
+list.sort((a,b)=>(a.indexNumber||"ZZZ").localeCompare(b.indexNumber||"ZZZ"));
+box.innerHTML=list.length?"" : "<p class='text-center py-10 text-gray-400'>No students SHKE - First SHKE00500 counting from 500 - Ordered by index</p>";
 list.forEach(u=>{
-box.innerHTML+=`<div class="bg-white p-4 rounded-2xl shadow-sm border">
-<div class="flex justify-between"><span class="bg-blue-100 text-blue-700 px-2 py-1 rounded-full text-[10px] font-bold">${u.grade||'No Grade'}</span><span class="${u.isPremium?'bg-green-600 text-white':'bg-gray-100'} px-2 py-1 rounded-full text-[10px]">${u.isPremium?'PAID':'FREE'}</span></div>
-<p class="font-bold text-sm mt-3">${u.displayName||u.email?.split('@')[0]}</p><p class="text-[11px] text-gray-500">${u.email}</p>
-<p class="text-[10px] mt-1">Mpesa: <b>${u.mpesaCode||'-'}</b> • ${u.status||'free'}</p>
-<div class="flex gap-2 mt-3">
-${!u.isPremium?`<button onclick="approveU('${u.id}')" class="flex-1 bg-black text-white py-2 rounded-full text-xs font-bold">Approve 500 KES</button>`:`<button onclick="revokeU('${u.id}')" class="flex-1 bg-red-50 py-2 rounded-full text-xs">Revoke</button>`}
-<button onclick="delU('${u.id}')" class="bg-gray-100 px-3 py-2 rounded-full text-xs">Del</button>
-</div></div>`;
+const hw=allHW.filter(h=>h.userId===u.id || h.indexNumber===u.indexNumber);
+const exams=allExams.filter(e=>e.userId===u.id || e.indexNumber===u.indexNumber);
+const hwAvg=hw.length>0? (hw.reduce((a,b)=>a+b.score,0)/hw.length).toFixed(1) : "0";
+const examAvg=exams.length>0? Math.round(exams.reduce((a,b)=>a+b.score,0)/exams.reduce((a,b)=>a+b.total,0)*100) : 0;
+const today=new Date().toISOString().split('T')[0];
+const todayDone=hw.some(h=>h.date===today);
+const mostFailed=hw.length>0? hw[0].mostFailedTopic : exams.length>0? exams[0].mostFailedTopic : "-";
+const lastHW=hw.sort((a,b)=>(b.timestamp?.seconds||0)-(a.timestamp?.seconds||0))[0];
+const lastExam=exams.sort((a,b)=>(b.timestamp?.seconds||0)-(a.timestamp?.seconds||0))[0];
+
+box.innerHTML+=`<div class="bg-white p-5 rounded-2xl shadow-sm border border-blue-200 hover:shadow-md transition">
+<div class="flex justify-between items-start">
+<div>
+<p class="font-black text-sm text-blue-600">📘 ${u.indexNumber||'No SHKE - Will auto get SHKE00500+ counting from 500'} - Ordered by SHKE Index</p>
+<p class="font-bold text-sm mt-1">${u.displayName||u.email?.split('@')[0]} - ${u.grade||'No Grade'}</p>
+<p class="text-[11px] text-gray-500">${u.email} • User ID: ${u.id.substring(0,12)}... • Counting from 500</p>
+<p class="text-[10px] mt-1 text-gray-400">Mpesa: <b>${u.mpesaCode||'-'}</b> • Status: ${u.status||'free'} • Premium: ${u.isPremium?'YES Till 0701305109':'FREE'} • Index Order: ${u.indexNumber||'No SHKE'}</p>
+</div>
+<div class="text-right"><span class="${u.isPremium?'bg-green-600 text-white':'bg-gray-100'} px-3 py-1 rounded-full text-[10px] font-bold">${u.isPremium?'PAID 500 KES':'FREE'}</span><p class="text-[9px] mt-1 text-gray-400">SHKE Order</p></div>
+</div>
+
+<div class="mt-4 grid grid-cols-2 md:grid-cols-4 gap-3">
+<div class="bg-blue-50 border border-blue-200 p-3 rounded-xl text-center"><p class="text-[10px] text-gray-500">Daily HW 10 Marks - Total</p><p class="font-black text-lg text-blue-600">${hw.length}</p><p class="text-[10px]">Avg ${hwAvg}/10</p><p class="text-[9px] text-gray-400">${todayDone?'✅ Today Done wait tomorrow':'⚠️ Today Pending → Double'}</p></div>
+<div class="bg-purple-50 border border-purple-200 p-3 rounded-xl text-center"><p class="text-[10px] text-gray-500">Weekly Exams - Total</p><p class="font-black text-lg text-purple-600">${exams.length}</p><p class="text-[10px]">Avg ${examAvg}%</p><p class="text-[9px] text-gray-400">${exams.length===0?'No exam - Pending':'Last '+ (lastExam?.score||0)+'/'+(lastExam?.total||0)}</p></div>
+<div class="bg-yellow-50 border border-yellow-200 p-3 rounded-xl text-center"><p class="text-[10px] text-gray-500">Most Failed Topic</p><p class="font-bold text-xs mt-1">${mostFailed}</p><p class="text-[9px] text-gray-400 mt-1">Needs remedy + notes link</p></div>
+<div class="bg-green-50 border border-green-200 p-3 rounded-xl text-center"><p class="text-[10px] text-gray-500">Last Performance</p><p class="font-bold text-xs mt-1">${lastHW? lastHW.date+' '+lastHW.subject+' '+lastHW.score+'/10' : lastExam? lastExam.date+' Exam '+lastExam.score+'/'+lastExam.total : 'No data'}</p><p class="text-[9px] text-gray-400">Parent sees at parent.html with ${u.indexNumber||'SHKE'}</p></div>
+</div>
+
+<div class="mt-3 bg-gray-50 p-3 rounded-xl border">
+<p class="font-bold text-[11px]">📝 Weekly Exams + Homework Performance - SHKE ${u.indexNumber||''} - How they perform</p>
+<p class="text-[10px] text-gray-600 mt-1">Daily HW: ${hw.slice(0,3).map(h=>`${h.date} ${h.subject} ${h.score}/10 ${h.score>=7?'✅':h.score<=4?'❌':'⚠️'}`).join(' | ') || 'No daily HW - Pending → Double'} </p>
+<p class="text-[10px] text-gray-600 mt-1">Weekly Exams: ${exams.slice(0,3).map(e=>`${e.date||''} ${e.subject||'Exam'} ${e.score}/${e.total} ${Math.round(e.score/e.total*100)}%`).join(' | ') || 'No weekly exams - If didn\'t do exam shows pending'}</p>
+${mostFailed && mostFailed!=="-"? `<p class="text-[10px] text-red-600 mt-1">❌ Most Failed: ${mostFailed} - Remedy: Revise Notes ${mostFailed} - Where information is notes.html?search=${mostFailed} - Direct link</p>` : `<p class="text-[10px] text-green-600 mt-1">✅ No failed - Good performance</p>`}
+</div>
+
+<div class="mt-3 flex gap-2 flex-wrap">
+<button onclick="openChat('${u.indexNumber||''}','${u.id}','student','${u.email} - ${u.grade||''} - SHKE ${u.indexNumber||''}')" class="flex-1 bg-green-600 text-white py-2.5 rounded-full text-xs font-bold">💬 Tap to Communicate - Student SHKE ${u.indexNumber||''} - Human Assistant</button>
+<button onclick="approveU('${u.id}')" class="${!u.isPremium?'bg-black text-white':'bg-gray-100'} px-4 py-2.5 rounded-full text-xs font-bold">${!u.isPremium?'Approve 500 KES':'Revoke'}</button>
+<button onclick="viewDetails('${u.id}','${u.indexNumber||''}')" class="bg-blue-100 text-blue-700 px-4 py-2.5 rounded-full text-xs font-bold">📊 Details</button>
+<button onclick="delU('${u.id}')" class="bg-red-50 text-red-600 px-3 py-2.5 rounded-full text-xs">Del</button>
+</div>
+</div>`;
 });
 };
 
 window.renderTeachers=()=>{
-const box=document.getElementById('teachersBox'); const list=filtered.filter(u=>u.role==='teacher');
-box.innerHTML=list.length?"" : "<p class='col-span-3 text-center py-10 text-gray-400'>No teachers</p>";
+const box=document.getElementById('teachersBox');
+let list=filtered.filter(u=>u.role==='teacher');
+// ORDERED BY USER ID - TEACHERS GIVEN USER ID
+list.sort((a,b)=>a.id.localeCompare(b.id));
+box.innerHTML=list.length?"" : "<p class='text-center py-10 text-gray-400'>No teachers - Teachers ordered by User ID - Given User ID</p>";
 list.forEach(u=>{
-box.innerHTML+=`<div class="bg-white p-4 rounded-2xl shadow-sm border-l-4 border-orange-400">
-<div class="flex justify-between"><span class="bg-orange-100 text-orange-700 px-2 py-1 rounded-full text-[10px] font-bold">TEACHER • ${u.grade||''}</span><span class="${u.isPremium?'bg-green-600 text-white':'bg-gray-100'} px-2 py-1 rounded-full text-[10px]">${u.isPremium?'PAID':'FREE'}</span></div>
-<p class="font-bold text-sm mt-3">${u.displayName||u.email?.split('@')[0]}</p><p class="text-[11px] text-gray-500">${u.email}</p>
-<p class="text-[10px] mt-1">Mpesa: <b>${u.mpesaCode||'-'}</b></p>
-<div class="flex gap-2 mt-3">
-${!u.isPremium?`<button onclick="approveU('${u.id}')" class="flex-1 bg-orange-500 text-white py-2 rounded-full text-xs font-bold">Approve 500</button>`:`<button onclick="revokeU('${u.id}')" class="flex-1 bg-red-50 py-2 rounded-full text-xs">Revoke</button>`}
-<button onclick="delU('${u.id}')" class="bg-gray-100 px-3 py-2 rounded-full text-xs">Del</button>
-</div></div>`;
+const hw=allHW.filter(h=>h.userId===u.id).length;
+box.innerHTML+=`<div class="bg-white p-5 rounded-2xl shadow-sm border-l-4 border-orange-400 hover:shadow-md transition">
+<div class="flex justify-between items-start">
+<div>
+<p class="font-black text-sm text-orange-600">👩‍🏫 TEACHER - Ordered by User ID - Given User ID</p>
+<p class="font-bold text-sm mt-1">${u.displayName||u.email?.split('@')[0]} - ${u.grade||'No Grade'}</p>
+<p class="text-[11px] text-gray-500">${u.email}</p>
+<p class="text-[10px] mt-1 font-mono bg-black text-white px-2 py-1 rounded-full inline-block">User ID: ${u.id} - Given User ID - Teachers given User ID</p>
+<p class="text-[10px] mt-2 text-gray-400">SHKE: ${u.indexNumber||'No SHKE - Teachers also get SHKE00500+ counting from 500 if student'} • Mpesa: <b>${u.mpesaCode||'-'}</b> • Premium: ${u.isPremium?'YES':'FREE'} • HW Created: ${hw}</p>
+</div>
+<span class="${u.isPremium?'bg-green-600 text-white':'bg-gray-100'} px-3 py-1 rounded-full text-[10px] font-bold h-fit">${u.isPremium?'PAID':'FREE'}</span>
+</div>
+<div class="mt-3 flex gap-2">
+<button onclick="openChat('${u.indexNumber||u.id}','${u.id}','teacher','${u.email} - Teacher - User ID ${u.id} - SHKE ${u.indexNumber||''}')" class="flex-1 bg-orange-500 text-white py-2.5 rounded-full text-xs font-bold">💬 Tap to Communicate - Teacher User ID ${u.id.substring(0,8)}... - Human Assistant</button>
+<button onclick="approveU('${u.id}')" class="${!u.isPremium?'bg-black text-white':'bg-gray-100'} px-4 py-2.5 rounded-full text-xs font-bold">${!u.isPremium?'Approve':'Revoke'}</button>
+<button onclick="delU('${u.id}')" class="bg-red-50 text-red-600 px-3 py-2.5 rounded-full text-xs">Del</button>
+</div>
+</div>`;
+});
+};
+
+window.renderParents=()=>{
+const box=document.getElementById('parentsBox');
+// Parents = distinct SHKE index with student data
+let parentMap={};
+all.forEach(u=>{
+  if(u.indexNumber?.startsWith('SHKE')){
+    if(!parentMap[u.indexNumber]) parentMap[u.indexNumber]= {indexNumber:u.indexNumber, student:u, hw:[], exams:[], messages:0};
+  }
+});
+allHW.forEach(h=>{
+  const idx=h.indexNumber; if(idx && parentMap[idx]) parentMap[idx].hw.push(h);
+});
+allExams.forEach(e=>{
+  const idx=e.indexNumber; if(idx && parentMap[idx]) parentMap[idx].exams.push(e);
+});
+
+let list=Object.values(parentMap);
+// Filter by search
+const q=document.getElementById('q').value.toLowerCase();
+if(q) list=list.filter(p=> (p.indexNumber.toLowerCase().includes(q) || p.student.email.toLowerCase().includes(q) || p.student.grade?.toLowerCase().includes(q)));
+// ORDERED BY SHKE INDEX
+list.sort((a,b)=>a.indexNumber.localeCompare(b.indexNumber));
+
+box.innerHTML=list.length?"" : "<p class='text-center py-10 text-gray-400'>No parents SHKE - Parents login at parent.html with SHKE00500 counting from 500 - Ordered by index - Separate data</p>";
+list.forEach(p=>{
+const hwAvg=p.hw.length>0? (p.hw.reduce((a,b)=>a+b.score,0)/p.hw.length).toFixed(1) : "0";
+const examAvg=p.exams.length>0? Math.round(p.exams.reduce((a,b)=>a+b.score,0)/p.exams.reduce((a,b)=>a+b.total,0)*100) : 0;
+const today=new Date().toISOString().split('T')[0];
+const todayDone=p.hw.some(h=>h.date===today);
+const mostFailed=p.hw.length>0? p.hw[0].mostFailedTopic : p.exams.length>0? p.exams[0].mostFailedTopic : "-";
+
+box.innerHTML+=`<div class="bg-white p-5 rounded-2xl shadow-sm border border-purple-200 hover:shadow-md transition">
+<div class="flex justify-between items-start">
+<div>
+<p class="font-black text-sm text-purple-600">👨‍👩‍👧 Parent SHKE ${p.indexNumber} - Separate Data - Ordered by SHKE Index</p>
+<p class="font-bold text-sm mt-1">Child: ${p.student.displayName||p.student.email?.split('@')[0]} - ${p.student.grade||'No Grade'} - Counting from 500</p>
+<p class="text-[11px] text-gray-500">Child Email: ${p.student.email} • Parent login parent.html with ${p.indexNumber} • Child SHKE ${p.indexNumber} counting from 500</p>
+<p class="text-[10px] mt-1 text-gray-400">Child User ID: ${p.student.id.substring(0,12)}... • Mpesa: ${p.student.mpesaCode||'-'} • Premium: ${p.student.isPremium?'YES':'FREE'} • Ordered by SHKE index</p>
+</div>
+<span class="bg-purple-600 text-white px-3 py-1 rounded-full text-[10px] font-black">PARENT SHKE ${p.indexNumber}</span>
+</div>
+
+<div class="mt-4 grid grid-cols-2 md:grid-cols-4 gap-3">
+<div class="bg-blue-50 border border-blue-200 p-3 rounded-xl text-center"><p class="text-[10px] text-gray-500">Child Daily HW 10 Marks</p><p class="font-black text-lg text-blue-600">${p.hw.length}</p><p class="text-[10px]">Avg ${hwAvg}/10</p><p class="text-[9px]">${todayDone?'✅ Today Done wait tomorrow':'⚠️ Today Pending → Double'}</p></div>
+<div class="bg-purple-50 border border-purple-200 p-3 rounded-xl text-center"><p class="text-[10px] text-gray-500">Child Weekly Exams</p><p class="font-black text-lg text-purple-600">${p.exams.length}</p><p class="text-[10px]">Avg ${examAvg}%</p><p class="text-[9px]">${p.exams.length===0?'No exam - If didn\'t do exam shows pending':'Last '+p.exams[0]?.score+'/'+p.exams[0]?.total}</p></div>
+<div class="bg-yellow-50 border border-yellow-200 p-3 rounded-xl text-center"><p class="text-[10px] text-gray-500">Child Most Failed</p><p class="font-bold text-xs mt-1">${mostFailed}</p><p class="text-[9px]">Needs remedy + notes link where info is</p></div>
+<div class="bg-green-50 border border-green-200 p-3 rounded-xl text-center"><p class="text-[10px] text-gray-500">Parent Monitoring</p><p class="font-bold text-xs mt-1">SHKE ${p.indexNumber}</p><p class="text-[9px]">Parent sees at parent.html with ${p.indexNumber} - Marks + correction + notes link</p></div>
+</div>
+
+<div class="mt-3 bg-gray-50 p-3 rounded-xl border">
+<p class="font-bold text-[11px]">👨‍👩‍👧 Parent Separate Data - Child Performance How they perform in weekly exams and homework - SHKE ${p.indexNumber}</p>
+<p class="text-[10px] text-gray-600 mt-1">Daily HW Performance: ${p.hw.slice(0,3).map(h=>`${h.date} ${h.subject} ${h.score}/10 ${h.score>=7?'✅':'❌'} Most failed ${h.mostFailedTopic}`).join(' | ') || 'No daily HW - Pending Monday → Tuesday double 20 marks - Today completed wait tomorrow'}</p>
+<p class="text-[10px] text-gray-600 mt-1">Weekly Exams Performance: ${p.exams.slice(0,3).map(e=>`${e.date||''} ${e.subject||'Exam'} ${e.score}/${e.total} ${Math.round(e.score/e.total*100)}% Most failed ${e.mostFailedTopic||''}`).join(' | ') || 'No weekly exams - If didn\'t do exam child can see pending - Weekly exam marks'}</p>
+<p class="text-[10px] text-purple-600 mt-1 font-bold">📚 Where information is - Notes link: ${mostFailed && mostFailed!=="-"? `Revise Notes ${mostFailed} - notes.html?search=${mostFailed} - Direct where info is` : 'Perfect - No failed'}</p>
+<p class="text-[10px] text-gray-500 mt-1">Alerts: ${!todayDone?'⚠️ Today pending → Tomorrow double 20 marks - Monday pending → Tuesday double':''} ${p.hw.filter(h=>h.score<=4).length>=2?'🔴 Failed 2+ HW ≤4/10 - Needs parent help':''}</p>
+</div>
+
+<div class="mt-3 flex gap-2 flex-wrap">
+<button onclick="openChat('${p.indexNumber}','${p.student.id}','parent','Parent of SHKE ${p.indexNumber} - Child ${p.student.email} - Grade ${p.student.grade||''} - Child performance Daily HW ${hwAvg}/10 Weekly ${examAvg}% - Most failed ${mostFailed}')" class="flex-1 bg-purple-600 text-white py-2.5 rounded-full text-xs font-bold">💬 Tap to Communicate - Parent SHKE ${p.indexNumber} - Child ${p.student.email?.split('@')[0]} - Human Assistant</button>
+<button onclick="viewDetails('${p.student.id}','${p.indexNumber}')" class="bg-blue-100 text-blue-700 px-4 py-2.5 rounded-full text-xs font-bold">📊 View Child Details</button>
+</div>
+</div>`;
 });
 };
 
 window.renderPayments=()=>{
 const body=document.getElementById('payBody'); const list=filtered.filter(u=>u.mpesaCode||u.status==='pending_payment');
-body.innerHTML=list.length?"" : "<tr><td colspan=4 class='p-10 text-center text-gray-400'>No M-Pesa payments - Waiting for Till 0701305109</td></tr>";
+list.sort((a,b)=>(a.indexNumber||"ZZZ").localeCompare(b.indexNumber||"ZZZ"));
+body.innerHTML=list.length?"" : "<tr><td colspan=5 class='p-10 text-center text-gray-400'>No M-Pesa payments - Waiting Till 0701305109 - SHKE00500+ Ordered by index</td></tr>";
 list.forEach(u=>{
-body.innerHTML+=`<tr class="border-b"><td class="p-3"><p class="font-bold">${u.displayName||u.email?.split('@')[0]}</p><p class="text-[10px] text-gray-500">${u.email} • ${u.grade||''}</p></td><td class="p-3 font-mono font-bold">${u.mpesaCode||'-'}</td><td class="p-3"><span class="bg-yellow-100 px-2 py-1 rounded-full text-[10px] font-bold">${u.status}</span></td><td class="p-3 flex gap-1"><button onclick="approveU('${u.id}')" class="bg-green-600 text-white px-3 py-1 rounded-full text-[10px] font-bold">Approve</button><button onclick="revokeU('${u.id}')" class="bg-gray-100 px-2 py-1 rounded-full text-[10px]">X</button></td></tr>`;
+body.innerHTML+=`<tr class="border-b"><td class="p-3"><p class="font-bold">${u.displayName||u.email?.split('@')[0]} - SHKE ${u.indexNumber||''} Ordered by index</p><p class="text-[10px] text-gray-500">${u.email} • ${u.grade||''} • User ID ${u.id.substring(0,8)}... • Counting from 500</p></td><td class="p-3 font-mono font-black text-blue-600">${u.indexNumber||'No SHKE - counting from 500'}</td><td class="p-3 font-mono font-bold">${u.mpesaCode||'-'} Till 0701305109</td><td class="p-3"><span class="bg-yellow-100 px-2 py-1 rounded-full text-[10px] font-bold">${u.status}</span></td><td class="p-3"><button onclick="openChat('${u.indexNumber||''}','${u.id}','${(u.role||'learner')==='teacher'?'teacher':u.indexNumber?'parent':'student'}','${u.email} - SHKE ${u.indexNumber||''} - Mpesa ${u.mpesaCode||''}')" class="bg-green-600 text-white px-3 py-1 rounded-full text-[10px] font-bold">💬 Tap to Communicate</button></td></tr>`;
 });
 };
 
-window.approveU=async(id)=>{if(!confirm("Confirm 500 KES received on Till 0701305109? Approve Premium?")) return; await FB.updateDoc(FB.doc(FB.db,"users",id),{isPremium:true, status:"active", premiumUntil:"90 days", approvedAt:FB.serverTimestamp()}); loadData();};
-window.revokeU=async(id)=>{if(!confirm("Revoke premium?")) return; await FB.updateDoc(FB.doc(FB.db,"users",id),{isPremium:false, status:"free"}); loadData();};
-window.delU=async(id)=>{if(!confirm("DELETE user permanently?")) return; await FB.deleteDoc(FB.doc(FB.db,"users",id)); loadData();};
-window.exportCSV=()=>{let csv="Type,Email,Name,Grade,Role,Mpesa,Premium,Status,Joined\n"; all.forEach(u=>{const type=u.role==='teacher'?'Teacher':'Student'; csv+=`${type},"${u.email||''}","${u.displayName||''}","${u.grade||''}","${u.role||''}","${u.mpesaCode||''}","${u.isPremium||false}","${u.status||''}","${u.createdAt?new Date(u.createdAt.seconds*1000).toLocaleDateString():''}"\n`;}); const a=document.createElement('a'); a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'})); a.download="somahub_data_"+new Date().toISOString().slice(0,10)+".csv"; a.click();};
-window.whatsappBlast=()=>{let txt="SomaHub - Free users emails:\n"; all.filter(u=>!u.isPremium).forEach(u=>{txt+=u.email+", ";}); prompt("Copy for WhatsApp broadcast:",txt);};
+window.openChat=async(shke, userId, role, info)=>{
+currentChatSHKE=shke; currentChatUserId=userId; currentChatRole=role;
+document.getElementById('chatUserInfo').innerText=`${role.toUpperCase()} - ${info} - SHKE ${shke} - Ordered by ${role==='teacher'?'User ID '+userId.substring(0,12)+' - Teachers given User ID':'SHKE Index '+shke+' - Counting from 500'}`;
+document.getElementById('chatModal').classList.remove('hidden');
+loadChatHistory();
+};
+
+window.closeChat=()=>{document.getElementById('chatModal').classList.add('hidden'); currentChatSHKE=null;};
+
+window.loadChatHistory=async()=>{
+if(!currentChatSHKE) return;
+const FB=window.FB;
+try{
+const q=FB.query(FB.collection(FB.db,"parent_messages"), FB.where("indexNumber","==",currentChatSHKE), FB.orderBy("timestamp","asc"));
+const snap=await FB.getDocs(q); let all=[]; snap.forEach(d=>all.push(d.data()));
+const q2=FB.query(FB.collection(FB.db,"human_assist_messages"), FB.where("indexNumber","==",currentChatSHKE), FB.orderBy("timestamp","asc"));
+const snap2=await FB.getDocs(q2); snap2.forEach(d=>all.push(d.data()));
+all.sort((a,b)=>(a.timestamp?.seconds||0)-(b.timestamp?.seconds||0));
+document.getElementById('chatHistory').innerHTML=all.map(m=>{
+const isAdmin=m.from==='admin' || m.fromRole==='admin';
+return `<div class="flex ${isAdmin?'justify-end':'justify-start'}"><div class="${isAdmin?'bg-green-600 text-white':'bg-white border'} p-2.5 rounded-2xl max-w-[85%]"><p class="font-bold text-[9px]">${isAdmin?'💬 You - Human Assistant Admin':'${m.fromId||currentChatSHKE} - '+currentChatRole}</p><p class="mt-1">${m.message}</p><p class="text-[8px] opacity-60 mt-1">${m.timestamp?.toDate?.()?.toLocaleString()||''} - SHKE ${m.indexNumber||''}</p></div></div>`;
+}).join('') || `<p class="text-center text-gray-400 py-8">No messages yet with ${currentChatRole} SHKE ${currentChatSHKE} - Teachers User ID ${currentChatUserId} - Tap to communicate as Human Assistant Admin monitoring all data<br>Ordered by ${currentChatRole==='teacher'?'User ID':'SHKE Index'} counting from 500</p>`;
+document.getElementById('chatHistory').scrollTop=document.getElementById('chatHistory').scrollHeight;
+}catch(e){ document.getElementById('chatHistory').innerHTML=`Error: ${e.message}`; }
+};
+
+window.sendChat=async()=>{
+const FB=window.FB; const txt=document.getElementById('chatInput').value.trim(); if(!txt||!currentChatSHKE) return;
+const msg={indexNumber:currentChatSHKE, fromId:"admin", toId:currentChatSHKE, fromRole:"admin", toRole:currentChatRole, from:"admin", to:currentChatRole, message:txt, timestamp:FB.serverTimestamp(), humanAssistant:true, type:"admin_tap_communicate"};
+await FB.setDoc(FB.doc(FB.collection(FB.db,"human_assist_messages")), msg);
+await FB.setDoc(FB.doc(FB.collection(FB.db,"parent_messages")), {indexNumber:currentChatSHKE, childUserId:currentChatUserId||"", from:"admin", to:currentChatRole, message:txt+" - Human Assistant Admin - Ordered by "+(currentChatRole==='teacher'?"User ID":"SHKE Index")+" counting from 500", timestamp:FB.serverTimestamp(), type:"admin_tap_communicate"});
+document.getElementById('chatInput').value=""; loadChatHistory();
+};
+window.quickChat=(t)=>{document.getElementById('chatInput').value=t;};
+
+window.approveU=async(id)=>{if(!confirm("Confirm 500 KES received Till 0701305109? Approve SHKE?")) return; await FB.updateDoc(FB.doc(FB.db,"users",id),{isPremium:true, status:"active", premiumUntil:"90 days", approvedAt:FB.serverTimestamp()}); loadData();};
+window.revokeU=async(id)=>{if(!confirm("Revoke?")) return; await FB.updateDoc(FB.doc(FB.db,"users",id),{isPremium:false, status:"free"}); loadData();};
+window.delU=async(id)=>{if(!confirm("DELETE permanently SHKE?")) return; await FB.deleteDoc(FB.doc(FB.db,"users",id)); loadData();};
+window.viewDetails=async(id,shke)=>{
+const hw=allHW.filter(h=>h.userId===id||h.indexNumber===shke);
+const exams=allExams.filter(e=>e.userId===id||e.indexNumber===shke);
+alert(`📊 Details SHKE ${shke} - Ordered by SHKE Index counting from 500\n\nDaily HW 10 Marks: Total ${hw.length}\nAvg ${hw.length>0?(hw.reduce((a,b)=>a+b.score,0)/hw.length).toFixed(1):0}/10\nLast 3: ${hw.slice(0,3).map(h=>`${h.date} ${h.subject} ${h.score}/10 Most failed ${h.mostFailedTopic}`).join('\\n')}\n\nWeekly Exams: Total ${exams.length}\nAvg ${exams.length>0?Math.round(exams.reduce((a,b)=>a+b.score,0)/exams.reduce((a,b)=>a+b.total,0)*100):0}%\nLast 3: ${exams.slice(0,3).map(e=>`${e.subject||'Exam'} ${e.score}/${e.total}`).join('\\n')}\n\nMost Failed: ${hw[0]?.mostFailedTopic||exams[0]?.mostFailedTopic||'-'}\nNotes link where info is: notes.html?search=${hw[0]?.mostFailedTopic||''}\n\nParent sees at parent.html login ${shke} - Marks + correction + notes link + most failed + remedy + pending double + weekly exams + if didn't do exam\nTeachers ordered by User ID - Given User ID ${id}`);
+};
+window.exportCSV=()=>{let csv="Order Type,SHKE Index Ordered,User ID (Teachers given User ID),Email,Name,Grade,Role,Mpesa,Premium,Status,Daily HW Total,Daily HW Avg 10,Weekly Exams Total,Weekly Exams Avg %,Most Failed,Today Done,Counting from 500\n"; let ordered=[...all].sort((a,b)=>(a.indexNumber||"ZZZ").localeCompare(b.indexNumber||"ZZZ")); ordered.forEach((u,i)=>{const hw=allHW.filter(h=>h.userId===u.id||h.indexNumber===u.indexNumber); const exams=allExams.filter(e=>e.userId===u.id||e.indexNumber===u.indexNumber); const hwAvg=hw.length>0?(hw.reduce((a,b)=>a+b.score,0)/hw.length).toFixed(1):0; const examAvg=exams.length>0?Math.round(exams.reduce((a,b)=>a+b.score,0)/exams.reduce((a,b)=>a+b.total,0)*100):0; csv+=`${i+1},"${u.indexNumber||''}","${u.id}","${u.email||''}","${u.displayName||''}","${u.grade||''}","${u.role||''}","${u.mpesaCode||''}","${u.isPremium||false}","${u.status||''}",${hw.length},${hwAvg},${exams.length},${examAvg},"${hw[0]?.mostFailedTopic||''}",${hw.some(h=>h.date===new Date().toISOString().split('T')[0])?'Today Done wait tomorrow':'Pending → Double'},"Counting from 500 SHKE00500"\n`;}); const a=document.createElement('a'); a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'})); a.download="somahub_ALL_users_ordered_SHKE_index_teachers_user_id_"+new Date().toISOString().slice(0,10)+".csv"; a.click();};
 },700);
 </script>
 </body>
