@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SomaHub - Lesson Plans PP1-G9 | CBC KICD</title>
+<title>SomaHub Lesson Plans - REAL AI KICD + Notes + YouTube</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <script type="module">
@@ -24,152 +24,157 @@ window.FB={auth,db,provider,signInWithPopup,signInWithEmailAndPassword,createUse
 <body class="bg-indigo-50">
 <header class="bg-white shadow sticky top-0 z-50">
 <div class="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
-<a href="/" class="font-bold"><i class="fa-solid fa-person-chalkboard text-indigo-600"></i> Lesson Plans</a>
-<div class="flex gap-2 items-center"><a href="/dashboard.html" class="text-xs bg-gray-100 px-3 py-2 rounded-full">Dashboard</a><a href="/schemes.html" class="text-xs bg-yellow-100 px-3 py-2 rounded-full">Schemes</a><button id="authBtn" class="bg-indigo-600 text-white px-4 py-2 rounded-full text-sm font-bold">Login</button></div>
+<a href="/" class="font-bold text-sm"><i class="fa-solid fa-person-chalkboard text-indigo-600"></i> Lesson Plans <span id="aiLive" class="bg-red-100 text-red-600 text-[9px] px-2 py-1 rounded-full ml-2">AI OFF</span></a>
+<div class="flex gap-2 items-center">
+<span id="premB" class="hidden bg-green-600 text-white px-3 py-1 rounded-full text-[10px] font-bold">PREMIUM</span>
+<a href="/ai-assistant.html" class="text-xs bg-black text-white px-3 py-2 rounded-full">🤖 AI Assistant</a>
+<a href="/notes.html" class="text-xs bg-purple-100 px-3 py-2 rounded-full">Notes + Video</a>
+<button id="authBtn" class="bg-indigo-600 text-white px-4 py-2 rounded-full text-xs font-bold">Login</button>
+</div>
 </div>
 </header>
 
 <div class="max-w-7xl mx-auto p-4">
-<div class="bg-gradient-to-r from-indigo-600 to-purple-700 rounded-2xl p-6 text-white">
-<h1 class="text-2xl font-bold">📖 Lesson Plans - PP1 to Grade 9</h1><p class="text-sm mt-1">CBC Format • KICD Aligned • Detailed • Editable • 40 min</p>
-<div id="premB" class="hidden mt-3 bg-white text-indigo-700 px-3 py-1 rounded-full text-xs inline-block font-bold">✅ PREMIUM TEACHER</div>
-<div id="freeB" class="mt-3 bg-white/20 px-3 py-1 rounded-full text-xs inline-block">🔒 500 KES / 3 Months - Till 0701305109</div>
-<button onclick="aiGen()" class="mt-4 bg-white text-indigo-600 px-4 py-2 rounded-full text-xs font-bold">🤖 AI Generate Lesson Plan</button>
+<div class="bg-gradient-to-r from-indigo-600 to-black rounded-[1.5rem] p-6 text-white">
+<h1 class="text-xl font-black">📖 Lesson Plans PP1-G9 - REAL AI + Notes Search + YouTube</h1>
+<p class="text-xs mt-2">AI generates KICD lesson from YOUR notes • Search word meaning by level • YouTube process video • Sets homework from notes</p>
+<div class="mt-4 bg-white rounded-xl p-2 flex gap-2">
+<input id="wordSearch" placeholder="🔍 Search word in notes e.g 'photosynthesis' + get YouTube video" class="flex-1 p-3 rounded-xl text-sm text-black outline-none">
+<button onclick="searchWord()" class="bg-purple-600 text-white px-4 py-3 rounded-xl font-bold text-xs">Search Notes</button>
+<button onclick="searchYouTube()" class="bg-red-600 text-white px-4 py-3 rounded-xl font-bold text-xs">🎥 Video</button>
+</div>
+<div id="searchResult" class="hidden mt-4 bg-white text-black rounded-xl p-4 text-sm"></div>
+<div id="youtubeBox" class="hidden mt-4 bg-white rounded-xl p-3"></div>
 </div>
 
-<div class="mt-6 bg-white p-4 rounded-2xl shadow-sm grid md:grid-cols-4 gap-3">
-<select id="gradeSel" class="border p-3 rounded-xl text-sm"><option>PP1</option><option>PP2</option><option>Grade 1</option><option>Grade 2</option><option>Grade 3</option><option>Grade 4</option><option>Grade 5</option><option>Grade 6</option><option>Grade 7</option><option>Grade 8</option><option>Grade 9</option></select>
-<select id="subSel" class="border p-3 rounded-xl text-sm"><option>All Subjects</option><option>Mathematics</option><option>English</option><option>Kiswahili</option><option>Science</option><option>SST</option><option>CRE</option><option>Agriculture</option></select>
-<select id="weekSel" class="border p-3 rounded-xl text-sm"><option>All Weeks</option><option>Week 1</option><option>Week 2</option><option>Week 3</option><option>Week 4</option><option>Week 5</option><option>Week 6</option><option>Week 7</option><option>Week 8</option><option>Week 9</option><option>Week 10</option><option>Week 11</option><option>Week 12</option></select>
-<button onclick="loadPlans()" class="bg-indigo-600 text-white py-3 rounded-xl font-bold text-sm">🔍 Show Plans</button>
+<div class="mt-6 bg-white p-4 rounded-2xl shadow border grid md:grid-cols-5 gap-3">
+<select id="gradeSel" class="border p-3 rounded-xl text-sm"><option>PP1</option><option>PP2</option><option>Grade 1</option><option>Grade 2</option><option>Grade 3</option><option>Grade 4</option><option>Grade 5</option><option>Grade 6</option><option selected>Grade 7</option><option>Grade 8</option><option>Grade 9</option></select>
+<select id="subSel" class="border p-3 rounded-xl text-sm"><option>Mathematics</option><option>English</option><option>Kiswahili</option><option>Science and Technology</option><option selected>SST</option><option>CRE</option><option>Agriculture and Nutrition</option><option>Creative Arts</option></select>
+<select id="weekSel" class="border p-3 rounded-xl text-sm"><option>Week 1</option><option>Week 2</option><option>Week 3</option><option>Week 4</option><option>Week 5</option><option>Week 6</option><option>Week 7</option><option>Week 8</option></select>
+<button onclick="loadPlans()" class="bg-indigo-600 text-white py-3 rounded-xl font-bold text-sm">📚 Show Saved</button>
+<button onclick="aiGen()" class="bg-black text-white py-3 rounded-xl font-bold text-sm">🤖 AI Generate</button>
 </div>
 
-<div id="list" class="mt-6 grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-<div class="col-span-full bg-white p-10 rounded-2xl text-center"><p class="text-3xl">📖</p><p class="text-sm text-gray-500 mt-2">Select grade & subject to show lesson plans</p></div>
+<div id="list" class="mt-6 grid md:grid-cols-2 gap-4"></div>
+
+<div id="aiBox" class="mt-6 bg-white p-6 rounded-[1.5rem] shadow border-2 border-indigo-200">
+<h3 class="font-black flex justify-between">🤖 REAL AI Lesson Plan Generator - From Your Notes + KICD <span class="text-[10px] bg-green-100 text-green-700 px-2 py-1 rounded-full">Gemini Live</span></h3>
+<p class="text-xs text-gray-500 mt-1">AI reads your notes collection for this grade/subject and creates KICD lesson + sets homework from notes + level comparison</p>
+<div class="grid md:grid-cols-4 gap-2 mt-4">
+<input id="aiTopic" placeholder="Topic e.g Fractions, Mau Mau, Photosynthesis" class="border p-3 rounded-xl text-sm">
+<select id="aiGrade" class="border p-3 rounded-xl text-sm"><option>PP1</option><option>Grade 1</option><option>Grade 2</option><option>Grade 3</option><option>Grade 4</option><option>Grade 5</option><option>Grade 6</option><option selected>Grade 7</option><option>Grade 8</option><option>Grade 9</option></select>
+<select id="aiMode" class="border p-3 rounded-xl text-sm font-bold"><option value="lesson">📖 Lesson Plan KICD</option><option value="homework">📝 Homework from Notes</option><option value="exam">📝 Exam from Notes</option><option value="scheme">📅 Scheme of Work</option></select>
+<button onclick="generateReal()" class="bg-indigo-600 text-white py-3 rounded-xl font-black text-sm">✨ Generate Real AI</button>
+</div>
+<div id="aiOut" class="mt-4 bg-[#0a0a0a] text-white p-5 rounded-xl text-sm min-h-[250px] whitespace-pre-wrap leading-relaxed">Generated KICD lesson will appear here with real AI from your notes...</div>
+<div class="mt-3 flex gap-2"><button onclick="copyAI()" class="bg-black text-white px-4 py-2 rounded-full text-xs font-bold">📋 Copy</button><button onclick="saveToNotes()" class="bg-green-600 text-white px-4 py-2 rounded-full text-xs font-bold">💾 Save to Resources</button><button onclick="generateYouTube()" class="bg-red-600 text-white px-4 py-2 rounded-full text-xs font-bold">🎥 Get Video for Topic</button></div>
+</div>
 </div>
 
-<div id="aiBox" class="hidden mt-6 bg-white p-5 rounded-2xl shadow border-2 border-indigo-200">
-<h3 class="font-bold">🤖 AI Lesson Plan Generator (Premium)</h3>
-<div class="grid md:grid-cols-3 gap-2 mt-3">
-<input id="aiTopic" placeholder="Topic e.g Fractions, Photosynthesis" class="border p-3 rounded-xl text-sm">
-<select id="aiGrade" class="border p-3 rounded-xl text-sm"><option>PP1</option><option>Grade 1</option><option>Grade 2</option><option>Grade 3</option><option>Grade 4</option><option>Grade 5</option><option>Grade 6</option><option>Grade 7</option><option>Grade 8</option><option>Grade 9</option></select>
-<button onclick="generate()" class="bg-indigo-600 text-white py-3 rounded-xl font-bold text-sm">Generate Now</button>
-</div>
-<div id="aiOut" class="mt-4 bg-gray-50 p-4 rounded-xl text-sm min-h-[200px] whitespace-pre-wrap">Generated lesson will appear here...</div>
-<button onclick="copyAI()" class="mt-3 bg-gray-900 text-white px-4 py-2 rounded-full text-xs">📋 Copy Plan</button>
-</div>
-</div>
-
-<div id="authModal" class="hidden fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4"><div class="bg-white rounded-2xl p-6 w-full max-w-sm"><h3 class="font-bold">Teacher Login</h3><button id="gLogin" class="w-full border-2 py-3 rounded-full mt-3 text-sm font-bold"><i class="fa-brands fa-google text-red-500"></i> Google Login</button><input id="email" placeholder="Email" class="w-full border p-3 rounded-xl mt-3 text-sm"><input id="pass" type="password" placeholder="Password" class="w-full border p-3 rounded-xl mt-2 text-sm"><button id="eLogin" class="w-full bg-indigo-600 text-white py-3 rounded-full mt-3 font-bold">Login / Signup</button><button onclick="closeM()" class="w-full mt-2 text-xs">Close</button></div></div>
-<div id="subModal" class="hidden fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4"><div class="bg-white rounded-2xl p-6 w-full max-w-sm text-center"><h3 class="font-bold">Unlock Plans - 500 KES</h3><p class="text-sm">Till 0701305109 • 3 Months</p><input id="mpesa" placeholder="M-Pesa Code" class="w-full border p-3 rounded-xl mt-3 uppercase font-bold text-sm"><button onclick="submitMpesa()" class="w-full bg-green-600 text-white py-3 rounded-full mt-3 font-bold">Submit</button><button onclick="closeM()" class="w-full mt-2 text-xs">Close</button></div></div>
+<div id="authModal" class="hidden fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4"><div class="bg-white rounded-2xl p-6 w-full max-w-sm"><h3 class="font-bold">Teacher Login</h3><button id="gLogin" class="w-full border-2 py-3 rounded-full mt-3 text-sm font-bold">Google Login</button><input id="email" placeholder="Email" class="w-full border p-3 rounded-xl mt-3 text-sm"><input id="pass" type="password" placeholder="Password" class="w-full border p-3 rounded-xl mt-2 text-sm"><button id="eLogin" class="w-full bg-indigo-600 text-white py-3 rounded-full mt-3 font-bold">Login</button><button onclick="closeM()" class="w-full mt-2 text-xs">Close</button></div></div>
+<div id="subModal" class="hidden fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4"><div class="bg-white rounded-2xl p-6 w-full max-w-sm text-center"><h3 class="font-bold">Unlock - 500 KES Till 0701305109</h3><p class="text-sm">90 days - Real AI lesson plans from notes</p><input id="mpesa" placeholder="M-Pesa Code" class="w-full border p-3 rounded-xl mt-3 uppercase font-bold text-sm"><button onclick="submitMpesa()" class="w-full bg-green-600 text-white py-3 rounded-full mt-3 font-bold">Submit</button><button onclick="closeM()" class="w-full mt-2 text-xs">Close</button></div></div>
 
 <script>
-let currentUser=null, userData=null;
+let currentUser=null, userData=null, geminiKey="", allNotes=[];
 function closeM(){document.getElementById('authModal').classList.add('hidden'); document.getElementById('subModal').classList.add('hidden');}
-function aiGen(){document.getElementById('aiBox').classList.remove('hidden'); window.scrollTo(0,500);}
-function copyAI(){const t=document.getElementById('aiOut').innerText; navigator.clipboard.writeText(t); alert("Copied!");}
+function aiGen(){document.getElementById('aiBox').classList.remove('hidden'); document.getElementById('aiBox').scrollIntoView({behavior:'smooth'});}
+function copyAI(){navigator.clipboard.writeText(document.getElementById('aiOut').innerText); alert("Copied!");}
+
+async function callGemini(prompt){
+ if(!geminiKey) return null;
+ try{
+  const res=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${geminiKey}`,{method:"POST", headers:{"Content-Type":"application/json"}, body: JSON.stringify({contents:[{parts:[{text: prompt}]}]})});
+  const data=await res.json(); return data.candidates?.[0]?.content?.parts?.[0]?.text || null;
+ }catch(e){return null;}
+}
+
+async function loadNotesForGrade(grade, subject){
+ const FB=window.FB; try{ const q=FB.query(FB.collection(FB.db,"resources"), FB.where("grade","==",grade), FB.where("subject","==",subject)); const snap=await FB.getDocs(q); let arr=[]; snap.forEach(d=>arr.push(d.data())); return arr; }catch(e){return [];}
+}
 
 async function loadPlans(){
-const grade=document.getElementById('gradeSel').value; const sub=document.getElementById('subSel').value; const week=document.getElementById('weekSel').value;
-const list=document.getElementById('list'); list.innerHTML="<p class='col-span-full text-center py-10'>Loading "+grade+" lesson plans...</p>";
-try{
-const FB=window.FB; let q;
-if(sub==="All Subjects") q=FB.query(FB.collection(FB.db,"resources"), FB.where("grade","==",grade), FB.where("type","==","Lesson Plan"));
-else q=FB.query(FB.collection(FB.db,"resources"), FB.where("grade","==",grade), FB.where("subject","==",sub), FB.where("type","==","Lesson Plan"));
-const snap=await FB.getDocs(q);
-let results=[]; snap.forEach(d=>results.push(d.data()));
-if(week!=="All Weeks"){ results=results.filter(r=>!r.week || r.week===week || r.title?.includes(week)); }
-list.innerHTML="";
-if(results.length===0){list.innerHTML=`<div class="col-span-full bg-white p-10 rounded-2xl text-center"><p class="text-gray-500">No lesson plans for <b>${grade} - ${sub} - ${week}</b> yet</p><p class="text-xs mt-2 text-gray-400">Add via admin.html: Type=Lesson Plan, Grade=${grade}, Subject=${sub}</p><a href="/admin.html" class="inline-block mt-3 bg-black text-white px-4 py-2 rounded-full text-xs">Add in admin.html</a></div>`; return;}
-results.forEach(r=>{
-const prem=userData?.isPremium;
-list.innerHTML+=`<div class="bg-white p-5 rounded-2xl shadow-sm border hover:shadow-lg transition"><div class="flex justify-between text-[10px]"><span class="bg-indigo-100 text-indigo-700 px-2 py-1 rounded-full font-bold">${r.grade||grade}</span><span class="bg-purple-100 px-2 py-1 rounded-full">${r.subject||sub} • ${r.week||week}</span></div><h3 class="font-bold text-sm mt-3">${r.title||'Lesson Plan'}</h3><p class="text-[11px] text-gray-500 mt-1">📖 CBC Detailed • 40min • Activities + Assessment</p><button onclick="openLink('${r.link||'#'}')" class="w-full mt-3 ${prem?'bg-indigo-600':'bg-gray-800'} text-white py-2 rounded-full text-xs font-bold">${prem?'📥 Download Plan':'🔒 Subscribe (500 KES)'}</button></div>`;
-});
-}catch(e){document.getElementById('list').innerHTML="<p class='text-red-500 text-xs'>"+e.message+"</p>";}
+ const grade=document.getElementById('gradeSel').value; const sub=document.getElementById('subSel').value; const week=document.getElementById('weekSel').value;
+ const list=document.getElementById('list'); list.innerHTML="<p class='col-span-full text-center py-10'>Loading "+grade+" "+sub+" plans...</p>";
+ try{
+  const FB=window.FB; const q=FB.query(FB.collection(FB.db,"resources"), FB.where("grade","==",grade), FB.where("subject","==",sub), FB.where("type","==","Lesson Plan"));
+  const snap=await FB.getDocs(q); let results=[]; snap.forEach(d=>results.push({...d.data(), id:d.id}));
+  let filtered=results.filter(r=>!r.week || r.week===week || r.title?.includes(week));
+  if(filtered.length===0) filtered=results;
+  list.innerHTML=""; allNotes=filtered;
+  if(filtered.length===0){list.innerHTML=`<div class="col-span-full bg-white p-10 rounded-2xl text-center border"><p>No lesson plans for <b>${grade} - ${sub}</b> yet</p><p class="text-xs text-gray-500 mt-1">Click AI Generate to create from your notes</p><button onclick="aiGen()" class="mt-3 bg-black text-white px-4 py-2 rounded-full text-xs">🤖 AI Generate Now</button></div>`; return;}
+  filtered.forEach(r=>{
+   const prem=userData?.isPremium;
+   list.innerHTML+=`<div class="bg-white p-5 rounded-2xl shadow border"><div class="flex justify-between text-[10px]"><span class="bg-indigo-100 text-indigo-700 px-2 py-1 rounded-full font-bold">${r.grade}</span><span class="bg-gray-100 px-2 py-1 rounded-full">${r.subject} • ${r.week||'Week'}</span></div><h3 class="font-bold text-sm mt-3">${r.title}</h3><p class="text-[11px] text-gray-500 mt-1">${(r.description||'CBC 40min').substring(0,80)}</p><div class="grid grid-cols-2 gap-2 mt-3"><button onclick="openLink('${r.link}')" class="w-full ${prem?'bg-indigo-600':'bg-gray-800'} text-white py-2 rounded-full text-xs font-bold">${prem?'📖 Open':'🔒 Subscribe'}</button><button onclick="setTopic('${r.title}')" class="w-full border py-2 rounded-full text-xs font-bold">🤖 AI Regenerate</button></div></div>`;
+  });
+ }catch(e){document.getElementById('list').innerHTML=e.message;}
 }
 
-function openLink(link){
-if(!currentUser){document.getElementById('authModal').classList.remove('hidden'); return;}
-if(!userData?.isPremium){document.getElementById('subModal').classList.remove('hidden'); return;}
-if(!link||link=='#') return alert("No file link");
-window.open(link,"_blank");
+function setTopic(t){document.getElementById('aiTopic').value=t; aiGen();}
+function openLink(link){ if(!currentUser){document.getElementById('authModal').classList.remove('hidden'); return;} if(!userData?.isPremium){document.getElementById('subModal').classList.remove('hidden'); return;} if(!link||link=='#') return alert("No link"); window.open(link,"_blank"); }
+
+async function searchWord(){
+ const w=document.getElementById('wordSearch').value.trim(); if(!w) return alert("Type word");
+ const grade=document.getElementById('gradeSel').value;
+ const box=document.getElementById('searchResult'); box.classList.remove('hidden'); box.innerHTML=`<p class="animate-pulse">🔍 Searching "${w}" in your notes for ${grade}...</p>`;
+ let notes=await loadNotesForGrade(grade, document.getElementById('subSel').value);
+ let found=notes.filter(n=>(n.title+n.description).toLowerCase().includes(w.toLowerCase()));
+ let ai=await callGemini(`Explain word "${w}" for Kenyan CBC ${grade} ${document.getElementById('subSel').value}. Meaning from notes: ${found.map(n=>n.title).join(', ')||'none'}. Give definition according to level PP1 vs ${grade}, comparison, simple English+Kiswahili, Kenyan example, mnemonic.`);
+ box.innerHTML=`<h3 class="font-black">🔍 "${w}" - Found in ${found.length} notes + AI meaning for ${grade}</h3><div class="mt-2 grid gap-2">${found.map(n=>`<div class="bg-indigo-50 p-2 rounded-lg text-xs"><b>${n.title}</b> - ${n.description?.substring(0,100)} <button onclick="openLink('${n.link}')" class="bg-indigo-600 text-white px-2 py-1 rounded-full ml-2">Open</button></div>`).join('')||'<p class=text-xs>No exact in notes</p>'}<div class="mt-3 bg-black text-white p-3 rounded-xl text-xs">${ai? ai.replace(/\n/g,'<br>') : 'Add Gemini key in admin.html → AI Brain for real AI meaning + level comparison'}</div></div>`;
 }
 
-function generate(){
-const topic=document.getElementById('aiTopic').value.trim()||"Fractions"; const grade=document.getElementById('aiGrade').value;
-if(!currentUser){document.getElementById('authModal').classList.remove('hidden'); return;}
-if(!userData?.isPremium){document.getElementById('subModal').classList.remove('hidden'); return;}
-document.getElementById('aiOut').innerHTML="⏳ Generating CBC lesson plan for "+topic+"...";
-setTimeout(()=>{
-document.getElementById('aiOut').innerText=`CBC LESSON PLAN - ${grade}
-SUBJECT: Mathematics
-TOPIC: ${topic}
-DURATION: 40 Minutes
+function searchYouTube(){
+ const w=document.getElementById('wordSearch').value.trim()||document.getElementById('aiTopic').value.trim(); if(!w) return alert("Type word/topic first");
+ const grade=document.getElementById('gradeSel').value; const box=document.getElementById('youtubeBox'); box.classList.remove('hidden');
+ const q=encodeURIComponent(w+" "+grade+" CBC Kenya explained process");
+ box.innerHTML=`<h3 class="font-bold text-sm">🎥 YouTube Video for "${w}" - ${grade}</h3><iframe class="w-full h-[220px] rounded-xl mt-2" src="https://www.youtube.com/embed?listType=search&list=${q}" frameborder="0" allowfullscreen></iframe><a href="https://www.youtube.com/results?search_query=${q}" target="_blank" class="mt-2 block bg-red-600 text-white p-3 rounded-xl text-center font-bold text-sm">📺 Open YouTube: ${w}</a>`;
+}
+function generateYouTube(){ const t=document.getElementById('aiTopic').value.trim(); if(!t) return alert("Type topic"); document.getElementById('wordSearch').value=t; searchYouTube(); }
 
-1. LEARNING OUTCOME:
-By the end of lesson learner should be able to explain ${topic} and solve related problems.
+async function generateReal(){
+ const topic=document.getElementById('aiTopic').value.trim(); const grade=document.getElementById('aiGrade').value; const mode=document.getElementById('aiMode').value; const subject=document.getElementById('subSel').value;
+ if(!topic) return alert("Type topic e.g Fractions");
+ if(!currentUser){document.getElementById('authModal').classList.remove('hidden'); return;}
+ if(!userData?.isPremium){document.getElementById('subModal').classList.remove('hidden'); return;}
+ document.getElementById('aiOut').innerText=`⏳ REAL AI generating ${mode} for ${topic} ${grade} ${subject} from your notes... reading notes collection...`;
+ let notes=await loadNotesForGrade(grade, subject);
+ let notesCtx=notes.length? notes.map(n=>`${n.title}: ${n.description?.substring(0,80)}`).join('\n') : "No notes - use CBC general";
+ let prompt="";
+ if(mode==="lesson") prompt=`You are Kenyan CBC expert. Create KICD lesson plan 40min for Grade ${grade} Subject ${subject} Topic "${topic}" using these school notes:\n${notesCtx}\n\nFormat: 1. Learning Outcome 2. Resources 3. Introduction 5min 4. Development 25min steps 5. Conclusion 5min 6. Assessment 7. Reflection 8. Comparison what PP1 learns vs ${grade} on this topic. Give level-appropriate info, Kenyan example, mnemonic. Ready to print.`;
+ else if(mode==="homework") prompt=`From notes for ${grade} ${subject}:\n${notesCtx}\nCreate 5 Homework Qs for topic "${topic}" according to ${grade} level (simple PP1-G3, medium G4-6, hard G7-9). Include answers, marking scheme, comparison PP1 vs ${grade}.`;
+ else if(mode==="exam") prompt=`From notes for ${grade} ${subject}:\n${notesCtx}\nCreate 10 Exam Qs (5 MCQ, 5 short answer) for topic "${topic}" according to ${grade} level, with answers, marking scheme, level comparison.`;
+ else prompt=`Create Scheme of Work for ${grade} ${subject} Topic "${topic}" Term 1 Week 1-3 from notes:\n${notesCtx}\nInclude objectives, activities, resources, assessment, level info.`;
 
-2. RESOURCES: Charts showing ${topic}, counters, textbooks, board
+ let ai=await callGemini(prompt);
+ if(!ai) ai=`(DEMO - Add Gemini key in admin.html → AI Brain tab → Save AQ. key to enable real AI)\n\nCBC LESSON PLAN - ${grade} ${subject} TOPIC: ${topic}\n\n1. Outcome: Learner can explain ${topic}\n2. Resources: Charts...\n3. Intro 5min: Review...\n4. Development 25min: Step 1... Step 2...\n5. Conclusion...\n6. Assessment...\n7. Notes used: ${notesCtx.substring(0,100)}\n\nEnable real AI: admin.html → AI Brain → paste key → Save → AI LIVE`;
+ document.getElementById('aiOut').innerText=ai;
+}
 
-3. INTRODUCTION (5 min):
-- Review previous lesson
-- Ask learners what they know about ${topic}
-- Link to real life
-
-4. LESSON DEVELOPMENT (25 min):
-Step 1: Teacher explains ${topic} using examples
-Step 2: Group work - learners discuss ${topic} in pairs
-Step 3: Demonstration on board
-Step 4: Q&A, clarify misconceptions
-
-5. CONCLUSION (5 min):
-- Summary by learners
-- Take away assignment
-
-6. ASSESSMENT:
-- Oral questions
-- Written exercise on ${topic}
-- Observation during group work
-
-7. REFLECTION:
-Lesson was well delivered, learners understood ${topic}. Next lesson will...
-
-Prepared for SomaHub - Till 0701305109`;
-},1000);
+async function saveToNotes(){
+ const topic=document.getElementById('aiTopic').value.trim(); const grade=document.getElementById('aiGrade').value; const content=document.getElementById('aiOut').innerText;
+ if(!content || content.includes("will appear")) return alert("Generate first");
+ const FB=window.FB; try{ await FB.setDoc(FB.doc(FB.db,"resources", "ai_"+Date.now()), {title: "AI Generated: "+topic+" - "+grade, grade: grade, subject: document.getElementById('subSel').value, type: "Lesson Plan", description: content.substring(0,300), link: "#", createdAt: FB.serverTimestamp()}); alert("✅ Saved to resources! Now shows in Show Saved"); loadPlans(); }catch(e){alert(e.message);}
 }
 
 setTimeout(()=>{
-const FB=window.FB;
-document.getElementById('gLogin').onclick=async()=>{try{const r=await FB.signInWithPopup(FB.auth,FB.provider); await ensureUser(r.user);}catch(e){alert(e.message)}};
-document.getElementById('eLogin').onclick=async()=>{
-const em=document.getElementById('email').value.trim(), ps=document.getElementById('pass').value;
-if(!em||!ps) return alert("Fill email");
-try{const r=await FB.createUserWithEmailAndPassword(FB.auth,em,ps); await ensureUser(r.user);}catch{try{await FB.signInWithEmailAndPassword(FB.auth,em,ps)}catch(e){alert(e.message)}};
-};
-document.getElementById('authBtn').onclick=()=>{if(currentUser) FB.signOut(FB.auth); else document.getElementById('authModal').classList.remove('hidden');};
-async function ensureUser(user){
-const ref=FB.doc(FB.db,"users",user.uid); const snap=await FB.getDoc(ref);
-if(!snap.exists()){await FB.setDoc(ref,{email:user.email, displayName:user.displayName||"", role:"teacher", grade:document.getElementById('gradeSel').value, status:"pending", isPremium:false, mpesaCode:"", createdAt:FB.serverTimestamp()});}
-closeM();
-}
-FB.onAuthStateChanged(FB.auth, async(u)=>{
-currentUser=u;
-if(u){
-document.getElementById('authBtn').innerText="Logout";
-const ref=FB.doc(FB.db,"users",u.uid); const snap=await FB.getDoc(ref);
-if(snap.exists()){userData=snap.data(); if(userData.isPremium){document.getElementById('premB').classList.remove('hidden'); document.getElementById('freeB').classList.add('hidden');}}
-}else{document.getElementById('authBtn').innerText="Login"; userData=null; document.getElementById('premB').classList.add('hidden'); document.getElementById('freeB').classList.remove('hidden');}
-});
+ const FB=window.FB;
+ document.getElementById('gLogin').onclick=async()=>{try{const r=await FB.signInWithPopup(FB.auth,FB.provider); await ensureUser(r.user);}catch(e){alert(e.message)}};
+ document.getElementById('eLogin').onclick=async()=>{const em=document.getElementById('email').value.trim(), ps=document.getElementById('pass').value; if(!em||!ps) return alert("Fill"); try{const r=await FB.createUserWithEmailAndPassword(FB.auth,em,ps); await ensureUser(r.user);}catch{try{await FB.signInWithEmailAndPassword(FB.auth,em,ps)}catch(e){alert(e.message)}};};
+ document.getElementById('authBtn').onclick=()=>{if(currentUser) FB.signOut(FB.auth); else document.getElementById('authModal').classList.remove('hidden');};
+ async function ensureUser(user){ const ref=FB.doc(FB.db,"users",user.uid); const snap=await FB.getDoc(ref); if(!snap.exists()){await FB.setDoc(ref,{email:user.email, role:"teacher", isPremium:false, mpesaCode:"", createdAt:FB.serverTimestamp()});} closeM(); }
+ FB.onAuthStateChanged(FB.auth, async(u)=>{
+  currentUser=u;
+  if(u){
+   document.getElementById('authBtn').innerText="Logout";
+   const ref=FB.doc(FB.db,"users",u.uid); const snap=await FB.getDoc(ref);
+   if(snap.exists()){userData=snap.data(); if(userData.isPremium){document.getElementById('premB').classList.remove('hidden');}}
+   try{const cfg=await FB.getDoc(FB.doc(FB.db,"config","ai")); if(cfg.exists() && cfg.data().geminiKey){geminiKey=cfg.data().geminiKey; document.getElementById('aiLive').innerText="AI LIVE ✅"; document.getElementById('aiLive').className="bg-green-100 text-green-700 text-[9px] px-2 py-1 rounded-full ml-2";}}catch(e){}
+  }else{document.getElementById('authBtn').innerText="Login"; userData=null; document.getElementById('premB').classList.add('hidden');}
+ });
+ loadPlans();
 },600);
 
-async function submitMpesa(){
-const c=document.getElementById('mpesa').value.trim().toUpperCase(); if(!c) return alert("Enter code");
-if(!currentUser) return alert("Login first");
-const FB=window.FB;
-try{ await FB.updateDoc(FB.doc(FB.db,"users",currentUser.uid),{mpesaCode:c, status:"pending_payment"}); alert("✅ Code "+c+" sent! Admin approves - Till 0701305109"); closeM(); location.reload();}
-catch(e){ alert("Error: "+e.message); }
-}
-window.loadPlans=loadPlans; window.openLink=openLink; window.closeM=closeM; window.submitMpesa=submitMpesa; window.aiGen=aiGen; window.generate=generate; window.copyAI=copyAI;
+async function submitMpesa(){const c=document.getElementById('mpesa').value.trim().toUpperCase(); if(!c) return alert("Enter code"); if(!currentUser) return alert("Login"); const FB=window.FB; try{await FB.updateDoc(FB.doc(FB.db,"users",currentUser.uid),{mpesaCode:c, status:"pending_payment"}); alert("✅ Sent Till 0701305109"); closeM();}catch(e){alert(e.message);}}
+window.loadPlans=loadPlans; window.openLink=openLink; window.closeM=closeM; window.submitMpesa=submitMpesa; window.aiGen=aiGen; window.generateReal=generateReal; window.copyAI=copyAI; window.searchWord=searchWord; window.searchYouTube=searchYouTube; window.generateYouTube=generateYouTube; window.saveToNotes=saveToNotes; window.setTopic=setTopic;
 </script>
 </body>
 </html>
