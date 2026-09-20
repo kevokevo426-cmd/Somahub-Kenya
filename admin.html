@@ -2,8 +2,9 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Admin - SHKE00500 Index + Parent Chat + Daily HW</title>
+<title>SomaHub Super Admin - Monitor All Students Parents Teachers + Human Assistant</title>
 <script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
@@ -15,111 +16,198 @@ window.FB={auth,db,onAuthStateChanged,doc,getDoc,setDoc,updateDoc,deleteDoc,coll
 </head>
 <body class="bg-[#0a0a0a] text-white min-h-screen">
 <header class="bg-[#141414] border-b border-white/10 p-4 flex justify-between items-center">
-<div><h1 class="font-black">Admin SHKE00500 → Counting</h1><p class="text-[10px] text-gray-400">Index auto at registration SHKE00500 from 500 - Parent login with SHKE index</p></div>
+<div>
+<h1 class="font-black text-sm">🛡️ Super Admin - Monitor Students Parents Teachers - Human Assistant</h1>
+<p class="text-[10px] text-gray-400">SHKE00500 counting from 500 | Admin appears as human assistant in student + parent + teacher portals</p>
+</div>
+<div class="flex gap-2 items-center">
+<span id="liveUsers" class="bg-green-500/20 text-green-400 text-[10px] px-3 py-1 rounded-full">Live: 0</span>
 <span id="aiStatus" class="bg-red-500/20 text-red-400 text-[10px] px-3 py-1 rounded-full">AI OFF</span>
+<button onclick="location.href='/'" class="bg-white text-black px-4 py-1.5 rounded-full text-xs font-bold">Site</button>
+</div>
 </header>
 
-<div class="flex gap-2 p-4 overflow-x-auto border-b border-white/10 text-xs">
-<button onclick="showTab('users')" id="tUsers" class="bg-white text-black px-4 py-2 rounded-full font-bold">👥 Users SHKE00500+ + Parent Chat</button>
-<button onclick="showTab('parentChat')" id="tParentChat" class="bg-green-600 text-white px-4 py-2 rounded-full font-bold">💬 Parent Chat <span id="msgCount" class="bg-white text-green-600 px-1.5 rounded-full ml-1">0</span></button>
-<button onclick="showTab('daily')" id="tDaily" class="bg-white/10 px-4 py-2 rounded-full">📝 Daily HW 10 Marks Monitor</button>
-<button onclick="showTab('resources')" id="tResources" class="bg-white/10 px-4 py-2 rounded-full">📚 Resources Correct Flow</button>
+<div class="flex gap-2 p-4 overflow-x-auto border-b border-white/10 text-xs sticky top-0 bg-[#0a0a0a] z-30">
+<button onclick="showTab('overview')" id="tOverview" class="bg-white text-black px-4 py-2 rounded-full font-bold">📊 Overview All Data</button>
+<button onclick="showTab('students')" id="tStudents" class="bg-white/10 px-4 py-2 rounded-full">🎓 Students SHKE <span id="sCount" class="bg-blue-600 px-1.5 rounded-full ml-1">0</span></button>
+<button onclick="showTab('parents')" id="tParents" class="bg-white/10 px-4 py-2 rounded-full">👨‍👩‍👧 Parents SHKE <span id="pCount" class="bg-purple-600 px-1.5 rounded-full ml-1">0</span></button>
+<button onclick="showTab('teachers')" id="tTeachers" class="bg-white/10 px-4 py-2 rounded-full">👩‍🏫 Teachers <span id="teCount" class="bg-yellow-600 px-1.5 rounded-full ml-1">0</span></button>
+<button onclick="showTab('human')" id="tHuman" class="bg-green-600 text-white px-4 py-2 rounded-full font-bold animate-pulse">💬 Human Assistant Inbox <span id="msgCount" class="bg-white text-green-600 px-1.5 rounded-full ml-1">0</span></button>
+<button onclick="showTab('daily')" id="tDaily" class="bg-white/10 px-4 py-2 rounded-full">📝 Daily HW 10 Marks</button>
 <button onclick="showTab('ai')" id="tAi" class="bg-white/10 px-4 py-2 rounded-full">🧠 AI Brain</button>
 </div>
 
-<div id="tabUsers" class="p-4">
+<!-- OVERVIEW -->
+<div id="tabOverview" class="p-4">
+<div class="grid grid-cols-2 md:grid-cols-5 gap-3">
+<div class="bg-[#141414] border border-white/10 p-4 rounded-2xl text-center"><p class="text-[10px] text-gray-400">Total Students</p><p id="totalStudents" class="font-black text-2xl mt-1">0</p><p class="text-[10px] text-blue-400">SHKE00500+</p></div>
+<div class="bg-[#141414] border border-white/10 p-4 rounded-2xl text-center"><p class="text-[10px] text-gray-400">Parents Active</p><p id="totalParents" class="font-black text-2xl mt-1">0</p><p class="text-[10px] text-purple-400">SHKE login parent.html</p></div>
+<div class="bg-[#141414] border border-white/10 p-4 rounded-2xl text-center"><p class="text-[10px] text-gray-400">Teachers</p><p id="totalTeachers" class="font-black text-2xl mt-1">0</p><p class="text-[10px] text-yellow-400">Teachers portal</p></div>
+<div class="bg-[#141414] border border-white/10 p-4 rounded-2xl text-center"><p class="text-[10px] text-gray-400">Daily HW Today</p><p id="todayHW" class="font-black text-2xl mt-1">0</p><p class="text-[10px] text-green-400">10 marks each subject</p></div>
+<div class="bg-[#141414] border border-red-500/30 p-4 rounded-2xl text-center"><p class="text-[10px] text-gray-400">Pending → Double</p><p id="pendingHW" class="font-black text-2xl mt-1 text-red-400">0</p><p class="text-[10px] text-red-400">Monday → Tuesday 20 marks</p></div>
+</div>
+
+<div class="mt-6 grid md:grid-cols-2 gap-4">
 <div class="bg-[#141414] border border-white/10 p-4 rounded-2xl">
-<div class="flex justify-between items-center">
-<div><p class="font-bold text-sm">👥 Users - Index Auto SHKE00500 from 500 at Registration</p><p class="text-[10px] text-gray-400 mt-1">When student registers, auto gets SHKE00500, SHKE00501... Parent logs in at parent.html with SHKE index. Counting from 500.</p></div>
-<button onclick="loadUsers()" class="bg-white/10 px-3 py-1 rounded-full text-xs">Refresh</button>
+<p class="font-bold text-sm">📊 SHKE Index Counter - Counting from 500</p>
+<div class="mt-3 grid grid-cols-3 gap-2 text-xs">
+<div class="bg-black p-3 rounded-xl text-center"><p class="text-gray-400 text-[10px]">Last Given</p><p id="lastIndex" class="font-black text-lg">SHKE00500</p></div>
+<div class="bg-black p-3 rounded-xl text-center"><p class="text-gray-400 text-[10px]">Next</p><p id="nextIndex" class="font-black text-lg text-green-400">SHKE00501</p></div>
+<div class="bg-black p-3 rounded-xl text-center"><p class="text-gray-400 text-[10px]">With SHKE</p><p id="withIndex" class="font-black text-lg">0</p></div>
+</div>
+<div class="mt-3 flex gap-2"><input id="counterInput" placeholder="500" class="bg-black border border-white/10 p-2 rounded-lg text-xs w-24"><button onclick="setCounter()" class="bg-blue-600 px-4 py-2 rounded-lg text-xs font-bold">Set to 500 SHKE00500 start</button><button onclick="initCounter()" class="bg-white/10 px-4 py-2 rounded-lg text-xs">Init Counter</button></div>
 </div>
 
-<div class="mt-4 grid grid-cols-4 gap-2 text-[10px]">
-<div class="bg-black p-3 rounded-xl border border-white/10 text-center"><p class="font-black text-lg" id="totalUsers">0</p><p>Total Students</p></div>
-<div class="bg-blue-500/20 p-3 rounded-xl text-center"><p class="font-black text-lg" id="lastIndex">SHKE00500</p><p>Last Index Given</p></div>
-<div class="bg-green-500/20 p-3 rounded-xl text-center"><p class="font-black text-lg" id="nextIndex">SHKE00501</p><p>Next Index</p></div>
-<div class="bg-purple-500/20 p-3 rounded-xl text-center"><p class="font-black text-lg" id="withIndex">0</p><p>With SHKE Index</p></div>
+<div class="bg-[#141414] border border-green-500/20 p-4 rounded-2xl">
+<p class="font-bold text-sm">💬 Human Assistant - You appear in 3 portals</p>
+<div class="mt-2 text-[11px] space-y-1 text-gray-300">
+<p>🎓 Student portal (daily-hw.html + ai-assistant.html) → Shows "💬 Human Assistant (Admin) is online - Need help with daily HW 10 marks?"</p>
+<p>👨‍👩‍👧 Parent portal (parent.html) → Shows "💬 Human Assistant (Admin) is online - Monitoring SHKE00500 + remedy + notes link"</p>
+<p>👩‍🏫 Teacher portal (teacher.html) → Shows "💬 Human Assistant (Admin) - Help set exam FROM Notes + marking"</p>
+<p class="text-green-400 font-bold mt-2">You reply from this tab → Human Assistant Inbox → Appears as human in their portal</p>
 </div>
-
-<div class="mt-4 bg-black p-3 rounded-xl border border-white/10">
-<p class="font-bold text-xs">Set Next Index Counter (Starts at 500)</p>
-<div class="flex gap-2 mt-2"><input id="counterInput" placeholder="500" class="bg-[#1f1f1f] border border-white/10 p-2 rounded-lg text-xs w-24"><button onclick="setCounter()" class="bg-blue-600 px-4 py-2 rounded-lg text-xs font-bold">Set Counter to 500 (SHKE00500 start)</button><button onclick="initCounter()" class="bg-white/10 px-4 py-2 rounded-lg text-xs">Init Counter if not exist</button></div>
-<p class="text-[10px] text-gray-400 mt-2">Current counter in config/counters lastIndex. First student gets SHKE00500 when lastIndex=500. Next SHKE00501 when lastIndex=501.</p>
-</div>
-
-<div id="userList" class="mt-4 space-y-3"></div>
 </div>
 </div>
 
-<div id="tabParentChat" class="hidden p-4">
+<div class="mt-6 bg-[#141414] border border-white/10 p-4 rounded-2xl">
+<p class="font-bold text-sm">⚠️ Alerts - All Data Monitoring</p>
+<div id="alertsOverview" class="mt-3 space-y-2 text-xs"></div>
+</div>
+</div>
+
+<!-- STUDENTS TAB -->
+<div id="tabStudents" class="hidden p-4">
+<div class="bg-[#141414] border border-white/10 p-4 rounded-2xl">
+<div class="flex justify-between items-center"><p class="font-bold text-sm">🎓 Students - SHKE00500+ Counting from 500 - Daily HW 10 Marks Monitor</p><button onclick="loadStudents()" class="bg-white/10 px-3 py-1 rounded-full text-xs">Refresh</button></div>
+<div id="studentList" class="mt-4 space-y-3"></div>
+</div>
+</div>
+
+<!-- PARENTS TAB -->
+<div id="tabParents" class="hidden p-4">
+<div class="bg-[#141414] border border-white/10 p-4 rounded-2xl">
+<div class="flex justify-between items-center"><p class="font-bold text-sm">👨‍👩‍👧 Parents - SHKE Index Login parent.html - Monitor Daily + Weekly + Chat</p><button onclick="loadParents()" class="bg-white/10 px-3 py-1 rounded-full text-xs">Refresh</button></div>
+<div id="parentList" class="mt-4 space-y-3"></div>
+</div>
+</div>
+
+<!-- TEACHERS TAB -->
+<div id="tabTeachers" class="hidden p-4">
+<div class="bg-[#141414] border border-white/10 p-4 rounded-2xl">
+<div class="flex justify-between items-center"><p class="font-bold text-sm">👩‍🏫 Teachers - Monitor Teachers Data + Human Assistant for Teachers</p><button onclick="loadTeachers()" class="bg-white/10 px-3 py-1 rounded-full text-xs">Refresh</button></div>
+<div class="mt-3 flex gap-2"><input id="teacherEmail" placeholder="Teacher email to add as teacher role" class="bg-black border border-white/10 p-2 rounded-lg text-xs flex-1"><button onclick="addTeacher()" class="bg-yellow-600 px-4 py-2 rounded-lg text-xs font-bold">Add Teacher Role</button></div>
+<div id="teacherList" class="mt-4 space-y-3"></div>
+</div>
+</div>
+
+<!-- HUMAN ASSISTANT INBOX - ADMIN APPEARS AS HUMAN IN ALL 3 PORTALS -->
+<div id="tabHuman" class="hidden p-4">
 <div class="bg-[#141414] border border-green-500/30 p-4 rounded-2xl">
-<p class="font-bold text-sm">💬 Parent Chat - Admin ↔ Parent via SHKE Index</p>
+<p class="font-bold text-sm">💬 Human Assistant Inbox - You appear as HUMAN in Student + Parent + Teacher portals</p>
+<p class="text-[10px] text-gray-400 mt-1">All messages from 3 portals come here: Students (daily HW help), Parents (SHKE monitoring), Teachers (exam setting). You reply → Appears as "Human Assistant (Admin)" in their portal, not AI.</p>
+
 <div class="grid md:grid-cols-3 gap-4 mt-4">
-<div class="bg-black border border-white/10 p-3 rounded-xl">
-<p class="font-bold text-xs">Parent Index e.g SHKE00500</p>
-<input id="chatIndexFilter" placeholder="SHKE00500" class="w-full bg-[#1f1f1f] border border-white/10 p-2.5 rounded-xl text-xs mt-2 uppercase">
-<button onclick="loadParentChat()" class="w-full bg-green-600 py-2 rounded-full text-xs font-bold mt-2">Load Chat SHKE00500</button>
-<div id="parentInfoChat" class="mt-3 text-[11px] text-gray-400"></div>
-<div class="mt-4">
-<p class="font-bold text-[11px]">Quick to Parent:</p>
-<button onclick="quickAdminMsg('Your child SHKE index pending HW - Monday pending → Tuesday double 20 marks')" class="w-full text-left bg-white/5 p-2 rounded-lg text-[11px] mt-2">⚠️ Pending → Double</button>
-<button onclick="quickAdminMsg('💊 Remedy: Your child failed Fractions - Revise Notes: Fractions - SHKE student needs help')" class="w-full text-left bg-white/5 p-2 rounded-lg text-[11px] mt-1">💊 Remedy Fractions</button>
-<button onclick="quickAdminMsg('📝 Weekly Exam SHKE student scored 45% - Most failed Algebra - Check parent.html')" class="w-full text-left bg-white/5 p-2 rounded-lg text-[11px] mt-1">📝 Weekly result</button>
+<div class="bg-black border border-white/10 p-3 rounded-xl h-[600px] flex flex-col">
+<div class="flex gap-1 mb-3">
+<button onclick="filterMessages('all')" id="fAll" class="bg-white text-black px-3 py-1 rounded-full text-[10px] font-bold">All</button>
+<button onclick="filterMessages('student')" id="fStudent" class="bg-white/10 px-3 py-1 rounded-full text-[10px]">🎓 Students</button>
+<button onclick="filterMessages('parent')" id="fParent" class="bg-white/10 px-3 py-1 rounded-full text-[10px]">👨‍👩‍👧 Parents</button>
+<button onclick="filterMessages('teacher')" id="fTeacher" class="bg-white/10 px-3 py-1 rounded-full text-[10px]">👩‍🏫 Teachers</button>
 </div>
+<input id="searchChat" placeholder="Search SHKE00500 or message..." class="w-full bg-[#1f1f1f] border border-white/10 p-2.5 rounded-xl text-xs mb-3" onkeyup="searchMessages()">
+<div id="conversationList" class="flex-1 overflow-y-auto space-y-2"></div>
 </div>
-<div class="md:col-span-2 bg-black border border-white/10 p-3 rounded-xl">
-<p class="font-bold text-xs">Chat with Parent Index: <span id="currentChatIndex">SHKE00500</span></p>
-<div id="adminChatBox" class="mt-3 bg-[#0a0a0a] rounded-xl p-3 h-[350px] overflow-y-auto space-y-2 border border-white/10"></div>
-<div class="flex gap-2 mt-3"><input id="adminMsg" placeholder="Message to parent SHKE00500..." class="flex-1 bg-[#1f1f1f] border border-white/10 p-3 rounded-full text-xs"><button onclick="sendAdminMsg()" class="bg-green-600 px-5 py-3 rounded-full text-xs font-bold">Send</button></div>
+
+<div class="md:col-span-2 bg-black border border-white/10 p-3 rounded-xl flex flex-col h-[600px]">
+<div class="flex justify-between items-center border-b border-white/10 pb-3">
+<div>
+<p class="font-bold text-xs">Chat with: <span id="currentChatWith">Select conversation</span></p>
+<p class="text-[10px] text-gray-400" id="currentChatInfo">SHKE index + role</p>
 </div>
-</div>
-<div class="mt-4"><p class="font-bold text-xs">All Parent Messages</p><div id="allMessages" class="mt-2 space-y-2 max-h-[300px] overflow-y-auto"></div></div>
+<div class="flex gap-2">
+<span id="currentRoleBadge" class="bg-white/10 px-2 py-1 rounded-full text-[10px]">Role</span>
+<button onclick="loadCurrentChat()" class="bg-white/10 px-3 py-1 rounded-full text-[10px]">Refresh</button>
 </div>
 </div>
 
-<div id="tabDaily" class="hidden p-4"><div class="bg-[#141414] border border-white/10 p-4 rounded-2xl"><div class="flex justify-between items-center"><p class="font-bold text-sm">📝 Daily HW Monitor SHKE</p><button onclick="loadDailyMonitor()" class="bg-white/10 px-3 py-1 rounded-full text-xs">Refresh</button></div><div id="dailyStats" class="grid grid-cols-4 gap-2 mt-4 text-[10px]"></div><div id="dailyMonitorList" class="mt-4 space-y-2"></div></div></div>
+<div id="humanChatBox" class="flex-1 overflow-y-auto p-3 space-y-3 bg-[#0a0a0a] rounded-xl mt-3 border border-white/5"></div>
 
-<div id="tabResources" class="hidden p-4"><div class="bg-[#141414] border border-white/10 p-4 rounded-2xl"><p class="font-bold text-sm">📚 Resources Correct Flow Designs→Notes→Exams</p><div id="resourceStats" class="grid grid-cols-5 gap-2 mt-3 text-[10px]"></div><div id="resourceList" class="mt-4 space-y-2 max-h-[400px] overflow-y-auto"></div></div></div>
+<div class="mt-3">
+<p class="text-[10px] text-gray-400 mb-2">Quick replies as Human Assistant:</p>
+<div class="flex gap-1 flex-wrap mb-3">
+<button onclick="quickHuman('Hello! I am Human Assistant (Admin) - I monitor your SHKE performance daily. How can I help with your 10 marks HW?')" class="bg-white/10 px-2 py-1 rounded-full text-[10px]">👋 Hello - Human Assistant</button>
+<button onclick="quickHuman('💊 I checked your most failed topic - It is Fractions. Please revise Notes: Fractions - Open notes.html?search=Fractions - This is where information is. Parent can see at parent.html with your SHKE.')" class="bg-yellow-500/20 text-yellow-400 px-2 py-1 rounded-full text-[10px]">💊 Remedy + Notes link</button>
+<button onclick="quickHuman('⚠️ I see Monday HW pending - If Monday pending, Tuesday you will have double 20 marks. Please complete now to avoid double. Parent sees pending at parent.html with SHKE index.')" class="bg-red-500/20 text-red-400 px-2 py-1 rounded-full text-[10px]">⚠️ Pending → Double 20 marks</button>
+<button onclick="quickHuman('✅ Great! Today work completed - Wait tomorrow for new 10 marks HW. Your parent can see your marks + correction + notes link at parent.html login with your SHKE index. Keep it up!')" class="bg-green-500/20 text-green-400 px-2 py-1 rounded-full text-[10px]">✅ Today completed wait tomorrow</button>
+<button onclick="quickHuman('📝 Weekly exam: Your child scored 45% - Most failed Algebra. Please help revise Notes: Algebra. Both exam and HW marks visible at parent.html with SHKE index.')" class="bg-purple-500/20 text-purple-400 px-2 py-1 rounded-full text-[10px]">📝 Weekly exam marks</button>
+</div>
 
-<div id="tabAi" class="hidden p-4"><div class="bg-[#141414] border border-green-500/20 p-4 rounded-2xl"><input id="geminiKey" placeholder="AQ..." class="w-full bg-[#1f1f1f] border border-white/10 p-3 rounded-xl text-xs mt-2"><button onclick="saveAi()" class="w-full bg-green-600 text-white py-3 rounded-full font-bold mt-3 text-sm">Save AI LIVE</button></div></div>
+<div class="flex gap-2">
+<input id="humanMsg" placeholder="Type as Human Assistant (Admin) to student/parent/teacher..." class="flex-1 bg-[#1f1f1f] border border-white/10 p-3 rounded-full text-xs">
+<button onclick="sendHumanMsg()" class="bg-green-600 px-6 py-3 rounded-full text-xs font-bold">Send as Human Assistant</button>
+</div>
+<p class="text-[9px] text-gray-500 mt-2">You send → Appears as "💬 Human Assistant (Admin)" in their portal (student daily-hw.html, parent.html, teacher.html) - Not AI, human support monitoring all data</p>
+</div>
+</div>
+</div>
+</div>
+
+<!-- DAILY HW MONITOR -->
+<div id="tabDaily" class="hidden p-4">
+<div class="bg-[#141414] border border-white/10 p-4 rounded-2xl">
+<div class="flex justify-between items-center"><p class="font-bold text-sm">📝 Daily HW Monitor All Students SHKE - 10 Marks Each Subject</p><button onclick="loadDailyMonitor()" class="bg-white/10 px-3 py-1 rounded-full text-xs">Refresh</button></div>
+<div id="dailyStats" class="grid grid-cols-4 gap-2 mt-4 text-[10px]"></div>
+<div id="dailyMonitorList" class="mt-4 space-y-2"></div>
+</div>
+</div>
+
+<div id="tabAi" class="hidden p-4"><div class="bg-[#141414] border border-green-500/20 p-4 rounded-2xl"><p class="font-bold text-sm">🧠 AI Brain - Gemini Key for AI + Human Assistant</p><input id="geminiKey" placeholder="AQ..." class="w-full bg-[#1f1f1f] border border-white/10 p-3 rounded-xl text-xs mt-3"><button onclick="saveAi()" class="w-full bg-green-600 text-white py-3 rounded-full font-bold mt-3 text-sm">Save AI LIVE ✅</button><p class="text-[10px] text-gray-400 mt-2">AI does auto marking + daily HW generation, Human Assistant (you) does human support monitoring all students parents teachers</p></div></div>
 
 <script>
+let currentFilter='all', currentChatId=null, currentChatData=null, allMessagesCache=[], allUsersCache=[];
+
 function showTab(t){
-  ['users','parentChat','daily','resources','ai'].forEach(x=>{
-    document.getElementById('tab'+x.charAt(0).toUpperCase()+x.slice(1)).classList.toggle('hidden', t!==x);
+  ['overview','students','parents','teachers','human','daily','ai'].forEach(x=>{
+    const el=document.getElementById('tab'+x.charAt(0).toUpperCase()+x.slice(1));
+    if(el) el.classList.toggle('hidden', t!==x);
     const btn=document.getElementById('t'+x.charAt(0).toUpperCase()+x.slice(1));
-    if(btn) btn.className = t===x? (x==='parentChat'?'bg-green-600 text-white px-4 py-2 rounded-full font-bold':'bg-white text-black px-4 py-2 rounded-full font-bold') : 'bg-white/10 px-4 py-2 rounded-full';
+    if(btn){
+      if(t===x) btn.className = x==='human'? 'bg-green-600 text-white px-4 py-2 rounded-full font-bold animate-pulse' : 'bg-white text-black px-4 py-2 rounded-full font-bold';
+      else btn.className = 'bg-white/10 px-4 py-2 rounded-full';
+      if(x==='human' && t!==x) btn.className='bg-green-600/20 text-green-400 px-4 py-2 rounded-full font-bold';
+    }
   });
-  if(t==='users') loadUsers(); if(t==='resources') loadResources(); if(t==='daily') loadDailyMonitor(); if(t==='parentChat') loadAllMessages();
+  if(t==='overview') loadOverview();
+  if(t==='students') loadStudents();
+  if(t==='parents') loadParents();
+  if(t==='teachers') loadTeachers();
+  if(t==='human') loadHumanInbox();
+  if(t==='daily') loadDailyMonitor();
 }
 
 async function initCounter(){
   const FB=window.FB;
-  try{
-    const ref=FB.doc(FB.db,"config","counters");
-    const snap=await FB.getDoc(ref);
-    if(!snap.exists()){
-      await FB.setDoc(ref,{lastIndex:500, prefix:"SHKE", createdAt:FB.serverTimestamp()});
-      alert("✅ Counter initialized at 500 → First student SHKE00500");
-    }else{
-      alert(`Counter exists: lastIndex=${snap.data().lastIndex} → Next ${snap.data().prefix}${String(snap.data().lastIndex).padStart(5,'0')}`);
-    }
-    loadUsers();
-  }catch(e){ alert(e.message); }
+  const ref=FB.doc(FB.db,"config","counters");
+  const snap=await FB.getDoc(ref);
+  if(!snap.exists()){
+    await FB.setDoc(ref,{lastIndex:500, prefix:"SHKE", createdAt:FB.serverTimestamp()});
+    alert("✅ Counter initialized at 500 → First student SHKE00500");
+  }else{
+    alert(`Counter exists: lastIndex=${snap.data().lastIndex} → Next SHKE${String(snap.data().lastIndex+1).padStart(5,'0')}`);
+  }
+  loadOverview();
 }
 
 async function setCounter(){
   const FB=window.FB;
   const val=parseInt(document.getElementById('counterInput').value);
   if(isNaN(val)) return alert("Enter number e.g 500");
-  try{
-    await FB.setDoc(FB.doc(FB.db,"config","counters"),{lastIndex:val, prefix:"SHKE", updatedAt:FB.serverTimestamp()}, {merge:true});
-    alert(`✅ Counter set to ${val} → Next index SHKE${String(val).padStart(5,'0')}`);
-    loadUsers();
-  }catch(e){ alert(e.message); }
+  await FB.setDoc(FB.doc(FB.db,"config","counters"),{lastIndex:val, prefix:"SHKE", updatedAt:FB.serverTimestamp()}, {merge:true});
+  alert(`✅ Counter set to ${val} → Next SHKE${String(val).padStart(5,'0')}`);
+  loadOverview();
 }
 
-async function loadUsers(){
+async function loadOverview(){
   const FB=window.FB;
   try{
     const counterSnap=await FB.getDoc(FB.doc(FB.db,"config","counters"));
@@ -127,74 +215,377 @@ async function loadUsers(){
     document.getElementById('lastIndex').innerText=`SHKE${String(lastIdx).padStart(5,'0')}`;
     document.getElementById('nextIndex').innerText=`SHKE${String(lastIdx+1).padStart(5,'0')}`;
 
-    const snap=await FB.getDocs(FB.collection(FB.db,"users"));
-    let all=[]; snap.forEach(d=>all.push({...d.data(), id:d.id}));
-    document.getElementById('totalUsers').innerText=all.length;
-    document.getElementById('withIndex').innerText=all.filter(u=>u.indexNumber).length;
+    const usersSnap=await FB.getDocs(FB.collection(FB.db,"users"));
+    let allUsers=[]; usersSnap.forEach(d=>allUsers.push({...d.data(), id:d.id}));
+    allUsersCache=allUsers;
+    document.getElementById('totalStudents').innerText=allUsers.filter(u=>(u.role||'learner')==='learner').length;
+    document.getElementById('totalTeachers').innerText=allUsers.filter(u=>u.role==='teacher').length;
+    document.getElementById('withIndex').innerText=allUsers.filter(u=>u.indexNumber?.startsWith('SHKE')).length;
+    document.getElementById('sCount').innerText=allUsers.filter(u=>(u.role||'learner')==='learner').length;
+    document.getElementById('teCount').innerText=allUsers.filter(u=>u.role==='teacher').length;
 
-    let html=""; all.sort((a,b)=> (a.indexNumber||"").localeCompare(b.indexNumber||"")).forEach(u=>{
-      const shke=u.indexNumber||"No SHKE";
-      html+=`<div class="bg-black p-4 rounded-xl border border-white/10">
-        <div class="flex justify-between items-start">
-          <div><p class="font-bold text-xs">📘 ${shke} - ${u.email||u.name||'Student'}</p><p class="text-[11px] text-gray-400">Grade: ${u.grade||'Grade 7'} | Premium: ${u.isPremium?'YES':'NO'} | M-Pesa: ${u.mpesaCode||'-'}</p><p class="text-[10px] text-gray-500">UID: ${u.id} | Index: ${shke}</p></div>
-          <div class="flex gap-1"><button onclick="approveUser('${u.id}')" class="bg-green-600 px-3 py-1 rounded-full text-[10px]">Approve</button><button onclick="chatWithParent('${shke}','${u.id}')" class="bg-blue-600 px-3 py-1 rounded-full text-[10px]">💬 Chat</button></div>
-        </div>
-        <div class="mt-3 grid md:grid-cols-3 gap-2">
-          <div class="flex gap-1"><input id="idx_${u.id}" value="${shke.startsWith('SHKE')?shke:''}" placeholder="SHKE00500" class="flex-1 bg-[#1f1f1f] border border-white/10 p-2 rounded-lg text-xs uppercase"><button onclick="setIndex('${u.id}')" class="bg-blue-600 px-3 py-2 rounded-lg text-[10px] font-bold">Set SHKE</button></div>
-          <div class="flex gap-1"><button onclick="regenerateIndex('${u.id}')" class="flex-1 bg-yellow-600 py-2 rounded-lg text-[10px] font-bold">🔄 Auto SHKE Next</button><button onclick="viewChildHW('${u.id}')" class="flex-1 bg-purple-600 py-2 rounded-lg text-[10px] font-bold">📝 HW 10 Marks</button></div>
-          <div class="flex gap-1"><button onclick="sendParentAlert('${u.id}','${shke}')" class="flex-1 bg-red-600 py-2 rounded-lg text-[10px] font-bold">⚠️ Alert Parent Pending Double</button></div>
-        </div>
-      </div>`;
-    });
-    document.getElementById('userList').innerHTML=html||"No users - Students get SHKE00500 at registration auto";
-  }catch(e){ document.getElementById('userList').innerHTML=`Error: ${e.message}`; }
+    const hwSnap=await FB.getDocs(FB.collection(FB.db,"homework_submissions"));
+    let hwAll=[]; hwSnap.forEach(d=>hwAll.push(d.data()));
+    const today=new Date().toISOString().split('T')[0];
+    document.getElementById('todayHW').innerText=hwAll.filter(s=>s.date===today).length;
+    document.getElementById('pendingHW').innerText=hwAll.filter(s=>s.score<=4).length;
+    document.getElementById('liveUsers').innerText=`Live: ${allUsers.length}`;
+
+    // Parents = distinct indexNumbers with parent_messages
+    const msgSnap=await FB.getDocs(FB.collection(FB.db,"parent_messages"));
+    let parentIndices=new Set(); msgSnap.forEach(d=>parentIndices.add(d.data().indexNumber));
+    document.getElementById('totalParents').innerText=parentIndices.size;
+    document.getElementById('pCount').innerText=parentIndices.size;
+
+    // Alerts
+    let alerts=[];
+    let failedStudents=hwAll.filter(s=>s.score<=4);
+    if(failedStudents.length>0) alerts.push(`🔴 ${failedStudents.length} students failed daily HW ≤4/10 - Most failed ${[...new Set(failedStudents.map(s=>s.mostFailedTopic))].join(', ')} - Need remedy + notes link`);
+    let pendingToday= allUsers.length - hwAll.filter(s=>s.date===today).length;
+    if(pendingToday>0) alerts.push(`⚠️ ${pendingToday} students pending today HW - Monday pending → Tuesday double 20 marks - Parent sees at parent.html with SHKE`);
+    let noIndex=allUsers.filter(u=>!u.indexNumber);
+    if(noIndex.length>0) alerts.push(`⚠️ ${noIndex.length} students without SHKE index - Will auto get SHKE00500+ on next login counting from 500`);
+
+    document.getElementById('alertsOverview').innerHTML=alerts.map(a=>`<div class="bg-black p-3 rounded-xl border border-white/10">${a}</div>`).join('') || '<p class="text-xs text-green-400">✅ All good - Students doing daily HW 10 marks - Parents monitoring with SHKE00500 - Teachers active</p>';
+
+  }catch(e){ console.error(e); }
 }
 
-async function regenerateIndex(uid){
+async function loadStudents(){
+  const FB=window.FB;
+  const snap=await FB.getDocs(FB.collection(FB.db,"users"));
+  let all=[]; snap.forEach(d=>all.push({...d.data(), id:d.id}));
+  let students=all.filter(u=>(u.role||'learner')==='learner').sort((a,b)=>(a.indexNumber||"").localeCompare(b.indexNumber||""));
+
+  // Get HW stats per student
+  const hwSnap=await FB.getDocs(FB.collection(FB.db,"homework_submissions"));
+  let hwByUser={}; hwSnap.forEach(d=>{ const data=d.data(); if(!hwByUser[data.userId]) hwByUser[data.userId]=[]; hwByUser[data.userId].push(data); });
+
+  document.getElementById('studentList').innerHTML=students.map(u=>{
+    const hws=hwByUser[u.id]||[];
+    const today=new Date().toISOString().split('T')[0];
+    const todayDone=hws.some(s=>s.date===today);
+    const avg=hws.length>0? (hws.reduce((a,b)=>a+b.score,0)/hws.length).toFixed(1) : "0";
+    const mostFailed=hws.length>0? hws[0].mostFailedTopic : "-";
+    return `<div class="bg-black p-4 rounded-xl border ${todayDone?'border-green-500/20':'border-red-500/20'}">
+      <div class="flex justify-between items-start">
+        <div><p class="font-bold text-xs">🎓 ${u.indexNumber||'No SHKE'} - ${u.email||u.name} - Grade ${u.grade||'Grade 7'}</p><p class="text-[11px] text-gray-400">SHKE: ${u.indexNumber||'No index - counting from 500'} | Avg: ${avg}/10 | Today: ${todayDone?'✅ Done - Wait tomorrow':'⚠️ Pending → Double'} | Most failed: ${mostFailed} | Premium: ${u.isPremium?'YES':'NO'}</p><p class="text-[10px] text-gray-500">UID: ${u.id} | M-Pesa: ${u.mpesaCode||'-'} | HW count: ${hws.length}</p></div>
+        <div class="flex gap-1"><button onclick="approveUser('${u.id}')" class="bg-green-600 px-3 py-1 rounded-full text-[10px]">Approve</button><button onclick="openHumanChat('${u.indexNumber||''}','${u.id}','student')" class="bg-blue-600 px-3 py-1 rounded-full text-[10px]">💬 Human Assist</button></div>
+      </div>
+      <div class="mt-3 grid md:grid-cols-4 gap-2">
+        <input id="idx_${u.id}" value="${u.indexNumber||''}" placeholder="SHKE00500" class="bg-[#1f1f1f] border border-white/10 p-2 rounded-lg text-xs uppercase">
+        <button onclick="setIndex('${u.id}')" class="bg-blue-600 py-2 rounded-lg text-[10px] font-bold">Set SHKE</button>
+        <button onclick="regenerateIndex('${u.id}')" class="bg-yellow-600 py-2 rounded-lg text-[10px] font-bold">🔄 Auto SHKE Next (500+)</button>
+        <button onclick="viewStudentHW('${u.id}','${u.indexNumber||''}')" class="bg-purple-600 py-2 rounded-lg text-[10px] font-bold">📝 View Daily 10 Marks + Weekly</button>
+      </div>
+      <div class="mt-2 flex gap-2">
+        <button onclick="sendHumanRemedy('${u.id}','${u.indexNumber||''}')" class="bg-yellow-600/20 text-yellow-400 border border-yellow-500/20 px-3 py-1 rounded-full text-[10px]">💊 Send Remedy as Human to Student + Parent</button>
+        <button onclick="sendPendingAlert('${u.id}','${u.indexNumber||''}')" class="bg-red-600/20 text-red-400 border border-red-500/20 px-3 py-1 rounded-full text-[10px]">⚠️ Alert Pending → Double as Human</button>
+      </div>
+    </div>`;
+  }).join('') || "No students - First gets SHKE00500 counting from 500";
+}
+
+async function loadParents(){
+  const FB=window.FB;
+  const msgSnap=await FB.getDocs(FB.collection(FB.db,"parent_messages"));
+  let byIndex={}; msgSnap.forEach(d=>{ const m=d.data(); if(!byIndex[m.indexNumber]) byIndex[m.indexNumber]=[]; byIndex[m.indexNumber].push(m); });
+
+  const usersSnap=await FB.getDocs(FB.collection(FB.db,"users"));
+  let usersByIndex={}; usersSnap.forEach(d=>{ const u=d.data(); if(u.indexNumber) usersByIndex[u.indexNumber]= {...u, id:d.id}; });
+
+  let html=""; Object.entries(byIndex).sort().forEach(([idx, msgs])=>{
+    const student=usersByIndex[idx];
+    const lastMsg=msgs.sort((a,b)=> (b.timestamp?.seconds||0)-(a.timestamp?.seconds||0))[0];
+    html+=`<div class="bg-black p-4 rounded-xl border border-white/10">
+      <div class="flex justify-between items-start">
+        <div><p class="font-bold text-xs">👨‍👩‍👧 Parent of SHKE ${idx} - Child: ${student?.email||'Unknown'} Grade ${student?.grade||''}</p><p class="text-[11px] text-gray-400">Messages: ${msgs.length} | Last: ${lastMsg?.message?.substring(0,60)}... | ${lastMsg?.timestamp?.toDate?.()?.toLocaleString()||''}</p><p class="text-[10px] text-gray-500">SHKE Index: ${idx} counting from 500 - Parent login parent.html with ${idx}</p></div>
+        <button onclick="openHumanChat('${idx}','','parent')" class="bg-green-600 px-3 py-1 rounded-full text-[10px]">💬 Chat as Human Assistant</button>
+      </div>
+      <div class="mt-2 flex gap-2">
+        <button onclick="viewParentChildHW('${idx}')" class="bg-purple-600 px-3 py-1 rounded-full text-[10px]">📝 View Child Daily 10 Marks + Weekly + Most Failed</button>
+        <button onclick="sendParentRemedy('${idx}')" class="bg-yellow-600 px-3 py-1 rounded-full text-[10px]">💊 Send Remedy + Notes Link as Human</button>
+      </div>
+    </div>`;
+  });
+
+  // Also parents who never chatted but have index
+  const allUsers=Object.values(usersByIndex);
+  allUsers.forEach(u=>{
+    if(!byIndex[u.indexNumber]){
+      html+=`<div class="bg-black p-4 rounded-xl border border-white/5 opacity-70">
+        <p class="font-bold text-xs">👨‍👩‍👧 Parent of SHKE ${u.indexNumber} - No chat yet - Child: ${u.email}</p>
+        <p class="text-[11px] text-gray-400">Parent never logged in parent.html with ${u.indexNumber} - Counting from 500</p>
+        <button onclick="openHumanChat('${u.indexNumber}','','parent')" class="mt-2 bg-green-600/20 text-green-400 px-3 py-1 rounded-full text-[10px]">💬 Start Chat as Human Assistant</button>
+      </div>`;
+    }
+  });
+
+  document.getElementById('parentList').innerHTML=html||"No parents yet - Parents login at parent.html with SHKE00500 counting from 500 - When they chat, they appear here";
+}
+
+async function loadTeachers(){
+  const FB=window.FB;
+  const snap=await FB.getDocs(FB.collection(FB.db,"users"));
+  let teachers=[]; snap.forEach(d=>{ const u=d.data(); if(u.role==='teacher') teachers.push({...u, id:d.id}); });
+
+  const msgSnap=await FB.getDocs(FB.collection(FB.db,"human_assist_messages"));
+  let teacherMsgs={}; msgSnap.forEach(d=>{ const m=d.data(); if(m.fromRole==='teacher' || m.toRole==='teacher'){ const key=m.fromId||m.toId; if(!teacherMsgs[key]) teacherMsgs[key]=[]; teacherMsgs[key].push(m); } });
+
+  document.getElementById('teacherList').innerHTML=teachers.map(t=>`
+    <div class="bg-black p-4 rounded-xl border border-white/10">
+      <div class="flex justify-between"><div><p class="font-bold text-xs">👩‍🏫 ${t.email} - Teacher - Grade ${t.grade||''}</p><p class="text-[11px] text-gray-400">UID: ${t.id} | Messages: ${teacherMsgs[t.id]?.length||0}</p></div><button onclick="openHumanChat('${t.email}','${t.id}','teacher')" class="bg-yellow-600 px-3 py-1 rounded-full text-[10px]">💬 Human Assist Teacher</button></div>
+    </div>
+  `).join('') || "No teachers - Add teacher email above - Teachers get teacher role - You appear as human assistant in teacher portal to help set exam FROM Notes";
+}
+
+async function addTeacher(){
+  const FB=window.FB; const email=document.getElementById('teacherEmail').value.trim(); if(!email) return alert("Enter email");
+  const q=FB.query(FB.collection(FB.db,"users"), FB.where("email","==",email));
+  const snap=await FB.getDocs(q);
+  if(snap.empty) return alert("User not found - Must register first at ai-assistant.html");
+  let uid=""; snap.forEach(d=>uid=d.id);
+  await FB.updateDoc(FB.doc(FB.db,"users",uid),{role:"teacher"});
+  alert(`✅ ${email} now teacher - Will see human assistant in teacher portal`);
+  loadTeachers();
+}
+
+// HUMAN ASSISTANT INBOX - ADMIN APPEARS AS HUMAN IN ALL 3 PORTALS
+async function loadHumanInbox(){
   const FB=window.FB;
   try{
-    await FB.runTransaction(FB.db, async(transaction)=>{
-      const counterRef=FB.doc(FB.db,"config","counters");
-      const counterSnap=await transaction.get(counterRef);
-      let last=counterSnap.exists()? counterSnap.data().lastIndex : 499;
-      let next=last+1;
-      let shke=`SHKE${String(next).padStart(5,'0')}`;
-      transaction.update(counterRef, {lastIndex:next});
-      transaction.update(FB.doc(FB.db,"users",uid), {indexNumber:shke});
-      transaction.set(FB.doc(FB.db,"student_index",shke), {indexNumber:shke, userId:uid, createdAt:FB.serverTimestamp()});
-    });
-    alert("✅ New SHKE index assigned auto counting from 500");
-    loadUsers();
+    const pSnap=await FB.getDocs(FB.collection(FB.db,"parent_messages"));
+    const hSnap=await FB.getDocs(FB.collection(FB.db,"human_assist_messages"));
+    let all=[];
+    pSnap.forEach(d=>{ const m=d.data(); all.push({...m, id:d.id, source:"parent_messages", fromRole:"parent", fromId:m.indexNumber, display:`Parent SHKE ${m.indexNumber}`, role:"parent", time:m.timestamp}); });
+    hSnap.forEach(d=>{ const m=d.data(); all.push({...m, id:d.id, source:"human_assist_messages", time:m.timestamp}); });
+
+    all.sort((a,b)=> (b.time?.seconds||0)-(a.time?.seconds||0));
+    allMessagesCache=all;
+    document.getElementById('msgCount').innerText=all.length;
+
+    displayConversations(all);
+  }catch(e){ console.error(e); }
+}
+
+function displayConversations(messages){
+  let grouped={};
+  messages.forEach(m=>{
+    const key=m.indexNumber||m.fromId||m.toId||m.display||"unknown";
+    const role=m.fromRole||m.role||"parent";
+    const groupKey=`${role}_${key}`;
+    if(!grouped[groupKey]) grouped[groupKey]={key, role, display:m.display||`${role} ${key}`, last: m, count:0, messages:[], indexNumber:m.indexNumber||key};
+    grouped[groupKey].messages.push(m);
+    grouped[groupKey].count++;
+    if((m.time?.seconds||0) > (grouped[groupKey].last.time?.seconds||0)) grouped[groupKey].last=m;
+  });
+
+  let sorted=Object.values(grouped).sort((a,b)=> (b.last.time?.seconds||0)-(a.last.time?.seconds||0));
+
+  if(currentFilter!=='all') sorted=sorted.filter(g=>g.role===currentFilter);
+
+  const search=document.getElementById('searchChat')?.value.toLowerCase()||"";
+  if(search) sorted=sorted.filter(g=> (g.display+g.key+g.last.message||"").toLowerCase().includes(search));
+
+  document.getElementById('conversationList').innerHTML=sorted.map(g=>`
+    <div onclick="openConversation('${g.role}','${g.key}','${g.indexNumber}')" class="bg-[#1f1f1f] p-3 rounded-xl border border-white/10 cursor-pointer hover:bg-[#2a2a2a] ${currentChatId===`${g.role}_${g.key}`?'border-green-500/50 bg-green-500/10':''}">
+      <div class="flex justify-between items-start"><p class="font-bold text-xs">${g.role==='student'?'🎓':g.role==='parent'?'👨‍👩‍👧':g.role==='teacher'?'👩‍🏫':'💬'} ${g.display}</p><span class="text-[10px] bg-white/10 px-1.5 py-0.5 rounded-full">${g.count}</span></div>
+      <p class="text-[11px] text-gray-400 mt-1 truncate">${g.last.from==='admin'?'You (Human Assistant): ':''}${g.last.message?.substring(0,60)}...</p>
+      <p class="text-[9px] text-gray-500 mt-1">${g.last.time?.toDate?.()?.toLocaleString()||''} | SHKE ${g.indexNumber} counting from 500</p>
+    </div>
+  `).join('') || '<p class="text-xs text-gray-400 text-center py-4">No conversations - Students/Parents/Teachers messages appear here - You reply as human assistant</p>';
+}
+
+function filterMessages(role){
+  currentFilter=role;
+  ['all','student','parent','teacher'].forEach(r=>{
+    const btn=document.getElementById('f'+r.charAt(0).toUpperCase()+r.slice(1));
+    if(btn) btn.className = currentFilter===r? 'bg-white text-black px-3 py-1 rounded-full text-[10px] font-bold' : 'bg-white/10 px-3 py-1 rounded-full text-[10px]';
+  });
+  displayConversations(allMessagesCache);
+}
+
+function searchMessages(){ displayConversations(allMessagesCache); }
+
+function openConversation(role, key, indexNumber){
+  currentChatId=`${role}_${key}`;
+  currentChatData={role, key, indexNumber: indexNumber||key};
+  document.getElementById('currentChatWith').innerText=`${role} ${key} - SHKE ${indexNumber}`;
+  document.getElementById('currentChatInfo').innerText=`Role: ${role} | Index: ${indexNumber} counting from 500 | You appear as Human Assistant (Admin) in their portal`;
+  document.getElementById('currentRoleBadge').innerText=role;
+  displayConversations(allMessagesCache);
+  loadCurrentChat();
+}
+
+function openHumanChat(indexOrEmail, uid, role){
+  const key=indexOrEmail||uid;
+  currentChatId=`${role}_${key}`;
+  currentChatData={role, key, indexNumber: indexOrEmail.startsWith('SHKE')?indexOrEmail:key, userId:uid};
+  document.getElementById('currentChatWith').innerText=`${role} ${key} - SHKE ${indexOrEmail}`;
+  document.getElementById('currentChatInfo').innerText=`Role: ${role} | SHKE ${indexOrEmail} | You as Human Assistant (Admin) monitoring all data`;
+  showTab('human');
+  setTimeout(()=>{ displayConversations(allMessagesCache); loadCurrentChat(); },300);
+}
+
+async function loadCurrentChat(){
+  if(!currentChatData) return;
+  const FB=window.FB;
+  const {role, key, indexNumber} = currentChatData;
+  try{
+    let all=[];
+    // Parent messages
+    if(role==='parent' || indexNumber?.startsWith('SHKE')){
+      const q=FB.query(FB.collection(FB.db,"parent_messages"), FB.where("indexNumber","==",indexNumber||key), FB.orderBy("timestamp","asc"));
+      const snap=await FB.getDocs(q);
+      snap.forEach(d=>all.push({...d.data(), id:d.id}));
+    }
+    // Human assist messages
+    const q2=FB.query(FB.collection(FB.db,"human_assist_messages"), FB.where("indexNumber","==",indexNumber||key), FB.orderBy("timestamp","asc"));
+    const snap2=await FB.getDocs(q2);
+    snap2.forEach(d=>all.push({...d.data(), id:d.id}));
+
+    const q3=FB.query(FB.collection(FB.db,"human_assist_messages"), FB.where("fromId","==",key), FB.orderBy("timestamp","asc"));
+    const snap3=await FB.getDocs(q3);
+    snap3.forEach(d=>all.push({...d.data(), id:d.id}));
+
+    all.sort((a,b)=> (a.timestamp?.seconds||0)-(b.timestamp?.seconds||0));
+
+    document.getElementById('humanChatBox').innerHTML=all.map(m=>{
+      const isAdmin=m.from==='admin' || m.fromRole==='admin';
+      return `<div class="flex ${isAdmin?'justify-end':'justify-start'}">
+        <div class="${isAdmin?'bg-green-600 text-white':'bg-[#1f1f1f] border border-white/10'} p-3 rounded-2xl max-w-[85%] text-xs">
+          <p class="font-bold text-[10px] ${isAdmin?'text-green-100':'text-yellow-400'}">${isAdmin?'💬 You - Human Assistant (Admin) - Monitoring All Data':`${role==='student'?'🎓 Student':role==='parent'?'👨‍👩‍👧 Parent':role==='teacher'?'👩‍🏫 Teacher':''} ${m.fromId||m.indexNumber||key}`}</p>
+          <p class="mt-1">${m.message}</p>
+          <p class="text-[9px] opacity-60 mt-1">${m.timestamp?.toDate?.()?.toLocaleString()||''} | ${m.type||''} | SHKE ${m.indexNumber||''}</p>
+        </div>
+      </div>`;
+    }).join('') || `<p class="text-xs text-gray-400 text-center py-8">No messages yet with ${role} ${key} SHKE ${indexNumber}<br>Start as Human Assistant: Send first message - You appear as human in their portal (student daily-hw.html, parent.html, teacher.html)<br>Example: Hello! I am Human Assistant (Admin) monitoring your SHKE performance daily.</p>`;
+
+    document.getElementById('humanChatBox').scrollTop=document.getElementById('humanChatBox').scrollHeight;
+  }catch(e){ document.getElementById('humanChatBox').innerHTML=`Error: ${e.message}`; }
+}
+
+async function sendHumanMsg(){
+  const FB=window.FB;
+  const txt=document.getElementById('humanMsg').value.trim();
+  if(!txt||!currentChatData) return alert("Select conversation + type message as Human Assistant");
+  const {role, key, indexNumber, userId} = currentChatData;
+  try{
+    const msgData={
+      indexNumber: indexNumber||key,
+      fromId: "admin",
+      toId: key,
+      fromRole: "admin",
+      toRole: role,
+      from: "admin",
+      to: role,
+      message: txt,
+      timestamp: FB.serverTimestamp(),
+      type: "human_assistant",
+      humanAssistant: true,
+      adminAppearsAsHuman: true
+    };
+    // Save to both collections so it appears in parent.html and human_assist_messages
+    await FB.setDoc(FB.doc(FB.collection(FB.db,"human_assist_messages")), msgData);
+    if(role==='parent' || indexNumber?.startsWith('SHKE')){
+      await FB.setDoc(FB.doc(FB.collection(FB.db,"parent_messages")), {
+        indexNumber: indexNumber||key,
+        childUserId: userId||"",
+        from: "admin",
+        to: "parent",
+        message: txt + " - (Human Assistant Admin monitoring all data)",
+        timestamp: FB.serverTimestamp(),
+        type: "human_assistant"
+      });
+    }
+    document.getElementById('humanMsg').value="";
+    loadCurrentChat();
+    loadHumanInbox();
   }catch(e){ alert(e.message); }
 }
 
-async function setIndex(uid){
-  const FB=window.FB; const idx=document.getElementById(`idx_${uid}`)?.value.trim().toUpperCase(); if(!idx) return alert("Enter SHKE e.g SHKE00500");
-  try{ await FB.updateDoc(FB.doc(FB.db,"users",uid),{indexNumber:idx}); await FB.setDoc(FB.doc(FB.db,"student_index",idx),{indexNumber:idx, userId:uid, createdAt:FB.serverTimestamp()}); alert(`✅ ${idx} set - Parent login with ${idx}`); loadUsers(); }catch(e){ alert(e.message); }
-}
-function chatWithParent(indexNumber, uid){ if(!indexNumber||!indexNumber.startsWith('SHKE')) return alert("Set SHKE index first e.g SHKE00500"); document.getElementById('chatIndexFilter').value=indexNumber; showTab('parentChat'); loadParentChat(); }
-async function approveUser(id){ const FB=window.FB; await FB.updateDoc(FB.doc(FB.db,"users",id),{isPremium:true, status:"approved"}); loadUsers(); }
-async function viewChildHW(uid){ const FB=window.FB; const q=FB.query(FB.collection(FB.db,"homework_submissions"), FB.where("userId","==",uid), FB.orderBy("timestamp","desc")); const snap=await FB.getDocs(q); let all=[]; snap.forEach(d=>all.push(d.data())); alert(`SHKE Child HW: ${all.length}\nLast: ${all[0]?.date} ${all[0]?.subject} ${all[0]?.score}/10`); }
-async function sendParentAlert(uid, shke){ const FB=window.FB; if(!shke.startsWith('SHKE')) return alert("No SHKE"); const msg=`⚠️ Parent of ${shke}: Your child has pending HW - Monday pending → Tuesday double 20 marks. Please ensure child does daily 10 marks HW. Check parent.html with ${shke}`; await FB.setDoc(FB.doc(FB.collection(FB.db,"parent_messages")), {indexNumber:shke, childUserId:uid, from:"admin", to:"parent", message:msg, timestamp:FB.serverTimestamp(), type:"alert"}); alert(`✅ Alert sent to parent ${shke}`); }
+function quickHuman(t){ document.getElementById('humanMsg').value=t; }
 
-let currentChatIndex=null;
-async function loadParentChat(){
-  const FB=window.FB; const idx=document.getElementById('chatIndexFilter').value.trim().toUpperCase(); if(!idx) return; currentChatIndex=idx; document.getElementById('currentChatIndex').innerText=idx;
-  try{
-    const userQ=FB.query(FB.collection(FB.db,"users"), FB.where("indexNumber","==",idx)); const userSnap=await FB.getDocs(userQ); let userData=null; userSnap.forEach(d=>userData=d.data());
-    document.getElementById('parentInfoChat').innerHTML=userData? `Child: ${userData.email}<br>Grade: ${userData.grade}<br>SHKE: ${idx}` : `SHKE ${idx} not found`;
-    const q=FB.query(FB.collection(FB.db,"parent_messages"), FB.where("indexNumber","==",idx), FB.orderBy("timestamp","asc")); const snap=await FB.getDocs(q); let html=""; snap.forEach(d=>{ const m=d.data(); const isAdmin=m.from==="admin"; html+=`<div class="flex ${isAdmin?'justify-end':'justify-start'}"><div class="${isAdmin?'bg-green-600':'bg-[#1f1f1f] border border-white/10'} p-2.5 rounded-2xl max-w-[80%] text-xs"><p class="font-bold text-[10px]">${isAdmin?'Admin':'Parent'}</p><p>${m.message}</p></div></div>`; }); document.getElementById('adminChatBox').innerHTML=html||'No messages'; }catch(e){}
+// Other functions
+async function setIndex(uid){ const FB=window.FB; const idx=document.getElementById(`idx_${uid}`)?.value.trim().toUpperCase(); if(!idx) return; await FB.updateDoc(FB.doc(FB.db,"users",uid),{indexNumber:idx}); await FB.setDoc(FB.doc(FB.db,"student_index",idx),{indexNumber:idx, userId:uid, createdAt:FB.serverTimestamp()}); alert(`✅ ${idx} set - Parent login with ${idx} - Counting from 500`); loadStudents(); loadOverview(); }
+async function regenerateIndex(uid){
+  const FB=window.FB;
+  await FB.runTransaction(FB.db, async(transaction)=>{
+    const counterRef=FB.doc(FB.db,"config","counters");
+    const counterSnap=await transaction.get(counterRef);
+    let last=counterSnap.exists()? counterSnap.data().lastIndex : 499;
+    let next=last+1; if(next<500) next=500;
+    let shke=`SHKE${String(next).padStart(5,'0')}`;
+    transaction.set(counterRef, {lastIndex:next, prefix:"SHKE"}, {merge:true});
+    transaction.update(FB.doc(FB.db,"users",uid), {indexNumber:shke});
+    transaction.set(FB.doc(FB.db,"student_index",shke), {indexNumber:shke, userId:uid, createdAt:FB.serverTimestamp()});
+  });
+  alert("✅ Auto SHKE assigned counting from 500");
+  loadStudents(); loadOverview();
 }
-async function sendAdminMsg(){ const FB=window.FB; const txt=document.getElementById('adminMsg').value.trim(); if(!txt||!currentChatIndex) return; await FB.setDoc(FB.doc(FB.collection(FB.db,"parent_messages")), {indexNumber:currentChatIndex, from:"admin", to:"parent", message:txt, timestamp:FB.serverTimestamp()}); document.getElementById('adminMsg').value=""; loadParentChat(); loadAllMessages(); }
-function quickAdminMsg(t){ document.getElementById('adminMsg').value=t; }
-async function loadAllMessages(){ const FB=window.FB; try{ const q=FB.query(FB.collection(FB.db,"parent_messages"), FB.orderBy("timestamp","desc")); const snap=await FB.getDocs(q); let all=[]; snap.forEach(d=>all.push(d.data())); document.getElementById('msgCount').innerText=all.length; document.getElementById('allMessages').innerHTML=all.slice(0,20).map(m=>`<div class="bg-black p-3 rounded-xl border border-white/10 text-xs flex justify-between"><div><p class="font-bold">${m.indexNumber} ${m.from}→${m.to}</p><p>${m.message.substring(0,100)}</p></div><button onclick="document.getElementById('chatIndexFilter').value='${m.indexNumber}'; loadParentChat();" class="bg-green-600 px-3 py-1 rounded-full text-[10px] h-fit">Open</button></div>`).join(''); }catch(e){} }
-async function loadDailyMonitor(){ const FB=window.FB; const q=FB.query(FB.collection(FB.db,"homework_submissions"), FB.orderBy("timestamp","desc")); const snap=await FB.getDocs(q); let all=[]; snap.forEach(d=>all.push(d.data())); document.getElementById('dailyStats').innerHTML=`<div class="bg-green-500/20 p-3 rounded-xl text-center"><p class="font-black text-xl">${all.filter(s=>s.date===new Date().toISOString().split('T')[0]).length}</p><p>Today</p></div><div class="bg-red-500/20 p-3 rounded-xl text-center"><p class="font-black text-xl">${all.filter(s=>s.score<=4).length}</p><p>Failed</p></div>`; document.getElementById('dailyMonitorList').innerHTML=all.slice(0,30).map(s=>`<div class="bg-black p-3 rounded-xl border border-white/10 text-xs flex justify-between"><div><p>${s.date} ${s.grade} ${s.subject} ${s.score}/10 - ${s.mostFailedTopic}</p><p class="text-[10px] text-gray-400">User ${s.userId.substring(0,6)}</p></div><button onclick="sendRemedy('${s.userId}','${s.mostFailedTopic}')" class="bg-yellow-600 px-2 py-1 rounded-full text-[10px]">Remedy</button></div>`).join(''); }
-async function sendRemedy(userId, topic){ const FB=window.FB; const userSnap=await FB.getDoc(FB.doc(FB.db,"users",userId)); const u=userSnap.data(); if(!u.indexNumber) return alert("No SHKE"); await FB.setDoc(FB.doc(FB.collection(FB.db,"parent_messages")), {indexNumber:u.indexNumber, childUserId:userId, from:"admin", to:"parent", message:`💊 Remedy: Failed ${topic} - Revise Notes ${topic}`, timestamp:FB.serverTimestamp()}); alert(`Sent to ${u.indexNumber}`); }
-async function loadResources(){ const FB=window.FB; const snap=await FB.getDocs(FB.collection(FB.db,"resources")); let all=[]; snap.forEach(d=>all.push(d.data())); document.getElementById('resourceStats').innerHTML=`<div class="bg-purple-500/20 p-2 rounded-xl text-center"><p class="font-black">${all.filter(r=>r.type==="Notes").length}</p><p>Notes</p></div>`; }
+async function approveUser(id){ const FB=window.FB; await FB.updateDoc(FB.doc(FB.db,"users",id),{isPremium:true, status:"approved"}); loadStudents(); }
+async function viewStudentHW(uid, shke){
+  const FB=window.FB;
+  const q=FB.query(FB.collection(FB.db,"homework_submissions"), FB.where("userId","==",uid), FB.orderBy("timestamp","desc"));
+  const snap=await FB.getDocs(q); let all=[]; snap.forEach(d=>all.push(d.data()));
+  const today=new Date().toISOString().split('T')[0];
+  const todayDone=all.some(s=>s.date===today);
+  alert(`SHKE ${shke} HW:\nTotal: ${all.length}\nToday ${today}: ${todayDone?'✅ Done wait tomorrow':'⚠️ Pending → Double tomorrow'}\nLast: ${all[0]?.date} ${all[0]?.subject} ${all[0]?.score}/10\nMost failed: ${all[0]?.mostFailedTopic}\n\nParent sees at parent.html login ${shke} - Marks + correction + notes link where failed`);
+}
+async function sendHumanRemedy(uid, shke){
+  const FB=window.FB;
+  const q=FB.query(FB.collection(FB.db,"homework_submissions"), FB.where("userId","==",uid), FB.orderBy("timestamp","desc"));
+  const snap=await FB.getDocs(q); let all=[]; snap.forEach(d=>all.push(d.data()));
+  const mostFailed=all[0]?.mostFailedTopic||"General";
+  const msg=`💬 Human Assistant (Admin) - Monitoring SHKE ${shke} daily 10 marks: Your child most failed topic is ${mostFailed}. Please revise Notes: ${mostFailed} - Open notes.html?search=${mostFailed} - This is where information is. Parent can see at parent.html with ${shke}. Today: ${all[0]?.score||0}/10`;
+  await FB.setDoc(FB.doc(FB.collection(FB.db,"human_assist_messages")), {indexNumber:shke, fromId:"admin", toId:shke, fromRole:"admin", toRole:"student", from:"admin", to:"student", message:msg, timestamp:FB.serverTimestamp(), type:"remedy_human"});
+  await FB.setDoc(FB.doc(FB.collection(FB.db,"parent_messages")), {indexNumber:shke, childUserId:uid, from:"admin", to:"parent", message:msg, timestamp:FB.serverTimestamp(), type:"remedy_human"});
+  alert(`✅ Remedy as Human Assistant sent to student ${shke} + parent ${shke} - Appears as human in both portals`);
+}
+async function sendPendingAlert(uid, shke){
+  const FB=window.FB;
+  const msg=`⚠️ Human Assistant (Admin) monitoring SHKE ${shke}: Monday homework pending - If Monday pending, Tuesday you will have double work 20 marks (Today 10 + Pending 10). Please complete now to avoid double. Today completed → Wait tomorrow. Parent sees pending at parent.html with ${shke} counting from 500.`;
+  await FB.setDoc(FB.doc(FB.collection(FB.db,"human_assist_messages")), {indexNumber:shke, fromId:"admin", toId:shke, fromRole:"admin", toRole:"student", from:"admin", to:"student", message:msg, timestamp:FB.serverTimestamp(), type:"pending_human"});
+  await FB.setDoc(FB.doc(FB.collection(FB.db,"parent_messages")), {indexNumber:shke, childUserId:uid, from:"admin", to:"parent", message:msg, timestamp:FB.serverTimestamp(), type:"pending_human"});
+  alert(`✅ Pending → Double alert as Human sent to SHKE ${shke} student + parent`);
+}
+async function viewParentChildHW(idx){
+  const FB=window.FB;
+  const q=FB.query(FB.collection(FB.db,"homework_submissions"), FB.where("indexNumber","==",idx), FB.orderBy("timestamp","desc"));
+  const snap=await FB.getDocs(q); let all=[]; snap.forEach(d=>all.push(d.data()));
+  if(all.length===0){
+    const q2=FB.query(FB.collection(FB.db,"student_index"), FB.where("indexNumber","==",idx));
+    const s2=await FB.getDocs(q2);
+    let uid=""; s2.forEach(d=>uid=d.data().userId);
+    if(uid){
+      const q3=FB.query(FB.collection(FB.db,"homework_submissions"), FB.where("userId","==",uid), FB.orderBy("timestamp","desc"));
+      const s3=await FB.getDocs(q3); s3.forEach(d=>all.push(d.data()));
+    }
+  }
+  alert(`Parent SHKE ${idx} Child HW:\nTotal: ${all.length}\nLast: ${all[0]?.date} ${all[0]?.subject} ${all[0]?.score}/10 Most failed: ${all[0]?.mostFailedTopic}\n\nParent sees at parent.html login ${idx}: Marks + correction + notes link where failed + most failed + remedy + pending double + weekly exams + if didn't do exam`);
+}
+async function sendParentRemedy(idx){
+  const FB=window.FB;
+  const q=FB.query(FB.collection(FB.db,"homework_submissions"), FB.where("indexNumber","==",idx), FB.orderBy("timestamp","desc"));
+  const snap=await FB.getDocs(q); let all=[]; snap.forEach(d=>all.push(d.data()));
+  const mostFailed=all[0]?.mostFailedTopic||"General";
+  const msg=`💊 Human Assistant (Admin) to Parent SHKE ${idx}: Your child most failed ${mostFailed} - Remedy: Revise Notes ${mostFailed} - Where information is: notes.html?search=${mostFailed} - Direct link where info is. Daily HW ${all[0]?.score||0}/10 - Weekly exam check parent.html with ${idx}`;
+  await FB.setDoc(FB.doc(FB.collection(FB.db,"parent_messages")), {indexNumber:idx, from:"admin", to:"parent", message:msg, timestamp:FB.serverTimestamp(), type:"remedy_human"});
+  alert(`✅ Remedy as Human sent to parent ${idx}`);
+}
+async function loadDailyMonitor(){
+  const FB=window.FB;
+  const snap=await FB.getDocs(FB.collection(FB.db,"homework_submissions"));
+  let all=[]; snap.forEach(d=>all.push(d.data()));
+  const today=new Date().toISOString().split('T')[0];
+  document.getElementById('dailyStats').innerHTML=`<div class="bg-green-500/20 p-3 rounded-xl text-center"><p class="font-black text-xl">${all.filter(s=>s.date===today).length}</p><p>Today Done</p></div><div class="bg-red-500/20 p-3 rounded-xl text-center"><p class="font-black text-xl">${all.filter(s=>s.score<=4).length}</p><p>Failed ≤4/10</p></div><div class="bg-blue-500/20 p-3 rounded-xl text-center"><p class="font-black text-xl">${all.length}</p><p>Total HW 10 Marks</p></div>`;
+  document.getElementById('dailyMonitorList').innerHTML=all.slice(0,40).map(s=>`<div class="bg-black p-3 rounded-xl border border-white/10 text-xs flex justify-between"><div><p>📘 ${s.indexNumber||'No SHKE'} ${s.date} ${s.grade} ${s.subject} ${s.score}/10 - ${s.mostFailedTopic} ${s.score<=4?'❌':s.score>=7?'✅':'⚠️'}</p><p class="text-[10px] text-gray-400">Where failed: ${s.corrections?.filter(c=>!c.correct).map(c=>c.noteTitle).join(', ')||'Perfect'} - Notes link where info is</p></div><button onclick="sendHumanRemedy('${s.userId}','${s.indexNumber||''}')" class="bg-yellow-600 px-2 py-1 rounded-full text-[10px]">💊 Human Remedy</button></div>`).join('');
+}
 async function saveAi(){ const FB=window.FB; const key=document.getElementById('geminiKey').value.trim(); await FB.setDoc(FB.doc(FB.db,"config","ai"),{geminiKey:key}, {merge:true}); document.getElementById('aiStatus').innerText="AI LIVE ✅"; }
 
-setTimeout(()=>{ const FB=window.FB; FB.onAuthStateChanged(FB.auth, async(u)=>{ if(!u){document.body.innerHTML='Login at /'; return;} const snap=await FB.getDoc(FB.doc(FB.db,"users",u.uid)); if(snap.data().email!=="kelvinkeseko20@gmail.com"){document.body.innerHTML='Not admin'; return;} loadUsers(); loadAllMessages(); try{ const cfg=await FB.getDoc(FB.doc(FB.db,"config","ai")); if(cfg.exists()) document.getElementById('geminiKey').value=cfg.data().geminiKey; }catch(e){} }); },500);
-window.showTab=showTab; window.setCounter=setCounter; window.initCounter=initCounter; window.setIndex=setIndex; window.regenerateIndex=regenerateIndex; window.chatWithParent=chatWithParent; window.approveUser=approveUser; window.viewChildHW=viewChildHW; window.sendParentAlert=sendParentAlert; window.loadParentChat=loadParentChat; window.sendAdminMsg=sendAdminMsg; window.quickAdminMsg=quickAdminMsg; window.loadAllMessages=loadAllMessages; window.loadDailyMonitor=loadDailyMonitor; window.sendRemedy=sendRemedy; window.saveAi=saveAi;
+setTimeout(()=>{ const FB=window.FB; FB.onAuthStateChanged(FB.auth, async(u)=>{ if(!u){document.body.innerHTML='<div class=p-8>Login at / required</div>'; return;} const snap=await FB.getDoc(FB.doc(FB.db,"users",u.uid)); if(!snap.exists() || snap.data().email!=="kelvinkeseko20@gmail.com"){document.body.innerHTML='Not admin - kelvinkeseko20@gmail.com only'; return;} loadOverview(); loadHumanInbox(); try{ const cfg=await FB.getDoc(FB.doc(FB.db,"config","ai")); if(cfg.exists() && cfg.data().geminiKey){document.getElementById('aiStatus').innerText="AI LIVE ✅"; } }catch(e){} setInterval(()=>{ loadHumanInbox(); loadOverview(); },10000); }); },600);
+
+window.showTab=showTab; window.initCounter=initCounter; window.setCounter=setCounter; window.setIndex=setIndex; window.regenerateIndex=regenerateIndex; window.approveUser=approveUser; window.viewStudentHW=viewStudentHW; window.sendHumanRemedy=sendHumanRemedy; window.sendPendingAlert=sendPendingAlert; window.viewParentChildHW=viewParentChildHW; window.sendParentRemedy=sendParentRemedy; window.openHumanChat=openHumanChat; window.openConversation=openConversation; window.filterMessages=filterMessages; window.searchMessages=searchMessages; window.loadCurrentChat=loadCurrentChat; window.sendHumanMsg=sendHumanMsg; window.quickHuman=quickHuman; window.loadDailyMonitor=loadDailyMonitor; window.saveAi=saveAi; window.addTeacher=addTeacher;
 </script>
 </body>
 </html>
