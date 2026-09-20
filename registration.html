@@ -2,386 +2,95 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SomaHub - Register - SHKE00500... SHKEP... SHKET... - Mon-Fri HW Only - No HW Sunday Rest Day - Weekly Sunday to Sunday</title>
+<title>Create account - SomaHub</title>
 <script src="https://cdn.tailwindcss.com"></script>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;700;800&display=swap" rel="stylesheet">
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-import { getAuth, GoogleAuthProvider, signInWithPopup, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-import { getFirestore, doc, setDoc, getDoc, serverTimestamp, runTransaction, collection } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-const firebaseConfig = {
-  apiKey: "AIzaSyA93BNes3AmFyxIEgjSbvbIWqLyorLsuj8",
-  authDomain: "somahubkenya-9e458.firebaseapp.com",
-  projectId: "somahubkenya-9e458",
-  storageBucket: "somahubkenya-9e458.firebasestorage.app",
-  messagingSenderId: "615579085715",
-  appId: "1:615579085715:web:28fca37ba498324bb49666"
-};
-const app=initializeApp(firebaseConfig); const auth=getAuth(app); const db=getFirestore(app); const provider=new GoogleAuthProvider();
-window.FB={auth,db,provider,signInWithPopup,createUserWithEmailAndPassword,signInWithEmailAndPassword,onAuthStateChanged,doc,setDoc,getDoc,serverTimestamp,runTransaction,collection};
+import { getAuth, createUserWithEmailAndPassword, updateProfile } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+import { getFirestore, doc, runTransaction, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+const cfg={apiKey:"AIzaSyA93BNes3AmFyxIEgjSbvbIWqLyorLsuj8",authDomain:"somahubkenya-9e458.firebaseapp.com",projectId:"somahubkenya-9e458",storageBucket:"somahubkenya-9e458.firebasestorage.app",messagingSenderId:"615579085715",appId:"1:615579085715:web:28fca37ba498324bb49666"};
+const app=initializeApp(cfg); window.FB={auth:getAuth(app),db:getFirestore(app),createUserWithEmailAndPassword,updateProfile,doc,runTransaction,serverTimestamp};
 </script>
-<style>body{font-family:'Plus Jakarta Sans',sans-serif}</style>
 </head>
-<body class="bg-[#f7f8fa] min-h-screen">
-<div class="max-w-6xl mx-auto p-4 py-8">
-<div class="text-center mb-8">
-<a href="/" class="inline-flex items-center gap-2 text-2xl font-black"><div class="bg-black text-white w-10 h-10 rounded-xl flex items-center justify-center">SH</div> SomaHub</a>
-<h1 class="text-3xl font-black mt-4">Create Account - International - Homeschool & School</h1>
-<p class="text-sm text-gray-600 mt-2">SHKE Students from 500 - SHKEP Parents from 100 - SHKET Teachers from 100 - NO connection for privacy - Mon-Fri HW Only - No HW Sunday Rest Day - Weekly ONLY Sunday to Sunday - SHKE00500+</p>
-<div class="mt-4 inline-flex gap-2 text-[10px] font-bold"><span class="bg-blue-600 text-white px-3 py-1 rounded-full">Students SHKE00500... from 500</span><span class="bg-green-600 text-white px-3 py-1 rounded-full">Parents SHKEP00100... from 100</span><span class="bg-orange-600 text-white px-3 py-1 rounded-full">Teachers SHKET00100... from 100</span><span class="bg-black text-white px-3 py-1 rounded-full">Privacy: NO connection between roles</span></div>
+<body class="bg-[#f6f7f9] flex justify-center p-4">
+<div class="w-full max-w-[400px] mt-6">
+<div class="flex justify-between"><p class="font-black">SomaHub</p><a href="/" class="text-xs border bg-white px-3 py-1 rounded-full">Home</a></div>
+
+<h1 class="text-[26px] font-black mt-8">Create account</h1>
+<p class="text-xs text-gray-500 mt-1">CBC / CBE • Grade 1-9 • International coming soon</p>
+
+<div class="flex gap-2 mt-5">
+<button id="bS" onclick="role='student';render()" class="flex-1 bg-black text-white rounded-full py-3 text-xs font-bold">Student</button>
+<button id="bP" onclick="role='parent';render()" class="flex-1 bg-white border rounded-full py-3 text-xs font-bold">Parent</button>
+<button id="bT" onclick="role='teacher';render()" class="flex-1 bg-white border rounded-full py-3 text-xs font-bold">Teacher</button>
 </div>
 
-<div class="flex justify-center gap-2 mb-6">
-<button onclick="showForm('student')" id="tabStudent" class="bg-blue-600 text-white px-6 py-3 rounded-full font-bold text-sm">👩‍🎓 Student - SHKE00500... from 500</button>
-<button onclick="showForm('parent')" id="tabParent" class="bg-white border px-6 py-3 rounded-full font-bold text-sm">👨‍👩‍👧 Parent - SHKEP00100... from 100 - Child Index</button>
-<button onclick="showForm('teacher')" id="tabTeacher" class="bg-white border px-6 py-3 rounded-full font-bold text-sm">👩‍🏫 Teacher - SHKET00100... from 100 - Junior/Upper/Lower</button>
+<div class="bg-white rounded-2xl p-5 mt-4 border">
+<div class="space-y-3">
+<input id="name" placeholder="Full name" class="w-full bg-gray-50 rounded-xl p-3 text-sm outline-none">
+<input id="phone" placeholder="Phone" class="w-full bg-gray-50 rounded-xl p-3 text-sm outline-none">
+<input id="email" placeholder="Email" class="w-full bg-gray-50 rounded-xl p-3 text-sm outline-none">
+<input id="email2" placeholder="Confirm email" class="w-full bg-gray-50 rounded-xl p-3 text-sm outline-none">
+<input id="pass" type="password" placeholder="Password" class="w-full bg-gray-50 rounded-xl p-3 text-sm outline-none">
+<input id="pass2" type="password" placeholder="Confirm password" class="w-full bg-gray-50 rounded-xl p-3 text-sm outline-none">
+
+<div id="fs" class="space-y-3 pt-3 border-t">
+<select id="grade" class="w-full bg-gray-50 rounded-xl p-3 text-sm outline-none"><option>Grade 1</option><option>Grade 2</option><option>Grade 3</option><option>Grade 4</option><option>Grade 5</option><option selected>Grade 6</option><option>Grade 7</option><option>Grade 8</option><option>Grade 9</option></select>
+<div class="grid grid-cols-2 gap-2"><input id="county" placeholder="County" class="bg-gray-50 rounded-xl p-3 text-sm outline-none"><input id="town" placeholder="Town" class="bg-gray-50 rounded-xl p-3 text-sm outline-none"></div>
 </div>
 
-<!-- STUDENT FORM - SHKE00500 FROM 500 -->
-<div id="formStudent" class="bg-white rounded-[2rem] p-8 shadow-xl border-2 border-blue-200 max-w-4xl mx-auto">
-<div class="text-center"><div class="bg-blue-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto"><i class="fa-solid fa-graduation-cap text-blue-600 text-2xl"></i></div>
-<h2 class="font-black text-xl mt-3">Student Registration - SHKE00500... from 500</h2><p class="text-xs text-gray-500 mt-1">PP1-G12 • Global • Homeschool & School • Email + Password Twice with Eye • Grade County Town School Optional • What else necessary included</p>
-<p class="text-[10px] mt-2 bg-blue-50 border p-2 rounded-xl">ID: SHKE00500, SHKE00501... counting from 500 - Students from 500 - Privacy: NO connection between students, teachers, parents</p></div>
-
-<button id="gStudent" class="w-full mt-6 border-2 py-3 rounded-full font-bold text-sm"><i class="fa-brands fa-google text-red-500"></i> Continue with Google - Student SHKE00500...</button>
-<div class="text-center text-xs my-3 text-gray-400">OR - Email and Password Twice with Eye</div>
-
-<div class="grid md:grid-cols-2 gap-3">
-<input id="sName" placeholder="Full Name *" class="border-2 p-3 rounded-xl text-sm">
-<input id="sPhone" placeholder="Phone (Optional) - What else necessary" class="border p-3 rounded-xl text-sm">
+<div id="fp" class="hidden space-y-3 pt-3 border-t">
+<input id="childIndex" placeholder="Child admission number *" class="w-full bg-gray-50 rounded-xl p-3 text-sm outline-none uppercase">
+<p class="text-[10px] text-gray-400">Enter the number given to your child after registration.</p>
 </div>
 
-<div class="grid md:grid-cols-2 gap-3 mt-3">
-<div class="relative"><input id="sEmail" placeholder="Email *" class="w-full border-2 p-3 rounded-xl text-sm"><p class="text-[9px] text-gray-400 mt-1">Email *</p></div>
-<div class="relative"><input id="sEmail2" placeholder="Confirm Email * - Type again" class="w-full border-2 p-3 rounded-xl text-sm"><p class="text-[9px] text-gray-400 mt-1">Confirm Email * - Must match</p></div>
+<div id="ft" class="hidden space-y-3 pt-3 border-t">
+<select id="level" class="w-full bg-gray-50 rounded-xl p-3 text-sm outline-none"><option>Lower Primary</option><option>Upper Primary</option><option>Junior Secondary</option></select>
+<input id="school" placeholder="School" class="w-full bg-gray-50 rounded-xl p-3 text-sm outline-none">
 </div>
 
-<div class="grid md:grid-cols-2 gap-3 mt-3">
-<div class="relative"><input id="sPass" type="password" placeholder="Password * (6+ chars)" class="w-full border-2 p-3 rounded-xl text-sm pr-10"><button type="button" onclick="toggleEye('sPass','eyeS1')" class="absolute right-3 top-3 text-gray-400"><i id="eyeS1" class="fa-solid fa-eye"></i></button><p class="text-[9px] text-gray-400 mt-1">Password * - Eye to show</p></div>
-<div class="relative"><input id="sPass2" type="password" placeholder="Confirm Password * - Type again" class="w-full border-2 p-3 rounded-xl text-sm pr-10"><button type="button" onclick="toggleEye('sPass2','eyeS2')" class="absolute right-3 top-3 text-gray-400"><i id="eyeS2" class="fa-solid fa-eye"></i></button><p class="text-[9px] text-gray-400 mt-1">Confirm Password * - Must match - Eye to show</p></div>
-</div>
-
-<h3 class="font-black text-sm mt-6">Additional Information - Student - Grade County Town School Optional - What else necessary</h3>
-<div class="grid md:grid-cols-2 gap-3 mt-3">
-<select id="sGrade" class="border-2 p-3 rounded-xl text-sm"><option value="">Select Grade *</option><option>PP1</option><option>PP2</option><option>Grade 1</option><option>Grade 2</option><option>Grade 3</option><option>Grade 4</option><option>Grade 5</option><option selected>Grade 6</option><option>Grade 7</option><option>Grade 8</option><option>Grade 9</option><option>Grade 10</option><option>Grade 11</option><option>Grade 12</option></select>
-<select id="sGender" class="border p-3 rounded-xl text-sm"><option value="">Gender (Optional) - What else necessary</option><option>Male</option><option>Female</option><option>Other</option><option>Prefer not to say</option></select>
-</div>
-<div class="grid md:grid-cols-3 gap-3 mt-3">
-<select id="sCounty" class="border-2 p-3 rounded-xl text-sm"><option value="">County * - e.g Nairobi, Mombasa, Kisumu</option><option>Nairobi</option><option>Mombasa</option><option>Kisumu</option><option>Nakuru</option><option>Kiambu</option><option>Uasin Gishu</option><option>Machakos</option><option>Kajiado</option><option>Other County</option><option>International - Outside Kenya</option></select>
-<input id="sTown" placeholder="Town * - e.g Ruiru, Westlands" class="border-2 p-3 rounded-xl text-sm">
-<input id="sSchool" placeholder="School (Optional) - e.g Homeschool, Ruiru Primary" class="border p-3 rounded-xl text-sm">
-</div>
-<div class="grid md:grid-cols-2 gap-3 mt-3">
-<select id="sLearningMode" class="border p-3 rounded-xl text-sm"><option value="">Learning Mode (Optional) - What else necessary</option><option selected>Homeschool</option><option>School - Public</option><option>School - Private</option><option>After-School</option><option>International School</option></select>
-<input id="sDOB" type="date" class="border p-3 rounded-xl text-sm"><p class="text-[9px] text-gray-400 md:hidden">DOB Optional - What else necessary</p>
-</div>
-
-<div class="mt-4 bg-blue-50 p-3 rounded-xl border text-[11px]">
-<p class="font-bold">What else is necessary? Included for student:</p><p>Phone Optional, Gender Optional, DOB Optional, Learning Mode Homeschool/School, Parent Phone Optional, Emergency Contact Optional, County*, Town*, School Optional - All for better personalization - Privacy: NO connection with teachers/parents</p>
-<div class="grid md:grid-cols-2 gap-2 mt-2">
-<input id="sParentPhone" placeholder="Parent/Guardian Phone (Optional) - What else necessary" class="border p-2 rounded-xl text-xs">
-<input id="sEmergency" placeholder="Emergency Contact (Optional)" class="border p-2 rounded-xl text-xs">
+<button id="btn" onclick="reg()" class="w-full bg-black text-white py-3.5 rounded-full font-bold text-sm mt-2">Create account</button>
+<p id="msg" class="text-xs text-center text-gray-500 mt-2"></p>
 </div>
 </div>
-
-<button onclick="reg('student')" class="w-full bg-blue-600 text-white py-4 rounded-xl font-black mt-6">📚 Register as Student - Get SHKE00500... from 500 - Mon-Fri HW Only - No HW Sunday Rest Day</button>
-<p class="text-[11px] text-center mt-3 text-gray-500">Already have? <a href="/daily-hw.html" class="text-blue-600 font-bold">Login Student - SHKE00500... - Mon-Fri + Sunday Rest</a> • Privacy: NO connection between students, teachers, parents</p>
-</div>
-
-<!-- PARENT FORM - SHKEP FROM 100 -->
-<div id="formParent" class="hidden bg-white rounded-[2rem] p-8 shadow-xl border-2 border-green-200 max-w-4xl mx-auto">
-<div class="text-center"><div class="bg-green-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto"><i class="fa-solid fa-users text-green-600 text-2xl"></i></div>
-<h2 class="font-black text-xl mt-3">Parent Registration - SHKEP00100... from 100 - Child Index Number Required</h2><p class="text-xs text-gray-500 mt-1">Parent : child Index number - SHKEP... - From 100 - NO connection for privacy</p>
-<p class="text-[10px] mt-2 bg-green-50 border p-2 rounded-xl">ID: SHKEP00100, SHKEP00101... counting from 100 - Parents from 100 - Child Index: SHKE00500... required to monitor - Privacy: NO connection between students, teachers, parents - Isolated collections</p></div>
-
-<button id="gParent" class="w-full mt-6 border-2 py-3 rounded-full font-bold text-sm"><i class="fa-brands fa-google text-red-500"></i> Continue with Google - Parent SHKEP00100...</button>
-<div class="text-center text-xs my-3 text-gray-400">OR - Email and Password Twice with Eye</div>
-
-<div class="grid md:grid-cols-2 gap-3">
-<input id="pName" placeholder="Full Name *" class="border-2 p-3 rounded-xl text-sm">
-<input id="pPhone" placeholder="Phone *" class="border-2 p-3 rounded-xl text-sm">
-</div>
-
-<div class="grid md:grid-cols-2 gap-3 mt-3">
-<div class="relative"><input id="pEmail" placeholder="Email *" class="w-full border-2 p-3 rounded-xl text-sm"><p class="text-[9px] text-gray-400 mt-1">Email *</p></div>
-<div class="relative"><input id="pEmail2" placeholder="Confirm Email * - Type again" class="w-full border-2 p-3 rounded-xl text-sm"><p class="text-[9px] text-gray-400 mt-1">Confirm Email * - Must match</p></div>
-</div>
-
-<div class="grid md:grid-cols-2 gap-3 mt-3">
-<div class="relative"><input id="pPass" type="password" placeholder="Password * (6+ chars)" class="w-full border-2 p-3 rounded-xl text-sm pr-10"><button type="button" onclick="toggleEye('pPass','eyeP1')" class="absolute right-3 top-3 text-gray-400"><i id="eyeP1" class="fa-solid fa-eye"></i></button><p class="text-[9px] text-gray-400 mt-1">Password * - Eye</p></div>
-<div class="relative"><input id="pPass2" type="password" placeholder="Confirm Password * - Type again" class="w-full border-2 p-3 rounded-xl text-sm pr-10"><button type="button" onclick="toggleEye('pPass2','eyeP2')" class="absolute right-3 top-3 text-gray-400"><i id="eyeP2" class="fa-solid fa-eye"></i></button><p class="text-[9px] text-gray-400 mt-1">Confirm Password * - Must match - Eye</p></div>
-</div>
-
-<h3 class="font-black text-sm mt-6">Parent Additional - Child Index Number * - County Town - What else necessary - SHKEP</h3>
-<div class="grid md:grid-cols-2 gap-3 mt-3">
-<input id="pChildIndex" placeholder="Child Index Number * - e.g SHKE00500 - Required for monitoring" class="border-2 border-green-300 p-3 rounded-xl text-sm font-black tracking-widest uppercase"><p class="text-[10px] text-green-600 font-bold md:hidden">Child Index * SHKE00500... required</p>
-<input id="pChildName" placeholder="Child Name (Optional) - For verification" class="border p-3 rounded-xl text-sm">
-</div>
-<div class="grid md:grid-cols-3 gap-3 mt-3">
-<select id="pCounty" class="border-2 p-3 rounded-xl text-sm"><option value="">County *</option><option>Nairobi</option><option>Mombasa</option><option>Kisumu</option><option>Nakuru</option><option>Kiambu</option><option>Other</option><option>International</option></select>
-<input id="pTown" placeholder="Town * - e.g Ruiru" class="border-2 p-3 rounded-xl text-sm">
-<input id="pSchool" placeholder="Child School (Optional)" class="border p-3 rounded-xl text-sm">
-</div>
-<div class="mt-3 bg-green-50 p-3 rounded-xl border text-[11px]">
-<p class="font-bold">Parent additional - What else necessary:</p><p>Child Index Number * required - SHKE00500... - Used to fetch child data for monitoring ONLY - NO direct connection for privacy - Isolated collections - Parent cannot message child directly - Privacy: NO connection between students, teachers, parents - Admin Chat + Student Monitor via admin only</p>
-</div>
-
-<button onclick="reg('parent')" class="w-full bg-green-600 text-white py-4 rounded-xl font-black mt-6">👨‍👩‍👧 Register as Parent - Get SHKEP00100... from 100 - Child Index Required - Mon-Fri + Sunday Rest</button>
-<p class="text-[11px] text-center mt-3 text-gray-500">Already have? <a href="/parent.html" class="text-green-600 font-bold">Login Parent - SHKEP... - Child Index - Mon-Fri + Sunday Rest</a> • Privacy: NO connection</p>
-</div>
-
-<!-- TEACHER FORM - SHKET FROM 100 -->
-<div id="formTeacher" class="hidden bg-white rounded-[2rem] p-8 shadow-xl border-2 border-orange-200 max-w-4xl mx-auto">
-<div class="text-center"><div class="bg-orange-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto"><i class="fa-solid fa-chalkboard-user text-orange-600 text-2xl"></i></div>
-<h2 class="font-black text-xl mt-3">Teacher Registration - SHKET00100... from 100 - Junior Upper Lower Primary</h2><p class="text-xs text-gray-500 mt-1">Teacher (junior, upper primary or lower primary) school, county and town and tsc number (optional) - SHKET...</p>
-<p class="text-[10px] mt-2 bg-orange-50 border p-2 rounded-xl">ID: SHKET00100, SHKET00101... counting from 100 - Teachers from 100 - Privacy: NO connection between students, teachers, parents - Isolated collections</p></div>
-
-<button id="gTeacher" class="w-full mt-6 border-2 py-3 rounded-full font-bold text-sm"><i class="fa-brands fa-google text-red-500"></i> Continue with Google - Teacher SHKET00100...</button>
-<div class="text-center text-xs my-3 text-gray-400">OR - Email and Password Twice with Eye</div>
-
-<div class="grid md:grid-cols-2 gap-3">
-<input id="tName" placeholder="Full Name *" class="border-2 p-3 rounded-xl text-sm">
-<input id="tPhone" placeholder="Phone *" class="border-2 p-3 rounded-xl text-sm">
-</div>
-
-<div class="grid md:grid-cols-2 gap-3 mt-3">
-<div class="relative"><input id="tEmail" placeholder="Email *" class="w-full border-2 p-3 rounded-xl text-sm"><p class="text-[9px] text-gray-400 mt-1">Email *</p></div>
-<div class="relative"><input id="tEmail2" placeholder="Confirm Email * - Type again" class="w-full border-2 p-3 rounded-xl text-sm"><p class="text-[9px] text-gray-400 mt-1">Confirm Email * - Must match</p></div>
-</div>
-
-<div class="grid md:grid-cols-2 gap-3 mt-3">
-<div class="relative"><input id="tPass" type="password" placeholder="Password * (6+ chars)" class="w-full border-2 p-3 rounded-xl text-sm pr-10"><button type="button" onclick="toggleEye('tPass','eyeT1')" class="absolute right-3 top-3 text-gray-400"><i id="eyeT1" class="fa-solid fa-eye"></i></button><p class="text-[9px] text-gray-400 mt-1">Password * - Eye</p></div>
-<div class="relative"><input id="tPass2" type="password" placeholder="Confirm Password * - Type again" class="w-full border-2 p-3 rounded-xl text-sm pr-10"><button type="button" onclick="toggleEye('tPass2','eyeT2')" class="absolute right-3 top-3 text-gray-400"><i id="eyeT2" class="fa-solid fa-eye"></i></button><p class="text-[9px] text-gray-400 mt-1">Confirm Password * - Must match - Eye</p></div>
-</div>
-
-<h3 class="font-black text-sm mt-6">Teacher Additional - Junior Upper Lower Primary - School County Town TSC Optional - SHKET</h3>
-<div class="grid md:grid-cols-2 gap-3 mt-3">
-<select id="tLevel" class="border-2 p-3 rounded-xl text-sm"><option value="">Teaching Level * - Junior / Upper / Lower Primary</option><option>Lower Primary - PP1-Grade 3</option><option>Upper Primary - Grade 4-6</option><option>Junior Secondary - Grade 7-9</option><option>Senior Secondary - Grade 10-12</option><option>All Grades - PP1-G12</option><option>Homeschool Tutor - All</option></select>
-<select id="tGrade" class="border-2 p-3 rounded-xl text-sm"><option value="">Teaching Grade * - Junior Upper Lower</option><option>PP1-PP2 (Lower)</option><option>Grade 1-3 (Lower Primary)</option><option>Grade 4-6 (Upper Primary)</option><option>Grade 7-9 (Junior)</option><option>Grade 10-12 (Senior)</option><option>All Grades</option></select>
-</div>
-<div class="grid md:grid-cols-3 gap-3 mt-3">
-<input id="tSchool" placeholder="School * - e.g Ruiru Primary / Homeschool" class="border-2 p-3 rounded-xl text-sm">
-<select id="tCounty" class="border-2 p-3 rounded-xl text-sm"><option value="">County *</option><option>Nairobi</option><option>Mombasa</option><option>Kisumu</option><option>Nakuru</option><option>Kiambu</option><option>Other</option><option>International</option></select>
-<input id="tTown" placeholder="Town * - e.g Ruiru" class="border-2 p-3 rounded-xl text-sm">
-</div>
-<div class="grid md:grid-cols-2 gap-3 mt-3">
-<input id="tTSC" placeholder="TSC Number (Optional) - Teacher Service Commission" class="border p-3 rounded-xl text-sm">
-<select id="tSubject" class="border p-3 rounded-xl text-sm"><option value="">Main Subject (Optional) - What else necessary</option><option>Mathematics</option><option>English</option><option>Kiswahili</option><option>Science</option><option>SST</option><option>All Subjects</option></select>
-</div>
-<div class="mt-3 bg-orange-50 p-3 rounded-xl border text-[11px]">
-<p class="font-bold">Teacher additional - What else necessary:</p><p>Teaching Level Junior/Upper/Lower Primary *, School*, County*, Town*, TSC Number Optional, Main Subject Optional, Phone*, Experience Optional - For better matching - Privacy: NO connection between students, teachers, parents - Isolated collections - Teacher cannot see student list directly - Privacy</p>
-<div class="grid md:grid-cols-2 gap-2 mt-2">
-<input id="tExperience" placeholder="Years Experience (Optional) - e.g 5 years" class="border p-2 rounded-xl text-xs">
-<input id="tQualification" placeholder="Qualification (Optional) - e.g Diploma, Degree" class="border p-2 rounded-xl text-xs">
-</div>
-</div>
-
-<button onclick="reg('teacher')" class="w-full bg-orange-600 text-white py-4 rounded-xl font-black mt-6">👩‍🏫 Register as Teacher - Get SHKET00100... from 100 - Junior Upper Lower - Mon-Fri + Sunday Rest</button>
-<p class="text-[11px] text-center mt-3 text-gray-500">Already have? <a href="/teachers.html" class="text-orange-600 font-bold">Login Teacher - SHKET... - Junior Upper Lower</a> • Privacy: NO connection</p>
-</div>
-
-<div class="max-w-4xl mx-auto mt-8 bg-black text-white p-5 rounded-2xl">
-<p class="font-black text-center">🔒 Privacy - NO connection between students, teachers, parents in the site for privacy reasons - SHKE00500... SHKEP... SHKET...</p>
-<p class="text-xs text-white/60 mt-2 text-center">Students: SHKE00500, SHKE00501... from 500 - Isolated collection student_index + users learner - Parents: SHKEP00100, SHKEP00101... from 100 - Isolated collection parent_index + users parent - Teachers: SHKET00100, SHKET00101... from 100 - Isolated collection teacher_index + users teacher - NO cross queries - Parent monitors child ONLY via SHKE index + admin chat + student monitor - Overall admin appears as Human Assistant monitoring all - Privacy first - From Monday to Friday (no homework on Sunday is rest day or can complete exam or ready notes or do search) - Mon-Fri HW Only - No HW Saturday Sunday - Sunday Rest Day or Exam or Notes or Search - Weekly ONLY Sunday to Sunday - International - Homeschool + School</p>
-<div class="mt-3 flex justify-center gap-2 text-[10px]"><span class="bg-blue-600 px-3 py-1 rounded-full">SHKE Students 500... - NO connection</span><span class="bg-green-600 px-3 py-1 rounded-full">SHKEP Parents 100... - NO connection</span><span class="bg-orange-600 px-3 py-1 rounded-full">SHKET Teachers 100... - NO connection</span></div>
-</div>
-
-<div class="max-w-4xl mx-auto mt-6 bg-green-600 text-white p-4 rounded-2xl text-center">
-<p class="font-black">💰 After Registration: Pay 500 KES / $5 to Till 0701305109 • Get 3 Months Premium • SHKE - Mon-Fri + Sunday Rest + Weekly Sunday to Sunday</p><p class="text-xs mt-1">M-Pesa: Lipa na M-Pesa → Buy Goods → Till 0701305109 → 500 KES / $5 • SHKE00500... SHKEP... SHKET... • Privacy: NO connection • International • Homeschool & School</p>
-</div>
+<p class="text-[10px] text-center text-gray-400 mt-4">After registration you'll get your admission number and full details inside.</p>
 </div>
 
 <script>
-function showForm(type){
- document.getElementById('formStudent').classList.add('hidden');
- document.getElementById('formParent').classList.add('hidden');
- document.getElementById('formTeacher').classList.add('hidden');
- document.getElementById('tabStudent').className="bg-white border px-6 py-3 rounded-full font-bold text-sm";
- document.getElementById('tabParent').className="bg-white border px-6 py-3 rounded-full font-bold text-sm";
- document.getElementById('tabTeacher').className="bg-white border px-6 py-3 rounded-full font-bold text-sm";
- if(type==='student'){ document.getElementById('formStudent').classList.remove('hidden'); document.getElementById('tabStudent').className="bg-blue-600 text-white px-6 py-3 rounded-full font-bold text-sm"; }
- if(type==='parent'){ document.getElementById('formParent').classList.remove('hidden'); document.getElementById('tabParent').className="bg-green-600 text-white px-6 py-3 rounded-full font-bold text-sm"; }
- if(type==='teacher'){ document.getElementById('formTeacher').classList.remove('hidden'); document.getElementById('tabTeacher').className="bg-orange-600 text-white px-6 py-3 rounded-full font-bold text-sm"; }
+let role='student';
+function render(){
+ bS.className=role==='student'?'flex-1 bg-black text-white rounded-full py-3 text-xs font-bold':'flex-1 bg-white border rounded-full py-3 text-xs font-bold';
+ bP.className=role==='parent'?'flex-1 bg-black text-white rounded-full py-3 text-xs font-bold':'flex-1 bg-white border rounded-full py-3 text-xs font-bold';
+ bT.className=role==='teacher'?'flex-1 bg-black text-white rounded-full py-3 text-xs font-bold':'flex-1 bg-white border rounded-full py-3 text-xs font-bold';
+ fs.classList.toggle('hidden',role!=='student'); fp.classList.toggle('hidden',role!=='parent'); ft.classList.toggle('hidden',role!=='teacher');
 }
-
-function toggleEye(inputId, eyeId){
- const input=document.getElementById(inputId);
- const eye=document.getElementById(eyeId);
- if(input.type==="password"){ input.type="text"; eye.className="fa-solid fa-eye-slash"; } else { input.type="password"; eye.className="fa-solid fa-eye"; }
-}
-
-setTimeout(()=>{
-const FB=window.FB;
-
-document.getElementById('gStudent').onclick=async()=>{ try{const r=await FB.signInWithPopup(FB.auth,FB.provider); await createUser(r.user,"student",null)}catch(e){alert(e.message)}};
-document.getElementById('gParent').onclick=async()=>{ try{const r=await FB.signInWithPopup(FB.auth,FB.provider); await createUser(r.user,"parent",null)}catch(e){alert(e.message)}};
-document.getElementById('gTeacher').onclick=async()=>{ try{const r=await FB.signInWithPopup(FB.auth,FB.provider); await createUser(r.user,"teacher",null)}catch(e){alert(e.message)}};
-
-window.reg=async(type=>{
- let email, email2, pass, pass2, name, data={};
-
- if(type==="student"){
-  email=document.getElementById('sEmail').value.trim(); email2=document.getElementById('sEmail2').value.trim();
-  pass=document.getElementById('sPass').value; pass2=document.getElementById('sPass2').value;
-  name=document.getElementById('sName').value.trim();
-  if(!name) return alert("Full Name * required - Student - SHKE00500... from 500");
-  if(!email||!email2) return alert("Email * and Confirm Email * required - Must match - SHKE");
-  if(email!==email2) return alert("Email and Confirm Email must match - SHKE - Student");
-  if(!pass||!pass2) return alert("Password * and Confirm Password * required - Must match - SHKE - Eye to show");
-  if(pass!==pass2) return alert("Password and Confirm Password must match - SHKE - Student - Eye to show");
-  if(pass.length<6) return alert("Password 6+ chars - SHKE");
-  let grade=document.getElementById('sGrade').value; if(!grade) return alert("Select Grade * - Student - SHKE");
-  let county=document.getElementById('sCounty').value; if(!county) return alert("County * required - Student - SHKE");
-  let town=document.getElementById('sTown').value.trim(); if(!town) return alert("Town * required - Student - SHKE");
-  data={displayName:name, grade:grade, county:county, town:town, school:document.getElementById('sSchool').value.trim()||"", gender:document.getElementById('sGender').value||"", phone:document.getElementById('sPhone').value.trim()||"", learningMode:document.getElementById('sLearningMode').value||"Homeschool", dob:document.getElementById('sDOB').value||"", parentPhone:document.getElementById('sParentPhone').value.trim()||"", emergency:document.getElementById('sEmergency').value.trim()||""};
- } else if(type==="parent"){
-  email=document.getElementById('pEmail').value.trim(); email2=document.getElementById('pEmail2').value.trim();
-  pass=document.getElementById('pPass').value; pass2=document.getElementById('pPass2').value;
-  name=document.getElementById('pName').value.trim();
-  if(!name) return alert("Full Name * required - Parent - SHKEP");
-  if(!email||!email2) return alert("Email * and Confirm Email * required - Parent - Must match - SHKEP");
-  if(email!==email2) return alert("Email and Confirm Email must match - Parent - SHKEP");
-  if(!pass||!pass2) return alert("Password * and Confirm Password * required - Must match - Parent - Eye");
-  if(pass!==pass2) return alert("Password and Confirm Password must match - Parent - SHKEP - Eye");
-  if(pass.length<6) return alert("Password 6+ chars - SHKEP");
-  let childIndex=document.getElementById('pChildIndex').value.trim().toUpperCase(); if(!childIndex) return alert("Child Index Number * required - Parent - SHKE00500... - e.g SHKE00500 - SHKEP");
-  if(!childIndex.startsWith('SHKE')) childIndex="SHKE"+childIndex.replace(/[^0-9]/g,'').padStart(5,'0');
-  let county=document.getElementById('pCounty').value; if(!county) return alert("County * required - Parent - SHKEP");
-  let town=document.getElementById('pTown').value.trim(); if(!town) return alert("Town * required - Parent - SHKEP");
-  data={displayName:name, phone:document.getElementById('pPhone').value.trim()||"", county:county, town:town, school:document.getElementById('pSchool').value.trim()||"", childIndex:childIndex, childName:document.getElementById('pChildName').value.trim()||""};
- } else if(type==="teacher"){
-  email=document.getElementById('tEmail').value.trim(); email2=document.getElementById('tEmail2').value.trim();
-  pass=document.getElementById('tPass').value; pass2=document.getElementById('tPass2').value;
-  name=document.getElementById('tName').value.trim();
-  if(!name) return alert("Full Name * required - Teacher - SHKET");
-  if(!email||!email2) return alert("Email * and Confirm Email * required - Teacher - Must match - SHKET");
-  if(email!==email2) return alert("Email and Confirm Email must match - Teacher - SHKET");
-  if(!pass||!pass2) return alert("Password * and Confirm Password * required - Must match - Teacher - Eye");
-  if(pass!==pass2) return alert("Password and Confirm Password must match - Teacher - SHKET - Eye");
-  if(pass.length<6) return alert("Password 6+ chars - SHKET");
-  let level=document.getElementById('tLevel').value; if(!level) return alert("Teaching Level * Junior Upper Lower Primary required - Teacher - SHKET");
-  let grade=document.getElementById('tGrade').value; if(!grade) return alert("Teaching Grade * Junior Upper Lower required - Teacher - SHKET");
-  let school=document.getElementById('tSchool').value.trim(); if(!school) return alert("School * required - Teacher - SHKET");
-  let county=document.getElementById('tCounty').value; if(!county) return alert("County * required - Teacher - SHKET");
-  let town=document.getElementById('tTown').value.trim(); if(!town) return alert("Town * required - Teacher - SHKET");
-  data={displayName:name, phone:document.getElementById('tPhone').value.trim()||"", teachingLevel:level, grade:grade, school:school, county:county, town:town, tscNumber:document.getElementById('tTSC').value.trim()||"", subject:document.getElementById('tSubject').value||"", experience:document.getElementById('tExperience').value.trim()||"", qualification:document.getElementById('tQualification').value.trim()||""};
- }
-
+async function reg(){
+ const FB=window.FB, m=msg, b=btn;
+ const name=document.getElementById('name').value.trim(), phone=document.getElementById('phone').value.trim();
+ const email=document.getElementById('email').value.trim(), email2=document.getElementById('email2').value.trim();
+ const pass=document.getElementById('pass').value.trim(), pass2=document.getElementById('pass2').value.trim();
+ if(!name||!email||!pass) return m.innerText="Fill required fields";
+ if(email!==email2) return m.innerText="Emails don't match";
+ if(pass!==pass2) return m.innerText="Passwords don't match";
+ let ex={}, pre="SHKE", ctr="students", col="student_index", from=500;
+ if(role==='parent'){ const c=childIndex.value.trim().toUpperCase(); if(!c) return m.innerText="Child admission number required"; ex={childIndex:c}; pre="SHKEP"; ctr="parents"; col="parent_index"; from=100; }
+ else if(role==='teacher'){ ex={level:level.value,school:school.value.trim()}; pre="SHKET"; ctr="teachers"; col="teacher_index"; from=100; }
+ else{ ex={grade:grade.value,county:county.value.trim(),town:town.value.trim()}; }
+ b.innerText="Creating..."; b.disabled=true;
  try{
-  const cred=await FB.createUserWithEmailAndPassword(FB.auth,email,pass);
-  await createUser(cred.user,type,data);
- }catch(e){
-  if(e.code==='auth/email-already-in-use'){
-   try{const cred=await FB.signInWithEmailAndPassword(FB.auth,email,pass); await createUser(cred.user,type,data);}catch(err){alert(err.message+" - SHKE - Email exists - Try login");}
-  }else{ alert(e.message); }
- }
-});
-
-async function createUser(user, roleType, extraData){
- const FB=window.FB;
- const ref=FB.doc(FB.db,"users",user.uid);
- const snap=await FB.getDoc(ref);
- if(snap.exists()){
-  alert("Already registered! Logging in... - SHKE - "+snap.data().indexNumber+" - Mon-Fri + Sunday Rest + Weekly Sunday to Sunday - Privacy: NO connection");
-  if(roleType==="student") window.location.href="/daily-hw.html";
-  else if(roleType==="parent") window.location.href="/parent.html";
-  else window.location.href="/teachers.html";
-  return;
- }
-
- // Generate ID - Teachers from 100 SHKET, Students from 500 SHKE, Parents from 100 SHKEP - NO connection for privacy
- let indexNumber="";
- try{
-  await FB.runTransaction(FB.db, async(transaction)=>{
-   if(roleType==="student"){
-    const counterRef=FB.doc(FB.db,"counters","students");
-    const counterSnap=await transaction.get(counterRef);
-    let count=500;
-    if(counterSnap.exists()) count=counterSnap.data().count||500;
-    else count=500;
-    let nextCount=count;
-    // First student SHKE00500 counting from 500
-    indexNumber="SHKE"+String(nextCount).padStart(5,'0');
-    transaction.set(counterRef,{count:nextCount+1, lastIndex:indexNumber, prefix:"SHKE", from:500}, {merge:true});
-   } else if(roleType==="parent"){
-    const counterRef=FB.doc(FB.db,"counters","parents");
-    const counterSnap=await transaction.get(counterRef);
-    let count=100;
-    if(counterSnap.exists()) count=counterSnap.data().count||100;
-    else count=100;
-    let nextCount=count;
-    indexNumber="SHKEP"+String(nextCount).padStart(5,'0');
-    transaction.set(counterRef,{count:nextCount+1, lastIndex:indexNumber, prefix:"SHKEP", from:100}, {merge:true});
-   } else if(roleType==="teacher"){
-    const counterRef=FB.doc(FB.db,"counters","teachers");
-    const counterSnap=await transaction.get(counterRef);
-    let count=100;
-    if(counterSnap.exists()) count=counterSnap.data().count||100;
-    else count=100;
-    let nextCount=count;
-    indexNumber="SHKET"+String(nextCount).padStart(5,'0');
-    transaction.set(counterRef,{count:nextCount+1, lastIndex:indexNumber, prefix:"SHKET", from:100}, {merge:true});
-   }
+  const cr=await FB.createUserWithEmailAndPassword(FB.auth,email,pass);
+  await FB.updateProfile(cr.user,{displayName:name});
+  let finalId=pre+String(from).padStart(5,'0');
+  await FB.runTransaction(FB.db, async(t)=>{
+   const r=FB.doc(FB.db,"counters",ctr); const s=await t.get(r); let n=from; if(s.exists()) n=s.data().count||from;
+   finalId=pre+String(n).padStart(5,'0'); t.set(r,{count:n+1},{merge:true});
+   t.set(FB.doc(FB.db,"users",cr.user.uid),{uid:cr.user.uid,email,name,phone,role:role==='student'?'learner':role,indexNumber:finalId,...ex,createdAt:FB.serverTimestamp()});
+   t.set(FB.doc(FB.db,col,finalId),{indexNumber:finalId,userId:cr.user.uid,email,name,...ex,createdAt:FB.serverTimestamp()});
   });
- }catch(e){
-  // Fallback
-  if(roleType==="student") indexNumber="SHKE00500";
-  else if(roleType==="parent") indexNumber="SHKEP00100";
-  else indexNumber="SHKET00100";
- }
-
- // Save to users + separate index collection - NO connection for privacy - Isolated
- let userData={
-  email:user.email,
-  displayName:extraData.displayName||user.displayName||"",
-  role:roleType==="student"?"learner":roleType,
-  grade:extraData.grade||"",
-  county:extraData.county||"",
-  town:extraData.town||"",
-  school:extraData.school||"",
-  indexNumber:indexNumber,
-  status:"pending",
-  isPremium:false,
-  mpesaCode:"",
-  privacyNoConnection:true,
-  createdAt:FB.serverTimestamp(),
- ...extraData
- };
-
- if(roleType==="student"){
-  userData.isStudent=true; userData.prefix="SHKE"; userData.from=500; userData.noConnectionPrivacy=true;
-  userData.schedule="From Monday to Friday (no homework on Sunday is rest day or can complete exam or ready notes or do search) - Mon-Fri HW Only - No HW Saturday Sunday - Sunday Rest Day or Exam or Notes or Search - Weekly ONLY Sunday to Sunday - 100 Marks NOT 10 Qs Homework";
- } else if(roleType==="parent"){
-  userData.isParent=true; userData.prefix="SHKEP"; userData.from=100; userData.noConnectionPrivacy=true;
-  userData.childIndex=extraData.childIndex||"";
-  userData.schedule="Parent : child Index number - SHKE00500... required - Mon-Fri + Sunday Rest + Weekly Sunday to Sunday - SHKEP - Privacy NO connection";
- } else if(roleType==="teacher"){
-  userData.isTeacher=true; userData.prefix="SHKET"; userData.from=100; userData.noConnectionPrivacy=true;
-  userData.teachingLevel=extraData.teachingLevel||"";
-  userData.tscNumber=extraData.tscNumber||"";
-  userData.schedule="Teacher (junior, upper primary or lower primary) school, county and town and tsc number (optional) - SHKET - Mon-Fri + Sunday Rest + Weekly Sunday to Sunday - Privacy NO connection";
- }
-
- await FB.setDoc(ref, userData);
-
- // Save to separate index collection for fast lookup - NO connection - Isolated collections
- if(roleType==="student"){
-  await FB.setDoc(FB.doc(FB.db,"student_index",indexNumber), {userId:user.uid, email:user.email, indexNumber:indexNumber, name:userData.displayName, grade:userData.grade, county:userData.county, town:userData.town, school:userData.school, prefix:"SHKE", from:500, privacyNoConnection:true, createdAt:FB.serverTimestamp()});
-  await FB.setDoc(FB.doc(FB.db,"counters","students_index_"+indexNumber), {userId:user.uid, indexNumber:indexNumber, createdAt:FB.serverTimestamp()});
- } else if(roleType==="parent"){
-  await FB.setDoc(FB.doc(FB.db,"parent_index",indexNumber), {userId:user.uid, email:user.email, indexNumber:indexNumber, name:userData.displayName, childIndex:userData.childIndex||"", county:userData.county, town:userData.town, prefix:"SHKEP", from:100, privacyNoConnection:true, createdAt:FB.serverTimestamp()});
- } else if(roleType==="teacher"){
-  await FB.setDoc(FB.doc(FB.db,"teacher_index",indexNumber), {userId:user.uid, email:user.email, indexNumber:indexNumber, name:userData.displayName, teachingLevel:userData.teachingLevel||"", grade:userData.grade||"", school:userData.school||"", county:userData.county, town:userData.town, tscNumber:userData.tscNumber||"", prefix:"SHKET", from:100, privacyNoConnection:true, createdAt:FB.serverTimestamp()});
- }
-
- alert("✅ Registered as "+roleType+"! Your ID: "+indexNumber+" - "+(roleType==="student"?"SHKE00500... from 500":roleType==="parent"?"SHKEP00100... from 100 - Child Index "+(userData.childIndex||"")+" - NO connection privacy":"SHKET00100... from 100 - Junior Upper Lower Primary - NO connection privacy")+" - Now pay 500 KES to Till 0701305109 to activate - Mon-Fri HW Only - No HW Sunday Rest Day - Weekly ONLY Sunday to Sunday - International - Homeschool & School - Privacy: NO connection between students, teachers, parents");
-
- if(roleType==="student") window.location.href="/daily-hw.html";
- else if(roleType==="parent") window.location.href="/parent.html";
- else window.location.href="/teachers.html";
+  m.innerText="Done. Redirecting..."; setTimeout(()=>location.href="/dashboard.html",900);
+ }catch(e){ m.innerText=e.message; b.innerText="Create account"; b.disabled=false; }
 }
-},800);
+window.render=render; window.reg=reg; render();
 </script>
 </body>
 </html>
