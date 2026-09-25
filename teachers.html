@@ -10,6 +10,11 @@
 body{font-family:'Nunito',sans-serif; background:#f6f6f7}
 @keyframes marquee{0%{transform:translateX(100%)}100%{transform:translateX(-100%)}}
 .animate-marquee{animation:marquee 28s linear infinite}
+#resList{display:flex; flex-direction:column; gap:8px;}
+.note-card{background:white; border:2px solid black; border-radius:18px; padding:12px 14px; display:flex; justify-content:space-between; align-items:center; height:62px; box-shadow:2px 2px 0px 0px #000;}
+.note-card p.title{font-weight:900; font-size:13px; line-height:1;}
+.note-card p.sub{font-size:10px; color:gray; font-weight:700; margin-top:3px;}
+.note-card button{background:black; color:white; border-radius:9999px; padding:8px 18px; font-weight:900; font-size:11px;}
 </style>
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
@@ -23,22 +28,24 @@ const app=initializeApp(cfg); window.FB={auth:getAuth(app),db:getFirestore(app),
 <div class="w-full max-w-[420px] bg-[#f6f6f7] min-h-screen pb-6">
 <div class="h-2 flex"><div class="flex-1 bg-[#ff8a2a]"></div><div class="flex-1 bg-[#2ac5a0]"></div><div class="flex-1 bg-[#4a86ff]"></div><div class="flex-1 bg-[#ffcc1a]"></div></div>
 
-<!-- 1. TOP - logo.png + WELCOME + MARQUEE -->
+<!-- TOP - LOGO FIXED VISIBLE -->
 <div class="bg-white border-b-2 border-black sticky top-0 z-40">
 <div class="p-4 flex items-center gap-3">
-<img src="./logo.png" class="w-11 h-11 rounded-full border-2 border-black object-cover bg-white">
+<div class="w-11 h-11 rounded-full border-2 border-black bg-white flex items-center justify-center overflow-hidden shrink-0">
+<img src="/logo.png" onerror="this.onerror=null; this.src='logo.png'; this.src='./logo.png';" class="w-full h-full object-cover block" alt="Logo">
+</div>
 <div class="flex-1"><p class="font-black text-[16px] leading-none">Welcome, Mwalimu! 👩‍🏫</p><p id="levelLabel" class="text-[11px] font-bold text-gray-600 mt-1">Junior School • Grade 7, 8, 9</p></div>
 <div class="bg-[#ffcc1a] border-2 border-black px-3 py-1.5 rounded-full shadow-[2px_2px_0px_0px_#000]"><p class="font-black text-[11px]" id="idLabel">SHKET00100</p></div>
 </div>
 <div class="bg-black text-white overflow-hidden whitespace-nowrap border-y-2 border-black h-9 flex items-center">
 <div class="animate-marquee flex gap-10 text-[11px] font-black tracking-wide">
-<span>🎉 Karibu Junior School Teacher!</span><span>📚 Get Daily Homework</span><span>📝 Exams + Marking Scheme</span><span>📖 Updated Teaching Notes</span><span>🗂️ Schemes of Work</span><span>📋 Lesson Plans CBC</span><span>🤖 AI Assistant</span><span>✍️ Composition Marking Bold (Brackets)</span><span>🔬 Research Center</span><span>🤖 AI Maker</span><span>📉 Reduced Paperwork</span><span>🏠 Homeschooling Program</span>
+<span>🎉 Karibu Junior School Teacher!</span><span>📚 Get Daily Homework</span><span>📝 Exams + Marking Scheme</span><span>📖 Updated Teaching Notes</span><span>🗂️ Schemes of Work</span><span>📋 Lesson Plans CBC</span><span>🤖 AI Assistant</span><span>✍️ Composition Bold (Brackets)</span><span>🔬 Research Center</span><span>🤖 AI Maker</span><span>📉 Reduced Paperwork</span><span>🏠 Homeschooling Program</span>
 </div>
 </div>
 <div class="p-3"><div class="bg-[#fff7e0] border-2 border-black rounded-xl p-2.5 flex gap-2 items-center"><span class="bg-purple-600 text-white text-[9px] px-2 py-1 rounded-full font-black">ID</span><p class="font-bold text-[11px]"><span id="idLabel2">SHKET00100</span> • <span id="levelLabel2">Junior School</span> • Mon-Fri HW • Weekly Sun-Sun 100 Marks</p></div></div>
 </div>
 
-<!-- 2. HOW TO USE -->
+<!-- HOW TO USE -->
 <div class="p-4">
 <div class="bg-white rounded-[1.5rem] p-5 border-2 border-black shadow-[4px_4px_0px_0px_#000]">
 <p class="font-black text-[14px]">📘 How to use SomaHub as Teacher</p>
@@ -53,7 +60,7 @@ const app=initializeApp(cfg); window.FB={auth:getAuth(app),db:getFirestore(app),
 </div>
 </div>
 
-<!-- AI + COMPOSITION QUICK -->
+<!-- AI + COMP -->
 <div class="px-4 grid grid-cols-2 gap-2">
 <button onclick="toggleAI()" class="bg-white border-2 border-black rounded-2xl p-4 text-left shadow-[2px_2px_0px_0px_#000]"><p class="font-black text-[13px]">🤖 AI Homework</p><p class="text-[10px] text-gray-500">Snap & Solve • Handwritten</p></button>
 <button onclick="toggleComp()" class="bg-white border-2 border-black rounded-2xl p-4 text-left shadow-[2px_2px_0px_0px_#000]"><p class="font-black text-[13px]">✍️ Composition</p><p class="text-[10px] text-gray-500">Bold (Brackets) • Out Of</p></button>
@@ -61,18 +68,17 @@ const app=initializeApp(cfg); window.FB={auth:getAuth(app),db:getFirestore(app),
 <div id="aiPanel" class="hidden px-4 mt-3"><div class="bg-white rounded-[1.5rem] p-4 border-2 border-black"><h3 class="font-black text-[12px]">📸 Handwritten Corrector</h3><label class="mt-3 border-2 border-dashed border-black rounded-2xl p-5 flex flex-col items-center bg-[#fff7e0] cursor-pointer"><i class="fa-solid fa-camera"></i><p class="text-[11px] font-black mt-1">Upload Photo</p><input type="file" id="imgInput" accept="image/*" class="hidden"></label><div id="preview" class="hidden mt-2"><img id="prevImg" class="rounded-2xl border-2 border-black w-full"></div><textarea id="qInput" placeholder="Type question + student answer..." class="w-full mt-3 border-2 border-black rounded-2xl p-3 text-[11px] h-20 outline-none"></textarea><button onclick="doMark()" class="w-full bg-black text-white py-3 rounded-full font-black mt-2 text-[12px]">🤖 Mark with AI</button><div id="aiResult" class="mt-3 bg-black text-white rounded-2xl p-3 text-[11px] min-h-[50px]">Result will appear here</div></div></div>
 <div id="compPanel" class="hidden px-4 mt-3"><div class="bg-white rounded-[1.5rem] p-4 border-2 border-purple-600"><h3 class="font-black text-[12px]">✍️ Composition Marker</h3><textarea id="compText" placeholder="We go to Mombasa and we was happy..." class="w-full mt-2 border-2 border-black rounded-2xl p-3 text-[11px] h-28"></textarea><div class="flex gap-2 mt-2 items-center"><p class="text-[10px] font-black">Out Of</p><input id="outOf" type="number" value="40" class="w-16 border-2 border-black rounded-xl p-2 text-[11px] font-black"><div class="flex gap-1 flex-1"><button id="bS" onclick="setMode('strict')" class="flex-1 bg-white border-2 border-black rounded-full py-2 text-[9px] font-black">Strict</button><button id="bM" onclick="setMode('moderate')" class="flex-1 bg-black text-white border-2 border-black rounded-full py-2 text-[9px] font-black">Moderate</button><button id="bF" onclick="setMode('fair')" class="flex-1 bg-white border-2 border-black rounded-full py-2 text-[9px] font-black">Fairly</button></div></div><button onclick="markComp()" class="w-full bg-purple-600 border-2 border-black text-white py-3 rounded-full font-black mt-3">Mark Composition</button><div id="compResult" class="mt-3 bg-[#f6f3ff] border-2 border-black rounded-2xl p-3 text-[11px]">Marked here: <b>go</b> (went)</div></div></div>
 
-<!-- 3RD LAST = STUDENT MONITOR -->
+<!-- THIRD LAST = STUDENT MONITOR -->
 <div class="p-4">
 <div class="bg-black text-white rounded-[2rem] p-5 border-2 border-black shadow-[3px_3px_0px_0px_#000]">
 <p class="font-black text-[15px]">🔒 Student Access Monitor (Special Arrangement)</p>
 <p class="text-[11px] mt-2 opacity-80">No student data in dashboard. Enter Student ID to monitor & assist. Parent-Teacher-Student link.</p>
 <div class="mt-4 flex gap-2"><input id="studentIdInput" placeholder="ENTER STUDENT ID E.G SHKE00" class="flex-1 bg-white text-black border-2 border-black rounded-full p-3.5 text-[11px] font-black uppercase outline-none"><button onclick="accessStudent()" class="bg-[#ffcc1a] text-black border-2 border-white px-6 rounded-full font-black text-[12px]">Access</button></div>
 <div id="studentPreview" class="hidden mt-4 bg-white text-black rounded-2xl p-3 border-2 border-white"><p class="font-black text-[11px]">Student: <span id="previewName">SHKE00500</span> • <span id="previewGrade">Grade 7</span> • Mon-Fri HW Auto • Weekly Sun-Sun 100 Marks</p></div>
-<p class="text-[10px] mt-3 opacity-60">Homework auto updates daily from Notes, Designs & Schemes for all subjects & grades.</p>
 </div>
 </div>
 
-<!-- 2ND LAST = QUICK ACCESS + NOTES TAB (your screenshot style) -->
+<!-- SECOND LAST = QUICK ACCESS -->
 <div class="px-4">
 <div class="flex items-center gap-2 mb-3"><p class="text-[18px]">🚀</p><p class="font-black text-[15px]">Quick Access</p></div>
 <div class="grid grid-cols-2 gap-3">
@@ -85,10 +91,10 @@ const app=initializeApp(cfg); window.FB={auth:getAuth(app),db:getFirestore(app),
 <div onclick="openRes('curriculum')" class="bg-white rounded-[1.2rem] p-4 border-2 border-black shadow-[2px_2px_0px_0px_#000] cursor-pointer"><div class="w-8 h-8 bg-teal-100 rounded-lg flex items-center justify-center"><i class="fa-solid fa-atlas text-teal-600 text-[12px]"></i></div><p class="font-black text-[13px] mt-3">Curriculum</p><p class="text-[10px] text-gray-500">KICD Designs</p></div>
 <div onclick="openRes('setbooks')" class="bg-white rounded-[1.2rem] p-4 border-2 border-black shadow-[2px_2px_0px_0px_#000] cursor-pointer"><div class="w-8 h-8 bg-red-100 rounded-lg flex items-center justify-center"><i class="fa-solid fa-book-open text-red-600 text-[12px]"></i></div><p class="font-black text-[13px] mt-3">Set Books</p><p class="text-[10px] text-gray-500">All Teaching</p></div>
 </div>
-<div id="resList" class="mt-4 space-y-3"></div>
+<div id="resList" class="mt-3"></div>
 </div>
 
-<!-- LAST = REFERRALS + CUSTOMER CARE CHAT -->
+<!-- LAST = REFERRALS + CHAT -->
 <div class="p-4 space-y-3">
 <div class="bg-white rounded-[1.5rem] p-4 border-2 border-black shadow-[3px_3px_0px_0px_#000]">
 <div class="flex justify-between items-center"><p class="font-black text-[13px]">🎁 Referrals & Subscription</p><span id="pointsBadge" class="bg-black text-white px-3 py-1 rounded-full text-[10px] font-black">0 pts</span></div>
@@ -96,22 +102,20 @@ const app=initializeApp(cfg); window.FB={auth:getAuth(app),db:getFirestore(app),
 <div class="mt-2 flex gap-2"><input id="myLink" readonly class="flex-1 bg-[#f6f6f7] border-2 border-black rounded-full p-2.5 text-[10px] font-bold"><button onclick="copyLink()" class="bg-black text-white px-4 rounded-full font-black text-[10px]">Copy Link</button></div>
 <button onclick="convertPts()" class="w-full mt-3 bg-[#2ac5a0] border-2 border-black py-2.5 rounded-full font-black text-[11px]">Convert: 1000 pts = 100 KES</button>
 </div>
-
 <div onclick="openCustomerChat()" class="bg-black text-white rounded-[2rem] p-4 border-2 border-black flex gap-3 items-center cursor-pointer shadow-[3px_3px_0px_0px_#000]">
 <img src="https://i.pravatar.cc/100?img=12" class="w-12 h-12 rounded-full border-2 border-white object-cover"><div class="flex-1"><p class="font-black text-[14px] leading-none">Customer Care - Admin</p><p class="text-[11px] opacity-60 mt-1 font-bold">Human Assistant • Mon-Fri + Weekly</p><div class="mt-2 bg-[#2ac5a0] text-black px-3 py-1 rounded-full inline-block text-[11px] font-black">Tap to Chat</div></div><i class="fa-solid fa-chevron-right text-[12px] opacity-60"></i>
 </div>
 </div>
-
 </div>
 
-<!-- CHAT PAGE - WHATSAPP STYLE -->
+<!-- CHAT PAGE -->
 <div id="chatPage" class="hidden fixed inset-0 bg-[#e5ddd5] z-[999] flex flex-col max-w-[420px] mx-auto">
 <div class="bg-black text-white p-4 flex items-center gap-3 border-b-2 border-black">
 <button onclick="closeCustomerChat()" class="w-8 h-8 bg-white text-black rounded-full flex items-center justify-center"><i class="fa-solid fa-arrow-left text-[12px]"></i></button>
 <img src="https://i.pravatar.cc/100?img=12" class="w-9 h-9 rounded-full border-2 border-white"><div class="flex-1"><p class="font-black text-[13px]">Customer Care - Admin</p><p class="text-[10px] text-[#2ac5a0] font-bold">Online • Human Assistant</p></div>
 </div>
 <div id="chatMessages" class="flex-1 p-4 space-y-3 overflow-y-auto">
-<div class="bg-white border-2 border-black rounded-[1.2rem] rounded-tl-none p-3 max-w-[80%] shadow-[2px_2px_0px_0px_#000]"><p class="text-[12px] font-bold">Karibu Mwalimu! 👋</p><p class="text-[11px] mt-1">I am Admin - Overall admin monitors all data. How can I help with homework, exams, notes, schemes?</p><p class="text-[8px] mt-1 opacity-50 text-right">09:30 AM</p></div>
+<div class="bg-white border-2 border-black rounded-[1.2rem] rounded-tl-none p-3 max-w-[80%] shadow-[2px_2px_0px_0px_#000]"><p class="text-[12px] font-bold">Karibu Mwalimu! 👋</p><p class="text-[11px] mt-1">I am Admin - Overall admin monitors all data. How can I help?</p><p class="text-[8px] mt-1 opacity-50 text-right">09:30 AM</p></div>
 </div>
 <div class="bg-white p-3 border-t-2 border-black flex gap-2 items-center">
 <input id="chatInput" placeholder="Type a message..." class="flex-1 bg-[#f0f0f0] border-2 border-black rounded-full p-3 text-[12px] font-bold outline-none">
@@ -119,26 +123,26 @@ const app=initializeApp(cfg); window.FB={auth:getAuth(app),db:getFirestore(app),
 </div>
 </div>
 
-<!-- NOTES CONTENT PAGE -->
+<!-- NOTES PAGE -->
 <div id="notePage" class="hidden fixed inset-0 bg-[#f6f6f7] z-[998] flex flex-col max-w-[420px] mx-auto">
 <div class="bg-white p-4 border-b-2 border-black flex items-center gap-3"><button onclick="closeNote()" class="w-8 h-8 bg-black text-white rounded-full flex items-center justify-center"><i class="fa-solid fa-arrow-left text-[11px]"></i></button><p id="noteTitle" class="font-black text-[14px]">Grade 7 Notes - Maths Fractions</p></div>
-<div class="flex-1 p-4 overflow-y-auto"><div class="bg-white border-2 border-black rounded-[1.5rem] p-5"><p class="font-black text-[13px]">Content - Auto Daily Homework</p><p class="text-[11px] mt-3 leading-6">Fractions: 1/2 + 1/4 = 3/4... (notes content here) Homework auto generated daily from Notes, Designs & Schemes for all subjects & grades.</p><div class="mt-4 bg-[#e8f8ff] border-2 border-black rounded-xl p-3"><p class="font-black text-[11px]">Today's Homework Auto:</p><p class="text-[10px] mt-1">Q1. Calculate 2/3 + 1/6</p></div></div></div>
+<div class="flex-1 p-4 overflow-y-auto"><div class="bg-white border-2 border-black rounded-[1.5rem] p-5"><p class="font-black text-[13px]">Content - Auto Daily Homework</p><p class="text-[11px] mt-3 leading-6">Fractions: 1/2 + 1/4 = 3/4... Homework auto generated daily from Notes, Designs & Schemes for all subjects & grades.</p><div class="mt-4 bg-[#e8f8ff] border-2 border-black rounded-xl p-3"><p class="font-black text-[11px]">Today's Homework Auto:</p><p class="text-[10px] mt-1">Q1. Calculate 2/3 + 1/6</p></div></div></div>
 </div>
 
 <script>
 let currentGrades=['Grade 7','Grade 8','Grade 9']; let mode='moderate';
 const resData=[
-  {grade:'Grade 7',type:'notes',title:'Grade 7 Notes - Maths Fractions',type2:'notes'},
-  {grade:'Grade 8',type:'notes',title:'Grade 8 Notes - English',type2:'notes'},
-  {grade:'Grade 9',type:'notes',title:'Grade 9 Notes - KPSEA',type2:'notes'},
-  {grade:'Grade 7',type:'exams',title:'Grade 7 Weekly Exam Sun-Sun 100 Marks + Scheme',type2:'exams'},
-  {grade:'Grade 7',type:'exams',title:'Grade 7 Monthly Exam + Marking Scheme',type2:'exams'},
-  {grade:'Grade 7',type:'exams',title:'Grade 7 Termly Exam + Marking Scheme',type2:'exams'},
-  {grade:'Grade 7',type:'homework',title:'Homework Today - Grade 7 - Auto from Schemes - All Subjects',type2:'homework'},
-  {grade:'Grade 4',type:'schemes',title:'Schemes - Grade 4 - Teachers Only',type2:'schemes'},
-  {grade:'Grade 7',type:'lessonplans',title:'Lesson Plans CBC - Grade 7',type2:'lessonplans'},
-  {grade:'Grade 7',type:'setbooks',title:'Set Book: Fathers of Nations Guide',type2:'setbooks'},
-  {grade:'Grade 7',type:'curriculum',title:'Curriculum KICD Design - Grade 7',type2:'curriculum'},
+  {grade:'Grade 7',type:'notes',title:'Grade 7 Notes - Maths Fractions'},
+  {grade:'Grade 8',type:'notes',title:'Grade 8 Notes - English'},
+  {grade:'Grade 9',type:'notes',title:'Grade 9 Notes - KPSEA'},
+  {grade:'Grade 7',type:'exams',title:'Grade 7 Weekly Exam Sun-Sun 100 Marks + Scheme'},
+  {grade:'Grade 7',type:'exams',title:'Grade 7 Monthly Exam + Marking Scheme'},
+  {grade:'Grade 7',type:'exams',title:'Grade 7 Termly Exam + Marking Scheme'},
+  {grade:'Grade 7',type:'homework',title:'Homework Today - Grade 7 - Auto from Schemes - All Subjects'},
+  {grade:'Grade 4',type:'schemes',title:'Schemes - Grade 4 - Teachers Only'},
+  {grade:'Grade 7',type:'lessonplans',title:'Lesson Plans CBC - Grade 7'},
+  {grade:'Grade 7',type:'setbooks',title:'Set Book: Fathers of Nations Guide'},
+  {grade:'Grade 7',type:'curriculum',title:'Curriculum KICD Design - Grade 7'},
 ];
 function init(){
   let lvl=(localStorage.getItem('sh_level')||'Junior Secondary').toLowerCase();
@@ -162,11 +166,14 @@ function doMark(){ document.getElementById('aiResult').innerHTML='✅ Marked!<br
 function setMode(m){ mode=m; ['bS','bM','bF'].forEach(b=>document.getElementById(b).className='flex-1 bg-white border-2 border-black rounded-full py-2 text-[9px] font-black'); document.getElementById(m==='strict'?'bS':m==='moderate'?'bM':'bF').className='flex-1 bg-black text-white border-2 border-black rounded-full py-2 text-[9px] font-black'; }
 function markComp(){ let t=document.getElementById('compText').value||'We go to Mombasa and we was happy.'; let out=parseInt(document.getElementById('outOf').value)||40; let sc=mode==='strict'?Math.round(out*0.4):mode==='moderate'?Math.round(out*0.65):Math.round(out*0.85); let mk=t.replace(/go/gi,'<b>go</b> (went)').replace(/was/gi,'<b>was</b> (were)'); document.getElementById('compResult').innerHTML=`${mk}<br><br><div class="bg-black text-white p-2 rounded-xl"><b>Score: ${sc}/${out}</b> (${mode})</div>`; }
 function openRes(type){
-  let filtered=resData.filter(r=>currentGrades.includes(r.grade) && (type==='all'||r.type===type||type==='notes'&&r.type==='notes'));
-  if(type!=='notes'){ filtered=resData.filter(r=>currentGrades.includes(r.grade) && r.type===type); }
-  if(type==='notes'){ filtered=resData.filter(r=>currentGrades.includes(r.grade) && r.type==='notes'); }
-  if(filtered.length===0) filtered=resData.filter(r=>currentGrades.includes(r.grade));
-  document.getElementById('resList').innerHTML=filtered.map(r=>`<div class="bg-white rounded-[1.2rem] p-4 border-2 border-black flex justify-between items-center shadow-[2px_2px_0px_0px_#000]"><div><p class="font-black text-[13px]">${r.title}</p><p class="text-[10px] text-gray-500 font-bold">${r.grade} • ${r.type} • Auto Daily</p></div><button onclick="openNotePage('${r.title}')" class="bg-black text-white px-5 py-2.5 rounded-full text-[11px] font-black">Open</button></div>`).join('');
+  let filtered = resData.filter(r=>currentGrades.includes(r.grade) && r.type===type);
+  if(type==='notes') filtered = resData.filter(r=>currentGrades.includes(r.grade) && r.type==='notes');
+  if(filtered.length===0) filtered = resData.filter(r=>currentGrades.includes(r.grade));
+  document.getElementById('resList').innerHTML = filtered.map(r=>`
+    <div class="note-card">
+      <div><p class="title">${r.title}</p><p class="sub">${r.grade} • ${r.type} • Auto Daily</p></div>
+      <button onclick="openNotePage('${r.title}')">Open</button>
+    </div>`).join('');
 }
 function openNotePage(title){ document.getElementById('noteTitle').textContent=title; document.getElementById('notePage').classList.remove('hidden'); }
 function closeNote(){ document.getElementById('notePage').classList.add('hidden'); }
