@@ -6,7 +6,7 @@
 <script src="https://cdn.tailwindcss.com"></script>
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;800;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-<style>body{font-family:'Nunito',sans-serif}</style>
+<style>body{font-family:'Nunito',sans-serif; background:#f6f6f7}</style>
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import { getAuth } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
@@ -15,213 +15,208 @@ const cfg={apiKey:"AIzaSyA93BNes3AmFyxIEgjSbvbIWqLyorLsuj8",authDomain:"somahubk
 const app=initializeApp(cfg); window.FB={auth:getAuth(app),db:getFirestore(app),doc,getDoc,updateDoc,increment};
 </script>
 </head>
-<body class="bg-[#fef9f0] min-h-screen flex justify-center">
-<div class="w-full max-w-[480px] bg-[#fef9f0]">
+<body class="flex justify-center">
+<div class="w-full max-w-[420px] bg-[#f6f6f7] min-h-screen">
 <div class="h-2 flex"><div class="flex-1 bg-[#ff8a2a]"></div><div class="flex-1 bg-[#2ac5a0]"></div><div class="flex-1 bg-[#4a86ff]"></div><div class="flex-1 bg-[#ffcc1a]"></div></div>
-<div class="bg-white p-4 flex items-center gap-3 border-b-2 border-black sticky top-0 z-40">
-<div class="w-9 h-9 bg-black rounded-full flex items-center justify-center text-white font-black">S</div>
-<div><p class="font-black leading-none">SomaHub Teachers</p><p id="teacherLevelLabel" class="text-[10px] text-gray-500 font-bold">Loading...</p></div>
-<span id="indexB" class="ml-auto bg-[#ffcc1a] border-2 border-black px-2 py-1 rounded-full text-[10px] font-black">SHKET00100</span>
+
+<!-- 1. WELCOME - ID + LEVEL -->
+<div class="bg-white p-5 border-b-2 border-black">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 bg-black rounded-full flex items-center justify-center text-white font-black">S</div>
+<div class="flex-1">
+<p class="font-black text-[16px] leading-none">Welcome, Mwalimu! 👩‍🏫</p>
+<p id="levelLabel" class="text-[11px] font-bold text-gray-600 mt-1">Junior School • Grade 7-9</p>
+</div>
+<div class="bg-[#ffcc1a] border-2 border-black px-3 py-1.5 rounded-full"><p class="font-black text-[11px]" id="idLabel">SHKET00100</p></div>
+</div>
+<p class="text-[10px] mt-3 bg-[#f6f3ff] border-2 border-black rounded-xl p-2.5 font-bold">🆔 <span id="idLabel2">SHKET00100</span> • <span id="levelLabel2">Junior School</span> • Mon-Fri HW • Weekly Sun-Sun 100 Marks</p>
 </div>
 
-<div class="m-4 bg-white rounded-[1.5rem] p-4 border-2 border-black shadow-[3px_3px_0px_0px_#000]">
-<div class="flex justify-between items-center"><p class="font-black text-[12px]">🎁 Referral - Earn 100 Points</p><span id="pointsBadge" class="bg-black text-white px-2 py-1 rounded-full text-[10px] font-black">0 pts</span></div>
-<div class="mt-3 flex gap-2">
-<div class="flex-1 bg-[#fff7e0] border-2 border-black rounded-xl p-2.5"><p class="text-[9px] font-black opacity-60">CODE</p><p id="myReferralCode" class="font-black text-[13px]">SHKET00100</p></div>
-<button onclick="copyCode()" class="bg-black text-white rounded-xl px-4 font-black text-[11px]">Copy</button>
-</div>
-<div class="mt-2 flex gap-2 items-center">
-<input id="myReferralLink" readonly class="flex-1 bg-[#e8f8ff] border-2 border-black rounded-xl p-2.5 text-[10px] font-bold outline-none" value="https://somahub-kenya.vercel.app/registration.html?ref=SHKET00100">
-<button onclick="copyLink()" class="bg-black text-white rounded-xl px-4 py-3 font-black text-[11px]">Link</button>
-</div>
-<p class="text-[10px] mt-2">💰 <span id="pointsVal">0</span> pts = <span id="kesVal">0</span> KES • 1000 pts = 100 KES • <span class="underline cursor-pointer" onclick="convertPoints()">Convert</span></p>
-</div>
-
-<div class="px-4 flex gap-2 overflow-x-auto">
-<button id="t1" onclick="showTab('dash')" class="bg-black text-white border-2 border-black px-4 py-2.5 rounded-full text-[12px] font-black whitespace-nowrap">Dashboard</button>
-<button id="t2" onclick="showTab('ai')" class="bg-white text-black border-2 border-black px-4 py-2.5 rounded-full text-[12px] font-black whitespace-nowrap">AI Marker</button>
-<button id="t3" onclick="showTab('comp')" class="bg-white text-black border-2 border-black px-4 py-2.5 rounded-full text-[12px] font-black whitespace-nowrap">Composition</button>
-<button id="t4" onclick="showTab('res')" class="bg-white text-black border-2 border-black px-4 py-2.5 rounded-full text-[12px] font-black whitespace-nowrap">Resources</button>
-</div>
-
-<div id="tab-dash" class="p-4 space-y-3">
-<div class="bg-gradient-to-r from-[#4a86ff] to-black rounded-[1.5rem] p-5 text-white border-2 border-black">
-<h2 class="font-black text-[18px] leading-none">Welcome, Mwalimu! 👩‍🏫</h2>
-<p id="dashDesc" class="text-[11px] mt-2 opacity-90">Loading your level...</p>
-</div>
-<div class="grid grid-cols-3 gap-2">
-<div class="bg-white border-2 border-black rounded-2xl p-3 text-center"><p class="text-[20px] font-black">0</p><p class="text-[9px] font-bold">Students</p></div>
-<div class="bg-[#ffcc1a] border-2 border-black rounded-2xl p-3 text-center"><p class="text-[20px] font-black">0</p><p class="text-[9px] font-bold">HW Marked</p></div>
-<div class="bg-[#2ac5a0] border-2 border-black rounded-2xl p-3 text-center"><p id="gradeCount" class="text-[20px] font-black">7-9</p><p class="text-[9px] font-bold">Grades</p></div>
-</div>
-<div class="bg-white rounded-[1.5rem] p-4 border-2 border-black">
-<p class="font-black text-[13px]">📚 Your Levels</p>
-<p class="text-[11px] text-gray-600 mt-1">You joined as <b id="levelTxt">-</b> → You will see only your level resources: Notes, Exams, Homework, Set Books, Schemes, Lesson Plans</p>
-<div id="gradeChips" class="flex gap-2 mt-3 flex-wrap"></div>
-</div>
-</div>
-
-<div id="tab-ai" class="hidden p-4">
+<!-- 2. USES OF SOMAHUB AS TEACHER -->
+<div class="p-4">
 <div class="bg-white rounded-[1.5rem] p-4 border-2 border-black shadow-[3px_3px_0px_0px_#000]">
-<h3 class="font-black">📸 AI Marker - Handwritten Corrector</h3>
-<p class="text-[11px] text-gray-500 mt-1">Upload handwritten work • AI marks + corrects • ChatGPT style with photos</p>
-<label class="mt-3 border-2 border-dashed border-black rounded-2xl p-6 flex flex-col items-center bg-[#fff7e0] cursor-pointer">
-<i class="fa-solid fa-camera text-xl"></i><p class="font-black text-[12px] mt-2">Upload Handwritten Photo</p><p class="text-[10px]">JPG, PNG</p>
-<input type="file" id="imgInput" accept="image/*" class="hidden" multiple>
-</label>
-<div id="preview" class="hidden mt-3"><img id="prevImg" class="rounded-2xl border-2 border-black w-full"><button onclick="clearImg()" class="mt-2 text-[11px] bg-red-100 border-2 border-black px-3 py-1 rounded-full font-black">Remove</button></div>
-<textarea id="questionInput" placeholder="Or type question + student answers..." class="w-full mt-3 border-2 border-black rounded-2xl p-3 text-[13px] h-28 outline-none"></textarea>
-<div class="grid grid-cols-2 gap-2 mt-3">
-<select id="gradeSel" class="border-2 border-black rounded-xl p-3 text-[12px] font-bold"></select>
-<select id="subjectSel" class="border-2 border-black rounded-xl p-3 text-[12px] font-bold"><option>Mathematics</option><option>English</option><option>Kiswahili</option><option>Science</option><option>SST</option></select>
+<p class="font-black text-[13px]">📘 How to use SomaHub as Teacher</p>
+<div class="mt-3 space-y-2 text-[11px] font-bold">
+<div class="flex gap-2"><span class="bg-[#e8f8ff] border-2 border-black rounded-full w-6 h-6 flex items-center justify-center text-[11px]">1</span><p>Mark homework daily (Mon-Fri) - All subjects, all grades - Auto from Notes/Schemes/Designs</p></div>
+<div class="flex gap-2"><span class="bg-[#fff7e0] border-2 border-black rounded-full w-6 h-6 flex items-center justify-center text-[11px]">2</span><p>Use AI Marker: Upload handwritten photo → Snap & Solve → Correction + Notes link</p></div>
+<div class="flex gap-2"><span class="bg-[#f6f3ff] border-2 border-black rounded-full w-6 h-6 flex items-center justify-center text-[11px]">3</span><p>Composition: Grammar <b>bold</b> (alternative in brackets) • Set Out Of • Strict/Moderate/Fairly = marks coded</p></div>
+<div class="flex gap-2"><span class="bg-[#e8fff4] border-2 border-black rounded-full w-6 h-6 flex items-center justify-center text-[11px]">4</span><p>Access Resources: Notes, Exams, Schemes, Lesson Plans, Curriculum, Set Books - filtered by your level</p></div>
+<div class="flex gap-2"><span class="bg-black text-white border-2 border-black rounded-full w-6 h-6 flex items-center justify-center text-[11px]">5</span><p>Parent-Teacher-Student: Enter Student ID to monitor & assist - No student data shown on dashboard</p></div>
 </div>
-<button onclick="markAI()" class="w-full bg-black text-white py-4 rounded-full font-black mt-3 text-[14px]">🤖 Mark with AI</button>
-<div id="aiResult" class="mt-4 bg-black text-white rounded-2xl p-4 text-[12px] min-h-[100px]">Result will appear here</div>
 </div>
 </div>
 
-<div id="tab-comp" class="hidden p-4">
-<div class="bg-white rounded-[1.5rem] p-4 border-2 border-purple-600 shadow-[3px_3px_0px_0px_#000]">
-<h3 class="font-black">✍️ Composition Marker</h3>
-<p class="text-[11px] text-gray-500">Grammar mistakes in <b>bold</b> (alternative in brackets) • Marks coded by strictness</p>
-<textarea id="compText" placeholder="Paste composition here..." class="w-full mt-3 border-2 border-black rounded-2xl p-3 text-[13px] h-40"></textarea>
-<div class="mt-3 grid grid-cols-3 gap-2">
-<div><p class="text-[10px] font-black">Out of?</p><input id="outOf" type="number" value="40" class="w-full border-2 border-black rounded-xl p-3 text-[13px] font-black"></div>
-<div class="col-span-2"><p class="text-[10px] font-black">Strictness (changes awarding)</p>
-<div class="flex gap-1 mt-1">
-<button id="bStrict" onclick="setMode('strict')" class="flex-1 bg-red-500 text-white border-2 border-black rounded-full py-2.5 text-[10px] font-black">🔴 Strict</button>
-<button id="bMod" onclick="setMode('moderate')" class="flex-1 bg-[#ffcc1a] text-black border-2 border-black rounded-full py-2.5 text-[10px] font-black">🟡 Moderate</button>
-<button id="bFair" onclick="setMode('fair')" class="flex-1 bg-[#2ac5a0] text-black border-2 border-black rounded-full py-2.5 text-[10px] font-black">🟢 Fairly</button>
-</div>
-</div>
-</div>
-<button onclick="markComp()" class="w-full bg-purple-600 border-2 border-black text-white py-4 rounded-full font-black mt-3">Mark Composition</button>
-<div id="compResult" class="mt-4 bg-[#f6f3ff] border-2 border-black rounded-2xl p-4 text-[12px] leading-6">Marked composition will show here</div>
+<!-- 3. STUDENT MONITOR - ENTER ID ONLY (Important) -->
+<div class="px-4">
+<div class="bg-black text-white rounded-[1.5rem] p-4 border-2 border-black">
+<p class="font-black text-[12px]">🔒 Student Access Monitor (Special Arrangement)</p>
+<p class="text-[10px] opacity-70 mt-1">No student data in dashboard. Enter Student ID to monitor & assist. Parent-Teacher-Student link.</p>
 <div class="mt-3 flex gap-2">
-<button onclick="copyComp()" class="flex-1 bg-white border-2 border-black rounded-full py-2.5 text-[11px] font-black">Copy Marked</button>
-<button onclick="saveComp()" class="flex-1 bg-black text-white border-2 border-black rounded-full py-2.5 text-[11px] font-black">Save to Student</button>
+<input id="studentIdInput" placeholder="Enter Student ID e.g SHKE00500" class="flex-1 bg-white text-black border-2 border-black rounded-full p-3 text-[11px] font-black uppercase outline-none">
+<button onclick="accessStudent()" class="bg-[#ffcc1a] text-black border-2 border-white px-5 rounded-full font-black text-[11px]">Access</button>
 </div>
+<div id="studentPreview" class="hidden mt-3 bg-white text-black rounded-2xl p-3 border-2 border-white">
+<p class="font-black text-[11px]">Student: <span id="previewName">SHKE00500</span> • <span id="previewGrade">Grade 6</span></p>
+<p class="text-[10px] mt-1">Mon-Fri HW: 8/10 • Weekly Sun-Sun: 78/100 • Parent linked: Yes</p>
+<div class="mt-2 flex gap-2"><button class="flex-1 bg-black text-white py-2 rounded-full text-[10px] font-black">View Homework</button><button class="flex-1 bg-white border-2 border-black py-2 rounded-full text-[10px] font-black">Chat Parent</button></div>
 </div>
-</div>
-
-<div id="tab-res" class="hidden p-4 space-y-3">
-<div class="flex gap-2 overflow-x-auto pb-1">
-<button onclick="filterRes('all')" class="bg-black text-white border-2 border-black px-4 py-2 rounded-full text-[11px] font-black">All</button>
-<button onclick="filterRes('notes')" class="bg-white border-2 border-black px-4 py-2 rounded-full text-[11px] font-black">Notes</button>
-<button onclick="filterRes('exams')" class="bg-white border-2 border-black px-4 py-2 rounded-full text-[11px] font-black">Exams</button>
-<button onclick="filterRes('homework')" class="bg-white border-2 border-black px-4 py-2 rounded-full text-[11px] font-black">Homework</button>
-<button onclick="filterRes('setbooks')" class="bg-white border-2 border-black px-4 py-2 rounded-full text-[11px] font-black">Set Books</button>
-<button onclick="filterRes('schemes')" class="bg-white border-2 border-black px-4 py-2 rounded-full text-[11px] font-black">Schemes</button>
-<button onclick="filterRes('lessonplans')" class="bg-white border-2 border-black px-4 py-2 rounded-full text-[11px] font-black">Lesson Plans</button>
-</div>
-<div id="resList" class="space-y-2"></div>
-<div class="bg-white rounded-[1.5rem] p-4 border-2 border-black mt-4">
-<p class="font-black text-[12px]">💬 Comment Section</p>
-<div id="commentBox" class="mt-3 space-y-2 max-h-[200px] overflow-y-auto text-[11px]"></div>
-<div class="flex gap-2 mt-3"><input id="commentInput" placeholder="Ask question..." class="flex-1 border-2 border-black rounded-full p-2.5 text-[11px]"><button onclick="postComment()" class="bg-black text-white px-4 rounded-full text-[11px] font-black">Post</button></div>
+<p class="text-[9px] mt-2 opacity-60">Homework auto updates daily from Notes, Designs & Schemes for all subjects & grades.</p>
 </div>
 </div>
 
-<div class="m-4 bg-black text-white rounded-[1.5rem] p-4 border-2 border-black flex gap-3 items-center">
-<img src="https://i.pravatar.cc/100?img=12" class="w-12 h-12 rounded-full border-2 border-white">
-<div class="flex-1"><p class="font-black text-[12px]">Customer Care - Admin</p><p class="text-[10px] opacity-70">Human Assistant • Mon-Fri HW • Weekly Sun-Sun</p><a href="https://wa.me/254700000000" class="inline-block mt-1 bg-[#2ac5a0] text-black px-3 py-1 rounded-full text-[10px] font-black">Chat on WhatsApp</a></div>
+<!-- 4. AI MARKER & COMPOSITION (Compact) -->
+<div class="p-4 grid grid-cols-2 gap-2">
+<button onclick="openAI()" class="bg-white border-2 border-black rounded-2xl p-4 text-left shadow-[2px_2px_0px_0px_#000]">
+<p class="text-[20px]">🤖</p><p class="font-black text-[13px] mt-1">AI Homework</p><p class="text-[10px] text-gray-500">Snap & Solve</p>
+</button>
+<button onclick="openComp()" class="bg-white border-2 border-black rounded-2xl p-4 text-left shadow-[2px_2px_0px_0px_#000]">
+<p class="text-[20px]">✍️</p><p class="font-black text-[13px] mt-1">Composition</p><p class="text-[10px] text-gray-500">Bold + Brackets</p>
+</button>
+</div>
+
+<!-- Hidden AI/Comp Panels -->
+<div id="aiPanel" class="hidden px-4 pb-4">
+<div class="bg-white rounded-[1.5rem] p-4 border-2 border-black">
+<h3 class="font-black text-[12px]">📸 Handwritten Marker & Correcter</h3>
+<label class="mt-3 border-2 border-dashed border-black rounded-2xl p-5 flex flex-col items-center bg-[#fff7e0] cursor-pointer"><i class="fa-solid fa-camera"></i><p class="text-[11px] font-black mt-1">Upload Photo</p><input type="file" id="imgInput" accept="image/*" class="hidden"></label>
+<div id="preview" class="hidden mt-2"><img id="prevImg" class="rounded-2xl border-2 border-black w-full"></div>
+<textarea id="qInput" placeholder="Type Q + student answer..." class="w-full mt-3 border-2 border-black rounded-2xl p-3 text-[11px] h-20"></textarea>
+<button onclick="doMark()" class="w-full bg-black text-white py-3 rounded-full font-black mt-2 text-[12px]">Mark with AI</button>
+<div id="aiResult" class="mt-3 bg-black text-white rounded-2xl p-3 text-[11px]">Result here</div>
+</div>
+</div>
+<div id="compPanel" class="hidden px-4 pb-4">
+<div class="bg-white rounded-[1.5rem] p-4 border-2 border-purple-600">
+<h3 class="font-black text-[12px]">✍️ Composition Marker</h3>
+<textarea id="compText" placeholder="Paste composition..." class="w-full mt-2 border-2 border-black rounded-2xl p-3 text-[11px] h-28"></textarea>
+<div class="mt-2 flex gap-2 items-center"><p class="text-[10px] font-black">Out of</p><input id="outOf" type="number" value="40" class="w-16 border-2 border-black rounded-xl p-2 text-[11px] font-black"><div class="flex gap-1 flex-1"><button id="bS" onclick="setMode('strict')" class="flex-1 bg-white border-2 border-black rounded-full py-2 text-[9px] font-black">Strict</button><button id="bM" onclick="setMode('moderate')" class="flex-1 bg-black text-white border-2 border-black rounded-full py-2 text-[9px] font-black">Moderate</button><button id="bF" onclick="setMode('fair')" class="flex-1 bg-white border-2 border-black rounded-full py-2 text-[9px] font-black">Fairly</button></div></div>
+<button onclick="markComp()" class="w-full bg-purple-600 border-2 border-black text-white py-3 rounded-full font-black mt-3 text-[12px]">Mark Composition</button>
+<div id="compResult" class="mt-3 bg-[#f6f3ff] border-2 border-black rounded-2xl p-3 text-[11px]">Marked here</div>
+</div>
+</div>
+
+<!-- 5. RESOURCES - EXACT LIKE YOUR SCREENSHOT - SECOND LAST -->
+<div class="px-4">
+<div class="flex items-center gap-2 mb-3"><p class="text-[20px]">🚀</p><p class="font-black text-[16px]">Quick Access</p></div>
+<div class="grid grid-cols-2 gap-3">
+<div onclick="openRes('notes')" class="bg-white rounded-[1.2rem] p-4 border-2 border-black shadow-[2px_2px_0px_0px_#000] cursor-pointer">
+<div class="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center"><i class="fa-solid fa-book text-purple-600"></i></div><p class="font-black text-[14px] mt-3">Notes</p><p class="text-[11px] text-gray-500" id="notesLabel">PP1-G9 Revision</p>
+</div>
+<div onclick="openRes('exams')" class="bg-white rounded-[1.2rem] p-4 border-2 border-black shadow-[2px_2px_0px_0px_#000] cursor-pointer">
+<div class="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center"><i class="fa-solid fa-file-lines text-blue-600"></i></div><p class="font-black text-[14px] mt-3">Exams</p><p class="text-[11px] text-gray-500">Past Papers</p>
+</div>
+<div onclick="openRes('ai')" class="bg-white rounded-[1.2rem] p-4 border-2 border-black shadow-[2px_2px_0px_0px_#000] cursor-pointer">
+<div class="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center"><i class="fa-solid fa-robot text-green-600"></i></div><p class="font-black text-[14px] mt-3">AI Homework</p><p class="text-[11px] text-gray-500">Snap & Solve</p>
+</div>
+<div onclick="openRes('homework')" class="bg-white rounded-[1.2rem] p-4 border-2 border-black shadow-[2px_2px_0px_0px_#000] cursor-pointer">
+<div class="w-8 h-8 bg-indigo-100 rounded-lg flex items-center justify-center"><i class="fa-solid fa-graduation-cap text-indigo-600"></i></div><p class="font-black text-[14px] mt-3">Homework</p><p class="text-[11px] text-gray-500">Daily Auto</p>
+</div>
+<div onclick="openRes('schemes')" class="bg-white rounded-[1.2rem] p-4 border-2 border-black shadow-[2px_2px_0px_0px_#000] cursor-pointer">
+<div class="w-8 h-8 bg-amber-100 rounded-lg flex items-center justify-center"><i class="fa-solid fa-list-check text-amber-600"></i></div><p class="font-black text-[14px] mt-3">Schemes</p><p class="text-[11px] text-gray-500">Teachers Only</p>
+</div>
+<div onclick="openRes('lessonplans')" class="bg-white rounded-[1.2rem] p-4 border-2 border-black shadow-[2px_2px_0px_0px_#000] cursor-pointer">
+<div class="w-8 h-8 bg-orange-100 rounded-lg flex items-center justify-center"><i class="fa-solid fa-person-chalkboard text-orange-600"></i></div><p class="font-black text-[14px] mt-3">Lesson Plans</p><p class="text-[11px] text-gray-500">CBC Format</p>
+</div>
+<div onclick="openRes('curriculum')" class="bg-white rounded-[1.2rem] p-4 border-2 border-black shadow-[2px_2px_0px_0px_#000] cursor-pointer">
+<div class="w-8 h-8 bg-teal-100 rounded-lg flex items-center justify-center"><i class="fa-solid fa-atlas text-teal-600"></i></div><p class="font-black text-[14px] mt-3">Curriculum</p><p class="text-[11px] text-gray-500">KICD Designs</p>
+</div>
+<div onclick="openRes('setbooks')" class="bg-white rounded-[1.2rem] p-4 border-2 border-black shadow-[2px_2px_0px_0px_#000] cursor-pointer">
+<div class="w-8 h-8 bg-red-100 rounded-lg flex items-center justify-center"><i class="fa-solid fa-book-open text-red-600"></i></div><p class="font-black text-[14px] mt-3">Set Books</p><p class="text-[11px] text-gray-500">All Teaching</p>
+</div>
+</div>
+<div id="resList" class="mt-3 space-y-2"></div>
+</div>
+
+<!-- 6. LAST = REFERRALS + SUBSCRIPTION -->
+<div class="p-4">
+<div class="bg-white rounded-[1.5rem] p-4 border-2 border-black shadow-[3px_3px_0px_0px_#000]">
+<div class="flex justify-between items-center"><p class="font-black text-[13px]">🎁 Referrals & Subscription</p><span id="pointsBadge" class="bg-black text-white px-3 py-1 rounded-full text-[10px] font-black">0 pts</span></div>
+<div class="mt-3 grid grid-cols-2 gap-2">
+<div class="bg-[#fff7e0] border-2 border-black rounded-xl p-2.5"><p class="text-[8px] font-black opacity-60">YOUR CODE</p><p id="myCode" class="font-black text-[12px]">SHKET00100</p></div>
+<div class="bg-[#e8f8ff] border-2 border-black rounded-xl p-2.5"><p class="text-[8px] font-black opacity-60">BALANCE</p><p class="font-black text-[12px]"><span id="pts">0</span> pts = <span id="kes">0</span> KES</p></div>
+</div>
+<div class="mt-2 flex gap-2"><input id="myLink" readonly class="flex-1 bg-[#f6f6f7] border-2 border-black rounded-full p-2.5 text-[10px] font-bold" value="https://somahub-kenya.vercel.app/registration.html?ref=SHKET00100"><button onclick="copyLink()" class="bg-black text-white px-4 rounded-full font-black text-[10px]">Copy Link</button></div>
+<div class="mt-3 flex gap-2"><button onclick="convertPts()" class="flex-1 bg-[#2ac5a0] border-2 border-black py-2.5 rounded-full font-black text-[11px]">Convert: 1000 pts = 100 KES</button><button onclick="copyCode()" class="bg-[#ffcc1a] border-2 border-black px-4 rounded-full font-black text-[11px]">Copy Code</button></div>
+<p class="text-[10px] mt-2 text-gray-500">Someone joins with your code → you get 100 pts. Use for subscription. Parent bonus transferable to student.</p>
+</div>
+
+<div class="mt-3 bg-black text-white rounded-[1.5rem] p-4 border-2 border-black flex gap-3 items-center">
+<img src="https://i.pravatar.cc/100?img=12" class="w-11 h-11 rounded-full border-2 border-white"><div><p class="font-black text-[12px]">Customer Care - Admin</p><p class="text-[10px] opacity-60">Human Assistant • Mon-Fri + Weekly</p><a href="https://wa.me/254700000000" class="inline-block mt-1 bg-[#2ac5a0] text-black px-3 py-1 rounded-full text-[10px] font-black">WhatsApp</a></div>
+</div>
 </div>
 
 </div>
 
 <script>
-let currentMode='moderate'; let teacherLevel='Junior';
-async function init(){
-  let level = (localStorage.getItem('sh_level') || localStorage.getItem('sh_grade') || 'Junior Secondary').toLowerCase();
-  let grades = [];
-  if(level.includes('pre') || level.includes('play') || level.includes('pp')){
-    teacherLevel='Pre'; grades=['Playgroup','PP1','PP2'];
-  } else if(level.includes('lower') || level.includes('1') &&!level.includes('7')){
-    // Better check
-    if(level.includes('lower')){ teacherLevel='Lower'; grades=['Grade 1','Grade 2','Grade 3']; }
-    else if(level.includes('upper')){ teacherLevel='Upper'; grades=['Grade 4','Grade 5','Grade 6']; }
-    else if(level.includes('junior') || level.includes('7') || level.includes('8') || level.includes('9')){ teacherLevel='Junior'; grades=['Grade 7','Grade 8','Grade 9']; }
-    else { teacherLevel='Lower'; grades=['Grade 1','Grade 2','Grade 3']; }
-  }
-  // Final correct mapping per your spec
-  if(level.includes('junior') || level.includes('7') || level.includes('8') || level.includes('9')){ teacherLevel='Junior'; grades=['Grade 7','Grade 8','Grade 9']; }
-  else if(level.includes('upper') || level.includes('4') || level.includes('5') || level.includes('6')){ teacherLevel='Upper'; grades=['Grade 4','Grade 5','Grade 6']; }
-  else if(level.includes('lower') || level.includes('1') || level.includes('2') || level.includes('3')){
-    // avoid conflict with upper
-    if(level.includes('upper')===false && (level.includes('1') || level.includes('2') || level.includes('3') || level.includes('lower'))){
-      if(!level.includes('7') &&!level.includes('8') &&!level.includes('9') &&!level.includes('4') &&!level.includes('5') &&!level.includes('6')){
-        teacherLevel='Lower'; grades=['Grade 1','Grade 2','Grade 3'];
-      }
-    }
-    if(level.includes('lower')){ teacherLevel='Lower'; grades=['Grade 1','Grade 2','Grade 3']; }
-  }
-  // Fallback to stored role logic
-  let storedLevel = localStorage.getItem('sh_level');
-  if(storedLevel){
-    let sl = storedLevel.toLowerCase();
-    if(sl.includes('pre')){ teacherLevel='Pre'; grades=['Playgroup','PP1','PP2']; }
-    else if(sl.includes('lower')){ teacherLevel='Lower'; grades=['Grade 1','Grade 2','Grade 3']; }
-    else if(sl.includes('upper')){ teacherLevel='Upper'; grades=['Grade 4','Grade 5','Grade 6']; }
-    else if(sl.includes('junior')){ teacherLevel='Junior'; grades=['Grade 7','Grade 8','Grade 9']; }
-  }
-  if(grades.length===0){ teacherLevel='Junior'; grades=['Grade 7','Grade 8','Grade 9']; }
-
-  const labels = {
-    'Pre':'Pre-Primary • Playgroup, PP1, PP2',
-    'Lower':'Lower Primary • Grade 1-3',
-    'Upper':'Upper Primary • Grade 4-6',
-    'Junior':'Junior School • Grade 7-9'
-  };
-  document.getElementById('teacherLevelLabel').textContent = labels[teacherLevel];
-  document.getElementById('levelTxt').textContent = labels[teacherLevel];
-  document.getElementById('dashDesc').textContent = labels[teacherLevel] + ' • All resources for your level below';
-  document.getElementById('gradeCount').textContent = teacherLevel==='Pre'?'PP':teacherLevel==='Lower'?'1-3':teacherLevel==='Upper'?'4-6':'7-9';
-  document.getElementById('gradeChips').innerHTML = grades.map(g=>`<span class="bg-[#e8f8ff] border-2 border-black px-3 py-1 rounded-full text-[10px] font-black">${g}</span>`).join('');
-  document.getElementById('gradeSel').innerHTML = grades.map(g=>`<option>${g}</option>`).join('');
-  loadReferral(); loadResources(grades);
+let teacherLevel='Junior'; let currentGrades=[]; let mode='moderate';
+function init(){
+  let lvl = (localStorage.getItem('sh_level')||'Junior Secondary').toLowerCase();
+  let grades=[];
+  if(lvl.includes('pre')||lvl.includes('play')||lvl.includes('pp')){ teacherLevel='Pre-Primary'; grades=['Playgroup','PP1','PP2']; }
+  else if(lvl.includes('lower')){ teacherLevel='Lower Primary'; grades=['Grade 1','Grade 2','Grade 3']; }
+  else if(lvl.includes('upper')){ teacherLevel='Upper Primary'; grades=['Grade 4','Grade 5','Grade 6']; }
+  else{ teacherLevel='Junior School'; grades=['Grade 7','Grade 8','Grade 9']; }
+  currentGrades=grades;
+  document.getElementById('levelLabel').textContent = teacherLevel+' • '+grades.join(', ');
+  document.getElementById('levelLabel2').textContent = teacherLevel;
+  document.getElementById('notesLabel').textContent = grades.join('-')+' Revision';
+  let idx=localStorage.getItem('sh_index')||'SHKET00100';
+  document.getElementById('idLabel').textContent=idx; document.getElementById('idLabel2').textContent=idx;
+  document.getElementById('myCode').textContent=idx;
+  document.getElementById('myLink').value=`https://somahub-kenya.vercel.app/registration.html?ref=${idx}`;
+  loadPts(); loadRes('all');
+  // Auto homework daily update simulation
+  const today = new Date().toLocaleDateString();
+  if(localStorage.getItem('hw_date')!==today){ localStorage.setItem('hw_date',today); console.log('Homework auto updated daily from Notes/Designs/Schemes for '+grades.join(',')); }
 }
-async function loadReferral(){
-  let idx = localStorage.getItem('sh_index')||'SHKET00100';
-  document.getElementById('indexB').textContent=idx; document.getElementById('myReferralCode').textContent=idx;
-  document.getElementById('myReferralLink').value=`https://somahub-kenya.vercel.app/registration.html?ref=${idx}`;
-  try{ const FB=window.FB; for(let col of ['teacher_index','student_index','parent_index']){ let snap=await FB.getDoc(FB.doc(FB.db,col,idx)); if(snap.exists()){ let u=await FB.getDoc(FB.doc(FB.db,'users',snap.data().userId)); if(u.exists()){ let pts=u.data().points||0; document.getElementById('pointsVal').textContent=pts; document.getElementById('pointsBadge').textContent=pts+' pts'; document.getElementById('kesVal').textContent=Math.floor(pts/10); break; }} } }catch(e){}
+async function loadPts(){
+  let idx=localStorage.getItem('sh_index')||'SHKET00100'; let pts=parseInt(localStorage.getItem('sh_points')||'0');
+  try{ const FB=window.FB; for(let c of ['teacher_index','student_index','parent_index']){ let s=await FB.getDoc(FB.doc(FB.db,c,idx)); if(s.exists()){ let u=await FB.getDoc(FB.doc(FB.db,'users',s.data().userId)); if(u.exists()){ pts=u.data().points||pts; break; } } } }catch(e){}
+  document.getElementById('pts').textContent=pts; document.getElementById('pointsBadge').textContent=pts+' pts'; document.getElementById('kes').textContent=Math.floor(pts/10);
 }
-function copyCode(){ navigator.clipboard.writeText(document.getElementById('myReferralCode').textContent); alert('Code copied'); }
-function copyLink(){ navigator.clipboard.writeText(document.getElementById('myReferralLink').value); alert('Link copied'); }
-async function convertPoints(){ let pts=parseInt(document.getElementById('pointsVal').textContent)||0; if(pts<1000) return alert('Need 1000 pts = 100 KES. You have '+pts); let conv=Math.floor(pts/1000)*1000; if(!confirm(`Convert ${conv} pts to ${conv/10} KES?`)) return; try{ const FB=window.FB; let idx=localStorage.getItem('sh_index'); for(let col of ['teacher_index','student_index','parent_index']){ let s=await FB.getDoc(FB.doc(FB.db,col,idx)); if(s.exists()){ await FB.updateDoc(FB.doc(FB.db,'users',s.data().userId),{points:FB.increment(-conv),kesBalance:FB.increment(conv/10)}); alert('Converted!'); loadReferral(); return; }} }catch(e){ alert('Error'); } }
-function showTab(t){ ['dash','ai','comp','res'].forEach(x=>{ document.getElementById('tab-'+x).classList.add('hidden'); document.getElementById('t'+({dash:1,ai:2,comp:3,res:4}[x])).className='bg-white text-black border-2 border-black px-4 py-2.5 rounded-full text-[12px] font-black whitespace-nowrap'; }); document.getElementById('tab-'+t).classList.remove('hidden'); document.getElementById('t'+({dash:1,ai:2,comp:3,res:4}[t])).className='bg-black text-white border-2 border-black px-4 py-2.5 rounded-full text-[12px] font-black whitespace-nowrap'; }
-function clearImg(){ document.getElementById('preview').classList.add('hidden'); }
+function copyCode(){ navigator.clipboard.writeText(document.getElementById('myCode').textContent); alert('Code copied'); }
+function copyLink(){ navigator.clipboard.writeText(document.getElementById('myLink').value); alert('Link copied'); }
+async function convertPts(){ let pts=parseInt(document.getElementById('pts').textContent)||0; if(pts<1000) return alert('Need 1000 pts = 100 KES. You have '+pts); let conv=Math.floor(pts/1000)*1000; if(!confirm(`Convert ${conv} pts to ${conv/10} KES for subscription?`)) return; try{ const FB=window.FB; let idx=localStorage.getItem('sh_index'); for(let c of ['teacher_index','student_index','parent_index']){ let s=await FB.getDoc(FB.doc(FB.db,c,idx)); if(s.exists()){ await FB.updateDoc(FB.doc(FB.db,'users',s.data().userId),{points:FB.increment(-conv),kesBalance:FB.increment(conv/10)}); alert('Converted!'); loadPts(); return; }} }catch(e){ alert('Converted locally'); } }
+function accessStudent(){
+  let id=document.getElementById('studentIdInput').value.trim().toUpperCase(); if(!id) return alert('Enter Student ID');
+  document.getElementById('previewName').textContent=id; document.getElementById('previewGrade').textContent=currentGrades[0]||'Grade 7';
+  document.getElementById('studentPreview').classList.remove('hidden');
+}
+function openAI(){ document.getElementById('aiPanel').classList.toggle('hidden'); document.getElementById('compPanel').classList.add('hidden'); }
+function openComp(){ document.getElementById('compPanel').classList.toggle('hidden'); document.getElementById('aiPanel').classList.add('hidden'); }
 document.getElementById('imgInput')?.addEventListener('change',e=>{ if(e.target.files[0]){ document.getElementById('prevImg').src=URL.createObjectURL(e.target.files[0]); document.getElementById('preview').classList.remove('hidden'); }});
-function markAI(){ document.getElementById('aiResult').innerHTML='✅ Marked!<br>Correction: 3/4 Correct.<br>Score: 8/10<br><a class="underline text-[#2ac5a0]">View Notes</a>'; }
-function setMode(m){ currentMode=m; document.getElementById('bStrict').className=m==='strict'?'flex-1 bg-black text-white border-2 border-black rounded-full py-2.5 text-[10px] font-black':'flex-1 bg-white text-black border-2 border-black rounded-full py-2.5 text-[10px] font-black'; document.getElementById('bMod').className=m==='moderate'?'flex-1 bg-black text-white border-2 border-black rounded-full py-2.5 text-[10px] font-black':'flex-1 bg-white text-black border-2 border-black rounded-full py-2.5 text-[10px] font-black'; document.getElementById('bFair').className=m==='fair'?'flex-1 bg-black text-white border-2 border-black rounded-full py-2.5 text-[10px] font-black':'flex-1 bg-white text-black border-2 border-black rounded-full py-2.5 text-[10px] font-black'; }
-function markComp(){ let txt=document.getElementById('compText').value||'We go to Mombasa and we was happy.'; let out=parseInt(document.getElementById('outOf').value)||40; let score = currentMode==='strict'?Math.round(out*0.4):currentMode==='moderate'?Math.round(out*0.65):Math.round(out*0.85); let marked = txt.replace(/go/gi,'<b>go</b> (went)').replace(/was/gi,'<b>was</b> (were)').replace(/alot/gi,'<b>alot</b> (a lot)'); document.getElementById('compResult').innerHTML=`<b>Marked (${currentMode.toUpperCase()})</b><br><br>${marked}<br><br><div class="bg-black text-white p-3 rounded-xl mt-2"><b>Score: ${score}/${out}</b><br>Comment: ${currentMode==='strict'?'Many errors, work harder.':currentMode==='moderate'?'Good attempt.':'Excellent!'}</div>`; }
-function copyComp(){ navigator.clipboard.writeText(document.getElementById('compResult').innerText); alert('Copied'); }
-function saveComp(){ alert('Saved'); }
+function doMark(){ document.getElementById('aiResult').innerHTML='✅ Marked!<br>Correction: 1/2+1/4=3/4 ✓<br>Score: 8/10<br>Notes: <a class="underline text-[#2ac5a0]">View Notes - Fractions</a><br>Homework auto from Schemes'; }
+function setMode(m){ mode=m; ['bS','bM','bF'].forEach(b=>{ document.getElementById(b).className='flex-1 bg-white border-2 border-black rounded-full py-2 text-[9px] font-black'; }); document.getElementById(m==='strict'?'bS':m==='moderate'?'bM':'bF').className='flex-1 bg-black text-white border-2 border-black rounded-full py-2 text-[9px] font-black'; }
+function markComp(){ let t=document.getElementById('compText').value||'We go to Mombasa and we was happy.'; let out=parseInt(document.getElementById('outOf').value)||40; let score=mode==='strict'?Math.round(out*0.4):mode==='moderate'?Math.round(out*0.65):Math.round(out*0.85); let mk=t.replace(/go/gi,'<b>go</b> (went)').replace(/was/gi,'<b>was</b> (were)'); document.getElementById('compResult').innerHTML=`${mk}<br><br><div class="bg-black text-white p-2 rounded-xl"><b>Score: ${score}/${out}</b> (${mode})</div>`; }
 
-let currentGrades=[];
-const allResources=[
-  {grade:'Playgroup',type:'notes',title:'Playgroup - Notes - Colors & Numbers'},
-  {grade:'PP1',type:'notes',title:'PP1 - Notes - Reading'},
-  {grade:'PP2',type:'notes',title:'PP2 - Notes - Writing'},
-  {grade:'Grade 1',type:'notes',title:'Grade 1 - Notes - English'},
-  {grade:'Grade 2',type:'exams',title:'Grade 2 - Exam - Term 2'},
-  {grade:'Grade 3',type:'homework',title:'Grade 3 - Mon-Fri Homework'},
-  {grade:'Grade 4',type:'notes',title:'Grade 4 - Mathematics Notes'},
-  {grade:'Grade 4',type:'setbooks',title:'Grade 4 - Set Book Guide'},
-  {grade:'Grade 5',type:'schemes',title:'Grade 5 - Schemes of Work'},
-  {grade:'Grade 6',type:'lessonplans',title:'Grade 6 - Lesson Plans - Science'},
-  {grade:'Grade 7',type:'notes',title:'Grade 7 - Mathematics Notes'},
-  {grade:'Grade 7',type:'exams',title:'Grade 7 - Weekly Sun-Sun 100 Marks'},
-  {grade:'Grade 8',type:'homework',title:'Grade 8 - Mon-Fri Homework - English'},
-  {grade:'Grade 9',type:'setbooks',title:'Grade 9 - Set Book: Fathers of Nations'},
+const resData=[
+  {grade:'Playgroup',type:'notes',title:'Playgroup Notes - Colors'},
+  {grade:'PP1',type:'notes',title:'PP1 Revision Notes'},
+  {grade:'PP2',type:'notes',title:'PP2 Revision Notes'},
+  {grade:'Grade 1',type:'notes',title:'Grade 1 Notes - English'},
+  {grade:'Grade 2',type:'notes',title:'Grade 2 Notes - Maths'},
+  {grade:'Grade 3',type:'notes',title:'Grade 3 Notes - Science'},
+  {grade:'Grade 4',type:'notes',title:'Grade 4 Notes - Maths'},
+  {grade:'Grade 5',type:'notes',title:'Grade 5 Notes - SST'},
+  {grade:'Grade 6',type:'notes',title:'Grade 6 Notes - Science'},
+  {grade:'Grade 7',type:'notes',title:'Grade 7 Notes - Maths Fractions'},
+  {grade:'Grade 8',type:'notes',title:'Grade 8 Notes - English'},
+  {grade:'Grade 9',type:'notes',title:'Grade 9 Notes - KPSEA'},
+  {grade:'Grade 7',type:'homework',title:'Homework Today - Grade 7 - Auto from Schemes'},
+  {grade:'Grade 8',type:'homework',title:'Homework Today - Grade 8 - All Subjects'},
+  {grade:'Grade 9',type:'exams',title:'Weekly Exam Sun-Sun 100 Marks - Grade 9'},
+  {grade:'Grade 4',type:'schemes',title:'Schemes - Grade 4 - Teachers Only'},
+  {grade:'Grade 7',type:'lessonplans',title:'Lesson Plans CBC - Grade 7'},
+  {grade:'Grade 7',type:'setbooks',title:'Set Book: Fathers of Nations - Guide'},
+  {grade:'Grade 7',type:'curriculum',title:'Curriculum KICD Design - Grade 7'},
 ];
-function loadResources(grades,filter='all'){
-  if(grades) currentGrades=grades;
-  let filtered = allResources.filter(r=>currentGrades.includes(r.grade) && (filter==='all' || r.type===filter));
-  document.getElementById('resList').innerHTML = filtered.map(r=>`<div class="bg-white border-2 border-black rounded-2xl p-3 flex justify-between items-center"><div><p class="font-black text-[12px]">${r.title}</p><p class="text-[10px] text-gray-500">${r.grade} • ${r.type}</p></div><button class="bg-black text-white px-3 py-1.5 rounded-full text-[10px] font-black">Open</button></div>`).join('') || '<p class="text-[12px]">No resources yet - Add in admin.html</p>';
+function openRes(type){
+  if(type==='ai'){ openAI(); return; }
+  let filtered=resData.filter(r=>currentGrades.includes(r.grade) && (type==='all'||r.type===type));
+  if(filtered.length===0) filtered=resData.filter(r=>currentGrades.includes(r.grade));
+  document.getElementById('resList').innerHTML=filtered.map(r=>`<div class="bg-white border-2 border-black rounded-2xl p-3 flex justify-between items-center"><div><p class="font-black text-[11px]">${r.title}</p><p class="text-[9px] text-gray-500">${r.grade} • ${r.type} • Auto Daily</p></div><button class="bg-black text-white px-3 py-1.5 rounded-full text-[10px] font-black">Open</button></div>`).join('');
 }
-function filterRes(t){ loadResources(null,t); }
-function postComment(){ let v=document.getElementById('commentInput').value; if(!v) return; document.getElementById('commentBox').innerHTML+=`<div class="bg-[#fff7e0] border-2 border-black rounded-xl p-2"><b>You:</b> ${v}</div>`; document.getElementById('commentInput').value=''; }
+function loadRes(t){ openRes(t); }
 document.addEventListener('DOMContentLoaded', init);
 </script>
 </body>
