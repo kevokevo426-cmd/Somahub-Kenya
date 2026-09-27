@@ -20,9 +20,9 @@ const app=initializeApp(cfg); window.FB={auth:getAuth(app),db:getFirestore(app),
 <div class="h-2 w-full flex"><div class="flex-1 bg-[#ff8a2a]"></div><div class="flex-1 bg-[#2ac5a0]"></div><div class="flex-1 bg-[#4a86ff]"></div><div class="flex-1 bg-[#ffcc1a]"></div></div>
 <div class="p-5">
 <div class="flex items-center gap-2"><div class="w-8 h-8 bg-black rounded-full flex items-center justify-center text-white font-black">S</div><p class="font-black text-[18px]">SomaHub</p><span class="ml-auto text-[10px] bg-white border px-2 py-1 rounded-full">CBC • CBE</span></div>
-<h1 class="text-[30px] font-[900] mt-6 leading-none">Create account</h1>
-<p class="text-[13px] text-gray-600 mt-2">Grade 1-9 • All genders • Fun + Serious</p>
-<div class="flex gap-2 mt-5">
+<h1 id="mainTitle" class="text-[30px] font-[900] mt-6 leading-none">Create account</h1>
+<p id="mainSub" class="text-[13px] text-gray-600 mt-2">Grade 1-9 • All genders • Fun + Serious</p>
+<div id="roleBtns" class="flex gap-2 mt-5">
 <button type="button" id="bS" class="flex-1 bg-black text-white rounded-full py-3.5 text-[13px] font-black border-2 border-black">🎒 Student</button>
 <button type="button" id="bP" class="flex-1 bg-white text-black rounded-full py-3.5 text-[13px] font-black border-2 border-black">👪 Parent</button>
 <button type="button" id="bT" class="flex-1 bg-white text-black rounded-full py-3.5 text-[13px] font-black border-2 border-black">👩‍🏫 Teacher</button>
@@ -59,6 +59,7 @@ const app=initializeApp(cfg); window.FB={auth:getAuth(app),db:getFirestore(app),
 <input id="pIndex" placeholder="STUDENT INDEX e.g SHKE00500 *" class="w-full bg-[#fff7e0] border-2 border-black rounded-2xl p-3.5 text-sm uppercase font-black">
 </div>
 <button id="btn2" type="button" onclick="finalReg()" class="w-full bg-[#4a86ff] border-2 border-black text-white py-4 rounded-full font-black text-[15px] mt-2 shadow-[3px_3px_0px_0px_#000]">Finish registration 🚀</button>
+<button id="btnSave" type="button" onclick="saveEdit()" class="hidden w-full bg-[#ffcc1a] border-2 border-black text-black py-4 rounded-full font-black text-[15px] mt-2 shadow-[3px_3px_0px_0px_#000]">Save Changes ✓</button>
 <p id="msg2" class="text-xs text-center text-red-500 font-bold"></p>
 </div>
 </div>
@@ -76,7 +77,6 @@ const app=initializeApp(cfg); window.FB={auth:getAuth(app),db:getFirestore(app),
 <p>👉 <b>Parents will check your work.</b> Parent account links via student index.</p>
 <p>👉 <b>No direct contact in the app,</b> concerns to human assistant only (Admin).</p>
 <p>👉 <b>The information we collect is to enhance our service</b> – County, Town, School helps us give you better CBC content.</p>
-<p class="pt-2 text-[11px] text-gray-500">Suitable for Grade 1-9, all genders. Fun + Serious learning.</p>
 </div>
 <button onclick="closeTerms()" class="w-full bg-black text-white py-3.5 rounded-full font-black mt-6">I Understand ✓</button>
 </div>
@@ -89,12 +89,57 @@ bS.addEventListener('click',()=>{role='student';render()}); bP.addEventListener(
 function tog(id,eye){ const e=document.getElementById(id), ic=document.getElementById(eye); e.type=e.type==='password'?'text':'password'; ic.className=e.type==='password'?'fa-regular fa-eye':'fa-regular fa-eye-slash'; }
 function openTerms(){ termsModal.classList.remove('hidden'); } function closeTerms(){ termsModal.classList.add('hidden'); }
 let tmpUser=null, tmpEmail="", tmpReferral="";
-(function(){ const urlParams = new URLSearchParams(window.location.search); const ref = urlParams.get('ref'); if(ref){ document.getElementById('referral').value = ref.toUpperCase(); }})();
+let editMode=false, editId="";
+(function(){
+  const urlParams = new URLSearchParams(window.location.search);
+  const ref = urlParams.get('ref');
+  if(ref){ document.getElementById('referral').value = ref.toUpperCase(); }
+  const edit = urlParams.get('edit');
+  if(edit){
+    editMode=true; editId=edit.toUpperCase();
+    document.getElementById('mainTitle').innerText='Edit Profile ✏️';
+    document.getElementById('mainSub').innerText='Update your info - '+editId;
+    document.getElementById('roleBtns').classList.add('hidden');
+    document.getElementById('step1').classList.add('hidden');
+    document.getElementById('step2').classList.remove('hidden');
+    document.getElementById('ft').classList.remove('hidden');
+    document.getElementById('fs').classList.add('hidden');
+    document.getElementById('fp').classList.add('hidden');
+    document.getElementById('btn2').classList.add('hidden');
+    document.getElementById('btnSave').classList.remove('hidden');
+    document.getElementById('roleLabel').innerText='Teacher • '+editId;
+    role='teacher';
+    // prefill from localStorage
+    try{
+      document.getElementById('tCountry').value=localStorage.getItem('sh_country')||'Kenya';
+      document.getElementById('tCounty').value=localStorage.getItem('sh_county')||'';
+      document.getElementById('tTown').value=localStorage.getItem('sh_town')||'';
+      document.getElementById('tSchool').value=localStorage.getItem('sh_school')||'Junior School';
+    }catch(e){}
+  }
+})();
 async function step1Go(){
  const FB=window.FB; const email=document.getElementById('email').value.trim(); const pass=document.getElementById('pass').value.trim(), pass2=document.getElementById('pass2').value.trim(); const referral=document.getElementById('referral').value.trim().toUpperCase(); const terms=document.getElementById('terms').checked;
  if(!email||!pass) return msg1.innerText="Fill email & password"; if(pass!==pass2) return msg1.innerText="Passwords don't match"; if(!terms) return msg1.innerText="Accept Terms & Privacy";
  btn1.innerText="Creating..."; btn1.disabled=true;
- try{ const cr=await FB.createUserWithEmailAndPassword(FB.auth,email,pass); tmpUser=cr.user; tmpEmail=email; tmpReferral=referral; step1.classList.add('hidden'); step2.classList.remove('hidden'); roleLabel.innerText=role==='student'?'Student':'Parent'; if(role==='teacher') roleLabel.innerText='Teacher'; fs.classList.toggle('hidden',role!=='student'); fp.classList.toggle('hidden',role!=='parent'); ft.classList.toggle('hidden',role!=='teacher'); }catch(e){ msg1.innerText=e.message; btn1.innerText="Confirm ✓"; btn1.disabled=false; }
+ try{ const cr=await FB.createUserWithEmailAndPassword(FB.auth,email,pass); tmpUser=cr.user; tmpEmail=email; tmpReferral=referral; step1.classList.add('hidden'); step2.classList.remove('hidden'); roleLabel.innerText=role==='student'?'Student':role==='parent'?'Parent':'Teacher'; fs.classList.toggle('hidden',role!=='student'); fp.classList.toggle('hidden',role!=='parent'); ft.classList.toggle('hidden',role!=='teacher'); }catch(e){ msg1.innerText=e.message; btn1.innerText="Confirm ✓"; btn1.disabled=false; }
+}
+async function saveEdit(){
+ const FB=window.FB;
+ const ex={ country:tCountry.value.trim(), county:tCounty.value.trim(), town:tTown.value.trim(), school:tSchool.value.trim(), tsc:tTSC.value.trim(), level:tLevel.value };
+ if(!ex.country||!ex.county||!ex.town||!ex.school) return msg2.innerText="Fill all fields";
+ btnSave.innerText="Saving..."; btnSave.disabled=true;
+ try{
+   const idx = editId || localStorage.getItem('sh_index');
+   // update users collection if logged in
+   try{
+     const uid = FB.auth.currentUser?.uid || localStorage.getItem('sh_uid');
+     if(uid) await FB.updateDoc(FB.doc(FB.db,"users",uid), {...ex});
+     if(idx) await FB.updateDoc(FB.doc(FB.db,"teacher_index",idx), {...ex});
+   }catch(e){ console.log(e); }
+   localStorage.setItem('sh_country',ex.country); localStorage.setItem('sh_county',ex.county); localStorage.setItem('sh_town',ex.town); localStorage.setItem('sh_school',ex.school);
+   alert('Profile Updated ✓'); window.location.href='/teachers.html';
+ }catch(e){ msg2.innerText=e.message; btnSave.innerText="Save Changes ✓"; btnSave.disabled=false; }
 }
 async function finalReg(){
  const FB=window.FB; let ex={referral:tmpReferral}, pre="SHKE", ctr="students", col="student_index", from=500;
@@ -115,7 +160,7 @@ async function finalReg(){
      }
    }catch(e){ console.log("Referral award failed", e); }
  }
- try{ localStorage.setItem('sh_username', tmpEmail.split('@')[0]); localStorage.setItem('sh_role', role); localStorage.setItem('sh_index', finalId); localStorage.setItem('sh_grade', ex.grade||ex.level||'Grade 6'); localStorage.setItem('sh_points','0'); localStorage.setItem('sh_loggedIn','true'); }catch(e){}
+ try{ localStorage.setItem('sh_username', tmpEmail.split('@')[0]); localStorage.setItem('sh_role', role); localStorage.setItem('sh_index', finalId); localStorage.setItem('sh_grade', ex.grade||ex.level||'Grade 6'); localStorage.setItem('sh_points','0'); localStorage.setItem('sh_loggedIn','true'); localStorage.setItem('sh_uid', tmpUser.uid); localStorage.setItem('sh_country',ex.country||''); localStorage.setItem('sh_county',ex.county||''); localStorage.setItem('sh_town',ex.town||''); localStorage.setItem('sh_school',ex.school||''); }catch(e){}
  let redirectUrl = '/dashboard.html';
  if(role==='teacher') redirectUrl = '/teachers.html';
  if(role==='parent') redirectUrl = '/parent.html';
