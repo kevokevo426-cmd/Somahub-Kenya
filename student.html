@@ -25,25 +25,25 @@ const app=initializeApp(cfg); window.FB={auth:getAuth(app),db:getFirestore(app),
 <div class="flex-1"><p class="font-black text-[14px] leading-none">Hi, <span id="firstName">Learner</span>! 🎒</p><p class="text-[10px] font-bold text-gray-600"><span id="gradeShow">Grade 6</span> • Daily 10 + Weekly 100</p></div>
 <div class="bg-black text-white border-2 border-black px-3 py-1 rounded-full"><p id="indexShow" class="font-black text-[10px]">SHKE...</p></div>
 </div>
-<div class="bg-black text-white overflow-hidden whitespace-nowrap border-y-2 border-black h-8 flex items-center"><div class="marquee flex gap-8 text-[10px] font-black"><span>⏰ TODAY: Do 10 Marks Daily HW!</span><span>📋 Weekly 100 Marks Sun-Sun — Don't Miss</span><span>💡 KICD Aligned • CBC & CBE</span></div></div>
+<div class="bg-black text-white overflow-hidden whitespace-nowrap border-y-2 border-black h-8 flex items-center"><div class="marquee flex gap-8 text-[10px] font-black"><span>⏰ TODAY: Do 10 Marks Daily HW!</span><span>📋 Weekly 100 Marks Sun-Sun</span><span>💡 KICD Aligned • CBC & CBE</span></div></div>
 </div>
 
 <div class="p-3 space-y-3">
 <div class="bg-white rounded-[1.3rem] p-4 border-2 border-black shadow-[3px_3px_0_0_#000]">
 <div class="grid grid-cols-2 gap-2">
 <div class="bg-[#ffcc1a] border-2 border-black rounded-xl p-3 shadow-[2px_2px_0_0_#000]"><p class="font-black text-[11px]">📝 Daily HW</p><p class="text-[8px] font-bold">Mon-Fri • 10 Marks</p><a href="homework.html" class="mt-2 block text-center w-full bg-black text-white rounded-full py-2 font-black text-[10px]">Do Now →</a></div>
-<div class="bg-[#4a86ff] border-2 border-black rounded-xl p-3 shadow-[2px_2px_0_0_#000] text-white"><p class="font-black text-[11px]">📋 Weekly Exam</p><p class="text-[8px] font-bold">Sun-Sun • 100 Marks</p><a href="exams.html" class="mt-2 block text-center w-full bg-white text-black rounded-full py-2 font-black text-[10px]">Start →</a></div>
+<div class="bg-[#4a86ff] border-2 border-black rounded-xl p-3 shadow-[2px_2px_0_0_#000] text-white"><p class="font-black text-[11px]">📋 Weekly Exam</p><p class="text-[8px] font-bold">Sun-Sun • 100 Marks</p><a href="exam.html" class="mt-2 block text-center w-full bg-white text-black rounded-full py-2 font-black text-[10px]">Start →</a></div>
 </div>
 </div>
 
 <p class="font-black text-[14px]">🚀 Quick Access</p>
 <div class="grid grid-cols-2 gap-2">
 <a href="notes.html" class="bg-white rounded-xl p-3 border-2 border-black shadow-[2px_2px_0_0_#000]"><p class="font-black text-[12px]"><i class="fa-solid fa-book text-purple-600"></i> Notes</p><p class="text-[9px] text-gray-500">PP1-G9 • KICD</p></a>
-<a href="exams.html" class="bg-white rounded-xl p-3 border-2 border-black shadow-[2px_2px_0_0_#000]"><p class="font-black text-[12px]"><i class="fa-solid fa-file-lines text-blue-600"></i> Exams</p><p class="text-[9px] text-gray-500">Weekly & Past</p></a>
+<a href="exam.html" class="bg-white rounded-xl p-3 border-2 border-black shadow-[2px_2px_0_0_#000]"><p class="font-black text-[12px]"><i class="fa-solid fa-file-lines text-blue-600"></i> Exams</p><p class="text-[9px] text-gray-500">Weekly & Past</p></a>
 <a href="homework.html" class="bg-white rounded-xl p-3 border-2 border-black shadow-[2px_2px_0_0_#000]"><p class="font-black text-[12px]"><i class="fa-solid fa-robot text-green-600"></i> AI Homework</p><p class="text-[9px] text-gray-500">Snap & Solve</p></a>
 <a href="curriculum-designs.html" class="bg-white rounded-xl p-3 border-2 border-black shadow-[2px_2px_0_0_#000]"><p class="font-black text-[12px]"><i class="fa-solid fa-book-atlas text-teal-600"></i> Curriculum</p><p class="text-[9px] text-gray-500">KICD Designs</p></a>
 <a href="notes.html#setbooks" class="bg-white rounded-xl p-3 border-2 border-black shadow-[2px_2px_0_0_#000]"><p class="font-black text-[12px]"><i class="fa-solid fa-book-open text-orange-600"></i> Set Books</p><p class="text-[9px] text-gray-500">G7-9 Summaries</p></a>
-<a href="notes.html#videos" class="bg-white rounded-xl p-3 border-2 border-black shadow-[2px_2px_0_0_#000]"><p class="font-black text-[12px]"><i class="fa-solid fa-circle-play text-red-600"></i> Videos</p><p class="text-[9px] text-gray-500">CBC Lessons</p></a>
+<a href="ai.assistant.html" class="bg-white rounded-xl p-3 border-2 border-black shadow-[2px_2px_0_0_#000]"><p class="font-black text-[12px]"><i class="fa-solid fa-circle-play text-red-600"></i> AI Tutor</p><p class="text-[9px] text-gray-500">Ask Anything</p></a>
 </div>
 
 <div class="bg-white rounded-[1.5rem] p-4 border-2 border-black shadow-[3px_3px_0_0_#000]">
@@ -52,26 +52,24 @@ const app=initializeApp(cfg); window.FB={auth:getAuth(app),db:getFirestore(app),
 <div class="bg-[#fff7e0] border-2 border-black rounded-xl p-2.5"><p class="text-[8px] font-black opacity-60">YOUR CODE</p><p id="refCode" class="font-black text-[13px]">SHKE...</p><p class="text-[8px] mt-1">Get 100 pts / invite</p></div>
 <div class="bg-[#e8fff4] border-2 border-black rounded-xl p-2.5"><p class="text-[8px] font-black opacity-60">BALANCE</p><p class="font-black text-[13px]"><span id="ptsBal">0</span> pts = <span id="kesBal">0</span> KES</p><p class="text-[8px] mt-1">1000 pts = 100 KES</p></div>
 </div>
-<div class="mt-3 flex gap-2"><input id="refLink" readonly class="flex-1 bg-[#f6f6f7] border-2 border-black rounded-full p-2.5 text-[9px] font-bold"><button onclick="copyRef()" class="bg-black text-white px-4 rounded-full font-black text-[10px]">Copy Link 📋</button></div>
+<div class="mt-3 flex gap-2"><input id="refLink" readonly class="flex-1 bg-[#f6f6f7] border-2 border-black rounded-full p-2.5 text-[9px] font-bold"><button onclick="copyRef()" class="bg-black text-white px-4 rounded-full font-black text-[10px]">Copy 📋</button></div>
 <div class="mt-3 grid grid-cols-2 gap-2">
-<button onclick="copyCare()" class="bg-[#2ac5a0] border-2 border-black rounded-full py-2.5 font-black text-[10px]">Copy Care Link 🔗</button>
+<button onclick="navigator.clipboard.writeText(refLink.value);convMsg.innerText='✓ Copied'" class="bg-[#2ac5a0] border-2 border-black rounded-full py-2.5 font-black text-[10px]">Copy Care Link 🔗</button>
 <button onclick="convertPoints()" class="bg-[#ffcc1a] border-2 border-black rounded-full py-2.5 font-black text-[10px]">Convert 1000→100 KES</button>
 </div>
 <p id="convMsg" class="text-[10px] font-bold text-center mt-2 text-green-600"></p>
 </div>
 
-<div class="bg-black text-white rounded-[1.5rem] p-3 border-2 border-black flex gap-3 items-center"><img src="https://i.pravatar.cc/100?img=12" class="w-11 h-11 rounded-full border-2 border-white"><div class="flex-1"><p class="font-black text-[13px]">Customer Care - Admin</p><p class="text-[10px] opacity-60">Human Assistant • Mon-Sun</p><div class="mt-1 bg-[#2ac5a0] text-black px-3 py-1 rounded-full inline-block text-[10px] font-black">Tap to Chat</div></div></div>
+<a href="admin.html" class="bg-black text-white rounded-[1.5rem] p-3 border-2 border-black flex gap-3 items-center block"><img src="https://i.pravatar.cc/100?img=12" class="w-11 h-11 rounded-full border-2 border-white"><div class="flex-1"><p class="font-black text-[13px]">Customer Care - Admin</p><p class="text-[10px] opacity-60">Human Assistant • Mon-Sun</p><div class="mt-1 bg-[#2ac5a0] text-black px-3 py-1 rounded-full inline-block text-[10px] font-black">Tap to Chat →</div></div></a>
 
 <div class="grid grid-cols-2 gap-2 pt-2">
-<button onclick="window.location.href='profile.html'" class="bg-white border-2 border-black rounded-full py-3.5 font-black text-[11px] shadow-[2px_2px_0_0_#000]">Edit Profile</button>
+<button onclick="window.location.href='panel.html'" class="bg-white border-2 border-black rounded-full py-3.5 font-black text-[11px] shadow-[2px_2px_0_0_#000]">Edit Profile ⚙️</button>
 <button onclick="doLogout()" class="bg-black text-white border-2 border-black rounded-full py-3.5 font-black text-[11px] shadow-[2px_2px_0_0_#000]">Log Out + Reset</button>
 </div>
-<button onclick="localStorage.clear(); location.href='registration.html'" class="w-full mt-2 bg-[#ffe8e8] border-2 border-black rounded-full py-2 font-black text-[10px]">Clear Cache / Reset App 🔄</button>
 </div>
 </div>
 <script>
-function copyRef(){ navigator.clipboard.writeText(document.getElementById('refLink').value); document.getElementById('convMsg').innerText="✓ Link Copied!"; setTimeout(()=>convMsg.innerText="",2000); }
-function copyCare(){ navigator.clipboard.writeText(document.getElementById('refLink').value); document.getElementById('convMsg').innerText="✓ Care Link Copied!"; }
+function copyRef(){ navigator.clipboard.writeText(document.getElementById('refLink').value); document.getElementById('convMsg').innerText="✓ Link Copied!"; }
 async function convertPoints(){ let pts=parseInt(document.getElementById('ptsBal').innerText)||0; if(pts<1000) return convMsg.innerText="❌ Need 1000 pts"; if(!confirm("Convert 1000 → 100 KES?")) return; const FB=window.FB; let uid=localStorage.getItem('sh_uid')||FB.auth.currentUser?.uid; await FB.updateDoc(FB.doc(FB.db,"users",uid),{points:FB.increment(-1000),kesBalance:FB.increment(100)}); ptsBal.innerText=pts-1000; convMsg.innerText="✓ 100 KES Added - Admin will pay"; }
 function doLogout(){ if(!confirm('Log out and reset?')) return; FB.signOut(FB.auth).then(()=>{ localStorage.clear(); sessionStorage.clear(); location.href='registration.html'; }); }
 setTimeout(()=>{ const FB=window.FB; FB.onAuthStateChanged(FB.auth, async(u)=>{ if(!u) return location.href='registration.html'; let s=await FB.getDoc(FB.doc(FB.db,"users",u.uid)); if(s.exists()){ let d=s.data(); firstName.innerText=d.firstName||"Learner"; gradeShow.innerText=d.grade||"Grade 6"; indexShow.innerText=d.indexNumber||"SHKE"; refCode.innerText=d.indexNumber||"SHKE"; ptsBal.innerText=d.points||0; ptsBadge.innerText=(d.points||0)+" pts"; kesBal.innerText=d.kesBalance||0; refLink.value="https://somahub-kenya.vercel.app/registration.html?ref="+(d.indexNumber||""); localStorage.setItem('sh_index',d.indexNumber); localStorage.setItem('sh_uid',u.uid); } }); },600);
