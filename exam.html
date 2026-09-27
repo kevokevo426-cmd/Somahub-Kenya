@@ -2,127 +2,49 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Weekly Exams - Sat & Sun - 100 Marks</title>
+<title>Weekly Exams - Sat-Sun 100 Marks</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;800;900&display=swap" rel="stylesheet">
 <style>body{font-family:'Nunito',sans-serif;background:#f6f6f7}</style>
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-import { getFirestore, doc, getDoc, collection, getDocs, query, where, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+import { getFirestore, doc, getDoc, collection, getDocs, query, where } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 const cfg={apiKey:"AIzaSyA93BNes3AmFyxIEgjSbvbIWqLyorLsuj8",authDomain:"somahubkenya-9e458.firebaseapp.com",projectId:"somahubkenya-9e458",storageBucket:"somahubkenya-9e458.firebasestorage.app",messagingSenderId:"615579085715",appId:"1:615579085715:web:28fca37ba498324bb49666"};
-const app=initializeApp(cfg); window.FB={auth:getAuth(app),db:getFirestore(app),doc,getDoc,collection,getDocs,query,where,setDoc,serverTimestamp,onAuthStateChanged};
+const app=initializeApp(cfg); window.FB={auth:getAuth(app),db:getFirestore(app),doc,getDoc,collection,getDocs,query,where,onAuthStateChanged};
 </script>
 </head>
-<body class="flex justify-center">
-<div class="w-full max-w-[460px] bg-[#f6f6f7] min-h-screen pb-10">
-
+<body class="flex justify-center"><div class="w-full max-w-[460px] bg-[#f6f6f7] min-h-screen pb-10">
 <div class="h-2 flex"><div class="flex-1 bg-[#ff8a2a]"></div><div class="flex-1 bg-[#2ac5a0]"></div><div class="flex-1 bg-[#4a86ff]"></div><div class="flex-1 bg-[#ffcc1a]"></div></div>
-
 <div class="bg-white border-b-2 border-black p-3 flex justify-between items-center sticky top-0 z-40">
 <a href="student.html" class="bg-black text-white px-4 py-2 rounded-full font-black text-[11px]">← Back</a>
-<p class="font-black text-[13px]">📅 Weekly Exams</p>
+<p class="font-black text-[13px]">📝 Weekly Exams</p>
 <span id="indexB" class="bg-blue-600 text-white px-2 py-1 rounded-full text-[9px] font-black">SHKE...</span>
 </div>
-
 <div class="p-3 space-y-3">
-<!-- CLEAN INFO CARD -->
 <div class="bg-black text-white rounded-[1.3rem] p-4 border-2 border-black">
 <p class="font-black text-[15px]">Weekly Exam - Sat & Sun ONLY • 100 Marks</p>
-<div class="mt-3 space-y-1.5 text-[11px] leading-5">
-<p>✅ <b>Window:</b> Saturday 00:00 → Sunday 23:59 (2 Days)</p>
-<p>✅ <b>100 Marks:</b> Sec A 20 MCQ + Sec B 30 Short + Sec C 50 Long</p>
-<p>✅ <b>Timed:</b> 60 min • Correction visible to Admin & Parents</p>
-<p>✅ <b>Based on:</b> KICD Curriculum Design, Notes, AI</p>
+<p class="text-[10px] mt-2 leading-5 opacity-80">✅ Sat 00:00 → Sun 23:59 (2 Days) • 100 Marks Sec A 20 + B 30 + C 50 • 60 min • Admin & Parents see correction • Based on KICD + ICT + Foreign Lang</p>
 </div>
-<div class="mt-3 bg-[#ffcc1a] text-black rounded-full py-2 px-3 text-center font-black text-[10px]">NOT Daily Homework (10 Marks) — This is Proper 100 Marks Exam</div>
+<div class="bg-white rounded-xl p-3 border-2 border-black shadow-[2px_2px_0_0_#000] space-y-2">
+<div class="grid grid-cols-2 gap-2">
+<select id="gradeSel" class="bg-[#f6f6f7] border-2 border-black rounded-full p-2.5 font-black text-[11px]"><option>Grade 6</option><option>Grade 4</option><option>Grade 5</option><option>Grade 7</option><option>Grade 8</option><option>Grade 9</option><option>PP1</option><option>PP2</option><option>Grade 1</option><option>Grade 2</option><option>Grade 3</option></select>
+<select id="subSel" class="bg-[#f6f6f7] border-2 border-black rounded-full p-2.5 font-black text-[11px]"><option>All Subjects</option><option>Mathematics</option><option>English</option><option>Kiswahili</option><option>Science</option><option>SST</option><option>CRE</option><option>ICT & Coding</option><option>Foreign Language - French</option><option>Foreign Language - German</option><option>Foreign Language - Chinese</option></select>
 </div>
-
-<!-- FILTERS -->
-<div class="bg-white rounded-xl p-3 border-2 border-black shadow-[2px_2px_0_0_#000] grid grid-cols-2 gap-2">
-<select id="gradeSel" class="bg-[#f6f6f7] border-2 border-black rounded-full p-2.5 font-black text-[11px]"><option>Grade 6</option><option>Grade 4</option><option>Grade 5</option><option>Grade 7</option><option>Grade 8</option><option>Grade 9</option><option>PP1</option><option>PP2</option></select>
-<select id="subSel" class="bg-[#f6f6f7] border-2 border-black rounded-full p-2.5 font-black text-[11px]"><option>All Subjects</option><option>Mathematics</option><option>English</option><option>Kiswahili</option><option>Science</option><option>SST</option><option>CRE</option></select>
-<button onclick="loadExams()" class="col-span-2 bg-[#4a86ff] text-white border-2 border-black rounded-full py-3 font-black text-[11px]">🔍 Show This Week's Exam</button>
+<button onclick="loadExams()" class="w-full bg-[#4a86ff] text-white border-2 border-black rounded-full py-3 font-black text-[11px]">🔍 Show Exam - Sat-Sun 100 Marks</button>
 </div>
-
 <div id="weeklyInfo" class="bg-purple-50 border-2 border-purple-200 rounded-xl p-3 text-[10px] font-bold"></div>
 <div id="pendingBanner"></div>
 <div id="examsList" class="space-y-3"></div>
 </div>
 </div>
-
-<!-- MODALS (same logic but clean) -->
-<div id="onlineModal" class="hidden fixed inset-0 bg-black/80 z-[100] p-3 overflow-auto"><div class="bg-white rounded-[1.5rem] max-w-[460px] mx-auto mt-2 overflow-hidden border-2 border-black">
-<div class="bg-black text-white p-3 flex justify-between items-center"><div><h3 class="font-black text-[13px]">Weekly Exam - 100 Marks</h3><p class="text-[9px] opacity-60">Sat-Sun • Sections A B C</p></div><span id="timer" class="bg-red-600 px-3 py-1 rounded-full text-[11px] font-black">60:00</span></div>
-<div id="onlineQs" class="p-3 space-y-4 max-h-[70vh] overflow-y-auto"></div>
-<div class="p-3"><button onclick="submitOnline()" class="w-full bg-green-600 text-white py-3 rounded-full font-black text-[12px] border-2 border-black">✅ Submit Exam</button><button onclick="closeOnline()" class="w-full mt-2 bg-[#f6f6f7] border-2 border-black py-2 rounded-full text-[10px] font-black">Close</button></div>
-</div></div>
-
-<div id="resultModal" class="hidden fixed inset-0 bg-black/80 z-[110] p-3"><div class="bg-white rounded-[1.5rem] max-w-[460px] mx-auto mt-10 p-4 border-2 border-black"><h3 class="font-black">🎉 Marked!</h3><div id="resultBox" class="mt-3 bg-gray-50 p-3 rounded-xl text-[12px]"></div><button onclick="document.getElementById('resultModal').classList.add('hidden')" class="w-full mt-3 bg-black text-white py-3 rounded-full font-black text-[11px]">Close</button></div></div>
-
+<div id="onlineModal" class="hidden fixed inset-0 bg-black/80 z-[100] p-3 overflow-auto"><div class="bg-white rounded-[1.5rem] max-w-[460px] mx-auto mt-2 border-2 border-black overflow-hidden"><div class="bg-black text-white p-3 flex justify-between"><p class="font-black text-[12px]">Exam 100 Marks - Sat-Sun</p><span id="timer" class="bg-red-600 px-3 py-1 rounded-full text-[11px] font-black">60:00</span></div><div id="onlineQs" class="p-3 space-y-3 max-h-[70vh] overflow-auto"></div><div class="p-3"><button onclick="submitOnline()" class="w-full bg-green-600 text-white py-3 rounded-full font-black text-[11px] border-2 border-black">✅ Submit</button><button onclick="document.getElementById('onlineModal').classList.add('hidden')" class="w-full mt-2 bg-[#f6f6f7] border-2 border-black py-2 rounded-full text-[10px] font-black">Close</button></div></div></div>
 <script>
-let currentUser=null,currentSHKE="SHKE",timeLeft=3600,timerInt=null;
-function closeOnline(){document.getElementById('onlineModal').classList.add('hidden');clearInterval(timerInt);}
-
-function getSatSunRange(){
-  const today=new Date(); let day=today.getDay();
-  let sat=new Date(today); sat.setDate(today.getDate()+(6-day)); sat.setHours(0,0,0,0);
-  let sun=new Date(sat); sun.setDate(sat.getDate()+1); sun.setHours(23,59,59,0);
-  let isInWindow=today>=sat && today<=sun;
-  // If today already past Sunday, show next weekend
-  if(day>0 && day<6){ // Mon-Fri, window is upcoming Sat-Sun
-  }
-  return {sat,sun,isInWindow};
-}
-
-function updateCountdown(){
-  const {sat,sun,isInWindow}=getSatSunRange();
-  const now=new Date(); const diff=sun-now; const h=Math.floor(diff/3600000); const m=Math.floor((diff%3600000)/60000);
-  document.getElementById('weeklyInfo').innerHTML=`<p class="text-purple-700">📅 This Week: <b>${sat.toDateString()} Sat 00:00 → ${sun.toDateString()} Sun 23:59</b></p><p class="text-gray-600 mt-1">${isInWindow?`✅ OPEN NOW - ${h}h ${m}m left till Sunday 23:59`:`⏰ CLOSED - Opens Saturday ${sat.toDateString()}`} • Once a week only • SHKE ${currentSHKE}</p>`;
-}
-setInterval(updateCountdown,60000);
-
-async function loadExams(){
-  const FB=window.FB; const grade=document.getElementById('gradeSel').value; const sub=document.getElementById('subSel').value;
-  const {sat,sun,isInWindow}=getSatSunRange();
-  const list=document.getElementById('examsList'); const banner=document.getElementById('pendingBanner');
-  list.innerHTML="<p class='text-center py-4 text-[11px]'>Loading...</p>"; banner.innerHTML="";
-
-  let alreadyDone=false;
-  if(currentUser){
-    try{
-      const q=FB.query(FB.collection(FB.db,"exam_submissions"), FB.where("userId","==",currentUser.uid));
-      const snap=await FB.getDocs(q);
-      snap.forEach(d=>{let dd=new Date(d.data().date); if(dd>=sat && dd<=sun){alreadyDone=true;}});
-    }catch(e){}
-  }
-
-  if(!alreadyDone &&!isInWindow){
-    banner.innerHTML=`<div class="bg-orange-100 border-2 border-black rounded-xl p-3 text-center"><p class="font-black text-[12px]">⏰ Weekly Exam Opens Saturday</p><p class="text-[10px] mt-1">Window Sat ${sat.toDateString()} 00:00 → Sun ${sun.toDateString()} 23:59 only. Daily 10 marks homework is separate - check homework.html</p></div>`;
-  }else if(!alreadyDone && isInWindow){
-    banner.innerHTML=`<div class="bg-red-600 text-white border-2 border-black rounded-xl p-4"><p class="font-black">⚠️ PENDING WEEK 1 EXAM - ${currentSHKE}</p><p class="text-[10px] mt-1">Status: PENDING • Marks: 0/100 • Window: Sat-Sun 2 Days • Do before Sunday 23:59 • Admin & Parents see pending</p></div>`;
-  }else{
-    banner.innerHTML=`<div class="bg-green-600 text-white border-2 border-black rounded-xl p-3 text-center font-black text-[11px]">✅ WEEK 1 DONE - ${currentSHKE} - Admin & Parents can see correction</div>`;
-  }
-
-  // Load exams from Firestore
-  try{
-    let q; if(sub==="All Subjects") q=FB.query(FB.collection(FB.db,"resources"), FB.where("grade","==",grade), FB.where("type","==","Exam")); else q=FB.query(FB.collection(FB.db,"resources"), FB.where("grade","==",grade), FB.where("subject","==",sub), FB.where("type","==","Exam"));
-    let snap=await FB.getDocs(q);
-    list.innerHTML="";
-    if(snap.empty){ list.innerHTML=`<div class="bg-white border-2 border-dashed border-black rounded-xl p-4 text-center"><p class="font-black text-[11px]">No Exam Yet for ${grade} ${sub}</p><p class="text-[9px] text-gray-500 mt-1">Admin will add. But you can Generate with AI.</p><button onclick="generateWeeklyExam()" class="mt-3 bg-black text-white px-4 py-2 rounded-full text-[10px] font-black">Generate with AI</button></div>`; return; }
-    snap.forEach(d=>{
-      let ex=d.data();
-      list.innerHTML+=`<div class="bg-white border-2 border-black rounded-xl p-3 shadow-[2px_2px_0_0_#000]"><p class="font-black text-[12px]">${ex.subject||sub} - ${grade}</p><p class="text-[10px] text-gray-600">100 Marks • Sec A B C • 60 min</p><button onclick="openExam('${d.id}')" class="mt-2 w-full bg-[#4a86ff] text-white rounded-full py-2 font-black text-[10px] border-2 border-black">${isInWindow &&!alreadyDone? 'Start Exam →' : 'View'}</button></div>`;
-    });
-  }catch(e){ list.innerHTML=`<p class='text-center text-[10px] text-red-500'>Error loading exams</p>`; }
-}
-
-function openExam(id){ document.getElementById('onlineModal').classList.remove('hidden'); document.getElementById('onlineQs').innerHTML=`<p class='text-[11px]'>Loading exam ${id}... Connect to AI assistant</p>`; timeLeft=3600; timerInt=setInterval(()=>{timeLeft--; let mm=Math.floor(timeLeft/60),ss=timeLeft%60; document.getElementById('timer').innerText=`${mm}:${ss.toString().padStart(2,'0')}`; if(timeLeft<=0) submitOnline(); },1000); }
-function submitOnline(){ clearInterval(timerInt); document.getElementById('onlineModal').classList.add('hidden'); document.getElementById('resultModal').classList.remove('hidden'); document.getElementById('resultBox').innerHTML=`<p>Exam submitted! 100 Marks exam done for Sat-Sun window. Admin & Parents will see correction.</p>`; }
-function generateWeeklyExam(){ location.href='ai.assistant.html?type=weekly&marks=100'; }
-
-setTimeout(()=>{ const FB=window.FB; FB.onAuthStateChanged(FB.auth, async(u)=>{ if(u){ currentUser=u; let s=await FB.getDoc(FB.doc(FB.db,"users",u.uid)); if(s.exists()){ currentSHKE=s.data().indexNumber||"SHKE"; document.getElementById('indexB').innerText=currentSHKE; document.getElementById('gradeSel').value=s.data().grade||"Grade 6"; } updateCountdown(); loadExams(); } }); },600);
-updateCountdown();
+let currentUser=null,currentSHKE="SHKE",timerInt=null,timeLeft=3600;
+function getSatSun(){let t=new Date(),d=t.getDay(),sat=new Date(t);sat.setDate(t.getDate()+(6-d));sat.setHours(0,0,0,0);let sun=new Date(sat);sun.setDate(sat.getDate()+1);sun.setHours(23,59,59,0);return{sat,sun,isIn:sat<=t&&t<=sun};}
+function updInfo(){let{sat,sun,isIn}=getSatSun(),now=new Date(),diff=sun-now,h=Math.floor(diff/3600000);document.getElementById('weeklyInfo').innerHTML=`📅 ${sat.toDateString()} Sat → ${sun.toDateString()} Sun • ${isIn?`✅ OPEN NOW ${h}h left`:`⏰ Opens Saturday`} • SHKE ${currentSHKE}`;}
+async function loadExams(){let FB=window.FB,grade=gradeSel.value,sub=subSel.value,list=document.getElementById('examsList'),banner=document.getElementById('pendingBanner'),{sat,sun,isIn}=getSatSun(); list.innerHTML="<p class='text-center py-4 text-[11px]'>Loading...</p>"; banner.innerHTML=""; let done=false; if(currentUser){try{let q=FB.query(FB.collection(FB.db,"exam_submissions"),FB.where("userId","==",currentUser.uid));let s=await FB.getDocs(q);s.forEach(d=>{let dd=new Date(d.data().date); if(dd>=sat&&dd<=sun) done=true;});}catch(e){}} if(!isIn) banner.innerHTML=`<div class="bg-orange-100 border-2 border-black rounded-xl p-3 text-center font-black text-[11px]">⏰ Opens Saturday - Mon-Fri do Daily HW 10 Marks</div>`; else if(!done) banner.innerHTML=`<div class="bg-red-600 text-white border-2 border-black rounded-xl p-3 font-black text-[11px]">⚠️ PENDING WEEKLY EXAM - ${currentSHKE} - 0/100 - Do before Sun 23:59</div>`; else banner.innerHTML=`<div class="bg-green-600 text-white border-2 border-black rounded-xl p-3 text-center font-black text-[11px]">✅ DONE - ${currentSHKE}</div>`; try{let q; if(sub==="All Subjects") q=FB.query(FB.collection(FB.db,"resources"),FB.where("grade","==",grade),FB.where("type","==","Exam")); else q=FB.query(FB.collection(FB.db,"resources"),FB.where("grade","==",grade),FB.where("subject","==",sub),FB.where("type","==","Exam")); let snap=await FB.getDocs(q); list.innerHTML=""; if(snap.empty){list.innerHTML=`<div class="bg-white border-2 border-dashed border-black rounded-xl p-4 text-center"><p class="font-black text-[11px]">No Exam Yet for ${grade} ${sub}</p><button onclick="location.href='ai.assistant.html?type=weekly&subject=${encodeURIComponent(sub)}&grade=${grade}'" class="mt-3 bg-black text-white px-4 py-2 rounded-full text-[10px] font-black">Generate AI 100 Marks</button></div>`;return;} snap.forEach(d=>{let ex=d.data(); list.innerHTML+=`<div class="bg-white border-2 border-black rounded-xl p-3 shadow-[2px_2px_0_0_#000]"><p class="font-black text-[12px]">${ex.subject||sub} - ${grade}</p><p class="text-[9px] text-gray-500">100 Marks • Sec A B C • 60 min</p><button onclick="document.getElementById('onlineModal').classList.remove('hidden')" class="mt-2 w-full bg-[#4a86ff] text-white rounded-full py-2 font-black text-[10px] border-2 border-black">${isIn&&!done?'Start →':'View'}</button></div>`;});}catch(e){list.innerHTML="<p class='text-center text-[10px] text-red-500'>Error</p>";}}
+function submitOnline(){document.getElementById('onlineModal').classList.add('hidden'); alert('Submitted! 100 Marks - Admin & Parents will see');}
+setTimeout(()=>{let FB=window.FB; FB.onAuthStateChanged(FB.auth, async(u)=>{if(u){currentUser=u;let s=await FB.getDoc(FB.doc(FB.db,"users",u.uid));if(s.exists()){currentSHKE=s.data().indexNumber||"SHKE";indexB.innerText=currentSHKE;gradeSel.value=s.data().grade||"Grade 6";}updInfo();loadExams();}});},600); setInterval(updInfo,60000); updInfo();
 </script>
 </body></html>
