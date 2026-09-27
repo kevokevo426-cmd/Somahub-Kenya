@@ -1,157 +1,148 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
+<html><head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SomaHub - Student Portal PP1-G9</title>
+<title>Student Dashboard - SomaHub</title>
 <script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;800;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>body{font-family:'Nunito',sans-serif;background:#f6f6f7}
+@keyframes m{0%{transform:translateX(100%)}100%{transform:translateX(-100%)}}.marquee{animation:m 25s linear infinite}
+.note-card{background:#fff;border:2px solid #000;border-radius:16px;padding:10px 12px;display:flex;justify-content:space-between;align-items:center;height:58px;box-shadow:2px 2px 0 0 #000;margin-bottom:6px}
+</style>
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-import { getAuth, GoogleAuthProvider, signInWithPopup, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-import { getFirestore, doc, setDoc, getDoc, collection, getDocs, query, where, updateDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-const firebaseConfig = {
-  apiKey: "AIzaSyA93BNes3AmFyxIEgjSbvbIWqLyorLsuj8",
-  authDomain: "somahubkenya-9e458.firebaseapp.com",
-  projectId: "somahubkenya-9e458",
-  storageBucket: "somahubkenya-9e458.firebasestorage.app",
-  messagingSenderId: "615579085715",
-  appId: "1:615579085715:web:28fca37ba498324bb49666"
-};
-const app=initializeApp(firebaseConfig); const auth=getAuth(app); const db=getFirestore(app); const provider=new GoogleAuthProvider();
-window.FB={auth,db,provider,signInWithPopup,signInWithEmailAndPassword,createUserWithEmailAndPassword,onAuthStateChanged,signOut,doc,setDoc,getDoc,collection,getDocs,query,where,updateDoc,serverTimestamp};
+import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+const cfg={apiKey:"AIzaSyA93BNes3AmFyxIEgjSbvbIWqLyorLsuj8",authDomain:"somahubkenya-9e458.firebaseapp.com",projectId:"somahubkenya-9e458",storageBucket:"somahubkenya-9e458.firebasestorage.app",messagingSenderId:"615579085715",appId:"1:615579085715:web:28fca37ba498324bb49666"};
+const app=initializeApp(cfg); window.FB={auth:getAuth(app),db:getFirestore(app),doc,getDoc,onAuthStateChanged,signOut};
 </script>
 </head>
-<body class="bg-gray-50">
-<header class="bg-white shadow sticky top-0 z-50">
-<div class="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
-<a href="/" class="flex items-center gap-2"><i class="fa-solid fa-book-open text-green-600 text-xl"></i><span class="font-bold">SomaHub Students</span><span class="text-xs bg-green-100 px-2 py-1 rounded">PP1-G9</span></a>
-<div class="flex gap-2 items-center"><a href="/dashboard.html" class="text-xs bg-gray-100 px-3 py-2 rounded-full">Dashboard</a><a href="/teachers.html" class="text-xs bg-orange-100 px-3 py-2 rounded-full">Teachers</a><button id="authBtn" class="bg-green-600 text-white px-4 py-2 rounded-full text-sm font-bold">Login</button></div>
-</div>
-</header>
+<body class="flex justify-center"><div class="w-full max-w-[420px] bg-[#f6f6f7] min-h-screen">
 
-<section id="home" class="max-w-7xl mx-auto px-4 py-6">
-<div class="bg-gradient-to-r from-blue-600 to-indigo-700 rounded-2xl p-6 text-white mb-6">
-<h1 class="text-2xl font-bold">🎓 Student Portal - PP1 to Grade 9</h1>
-<p class="text-sm mt-1">Exams • Notes • AI Homework Helper • Video Lessons • Games</p>
-<div id="premiumBadge" class="hidden mt-3 bg-white text-blue-700 px-3 py-1 rounded-full text-xs inline-block font-bold">✅ PREMIUM ACTIVE - 3 Months</div>
-<div id="freeBadge" class="mt-3 bg-white/20 px-3 py-1 rounded-full text-xs inline-block">🔒 Subscribe 500 KES / 3 Months - Till 0701305109</div>
-</div>
-<h2 class="font-bold mb-3">Select Your Grade</h2>
-<div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-3 mb-8" id="gradeGrid"></div>
-<div class="grid md:grid-cols-3 gap-4">
-<div class="bg-white p-4 rounded-xl shadow border"><h3 class="font-bold">📝 Auto-Mark Exams</h3><p class="text-xs text-gray-600 mt-1">Do exams, get instant marks & corrections</p></div>
-<div class="bg-white p-4 rounded-xl shadow border"><h3 class="font-bold">🤖 AI Homework</h3><p class="text-xs text-gray-600 mt-1">Snap homework photo, AI explains</p></div>
-<div class="bg-white p-4 rounded-xl shadow border"><h3 class="font-bold">🎮 CBC Games</h3><p class="text-xs text-gray-600 mt-1">Learn Math & Science through games</p></div>
-</div>
-</section>
+<div class="h-2 flex"><div class="flex-1 bg-[#ff8a2a]"></div><div class="flex-1 bg-[#2ac5a0]"></div><div class="flex-1 bg-[#4a86ff]"></div><div class="flex-1 bg-[#ffcc1a]"></div></div>
 
-<section id="resView" class="hidden max-w-7xl mx-auto px-4 py-6">
-<button onclick="showHome()" class="mb-4 bg-gray-200 px-3 py-1 rounded text-sm">← Back to Grades</button>
-<h2 id="resTitle" class="text-xl font-bold mb-1"></h2>
-<p class="text-xs text-gray-500 mb-4">Choose subject</p>
-<div class="flex gap-2 mb-4 flex-wrap" id="subjectTabs"></div>
-<div id="resList" class="grid md:grid-cols-2 gap-3"></div>
-</section>
-
-<div id="authModal" class="hidden fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
-<div class="bg-white rounded-2xl p-6 w-full max-w-sm">
-<h3 class="font-bold mb-4">Student Login - PP1-G9</h3>
-<button id="gLogin" class="w-full border-2 py-2 rounded-full mb-3 text-sm font-bold"><i class="fa-brands fa-google text-red-500"></i> Continue with Google</button>
-<div class="text-center text-xs text-gray-400 my-2">OR</div>
-<input id="email" placeholder="Email" class="w-full border p-2 rounded mb-2 text-sm">
-<input id="pass" type="password" placeholder="Password" class="w-full border p-2 rounded mb-3 text-sm">
-<button id="eLogin" class="w-full bg-blue-600 text-white py-2 rounded-full font-bold text-sm">Login / Signup</button>
-<button onclick="closeMod()" class="w-full mt-3 text-xs text-gray-500">Cancel</button>
-<p class="text-[10px] text-center mt-3">No account? <a href="/registration.html" class="text-blue-600 font-bold">Register</a></p>
+<div class="bg-white border-b-2 border-black sticky top-0 z-40">
+<div class="p-3 flex items-center gap-2">
+<div class="w-10 h-10 rounded-full border-2 border-black bg-[#4a86ff] flex items-center justify-center overflow-hidden shrink-0">
+<img src="logo.png?v=9" class="w-full h-full object-cover" alt="" onerror="this.style.display='none'">
+<span class="font-black text-[12px]">S</span>
+</div>
+<div class="flex-1"><p class="font-black text-[14px] leading-none">Welcome, <span id="firstName">Learner</span>! 🎒</p><p class="text-[10px] font-bold text-gray-600"><span id="gradeShow">Grade 6</span> • Daily HW 10 Marks • Weekly 100 Marks</p></div>
+<div class="bg-black text-white border-2 border-black px-3 py-1 rounded-full shadow-[2px_2px_0_0_#000]"><p id="indexShow" class="font-black text-[10px]">SHKE00500</p></div>
+</div>
+<!-- BANNER AS REMINDER -->
+<div class="bg-black text-white overflow-hidden whitespace-nowrap border-y-2 border-black h-8 flex items-center">
+<div id="reminderBanner" class="marquee flex gap-8 text-[10px] font-black">
+<span>⏰ TODAY: Do your 10 Marks Daily Homework!</span>
+<span>📅 Weekly Exam Sun-Sun = 100 Marks — Don't miss!</span>
+<span>🤖 AI Homework Helper Ready — Snap & Solve</span>
+<span>📝 Mon-Fri HW • 📚 Notes • 📖 Exams • 🎮 Games</span>
+<span>💡 Complete HW early = More Points!</span>
+</div>
 </div>
 </div>
 
-<div id="subModal" class="hidden fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
-<div class="bg-white rounded-2xl p-6 w-full max-w-sm text-center">
-<h3 class="font-bold">🔓 Unlock All - 500 KES</h3>
-<p class="text-sm mt-2">Lipa <b>500 KES</b> to Till <b>0701305109</b></p>
-<p class="text-xs text-gray-500 mt-1">Buy Goods & Services</p>
-<input id="mpesa" placeholder="M-Pesa Code e.g QGH7..." class="w-full border p-3 rounded-xl mt-3 uppercase text-sm font-bold">
-<button onclick="submitMpesa()" class="w-full bg-green-600 text-white py-3 rounded-full mt-3 font-bold">Submit Code</button>
-<a href="/wallet.html" class="block w-full mt-2 border py-2 rounded-full text-sm">Go to Wallet</a>
-<button onclick="closeMod()" class="w-full mt-2 text-xs">Close</button>
+<div class="p-3">
+<!-- HOW TO USE -->
+<div class="bg-white rounded-[1.3rem] p-4 border-2 border-black shadow-[3px_3px_0_0_#000]">
+<p class="font-black text-[13px]">📘 How to use — Student</p>
+<div class="mt-3 space-y-2 text-[11px] font-bold">
+<p>1. Daily Homework: 10 Marks every Mon-Fri — Auto-marked, AI explains</p>
+<p>2. Weekly Exam: 100 Marks Sun-Sun — Revision + KICD Aligned</p>
+<p>3. AI Homework: Snap photo → Get correction + Notes link</p>
+<p>4. Notes & Exams: PP1 to Grade 9 — All subjects CBC/CBE</p>
+<p>5. Parent checks your work via your Index (SHKE...)</p>
+</div>
 </div>
 </div>
 
+<!-- DAILY HOMEWORK + WEEKLY EXAMS PLACE -->
+<div class="px-3 grid grid-cols-2 gap-2">
+<div class="bg-[#ffcc1a] border-2 border-black rounded-xl p-3 shadow-[2px_2px_0_0_#000]">
+<div class="flex justify-between items-center"><p class="font-black text-[12px]">📝 Daily HW</p><span id="hwStatus" class="bg-black text-white text-[8px] px-2 py-1 rounded-full">PENDING</span></div>
+<p class="text-[9px] font-bold mt-1">Mon-Fri • 10 Marks</p>
+<p id="hwToday" class="text-[10px] font-black mt-2">Today: Maths Fractions</p>
+<button onclick="openHW()" class="mt-2 w-full bg-black text-white rounded-full py-2 font-black text-[10px]">Do Now →</button>
+</div>
+<div class="bg-[#4a86ff] border-2 border-black rounded-xl p-3 shadow-[2px_2px_0_0_#000] text-white">
+<div class="flex justify-between items-center"><p class="font-black text-[12px]">📋 Weekly Exam</p><span class="bg-white text-black text-[8px] px-2 py-1 rounded-full">100 MARKS</span></div>
+<p class="text-[9px] font-bold mt-1 text-white/80">Sun-Sun • All Subjects</p>
+<p class="text-[10px] font-black mt-2">Grade <span class="gNum">6</span> • KPSEA Style</p>
+<button onclick="openWeekly()" class="mt-2 w-full bg-white text-black rounded-full py-2 font-black text-[10px]">Start Exam →</button>
+</div>
+</div>
+
+<div class="p-3">
+<div class="grid grid-cols-2 gap-2">
+<div class="bg-white border-2 border-black rounded-xl p-3 shadow-[2px_2px_0_0_#000]"><p class="font-black text-[12px]">🤖 AI Homework</p><p class="text-[9px] text-gray-500">Snap & Solve</p></div>
+<div class="bg-white border-2 border-black rounded-xl p-3 shadow-[2px_2px_0_0_#000]"><p class="font-black text-[12px]">✍️ Composition</p><p class="text-[9px] text-gray-500">Auto Mark</p></div>
+</div>
+</div>
+
+<div class="px-3">
+<p class="font-black text-[14px] mb-2">🚀 Quick Access — No Schemes</p>
+<div class="grid grid-cols-2 gap-2">
+<div onclick="showNotes('Notes')" class="bg-white rounded-xl p-3 border-2 border-black shadow-[2px_2px_0_0_#000]"><p class="font-black text-[12px]">📚 Notes</p><p class="text-[9px] text-gray-500">PP1-G9 Revision</p></div>
+<div onclick="showNotes('Exams')" class="bg-white rounded-xl p-3 border-2 border-black shadow-[2px_2px_0_0_#000]"><p class="font-black text-[12px]">📝 Exams</p><p class="text-[9px] text-gray-500">Past + Weekly</p></div>
+<div onclick="showNotes('Videos')" class="bg-white rounded-xl p-3 border-2 border-black shadow-[2px_2px_0_0_#000]"><p class="font-black text-[12px]">🎥 Video Lessons</p><p class="text-[9px] text-gray-500">CBC Explained</p></div>
+<div onclick="showNotes('Homework')" class="bg-white rounded-xl p-3 border-2 border-black shadow-[2px_2px_0_0_#000]"><p class="font-black text-[12px]">📖 Homework</p><p class="text-[9px] text-gray-500">Daily Auto 10 Marks</p></div>
+<div onclick="showNotes('Curriculum')" class="bg-white rounded-xl p-3 border-2 border-black shadow-[2px_2px_0_0_#000]"><p class="font-black text-[12px]">📜 Curriculum</p><p class="text-[9px] text-gray-500">KICD Aligned</p></div>
+<div onclick="showNotes('Set Books')" class="bg-white rounded-xl p-3 border-2 border-black shadow-[2px_2px_0_0_#000]"><p class="font-black text-[12px]">📕 Set Books</p><p class="text-[9px] text-gray-500">G7-9</p></div>
+</div>
+<div id="resList" class="mt-3"></div>
+</div>
+
+<div class="p-3 space-y-3">
+<div class="bg-white rounded-[1.3rem] p-3 border-2 border-black shadow-[3px_3px_0_0_#000]">
+<div class="flex justify-between"><p class="font-black text-[12px]">🎁 Referrals & Points</p><span id="ptsBadge" class="bg-black text-white px-2 py-1 rounded-full text-[9px] font-black">0 pts</span></div>
+<div class="mt-2 grid grid-cols-2 gap-2"><div class="bg-[#fff7e0] border-2 border-black rounded-xl p-2"><p class="text-[7px] font-black">YOUR CODE</p><p id="refCode" class="font-black text-[11px]">SHKE00500</p></div><div class="bg-[#e8f8ff] border-2 border-black rounded-xl p-2"><p class="text-[7px] font-black">BALANCE</p><p class="font-black text-[11px]"><span id="ptsBal">0</span> pts</p></div></div>
+<div class="mt-2 flex gap-2"><input id="refLink" readonly value="" class="flex-1 bg-[#f6f6f7] border-2 border-black rounded-full p-2 text-[9px] font-bold"><button onclick="copyRef()" class="bg-black text-white px-3 rounded-full font-black text-[9px]">Copy Link</button></div>
+</div>
+
+<div class="bg-black text-white rounded-[1.5rem] p-3 border-2 border-black flex gap-3 items-center"><img src="https://i.pravatar.cc/100?img=12" class="w-10 h-10 rounded-full border-2 border-white"><div class="flex-1"><p class="font-black text-[13px] leading-none">Customer Care - Admin</p><p class="text-[10px] opacity-60">Human Assistant • Mon-Fri + Weekly Help</p><div class="mt-1 bg-[#2ac5a0] text-black px-3 py-1 rounded-full inline-block text-[10px] font-black">Tap to Chat</div></div></div>
+
+<div class="grid grid-cols-2 gap-2 pt-2">
+<button onclick="window.location.href='profile.html'" class="bg-white border-2 border-black rounded-full py-3 font-black text-[11px] shadow-[2px_2px_0_0_#000] flex items-center justify-center gap-2"><i class="fa-solid fa-pen-to-square"></i> Edit Profile</button>
+<button onclick="doLogout()" class="bg-black text-white border-2 border-black rounded-full py-3 font-black text-[11px] shadow-[2px_2px_0_0_#000] flex items-center justify-center gap-2"><i class="fa-solid fa-right-from-bracket"></i> Log Out</button>
+</div>
+</div>
+
+</div>
 <script>
-const grades=["PP1","PP2","Grade 1","Grade 2","Grade 3","Grade 4","Grade 5","Grade 6","Grade 7","Grade 8","Grade 9"];
-const subjects=["All","Mathematics","English","Kiswahili","Science","SST","CRE"];
-let currentGrade="Grade 5"; let currentUser=null; let userData=null;
-const gradeGrid=document.getElementById('gradeGrid');
-grades.forEach(g=>{gradeGrid.innerHTML+=`<div onclick="openGrade('${g}')" class="bg-white p-4 rounded-xl shadow border hover:shadow-lg cursor-pointer text-center transition"><p class="font-bold text-sm">${g}</p><p class="text-[10px] text-gray-500 mt-1">Notes • Exams • Videos</p></div>`;});
-function showHome(){document.getElementById('home').classList.remove('hidden'); document.getElementById('resView').classList.add('hidden');}
-function openGrade(g){currentGrade=g; document.getElementById('home').classList.add('hidden'); document.getElementById('resView').classList.remove('hidden'); document.getElementById('resTitle').innerText=g+" Resources"; renderSubjects(); loadRes("All");}
-function renderSubjects(){const tabs=document.getElementById('subjectTabs'); tabs.innerHTML=""; subjects.forEach(s=>{tabs.innerHTML+=`<button onclick="loadRes('${s}')" id="tab-${s}" class="px-3 py-2 rounded-full text-xs border font-bold ${s==='All'?'bg-blue-600 text-white':''}">${s}</button>`;});}
-function closeMod(){document.getElementById('authModal').classList.add('hidden'); document.getElementById('subModal').classList.add('hidden');}
-
-async function loadRes(sub){
-const list=document.getElementById('resList'); list.innerHTML="<p class='text-sm'>Loading...</p>";
-document.querySelectorAll('#subjectTabs button').forEach(b=>b.classList.remove('bg-blue-600','text-white'));
-const active=document.getElementById('tab-'+sub); if(active) active.classList.add('bg-blue-600','text-white');
-try{
-const FB=window.FB;
-let q;
-if(sub==="All") q=FB.query(FB.collection(FB.db,"resources"), FB.where("grade","==",currentGrade));
-else q=FB.query(FB.collection(FB.db,"resources"), FB.where("grade","==",currentGrade), FB.where("subject","==",sub));
-const snap=await FB.getDocs(q);
-list.innerHTML="";
-if(snap.empty){list.innerHTML=`<div class="col-span-2 bg-white p-6 rounded-xl text-center"><p class="text-sm text-gray-500">No resources yet for ${currentGrade} - ${sub}.</p><p class="text-xs mt-2">Admin will add soon • Check <a href="/dashboard.html" class="text-blue-600">Dashboard</a></p></div>`; return;}
-snap.forEach(d=>{
-const r=d.data();
-const isPrem=userData?.isPremium;
-list.innerHTML+=`<div class="bg-white p-4 rounded-xl shadow border"><div class="flex justify-between"><span class="text-[10px] bg-blue-100 text-blue-700 px-2 py-1 rounded-full font-bold">${r.type||'Note'}</span><span class="text-[10px] text-gray-500">${r.subject||''} • ${r.grade||''}</span></div><h4 class="font-bold text-sm mt-2">${r.title||'Untitled'}</h4><p class="text-[11px] text-gray-500 mt-1">${r.description||''}</p><button onclick="downloadRes('${r.link||'#'}')" class="mt-3 w-full ${isPrem?'bg-green-600':'bg-gray-800'} text-white py-2 rounded-full text-xs font-bold">${isPrem?'📥 Download / View':'🔒 Subscribe (500 KES) to View'}</button></div>`;
-});
-}catch(e){list.innerHTML="<p class='text-xs text-red-500'>Error: "+e.message+"<br>Check Firestore Rules - allow read: if true</p>";}
+function showNotes(type){
+let title = type;
+document.getElementById('resList').innerHTML=`
+<div class="note-card"><div><p class="font-black text-[12px]">${title} - ${document.getElementById('gradeShow').innerText} Maths</p><p class="text-[9px] text-gray-500 font-bold">Auto • KICD</p></div><button class="bg-black text-white rounded-full px-4 py-1.5 font-black text-[10px]">Open</button></div>
+<div class="note-card"><div><p class="font-black text-[12px]">${title} - English Comprehension</p><p class="text-[9px] text-gray-500 font-bold">Daily HW 10 Marks</p></div><button class="bg-black text-white rounded-full px-4 py-1.5 font-black text-[10px]">Open</button></div>
+<div class="note-card"><div><p class="font-black text-[12px]">${title} - Science Revision</p><p class="text-[9px] text-gray-500 font-bold">Weekly 100 Marks</p></div><button class="bg-black text-white rounded-full px-4 py-1.5 font-black text-[10px]">Open</button></div>`;
 }
-function downloadRes(link){
-if(!currentUser){document.getElementById('authModal').classList.remove('hidden'); return;}
-if(!userData?.isPremium){document.getElementById('subModal').classList.remove('hidden'); return;}
-if(!link || link=='#') return alert("No file link");
-window.open(link,"_blank");
-}
+function openHW(){ alert("Daily Homework: 10 Marks — Opening..."); window.location.href="#homework"; }
+function openWeekly(){ alert("Weekly Exam 100 Marks Sun-Sun — Opening..."); window.location.href="#exams"; }
+function copyRef(){ navigator.clipboard.writeText(document.getElementById('refLink').value); alert("Copied!"); }
+function doLogout(){ if(confirm('Log out?')){ const FB=window.FB; FB.signOut(FB.auth).then(()=>{ localStorage.clear(); window.location.href='registration.html'; }); } }
 
 setTimeout(()=>{
 const FB=window.FB;
-document.getElementById('gLogin').onclick=async()=>{try{const r=await FB.signInWithPopup(FB.auth,FB.provider); handleNewUser(r.user);}catch(e){alert(e.message)}};
-document.getElementById('eLogin').onclick=async()=>{
-const em=document.getElementById('email').value.trim(), ps=document.getElementById('pass').value;
-if(!em||!ps) return alert("Fill email & password");
-try{const r=await FB.createUserWithEmailAndPassword(FB.auth,em,ps); await handleNewUser(r.user);}catch{try{await FB.signInWithEmailAndPassword(FB.auth,em,ps)}catch(e){alert(e.message)}};
-};
-document.getElementById('authBtn').onclick=()=>{if(currentUser) FB.signOut(FB.auth); else document.getElementById('authModal').classList.remove('hidden');};
-async function handleNewUser(user){
-const ref=FB.doc(FB.db,"users",user.uid); const snap=await FB.getDoc(ref);
-if(!snap.exists()){
-await FB.setDoc(ref,{email:user.email, displayName:user.displayName||"", role:"learner", grade:currentGrade, status:"pending", isPremium:false, mpesaCode:"", createdAt:FB.serverTimestamp()});
-}
-closeMod();
-}
 FB.onAuthStateChanged(FB.auth, async(u)=>{
-currentUser=u;
-if(u){
-document.getElementById('authBtn').innerText="Logout";
-const ref=FB.doc(FB.db,"users",u.uid); const snap=await FB.getDoc(ref);
-if(snap.exists()){userData=snap.data(); if(userData.isPremium){document.getElementById('premiumBadge').classList.remove('hidden'); document.getElementById('freeBadge').classList.add('hidden');}}
-else{userData={isPremium:false};}
-}else{document.getElementById('authBtn').innerText="Login"; userData=null; document.getElementById('premiumBadge').classList.add('hidden'); document.getElementById('freeBadge').classList.remove('hidden');}
+if(!u) return window.location.href='registration.html';
+try{
+const snap=await FB.getDoc(FB.doc(FB.db,"users",u.uid));
+if(snap.exists()){
+const d=snap.data();
+document.getElementById('firstName').innerText=d.firstName||d.email.split('@')[0];
+document.getElementById('gradeShow').innerText=d.grade||'Grade 6';
+document.querySelector('.gNum').innerText=(d.grade||'Grade 6').replace('Grade ','');
+document.getElementById('indexShow').innerText=d.indexNumber||'SHKE';
+document.getElementById('refCode').innerText=d.indexNumber||'SHKE';
+document.getElementById('ptsBal').innerText=d.points||0;
+document.getElementById('ptsBadge').innerText=(d.points||0)+' pts';
+document.getElementById('refLink').value='https://somahub-kenya.vercel.app/registration.html?ref='+d.indexNumber;
+// Reminder logic
+let now=new Date(); let day=now.getDay();
+if(day>=1 && day<=5){ document.getElementById('reminderBanner').innerHTML='<span>⏰ TODAY '+now.toLocaleDateString()+' — Do your 10 Marks Daily HW!</span><span>📝 Subject: Mathematics — 10 Marks Due Tonight 9pm</span><span>📋 Weekly Exam: 100 Marks — '+ (7-day)+' days left!</span>'; }
+}
+}catch(e){}
 });
 },600);
-
-async function submitMpesa(){
-const code=document.getElementById('mpesa').value.trim().toUpperCase(); if(!code) return alert("Enter code");
-if(!currentUser) return alert("Login first");
-const FB=window.FB;
-try{
-await FB.updateDoc(FB.doc(FB.db,"users",currentUser.uid),{mpesaCode:code, status:"pending_payment"});
-alert("✅ Submitted! Admin will approve in 5min. Till 0701305109"); closeMod(); location.reload();
-}catch(e){ alert("Error: "+e.message+"\nPublish new Firestore rules first!"); }
-}
-window.showHome=showHome; window.openGrade=openGrade; window.loadRes=loadRes; window.downloadRes=downloadRes; window.closeMod=closeMod; window.submitMpesa=submitMpesa;
 </script>
-</body>
-</html>
+</body></html>
