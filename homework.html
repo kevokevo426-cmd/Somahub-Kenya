@@ -1,8 +1,7 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
+<html><head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Daily HW - Mon-Fri - 10 Marks</title>
+<title>Daily HW - Mon-Fri 10 Marks</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;800;900&display=swap" rel="stylesheet">
 <style>body{font-family:'Nunito',sans-serif;background:#f6f6f7}</style>
@@ -16,69 +15,32 @@ const app=initializeApp(cfg); window.FB={auth:getAuth(app),db:getFirestore(app),
 </head>
 <body class="flex justify-center"><div class="w-full max-w-[460px] bg-[#f6f6f7] min-h-screen pb-10">
 <div class="h-2 flex"><div class="flex-1 bg-[#ff8a2a]"></div><div class="flex-1 bg-[#2ac5a0]"></div><div class="flex-1 bg-[#4a86ff]"></div><div class="flex-1 bg-[#ffcc1a]"></div></div>
-
 <div class="bg-white border-b-2 border-black p-3 flex justify-between items-center sticky top-0 z-40">
 <a href="student.html" class="bg-black text-white px-4 py-2 rounded-full font-black text-[11px]">← Back</a>
 <p class="font-black text-[13px]">📝 Daily HW</p>
 <span id="indexB" class="bg-blue-600 text-white px-2 py-1 rounded-full text-[9px] font-black">SHKE...</span>
 </div>
-
 <div class="p-3 space-y-3">
-<!-- CLEAN INFO -->
 <div class="bg-gradient-to-br from-green-600 to-emerald-700 text-white rounded-[1.5rem] p-5 border-2 border-black shadow-[3px_3px_0_0_#000]">
 <p class="font-black text-[16px]">📅 Daily HW - Mon to Fri ONLY - 10 Marks</p>
-<div class="mt-3 bg-white/15 rounded-xl p-3 text-[11px] leading-5">
-<p>✅ Mon-Fri: 10 Marks Daily (1 paper per day)</p>
-<p>❌ Saturday: No HW</p>
-<p>❌ Sunday: Rest Day - No HW (Do Weekly Exam / Notes / Search)</p>
-<p>⚠️ If miss Monday → Tuesday 20 Marks (Double)</p>
+<p class="text-[11px] mt-2">✅ Mon-Fri 10 Marks • ❌ Sat No HW • ❌ Sun Rest Day - Do Exam / Notes / ICT / Foreign Lang • If miss Mon → Tue 20 Marks</p>
 </div>
-<div class="mt-3 flex gap-2 flex-wrap">
-<span class="bg-white text-black px-3 py-1 rounded-full text-[9px] font-black">📅 Mon-Fri 10 Marks</span>
-<span class="bg-black text-white px-3 py-1 rounded-full text-[9px] font-black">Sat: No HW</span>
-<span class="bg-black text-white px-3 py-1 rounded-full text-[9px] font-black">Sun: Rest Day</span>
+<div class="bg-white rounded-xl p-3 border-2 border-black shadow-[2px_2px_0_0_#000] space-y-2">
+<div class="grid grid-cols-2 gap-2">
+<select id="gradeSel" class="bg-[#f6f6f7] border-2 border-black rounded-full p-2.5 font-black text-[11px]"><option>Grade 6</option><option>Grade 4</option><option>Grade 5</option><option>Grade 7</option><option>Grade 8</option><option>Grade 9</option></select>
+<select id="subSel" class="bg-[#f6f6f7] border-2 border-black rounded-full p-2.5 font-black text-[11px]"><option>All Subjects</option><option>Mathematics</option><option>English</option><option>Kiswahili</option><option>Science</option><option>SST</option><option>CRE</option><option>ICT & Coding</option><option>Foreign Language - French</option><option>Foreign Language - German</option><option>Foreign Language - Chinese</option></select>
 </div>
+<button onclick="loadHW()" class="w-full bg-black text-white border-2 border-black rounded-full py-3 font-black text-[11px]">🔍 Show Today's HW - Mon-Fri</button>
 </div>
-
-<div class="bg-white rounded-xl p-3 border-2 border-black shadow-[2px_2px_0_0_#000] grid grid-cols-2 gap-2">
-<select id="gradeSel" class="bg-[#f6f6f7] border-2 border-black rounded-full p-2.5 font-black text-[11px]"><option>Grade 6</option><option>Grade 4</option><option>Grade 5</option><option>Grade 7</option><option>Grade 8</option></select>
-<select id="subSel" class="bg-[#f6f6f7] border-2 border-black rounded-full p-2.5 font-black text-[11px]"><option>All Subjects</option><option>Mathematics</option><option>English</option><option>Kiswahili</option><option>Science</option></select>
-<button onclick="loadHW()" class="col-span-2 bg-black text-white border-2 border-black rounded-full py-3 font-black text-[11px]">🔍 Show Today's HW</button>
-</div>
-
 <div id="dayInfo" class="bg-white border-2 border-black rounded-xl p-3 text-[11px] font-bold text-center"></div>
 <div id="hwList" class="space-y-3"></div>
 </div>
 </div>
-
 <script>
-let currentUser=null,currentSHKE="SHKE";
-function getDayStatus(){
-  let d=new Date(); let day=d.getDay(); //0 Sun,6 Sat
-  if(day===0) return {msg:"😴 Today Sunday - Rest Day - No Daily HW. Do Weekly Exam (Sat-Sun 100 Marks) or Read Notes.", canDo:false, isSunday:true};
-  if(day===6) return {msg:"😴 Today Saturday - No Daily HW. Weekly Exam available Sat-Sun.", canDo:false, isSaturday:true};
-  return {msg:`✅ Today ${d.toLocaleDateString('en-US',{weekday:'long'})} - Daily HW Available - 10 Marks`, canDo:true};
-}
-function updateDayInfo(){
-  let s=getDayStatus(); document.getElementById('dayInfo').innerHTML=`<p>${s.msg}</p><p class="text-[9px] text-gray-500 mt-1">SHKE ${currentSHKE} • Mon-Fri 10 Marks • Sat-Sun No HW</p>`;
-}
-async function loadHW(){
-  let FB=window.FB; let grade=document.getElementById('gradeSel').value; let sub=document.getElementById('subSel').value;
-  let list=document.getElementById('hwList'); let status=getDayStatus();
-  if(!status.canDo){ list.innerHTML=`<div class="bg-white border-2 border-dashed border-black rounded-xl p-4 text-center"><p class="font-black text-[11px]">${status.isSunday?'Sunday Rest - Do Weekly Exam or Notes':'Saturday - No HW - Weekly Exam Sat-Sun'}</p><a href="${status.isSunday?'exam.html':'exam.html'}" class="mt-3 inline-block bg-[#4a86ff] text-white px-4 py-2 rounded-full text-[10px] font-black border-2 border-black">Go to Weekly Exam →</a></div>`; return; }
-  list.innerHTML="<p class='text-center py-4 text-[11px]'>Loading HW...</p>";
-  try{
-    let q; if(sub==="All Subjects") q=FB.query(FB.collection(FB.db,"resources"), FB.where("grade","==",grade), FB.where("type","==","Homework")); else q=FB.query(FB.collection(FB.db,"resources"), FB.where("grade","==",grade), FB.where("subject","==",sub), FB.where("type","==","Homework"));
-    let snap=await FB.getDocs(q);
-    list.innerHTML="";
-    if(snap.empty){ list.innerHTML=`<div class="bg-white border-2 border-black rounded-xl p-4 text-center shadow-[2px_2px_0_0_#000]"><p class="font-black text-[11px]">No HW Yet for ${grade} - ${sub}</p><p class="text-[9px] text-gray-500 mt-1">Teacher will add or generate with AI</p><button onclick="location.href='ai.assistant.html?type=homework&marks=10'" class="mt-3 bg-black text-white px-4 py-2 rounded-full text-[10px] font-black">Generate with AI - 10 Marks</button></div>`; return; }
-    snap.forEach(d=>{
-      let hw=d.data();
-      list.innerHTML+=`<div class="bg-white border-2 border-black rounded-xl p-3 shadow-[2px_2px_0_0_#000]"><div class="flex justify-between"><p class="font-black text-[12px]">${hw.subject||sub}</p><span class="bg-[#ffcc1a] px-2 py-0.5 rounded-full text-[8px] font-black border border-black">10 Marks</span></div><p class="text-[10px] text-gray-600 mt-1">${hw.title||'Daily Homework - Mon-Fri'}</p><button class="mt-2 w-full bg-black text-white rounded-full py-2 font-black text-[10px]">Do HW →</button></div>`;
-    });
-  }catch(e){ list.innerHTML="<p class='text-center text-[10px] text-red-500'>Error</p>"; }
-}
-setTimeout(()=>{ const FB=window.FB; FB.onAuthStateChanged(FB.auth, async(u)=>{ if(u){ currentUser=u; let s=await FB.getDoc(FB.doc(FB.db,"users",u.uid)); if(s.exists()){ currentSHKE=s.data().indexNumber||"SHKE"; document.getElementById('indexB').innerText=currentSHKE; document.getElementById('gradeSel').value=s.data().grade||"Grade 6"; } updateDayInfo(); loadHW(); } }); },600);
-updateDayInfo();
+let currentSHKE="SHKE";
+function getDay(){let d=new Date().getDay(); if(d===0) return{can:false,msg:"😴 Sunday Rest Day - No HW - Do Weekly Exam Sat-Sun or ICT / Foreign Lang Notes"}; if(d===6) return{can:false,msg:"😴 Saturday - No HW - Weekly Exam Sat-Sun available"}; return{can:true,msg:`✅ Today ${new Date().toLocaleDateString('en-US',{weekday:'long'})} - Daily HW 10 Marks Available`};}
+function updDay(){let s=getDay(); document.getElementById('dayInfo').innerHTML=`${s.msg}<br><span class="text-[9px] text-gray-500">SHKE ${currentSHKE} • Mon-Fri 10 Marks</span>`;}
+async function loadHW(){let FB=window.FB,grade=gradeSel.value,sub=subSel.value,list=document.getElementById('hwList'),day=getDay(); if(!day.can){list.innerHTML=`<div class="bg-white border-2 border-dashed border-black rounded-xl p-4 text-center"><p class="font-black text-[11px]">${day.msg}</p><a href="exam.html" class="mt-3 inline-block bg-[#4a86ff] text-white px-4 py-2 rounded-full text-[10px] font-black border-2 border-black">Go to Weekly Exam Sat-Sun →</a><div class="mt-2 flex gap-2 justify-center"><a href="ict.html" class="bg-black text-white px-3 py-1.5 rounded-full text-[9px] font-black">💻 ICT</a><a href="foreign-language.html" class="bg-black text-white px-3 py-1.5 rounded-full text-[9px] font-black">🌐 Foreign</a></div></div>`;return;} list.innerHTML="<p class='text-center py-4 text-[11px]'>Loading...</p>"; try{let q; if(sub==="All Subjects") q=FB.query(FB.collection(FB.db,"resources"),FB.where("grade","==",grade),FB.where("type","==","Homework")); else q=FB.query(FB.collection(FB.db,"resources"),FB.where("grade","==",grade),FB.where("subject","==",sub),FB.where("type","==","Homework")); let snap=await FB.getDocs(q); list.innerHTML=""; if(snap.empty){list.innerHTML=`<div class="bg-white border-2 border-black rounded-xl p-4 text-center shadow-[2px_2px_0_0_#000]"><p class="font-black text-[11px]">No HW Yet for ${grade} - ${sub}</p><button onclick="location.href='ai.assistant.html?type=homework&subject=${encodeURIComponent(sub)}&grade=${grade}'" class="mt-3 bg-black text-white px-4 py-2 rounded-full text-[10px] font-black">Generate AI 10 Marks</button></div>`;return;} snap.forEach(d=>{let hw=d.data(); list.innerHTML+=`<div class="bg-white border-2 border-black rounded-xl p-3 shadow-[2px_2px_0_0_#000]"><div class="flex justify-between"><p class="font-black text-[12px]">${hw.subject||sub}</p><span class="bg-[#ffcc1a] px-2 py-0.5 rounded-full text-[8px] font-black border border-black">10 Marks</span></div><p class="text-[10px] text-gray-600 mt-1">${hw.title||'Daily HW Mon-Fri'}</p><button class="mt-2 w-full bg-black text-white rounded-full py-2 font-black text-[10px]">Do HW →</button></div>`;});}catch(e){list.innerHTML="<p class='text-center text-[10px] text-red-500'>Error</p>";}}
+setTimeout(()=>{let FB=window.FB; FB.onAuthStateChanged(FB.auth, async(u)=>{if(u){let s=await FB.getDoc(FB.doc(FB.db,"users",u.uid)); if(s.exists()){currentSHKE=s.data().indexNumber||"SHKE"; indexB.innerText=currentSHKE; gradeSel.value=s.data().grade||"Grade 6";} updDay(); loadHW();}});},600); updDay();
 </script>
 </body></html>
