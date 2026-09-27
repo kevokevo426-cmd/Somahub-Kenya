@@ -25,7 +25,7 @@ const app=initializeApp(cfg); window.FB={auth:getAuth(app),db:getFirestore(app),
 <div class="flex-1"><p class="font-black text-[14px] leading-none">Hi, <span id="firstName">Learner</span>! 🎒</p><p class="text-[10px] font-bold text-gray-600"><span id="gradeShow">Grade 6</span> • Mon-Fri 10 + Sat-Sun 100</p></div>
 <div class="bg-black text-white border-2 border-black px-3 py-1 rounded-full"><p id="indexShow" class="font-black text-[10px]">SHKE...</p></div>
 </div>
-<div class="bg-black text-white overflow-hidden whitespace-nowrap border-y-2 border-black h-8 flex items-center"><div class="marquee flex gap-8 text-[10px] font-black"><span>⏰ TODAY: Mon-Fri 10 Marks Daily HW!</span><span>📋 SAT-SUN: Weekly 100 Marks Exam</span><span>💡 KICD Aligned • CBC & CBE • ICT & Foreign Lang</span></div></div>
+<div class="bg-black text-white overflow-hidden whitespace-nowrap border-y-2 border-black h-8 flex items-center"><div class="marquee flex gap-8 text-[10px] font-black"><span>⏰ TODAY: Mon-Fri 10 Marks Daily HW!</span><span>📋 SAT-SUN: Weekly 100 Marks Exam</span><span>🎮 NEW: Games - Play & Earn Points!</span><span>💡 KICD Aligned • CBC & CBE • ICT & Foreign Lang</span></div></div>
 </div>
 
 <div class="p-3 space-y-3">
@@ -41,14 +41,12 @@ const app=initializeApp(cfg); window.FB={auth:getAuth(app),db:getFirestore(app),
 <a href="notes.html" class="bg-white rounded-xl p-3 border-2 border-black shadow-[2px_2px_0_0_#000]"><p class="font-black text-[12px]"><i class="fa-solid fa-book text-purple-600"></i> Notes</p><p class="text-[9px] text-gray-500">PP1-G9 • KICD</p></a>
 <a href="exam.html" class="bg-white rounded-xl p-3 border-2 border-black shadow-[2px_2px_0_0_#000]"><p class="font-black text-[12px]"><i class="fa-solid fa-file-lines text-blue-600"></i> Exams</p><p class="text-[9px] text-gray-500">Sat-Sun 100 Marks</p></a>
 <a href="homework.html" class="bg-white rounded-xl p-3 border-2 border-black shadow-[2px_2px_0_0_#000]"><p class="font-black text-[12px]"><i class="fa-solid fa-robot text-green-600"></i> AI Homework</p><p class="text-[9px] text-gray-500">Mon-Fri 10 Marks</p></a>
+<a href="games.html" class="bg-[#ffcc1a] rounded-xl p-3 border-2 border-black shadow-[2px_2px_0_0_#000]"><p class="font-black text-[12px]"><i class="fa-solid fa-gamepad text-black"></i> Learning Games</p><p class="text-[9px] text-gray-700">Play & Earn 10 pts 🎮</p></a>
+<a href="ict.html" class="bg-[#e0f2ff] rounded-xl p-3 border-2 border-black shadow-[2px_2px_0_0_#000]"><p class="font-black text-[12px]"><i class="fa-solid fa-computer text-blue-600"></i> ICT / Coding</p><p class="text-[9px] text-gray-500">Computer, Internet, Coding</p></a>
+<a href="foreign-language.html" class="bg-[#ffe8f0] rounded-xl p-3 border-2 border-black shadow-[2px_2px_0_0_#000]"><p class="font-black text-[12px]"><i class="fa-solid fa-language text-pink-600"></i> Foreign Language</p><p class="text-[9px] text-gray-500">French, German, Chinese</p></a>
 <a href="curriculum-designs.html" class="bg-white rounded-xl p-3 border-2 border-black shadow-[2px_2px_0_0_#000]"><p class="font-black text-[12px]"><i class="fa-solid fa-book-atlas text-teal-600"></i> Curriculum</p><p class="text-[9px] text-gray-500">KICD Designs</p></a>
-
-<!-- NEW LEARNING AREAS -->
-<a href="notes.html?subject=ICT" class="bg-[#e0f2ff] rounded-xl p-3 border-2 border-black shadow-[2px_2px_0_0_#000]"><p class="font-black text-[12px]"><i class="fa-solid fa-computer text-blue-600"></i> ICT / Coding</p><p class="text-[9px] text-gray-500">Computer, Internet, Coding</p></a>
-<a href="notes.html?subject=Foreign" class="bg-[#ffe8f0] rounded-xl p-3 border-2 border-black shadow-[2px_2px_0_0_#000]"><p class="font-black text-[12px]"><i class="fa-solid fa-language text-pink-600"></i> Foreign Language</p><p class="text-[9px] text-gray-500">French, German, Chinese</p></a>
-
-<a href="notes.html#setbooks" class="bg-white rounded-xl p-3 border-2 border-black shadow-[2px_2px_0_0_#000]"><p class="font-black text-[12px]"><i class="fa-solid fa-book-open text-orange-600"></i> Set Books</p><p class="text-[9px] text-gray-500">G7-9 Summaries</p></a>
 <a href="ai.assistant.html" class="bg-white rounded-xl p-3 border-2 border-black shadow-[2px_2px_0_0_#000]"><p class="font-black text-[12px]"><i class="fa-solid fa-circle-play text-red-600"></i> AI Tutor</p><p class="text-[9px] text-gray-500">Ask Anything</p></a>
+<a href="notes.html#setbooks" class="bg-white rounded-xl p-3 border-2 border-black shadow-[2px_2px_0_0_#000] col-span-2"><p class="font-black text-[12px]"><i class="fa-solid fa-book-open text-orange-600"></i> Set Books - G7-9 Summaries</p><p class="text-[9px] text-gray-500">Fathers of Nations, etc • Free</p></a>
 </div>
 
 <div class="bg-white rounded-[1.5rem] p-4 border-2 border-black shadow-[3px_3px_0_0_#000]">
@@ -65,7 +63,6 @@ const app=initializeApp(cfg); window.FB={auth:getAuth(app),db:getFirestore(app),
 <p id="convMsg" class="text-[10px] font-bold text-center mt-2 text-green-600"></p>
 </div>
 
-<!-- FIXED: Customer Care now opens AI Assistant CARE CHAT, NOT admin.html -->
 <a href="ai.assistant.html?care=admin&shke=SHKE" id="careLink" class="bg-black text-white rounded-[1.5rem] p-3 border-2 border-black flex gap-3 items-center block">
 <img src="https://i.pravatar.cc/100?img=12" class="w-11 h-11 rounded-full border-2 border-white">
 <div class="flex-1"><p class="font-black text-[13px]">Customer Care - Assistant</p><p class="text-[10px] opacity-60">Human + AI • Mon-Sun • Chat here</p><div class="mt-1 bg-[#2ac5a0] text-black px-3 py-1 rounded-full inline-block text-[10px] font-black">Tap to Chat →</div></div>
