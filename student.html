@@ -22,26 +22,31 @@ const app=initializeApp(cfg); window.FB={auth:getAuth(app),db:getFirestore(app),
 <div class="bg-white border-b-2 border-black sticky top-0 z-40">
 <div class="p-3 flex items-center gap-2">
 <div class="w-10 h-10 rounded-full border-2 border-black bg-[#4a86ff] flex items-center justify-center overflow-hidden"><img src="logo.png" class="w-full h-full object-cover" onerror="this.style.display='none'"></div>
-<div class="flex-1"><p class="font-black text-[14px] leading-none">Hi, <span id="firstName">Learner</span>! 🎒</p><p class="text-[10px] font-bold text-gray-600"><span id="gradeShow">Grade 6</span> • Daily 10 + Weekly 100</p></div>
+<div class="flex-1"><p class="font-black text-[14px] leading-none">Hi, <span id="firstName">Learner</span>! 🎒</p><p class="text-[10px] font-bold text-gray-600"><span id="gradeShow">Grade 6</span> • Mon-Fri 10 + Sat-Sun 100</p></div>
 <div class="bg-black text-white border-2 border-black px-3 py-1 rounded-full"><p id="indexShow" class="font-black text-[10px]">SHKE...</p></div>
 </div>
-<div class="bg-black text-white overflow-hidden whitespace-nowrap border-y-2 border-black h-8 flex items-center"><div class="marquee flex gap-8 text-[10px] font-black"><span>⏰ TODAY: Do 10 Marks Daily HW!</span><span>📋 Weekly 100 Marks Sun-Sun</span><span>💡 KICD Aligned • CBC & CBE</span></div></div>
+<div class="bg-black text-white overflow-hidden whitespace-nowrap border-y-2 border-black h-8 flex items-center"><div class="marquee flex gap-8 text-[10px] font-black"><span>⏰ TODAY: Mon-Fri 10 Marks Daily HW!</span><span>📋 SAT-SUN: Weekly 100 Marks Exam</span><span>💡 KICD Aligned • CBC & CBE • ICT & Foreign Lang</span></div></div>
 </div>
 
 <div class="p-3 space-y-3">
 <div class="bg-white rounded-[1.3rem] p-4 border-2 border-black shadow-[3px_3px_0_0_#000]">
 <div class="grid grid-cols-2 gap-2">
 <div class="bg-[#ffcc1a] border-2 border-black rounded-xl p-3 shadow-[2px_2px_0_0_#000]"><p class="font-black text-[11px]">📝 Daily HW</p><p class="text-[8px] font-bold">Mon-Fri • 10 Marks</p><a href="homework.html" class="mt-2 block text-center w-full bg-black text-white rounded-full py-2 font-black text-[10px]">Do Now →</a></div>
-<div class="bg-[#4a86ff] border-2 border-black rounded-xl p-3 shadow-[2px_2px_0_0_#000] text-white"><p class="font-black text-[11px]">📋 Weekly Exam</p><p class="text-[8px] font-bold">Sun-Sun • 100 Marks</p><a href="exam.html" class="mt-2 block text-center w-full bg-white text-black rounded-full py-2 font-black text-[10px]">Start →</a></div>
+<div class="bg-[#4a86ff] border-2 border-black rounded-xl p-3 shadow-[2px_2px_0_0_#000] text-white"><p class="font-black text-[11px]">📋 Weekly Exam</p><p class="text-[8px] font-bold">Sat-Sun • 100 Marks</p><a href="exam.html" class="mt-2 block text-center w-full bg-white text-black rounded-full py-2 font-black text-[10px]">Start →</a></div>
 </div>
 </div>
 
 <p class="font-black text-[14px]">🚀 Quick Access</p>
 <div class="grid grid-cols-2 gap-2">
 <a href="notes.html" class="bg-white rounded-xl p-3 border-2 border-black shadow-[2px_2px_0_0_#000]"><p class="font-black text-[12px]"><i class="fa-solid fa-book text-purple-600"></i> Notes</p><p class="text-[9px] text-gray-500">PP1-G9 • KICD</p></a>
-<a href="exam.html" class="bg-white rounded-xl p-3 border-2 border-black shadow-[2px_2px_0_0_#000]"><p class="font-black text-[12px]"><i class="fa-solid fa-file-lines text-blue-600"></i> Exams</p><p class="text-[9px] text-gray-500">Weekly & Past</p></a>
-<a href="homework.html" class="bg-white rounded-xl p-3 border-2 border-black shadow-[2px_2px_0_0_#000]"><p class="font-black text-[12px]"><i class="fa-solid fa-robot text-green-600"></i> AI Homework</p><p class="text-[9px] text-gray-500">Snap & Solve</p></a>
+<a href="exam.html" class="bg-white rounded-xl p-3 border-2 border-black shadow-[2px_2px_0_0_#000]"><p class="font-black text-[12px]"><i class="fa-solid fa-file-lines text-blue-600"></i> Exams</p><p class="text-[9px] text-gray-500">Sat-Sun 100 Marks</p></a>
+<a href="homework.html" class="bg-white rounded-xl p-3 border-2 border-black shadow-[2px_2px_0_0_#000]"><p class="font-black text-[12px]"><i class="fa-solid fa-robot text-green-600"></i> AI Homework</p><p class="text-[9px] text-gray-500">Mon-Fri 10 Marks</p></a>
 <a href="curriculum-designs.html" class="bg-white rounded-xl p-3 border-2 border-black shadow-[2px_2px_0_0_#000]"><p class="font-black text-[12px]"><i class="fa-solid fa-book-atlas text-teal-600"></i> Curriculum</p><p class="text-[9px] text-gray-500">KICD Designs</p></a>
+
+<!-- NEW LEARNING AREAS -->
+<a href="notes.html?subject=ICT" class="bg-[#e0f2ff] rounded-xl p-3 border-2 border-black shadow-[2px_2px_0_0_#000]"><p class="font-black text-[12px]"><i class="fa-solid fa-computer text-blue-600"></i> ICT / Coding</p><p class="text-[9px] text-gray-500">Computer, Internet, Coding</p></a>
+<a href="notes.html?subject=Foreign" class="bg-[#ffe8f0] rounded-xl p-3 border-2 border-black shadow-[2px_2px_0_0_#000]"><p class="font-black text-[12px]"><i class="fa-solid fa-language text-pink-600"></i> Foreign Language</p><p class="text-[9px] text-gray-500">French, German, Chinese</p></a>
+
 <a href="notes.html#setbooks" class="bg-white rounded-xl p-3 border-2 border-black shadow-[2px_2px_0_0_#000]"><p class="font-black text-[12px]"><i class="fa-solid fa-book-open text-orange-600"></i> Set Books</p><p class="text-[9px] text-gray-500">G7-9 Summaries</p></a>
 <a href="ai.assistant.html" class="bg-white rounded-xl p-3 border-2 border-black shadow-[2px_2px_0_0_#000]"><p class="font-black text-[12px]"><i class="fa-solid fa-circle-play text-red-600"></i> AI Tutor</p><p class="text-[9px] text-gray-500">Ask Anything</p></a>
 </div>
@@ -60,7 +65,11 @@ const app=initializeApp(cfg); window.FB={auth:getAuth(app),db:getFirestore(app),
 <p id="convMsg" class="text-[10px] font-bold text-center mt-2 text-green-600"></p>
 </div>
 
-<a href="admin.html" class="bg-black text-white rounded-[1.5rem] p-3 border-2 border-black flex gap-3 items-center block"><img src="https://i.pravatar.cc/100?img=12" class="w-11 h-11 rounded-full border-2 border-white"><div class="flex-1"><p class="font-black text-[13px]">Customer Care - Admin</p><p class="text-[10px] opacity-60">Human Assistant • Mon-Sun</p><div class="mt-1 bg-[#2ac5a0] text-black px-3 py-1 rounded-full inline-block text-[10px] font-black">Tap to Chat →</div></div></a>
+<!-- FIXED: Customer Care now opens AI Assistant CARE CHAT, NOT admin.html -->
+<a href="ai.assistant.html?care=admin&shke=SHKE" id="careLink" class="bg-black text-white rounded-[1.5rem] p-3 border-2 border-black flex gap-3 items-center block">
+<img src="https://i.pravatar.cc/100?img=12" class="w-11 h-11 rounded-full border-2 border-white">
+<div class="flex-1"><p class="font-black text-[13px]">Customer Care - Assistant</p><p class="text-[10px] opacity-60">Human + AI • Mon-Sun • Chat here</p><div class="mt-1 bg-[#2ac5a0] text-black px-3 py-1 rounded-full inline-block text-[10px] font-black">Tap to Chat →</div></div>
+</a>
 
 <div class="grid grid-cols-2 gap-2 pt-2">
 <button onclick="window.location.href='panel.html'" class="bg-white border-2 border-black rounded-full py-3.5 font-black text-[11px] shadow-[2px_2px_0_0_#000]">Edit Profile ⚙️</button>
@@ -72,6 +81,6 @@ const app=initializeApp(cfg); window.FB={auth:getAuth(app),db:getFirestore(app),
 function copyRef(){ navigator.clipboard.writeText(document.getElementById('refLink').value); document.getElementById('convMsg').innerText="✓ Link Copied!"; }
 async function convertPoints(){ let pts=parseInt(document.getElementById('ptsBal').innerText)||0; if(pts<1000) return convMsg.innerText="❌ Need 1000 pts"; if(!confirm("Convert 1000 → 100 KES?")) return; const FB=window.FB; let uid=localStorage.getItem('sh_uid')||FB.auth.currentUser?.uid; await FB.updateDoc(FB.doc(FB.db,"users",uid),{points:FB.increment(-1000),kesBalance:FB.increment(100)}); ptsBal.innerText=pts-1000; convMsg.innerText="✓ 100 KES Added - Admin will pay"; }
 function doLogout(){ if(!confirm('Log out and reset?')) return; FB.signOut(FB.auth).then(()=>{ localStorage.clear(); sessionStorage.clear(); location.href='registration.html'; }); }
-setTimeout(()=>{ const FB=window.FB; FB.onAuthStateChanged(FB.auth, async(u)=>{ if(!u) return location.href='registration.html'; let s=await FB.getDoc(FB.doc(FB.db,"users",u.uid)); if(s.exists()){ let d=s.data(); firstName.innerText=d.firstName||"Learner"; gradeShow.innerText=d.grade||"Grade 6"; indexShow.innerText=d.indexNumber||"SHKE"; refCode.innerText=d.indexNumber||"SHKE"; ptsBal.innerText=d.points||0; ptsBadge.innerText=(d.points||0)+" pts"; kesBal.innerText=d.kesBalance||0; refLink.value="https://somahub-kenya.vercel.app/registration.html?ref="+(d.indexNumber||""); localStorage.setItem('sh_index',d.indexNumber); localStorage.setItem('sh_uid',u.uid); } }); },600);
+setTimeout(()=>{ const FB=window.FB; FB.onAuthStateChanged(FB.auth, async(u)=>{ if(!u) return location.href='registration.html'; let s=await FB.getDoc(FB.doc(FB.db,"users",u.uid)); if(s.exists()){ let d=s.data(); firstName.innerText=d.firstName||"Learner"; gradeShow.innerText=d.grade||"Grade 6"; indexShow.innerText=d.indexNumber||"SHKE"; refCode.innerText=d.indexNumber||"SHKE"; ptsBal.innerText=d.points||0; ptsBadge.innerText=(d.points||0)+" pts"; kesBal.innerText=d.kesBalance||0; refLink.value="https://somahub-kenya.vercel.app/registration.html?ref="+(d.indexNumber||""); document.getElementById('careLink').href=`ai.assistant.html?care=admin&shke=${d.indexNumber}&name=${d.firstName}`; localStorage.setItem('sh_index',d.indexNumber); localStorage.setItem('sh_uid',u.uid); } }); },600);
 </script>
 </body></html>
