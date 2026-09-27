@@ -1,94 +1,129 @@
 <!DOCTYPE html>
-<html><head>
+<html lang="en">
+<head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Super Admin - SomaHub</title>
+<title>Admin Overall - SomaHub Connects All Files SHKE00500</title>
 <script src="https://cdn.tailwindcss.com"></script>
-<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;800;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-<style>body{font-family:'Nunito',sans-serif;background:#f6f6f7}</style>
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-import { getFirestore, doc, getDoc, updateDoc, collection, getDocs, query, where, orderBy, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+import { getFirestore, doc, getDoc, setDoc, updateDoc, deleteDoc, collection, getDocs, query, where, serverTimestamp, addDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 const cfg={apiKey:"AIzaSyA93BNes3AmFyxIEgjSbvbIWqLyorLsuj8",authDomain:"somahubkenya-9e458.firebaseapp.com",projectId:"somahubkenya-9e458",storageBucket:"somahubkenya-9e458.firebasestorage.app",messagingSenderId:"615579085715",appId:"1:615579085715:web:28fca37ba498324bb49666"};
 const app=initializeApp(cfg); const auth=getAuth(app); const db=getFirestore(app);
-window.FB={auth,db,doc,getDoc,updateDoc,collection,getDocs,query,where,orderBy,serverTimestamp,onAuthStateChanged};
+window.FB={auth,db,onAuthStateChanged,doc,getDoc,setDoc,updateDoc,deleteDoc,addDoc,collection,getDocs,query,where,serverTimestamp};
 </script>
 </head>
-<body class="flex justify-center"><div class="w-full max-w-[600px] bg-[#f6f6f7] min-h-screen pb-10">
-<div class="h-2 flex"><div class="flex-1 bg-[#ff8a2a]"></div><div class="flex-1 bg-[#2ac5a0]"></div><div class="flex-1 bg-[#4a86ff]"></div><div class="flex-1 bg-[#ffcc1a]"></div></div>
-<div class="bg-black text-white p-3 flex justify-between items-center sticky top-0 z-50 border-b-2 border-black"><p class="font-black text-[13px]">🛡️ Super Admin - SomaHub</p><span class="bg-[#ffcc1a] text-black px-2 py-1 rounded-full text-[8px] font-black">ADMIN ONLY</span></div>
+<body class="bg-[#0a0a0a] text-white min-h-screen">
+<header class="bg-[#141414] border-b border-white/10 p-3 flex justify-between items-center sticky top-0 z-50">
+<div><h1 class="font-black text-[13px]">🛡️ ADMIN OVERALL - Connects All Files - SHKE00500+</h1><p class="text-[9px] text-gray-400">admin.html → student.html + teachers.html + parent.html + notes.html + curriculum-designs.html + exam.html + homework.html + schemes.html + lesson-plans.html + ict.html + foreign-language.html + games.html + care-chat.html + wallet.html + terms.html</p></div>
+<div class="flex gap-2"><span id="liveUsers" class="bg-green-500/20 text-green-400 text-[10px] px-3 py-1 rounded-full">Live: 0</span><a href="/panel.html" class="bg-white text-black px-3 py-1 rounded-full text-[10px] font-bold">DATA PANEL</a></div>
+</header>
 
-<div class="p-3 space-y-3">
-<div class="bg-white border-2 border-black rounded-xl p-2 flex gap-2 overflow-x-auto">
-<button onclick="showTab('tuition')" id="tabTuition" class="bg-black text-white px-4 py-2 rounded-full font-black text-[10px] whitespace-nowrap">🏠 Tuition - Student+Parent+Teacher</button>
-<button onclick="showTab('pending')" id="tabPending" class="bg-white border-2 border-black px-4 py-2 rounded-full font-black text-[10px] whitespace-nowrap">⏳ Pending Requests</button>
-<button onclick="showTab('approved')" id="tabApproved" class="bg-white border-2 border-black px-4 py-2 rounded-full font-black text-[10px] whitespace-nowrap">✅ Approved</button>
-<button onclick="showTab('teachers')" id="tabTeachers" class="bg-white border-2 border-black px-4 py-2 rounded-full font-black text-[10px] whitespace-nowrap">👩‍🏫 Teachers List</button>
+<div class="p-3 bg-black border-b border-white/10">
+<div class="flex gap-2 max-w-6xl mx-auto">
+<input id="globalSearch" placeholder="🔍 Search Tap - SHKE00500, name, M-Pesa, User ID, grade, tuition phone, notes title, subject..." class="flex-1 bg-[#1f1f1f] border-2 border-blue-500/30 p-3 rounded-xl text-xs outline-none" oninput="doSearch()">
+<button onclick="doSearch()" class="bg-blue-600 px-6 py-3 rounded-xl font-bold text-xs">🔍 Search All Files</button>
+</div>
 </div>
 
-<div id="tuitionBox" class="space-y-2 max-h-[800px] overflow-y-auto">Loading tuition - Teacher ↔ Learner Schooling...</div>
-<div id="pendingBox" class="hidden space-y-2"></div>
-<div id="approvedBox" class="hidden space-y-2"></div>
-<div id="teachersBox" class="hidden space-y-2"></div>
+<div class="flex gap-2 p-3 overflow-x-auto border-b border-white/10 text-[11px] sticky top-[66px] bg-[#0a0a0a] z-30">
+<button onclick="showTab('overview')" id="tOverview" class="bg-white text-black px-4 py-2 rounded-full font-bold">📊 Overview All</button>
+<button onclick="showTab('tuition')" id="tTuition" class="bg-[#ffcc1a] text-black px-4 py-2 rounded-full font-bold">🏠 Tuition SHKE <span id="tuitionCount" class="bg-black text-white px-1.5 rounded-full ml-1">0</span></button>
+<button onclick="showTab('students')" id="tStudents" class="bg-white/10 px-4 py-2 rounded-full">🎓 Students - student.html <span id="sCount" class="bg-blue-600 px-1.5 rounded-full">0</span></button>
+<button onclick="showTab('teachers')" id="tTeachers" class="bg-white/10 px-4 py-2 rounded-full">👩‍🏫 Teachers - teachers.html <span id="teCount" class="bg-yellow-600 px-1.5 rounded-full">0</span></button>
+<button onclick="showTab('parents')" id="tParents" class="bg-white/10 px-4 py-2 rounded-full">👨‍👩‍👧 Parents - parent.html <span id="pCount" class="bg-purple-600 px-1.5 rounded-full">0</span></button>
+<button onclick="showTab('subscriptions')" id="tSubscriptions" class="bg-yellow-500 text-black px-4 py-2 rounded-full font-bold">💰 Wallet Till 0701305109 - wallet.html <span id="subCount" class="bg-black text-white px-1.5 rounded-full">0</span></button>
+<button onclick="showTab('resources')" id="tResources" class="bg-purple-600 px-4 py-2 rounded-full font-bold">📚 Resources - notes.html + curriculum-designs.html + exam.html + schemes.html + lesson-plans.html + ict.html + foreign-language.html</button>
+<button onclick="showTab('homework')" id="tHomework" class="bg-white/10 px-4 py-2 rounded-full">📝 Homework - homework.html + exam.html</button>
+<button onclick="showTab('human')" id="tHuman" class="bg-green-600 px-4 py-2 rounded-full font-bold">💬 Inbox - care-chat.html + ai.assistant.html <span id="msgCount" class="bg-white text-green-600 px-1.5 rounded-full">0</span></button>
+</div>
 
-<div class="bg-white border-2 border-black rounded-xl p-3">
-<p class="font-black text-[11px]">Assign Teacher to Tuition - Enter IDs</p>
-<div class="mt-2 grid grid-cols-2 gap-2">
-<input id="assignDocId" placeholder="Doc ID of request" class="bg-[#f6f6f7] border-2 border-black rounded-full px-3 py-2 text-[10px] font-bold">
-<input id="assignTeacherId" placeholder="Teacher UserId (from users)" class="bg-[#f6f6f7] border-2 border-black rounded-full px-3 py-2 text-[10px] font-bold">
-<input id="assignTeacherName" placeholder="Teacher Name e.g Mr Kamau" class="bg-[#f6f6f7] border-2 border-black rounded-full px-3 py-2 text-[10px] font-bold col-span-2">
+<div id="tabOverview" class="p-4">
+<div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+<div class="bg-[#141414] border border-white/10 p-4 rounded-2xl text-center"><p class="text-[9px] text-gray-400">Students - student.html</p><p id="totalStudents" class="font-black text-xl">0</p><p class="text-[8px] text-blue-400">SHKE00500+ ordered</p></div>
+<div class="bg-[#141414] border border-white/10 p-4 rounded-2xl text-center"><p class="text-[9px] text-gray-400">Teachers - teachers.html</p><p id="totalTeachers" class="font-black text-xl">0</p><p class="text-[8px] text-yellow-400">User ID order</p></div>
+<div class="bg-[#141414] border border-white/10 p-4 rounded-2xl text-center"><p class="text-[9px] text-gray-400">Resources - notes.html etc</p><p id="totalResources" class="font-black text-xl">0</p><p class="text-[8px] text-purple-400">Notes/Designs/Exams</p></div>
+<div class="bg-[#141414] border border-red-500/30 p-4 rounded-2xl text-center"><p class="text-[9px] text-gray-400">Tuition - Teacher↔Learner</p><p id="pendingTuition" class="font-black text-xl text-red-400">0</p><p class="text-[8px]">Student+Parent+Teacher via SHKE</p></div>
 </div>
-<button onclick="assignTeacher()" class="w-full mt-2 bg-[#4a86ff] text-white border-2 border-black rounded-full py-2.5 font-black text-[10px]">✅ Approve + Assign Teacher - Student+Parent+Teacher Connected via SHKE</button>
-<p id="assignMsg" class="text-[9px] mt-2 font-bold text-green-600"></p>
+<div class="mt-4 grid md:grid-cols-3 gap-3 text-[10px]">
+<a href="student.html" class="bg-white text-black p-3 rounded-xl font-bold">🎓 student.html - Student portal SHKE</a>
+<a href="teachers.html" class="bg-[#ffcc1a] text-black p-3 rounded-xl font-bold">👩‍🏫 teachers.html - Teacher portal + Tuition assigned</a>
+<a href="parent.html" class="bg-purple-600 text-white p-3 rounded-xl font-bold">👨‍👩‍👧 parent.html - Parent SHKE + Request tuition</a>
+<a href="notes.html" class="bg-blue-600 text-white p-3 rounded-xl font-bold">📘 notes.html - Notes where info is</a>
+<a href="curriculum-designs.html" class="bg-teal-600 text-white p-3 rounded-xl font-bold">🎨 curriculum-designs.html - Designs KICD</a>
+<a href="exam.html" class="bg-red-600 text-white p-3 rounded-xl font-bold">📝 exam.html - Weekly 100 Marks</a>
+<a href="homework.html" class="bg-green-600 text-white p-3 rounded-xl font-bold">📝 homework.html - Daily 10 Marks Mon-Fri</a>
+<a href="schemes.html" class="bg-white/10 p-3 rounded-xl font-bold">🗂️ schemes.html - Teachers schemes</a>
+<a href="care-chat.html" class="bg-[#25d366] text-black p-3 rounded-xl font-bold">💬 care-chat.html - Human Assistant</a>
+</div>
+<div id="alertsOverview" class="mt-4 space-y-2 text-xs"></div>
+</div>
+
+<div id="tabTuition" class="hidden p-4">
+<div class="bg-[#141414] border border-[#ffcc1a]/30 p-4 rounded-2xl">
+<div class="flex justify-between"><p class="font-bold text-xs">🏠 Tuition - Teacher ↔ Learner - Student+Parent+Teacher via SHKE - Connects parent.html → teachers.html → student.html</p><button onclick="loadTuition()" class="bg-[#ffcc1a] text-black px-3 py-1 rounded-full text-xs font-bold">🔄 Reload</button></div>
+<div id="tuitionStatus" class="mt-2 bg-black border border-white/10 p-2 rounded-xl text-[10px]">Loading homeschooling_requests (NO orderBy - FIXED)...</div>
+<div id="tuitionList" class="mt-3 space-y-3"></div>
+<div class="mt-4 bg-black border border-white/10 p-4 rounded-xl">
+<p class="font-bold text-xs">✅ Approve + Assign Teacher - Student sees NO contact</p>
+<div class="grid md:grid-cols-3 gap-2 mt-3">
+<input id="assignDocId" placeholder="Doc ID" class="bg-[#1f1f1f] border border-white/10 p-3 rounded-xl text-xs">
+<input id="assignTeacherId" placeholder="Teacher UserId from teachers tab" class="bg-[#1f1f1f] border border-white/10 p-3 rounded-xl text-xs">
+<input id="assignTeacherName" placeholder="Teacher Name Mr Kamau" class="bg-[#1f1f1f] border border-white/10 p-3 rounded-xl text-xs">
+</div>
+<button onclick="assignTeacher()" class="w-full bg-[#ffcc1a] text-black py-3 rounded-xl font-bold mt-3 text-xs">✅ Assign - Student NO phone, Teacher HAS parent phone, Admin sees all</button>
+<p id="assignMsg" class="text-[10px] mt-2 text-green-400"></p>
 </div>
 </div>
 </div>
+
+<div id="tabStudents" class="hidden p-4"><div class="bg-[#141414] border border-white/10 p-4 rounded-2xl"><div class="flex justify-between"><p class="font-bold text-xs">🎓 Students - student.html SHKE00500+ - Monitors Daily 10 + Weekly 100</p><button onclick="loadStudents()" class="bg-white/10 px-3 py-1 rounded-full text-xs">Refresh</button></div><div id="studentList" class="mt-4 space-y-2"></div></div></div>
+<div id="tabTeachers" class="hidden p-4"><div class="bg-[#141414] border border-white/10 p-4 rounded-2xl"><div class="flex justify-between"><p class="font-bold text-xs">👩‍🏫 Teachers - teachers.html User ID + Tuition assigned + Schemes</p><button onclick="loadTeachers()" class="bg-white/10 px-3 py-1 rounded-full text-xs">Refresh</button></div><div id="teacherList" class="mt-4 space-y-2"></div></div></div>
+<div id="tabParents" class="hidden p-4"><div class="bg-[#141414] border border-white/10 p-4 rounded-2xl"><div class="flex justify-between"><p class="font-bold text-xs">👨‍👩‍👧 Parents - parent.html SHKE login + Request tuition</p><button onclick="loadParents()" class="bg-white/10 px-3 py-1 rounded-full text-xs">Refresh</button></div><div id="parentList" class="mt-4 space-y-2"></div></div></div>
+<div id="tabSubscriptions" class="hidden p-4"><div class="bg-[#141414] border border-yellow-500/30 p-4 rounded-2xl"><div class="flex justify-between"><p class="font-bold text-xs">💰 Wallet - wallet.html + Till 0701305109 - 500 KES → 90 days</p><button onclick="loadSubscriptions()" class="bg-yellow-500 text-black px-3 py-1 rounded-full text-xs font-bold">Refresh</button></div><div id="subscriptionList" class="mt-4 space-y-2"></div></div></div>
+<div id="tabResources" class="hidden p-4"><div class="bg-[#141414] border border-purple-500/30 p-4 rounded-2xl"><p class="font-bold text-xs">📚 Resources - Connects ALL: notes.html + curriculum-designs.html + exam.html + schemes.html + lesson-plans.html + ict.html + foreign-language.html + games.html</p><div class="mt-4 bg-black border border-white/10 p-4 rounded-xl"><p class="font-bold text-[11px]">➕ Add Resource - Notes / Design / Exam / Scheme / Lesson Plan / ICT / Foreign</p><div class="grid md:grid-cols-4 gap-2 mt-3"><input id="resTitle" placeholder="Title e.g Fractions" class="bg-[#1f1f1f] border border-white/10 p-3 rounded-xl text-xs col-span-2"><select id="resType" class="bg-[#1f1f1f] border border-white/10 p-3 rounded-xl text-xs"><option value="Notes">📘 Notes - notes.html where info is</option><option value="Design">🎨 Design - curriculum-designs.html</option><option value="Exam">📝 Exam - exam.html</option><option value="Homework">📝 Homework - homework.html 10 Marks FROM Notes</option><option value="Scheme">🗂️ Scheme - schemes.html</option><option value="LessonPlan">📋 Lesson Plan - lesson-plans.html</option><option value="ICT">💻 ICT/Coding - ict.html</option><option value="Foreign">🌍 Foreign Lang - foreign-language.html</option><option value="Game">🎮 Game - games.html</option></select><select id="resGrade" class="bg-[#1f1f1f] border border-white/10 p-3 rounded-xl text-xs"><option>PP1</option><option>PP2</option><option>Grade 1</option><option>Grade 2</option><option>Grade 3</option><option>Grade 4</option><option>Grade 5</option><option selected>Grade 6</option><option>Grade 7</option><option>Grade 8</option><option>Grade 9</option></select><select id="resSubject" class="bg-[#1f1f1f] border border-white/10 p-3 rounded-xl text-xs"><option>Mathematics</option><option>English</option><option>Kiswahili</option><option>Science</option><option>SST</option><option>Computer / ICT</option><option>French</option><option>German</option><option>Chinese</option><option>All Subjects</option></select></div><textarea id="resDesc" placeholder="Description where info is - Explain for SHKE student" class="w-full bg-[#1f1f1f] border border-white/10 p-3 rounded-xl text-xs mt-2 h-16"></textarea><input id="resUrl" placeholder="Drive / PDF / YouTube link where info is" class="w-full bg-[#1f1f1f] border border-white/10 p-3 rounded-xl text-xs mt-2"><button onclick="addResource()" class="w-full bg-purple-600 py-3 rounded-xl font-bold mt-3 text-xs">➕ Add to resources → shows in notes.html / exam.html etc</button></div><div id="resourceList" class="mt-4 space-y-2 max-h-[600px] overflow-y-auto"></div></div></div>
+<div id="tabHomework" class="hidden p-4"><div class="bg-[#141414] border border-white/10 p-4 rounded-2xl"><p class="font-bold text-xs">📝 Homework + Exams Monitor - homework.html + exam.html - Daily 10 Marks Mon-Fri FROM Notes</p><div id="dailyMonitorList" class="mt-4 space-y-2"></div></div></div>
+<div id="tabHuman" class="hidden p-4"><div class="bg-[#141414] border border-green-500/30 p-4 rounded-2xl"><p class="font-bold text-xs">💬 Human Inbox - care-chat.html + ai.assistant.html - Admin appears as human in 3 portals</p><div id="conversationList" class="mt-3 space-y-2"></div><div id="humanChatBox" class="mt-3 bg-black p-3 rounded-xl h-[300px] overflow-y-auto"></div></div></div>
+
 <script>
-let allRequests=[], teachersMap={};
+let teachersMap={}, allResCache=[], allTuition=[];
 function showTab(t){
- document.getElementById('tuitionBox').classList.toggle('hidden', t!=='tuition');
- document.getElementById('pendingBox').classList.toggle('hidden', t!=='pending');
- document.getElementById('approvedBox').classList.toggle('hidden', t!=='approved');
- document.getElementById('teachersBox').classList.toggle('hidden', t!=='teachers');
- ['tabTuition','tabPending','tabApproved','tabTeachers'].forEach(id=>{ document.getElementById(id).className=id==='tab'+t.charAt(0).toUpperCase()+t.slice(1)? "bg-black text-white px-4 py-2 rounded-full font-black text-[10px] whitespace-nowrap" : "bg-white border-2 border-black px-4 py-2 rounded-full font-black text-[10px] whitespace-nowrap"; });
-}
-async function loadTeachers(){
- let FB=window.FB; try{ let q=FB.query(FB.collection(FB.db,"users"), FB.where("role","==","teacher")); let snap=await FB.getDocs(q); let box=document.getElementById('teachersBox'); box.innerHTML=""; snap.forEach(d=>{ let t=d.data(); teachersMap[d.id]=t; box.innerHTML+=`<div class="bg-white border-2 border-black rounded-xl p-3"><p class="font-black text-[11px]">👩‍🏫 ${t.firstName||t.name||''} ${t.lastName||''} • ${t.indexNumber||d.id.slice(0,8)}</p><p class="text-[9px]">UserId: ${d.id} • Email: ${t.email||''} • Phone: ${t.phone||''}</p><p class="text-[8px] mt-1 opacity-60">Use UserId to assign tuition - Teacher ↔ Learner</p><button onclick="assignTeacherId.value='${d.id}'; assignTeacherName.value='${t.firstName||t.name||''}'; window.scrollTo(0,9999)" class="mt-2 bg-black text-white px-3 py-1 rounded-full text-[8px] font-black">Use This Teacher</button></div>`; }); }catch(e){ document.getElementById('teachersBox').innerHTML=`<p class="text-[9px]">${e.message}</p>`; }
+ ['overview','tuition','students','teachers','parents','subscriptions','resources','homework','human'].forEach(x=>{
+  let el=document.getElementById('tab'+x.charAt(0).toUpperCase()+x.slice(1)); if(el) el.classList.toggle('hidden', t!==x);
+ });
+ if(t==='students') loadStudents(); if(t==='teachers') loadTeachers(); if(t==='parents') loadParents(); if(t==='subscriptions') loadSubscriptions(); if(t==='resources') loadResources(); if(t==='tuition') loadTuition(); if(t==='homework') loadDaily(); if(t==='human') loadHuman();
 }
 async function loadTuition(){
- let FB=window.FB; let box=document.getElementById('tuitionBox'); let pendingBox=document.getElementById('pendingBox'); let approvedBox=document.getElementById('approvedBox'); box.innerHTML="Loading Teacher ↔ Learner Schooling - Student+Parent+Teacher via SHKE...";
+ let FB=window.FB; let box=document.getElementById('tuitionList'); let status=document.getElementById('tuitionStatus');
  try{
-  let q=FB.query(FB.collection(FB.db,"homeschooling_requests"), FB.orderBy("timestamp","desc"));
-  let snap=await FB.getDocs(q); allRequests=[]; snap.forEach(d=>allRequests.push({id:d.id,...d.data()}));
-  box.innerHTML=""; pendingBox.innerHTML=""; approvedBox.innerHTML="";
-  if(allRequests.length===0){ box.innerHTML=`<div class="bg-white border-2 border-black rounded-xl p-3 text-center"><p class="font-black text-[10px]">No tuition requests yet</p><p class="text-[8px]">Parent requests from parent.html → SHKE + Subject + Parent Phone + Location + Days + Reason</p></div>`; return; }
-  allRequests.forEach(r=>{
-   let teacherInfo = r.teacherId? (teachersMap[r.teacherId]? `${teachersMap[r.teacherId].firstName||''} ${teachersMap[r.teacherId].email||''}` : r.teacherName||r.teacherId) : "Not assigned yet";
-   let card=`<div class="bg-white border-2 border-black rounded-xl p-3 shadow-[2px_2px_0_0_#000]">
-   <div class="flex justify-between items-start"><div><p class="font-black text-[11px]">🔗 SHKE ${r.shke} • ${r.childName||''} • ${r.grade||''} • ${r.subject||''}</p><p class="text-[8px] opacity-60">DocId: ${r.id} • UserId: ${r.userId||''} • SHKE ${r.shke} - Student+Parent+Teacher connected</p></div><span class="${r.status==='approved'?'bg-green-500':'bg-yellow-400 text-black'} text-white px-2 py-0.5 rounded-full text-[7px] font-black">${r.status?.toUpperCase()}</span></div>
-   <div class="mt-2 bg-[#f6f6f7] border border-black rounded-xl p-2 text-[9px] leading-4"><p><b>Student:</b> ${r.childName||''} SHKE ${r.shke} Grade ${r.grade||''} UserId ${r.userId||''}</p><p><b>Parent Phone:</b> ${r.parentPhone||''} • <b>Location:</b> ${r.location||''} • <b>Days:</b> ${r.days||''}</p><p><b>Subject:</b> ${r.subject||''} • <b>Reason:</b> ${r.reason||''}</p><p class="mt-1"><b>Teacher Assigned:</b> ${teacherInfo} • ID ${r.teacherId||''} • Name ${r.teacherName||''}</p></div>
-   <div class="mt-2 flex gap-2"><button onclick="assignDocId.value='${r.id}'; window.scrollTo(0,9999)" class="flex-1 bg-black text-white rounded-full py-2 text-[8px] font-black">📌 Select to Assign Teacher</button><button onclick="approveOnly('${r.id}')" class="flex-1 bg-[#ffcc1a] text-black border-2 border-black rounded-full py-2 text-[8px] font-black">✅ Approve Only (No Teacher Yet)</button></div>
-   <p class="text-[7px] mt-2 opacity-60">Teacher ↔ Learner Schooling - Seen in Super Admin Student+Parent+Teacher via SHKE ${r.shke} - Student NO contact, Teacher HAS parent phone, Admin manages all</p>
-   </div>`;
-   box.innerHTML+=card;
-   if(r.status==='pending') pendingBox.innerHTML+=card;
-   if(r.status==='approved') approvedBox.innerHTML+=card;
+  let snap=await FB.getDocs(FB.collection(FB.db,"homeschooling_requests"));
+  let docs=[]; snap.forEach(d=>docs.push({id:d.id,...d.data()}));
+  allTuition=docs; document.getElementById('tuitionCount').innerText=docs.length; document.getElementById('pendingTuition').innerText=docs.filter(x=>x.status!=='approved').length;
+  status.innerText=`✅ Found ${docs.length} tuition - Student+Parent+Teacher via SHKE - NO index needed - Connects parent.html → teachers.html → student.html`;
+  box.innerHTML=""; if(docs.length===0){ box.innerHTML=`<p class="bg-black border border-white/10 p-4 rounded-xl text-xs text-center">No tuition yet - Parent requests in parent.html with SHKE + phone + location + days</p>`; return; }
+  docs.forEach(r=>{
+   let tShow = r.teacherId? (teachersMap[r.teacherId]?.firstName||r.teacherName||r.teacherId) : "Not assigned";
+   box.innerHTML+=`<div class="bg-black border border-white/10 p-3 rounded-xl"><div class="flex justify-between"><p class="font-bold text-xs">🔗 ${r.shke} • ${r.childName||''} • ${r.grade||''} • ${r.subject||''}</p><span class="${r.status==='approved'?'bg-green-600':'bg-yellow-500 text-black'} px-2 py-0.5 rounded-full text-[9px] font-bold">${(r.status||'pending').toUpperCase()}</span></div><p class="text-[10px] mt-2"><b>Student:</b> SHKE ${r.shke} UserId ${r.userId||''} • <b>Parent Phone:</b> ${r.parentPhone||''} • <b>Location:</b> ${r.location||''} • <b>Days:</b> ${r.days||''} • <b>Subject:</b> ${r.subject||''}</p><p class="text-[9px] text-gray-400"><b>Teacher:</b> ${tShow} ID ${r.teacherId||''} • Doc ${r.id} • Student NO contact, Teacher HAS parent phone</p><div class="flex gap-2 mt-2"><button onclick="assignDocId.value='${r.id}'; window.scrollTo(0,800)" class="bg-white text-black px-3 py-1 rounded-full text-[9px] font-bold">📌 Select</button><button onclick="approveOnly('${r.id}')" class="bg-[#ffcc1a] text-black px-3 py-1 rounded-full text-[9px] font-bold">Approve</button><button onclick="deleteTuition('${r.id}')" class="bg-red-600 px-3 py-1 rounded-full text-[9px] font-bold">Delete</button></div></div>`;
   });
-  if(!pendingBox.innerHTML) pendingBox.innerHTML=`<p class="bg-white border-2 border-black rounded-xl p-3 text-[9px] text-center">No pending</p>`;
-  if(!approvedBox.innerHTML) approvedBox.innerHTML=`<p class="bg-white border-2 border-black rounded-xl p-3 text-[9px] text-center">No approved yet</p>`;
- }catch(e){ box.innerHTML=`<p class="bg-[#ffeaea] border-2 border-black rounded-xl p-3 text-[9px]">${e.message}<br>Create index: homeschooling_requests timestamp DESC</p>`; }
+ }catch(e){ status.innerText="❌ "+e.message; }
 }
-async function approveOnly(docId){ let FB=window.FB; try{ await FB.updateDoc(FB.doc(FB.db,"homeschooling_requests", docId), {status:'approved', approvedAt:FB.serverTimestamp()}); document.getElementById('assignMsg').innerText=`✅ Approved ${docId} - Now assign teacher`; loadTuition(); }catch(e){ alert(e.message); } }
-async function assignTeacher(){
- let FB=window.FB; let docId=document.getElementById('assignDocId').value.trim(); let tId=document.getElementById('assignTeacherId').value.trim(); let tName=document.getElementById('assignTeacherName').value.trim(); if(!docId||!tId) return alert("Enter Doc ID + Teacher UserId");
- try{
-  let tDoc=await FB.getDoc(FB.doc(FB.db,"users", tId)); let tEmail=tDoc.exists()? (tDoc.data().email||'') : '';
-  await FB.updateDoc(FB.doc(FB.db,"homeschooling_requests", docId), {status:'approved', teacherId:tId, teacherName:tName, teacherEmail:tEmail, approvedAt:FB.serverTimestamp(), assignedBy:'admin', type:'home_tuition'});
-  document.getElementById('assignMsg').innerText=`✅ Assigned Teacher ${tName} (${tId}) to SHKE request ${docId} - Teacher ↔ Learner Schooling Student+Parent+Teacher connected via SHKE - Student sees NO phone, Teacher sees parent phone, Admin sees all`;
-  loadTuition();
- }catch(e){ alert(e.message); }
-}
-setTimeout(()=>{ let FB=window.FB; FB.onAuthStateChanged(FB.auth, async(u)=>{ if(!u) return; loadTeachers().then(()=>loadTuition()); }); },700);
+async function approveOnly(id){ let FB=window.FB; await FB.updateDoc(FB.doc(FB.db,"homeschooling_requests", id), {status:'approved'}); loadTuition(); }
+async function deleteTuition(id){ if(!confirm("Delete "+id+"?")) return; let FB=window.FB; await FB.deleteDoc(FB.doc(FB.db,"homeschooling_requests", id)); loadTuition(); }
+async function assignTeacher(){ let FB=window.FB; let docId=assignDocId.value.trim(), tId=assignTeacherId.value.trim(), tName=assignTeacherName.value.trim(); if(!docId||!tId) return alert("Doc ID + Teacher UserId"); let tDoc=await FB.getDoc(FB.doc(FB.db,"users", tId)); let tEmail=tDoc.exists()?tDoc.data().email||'':''; await FB.updateDoc(FB.doc(FB.db,"homeschooling_requests", docId), {status:'approved', teacherId:tId, teacherName:tName, teacherEmail:tEmail}); document.getElementById('assignMsg').innerText=`✅ Assigned ${tName} to ${docId}`; loadTuition(); }
+async function loadStudents(){ let FB=window.FB; let snap=await FB.getDocs(FB.collection(FB.db,"users")); let list=document.getElementById('studentList'); list.innerHTML=""; let c=0; snap.forEach(d=>{ let u=d.data(); if((u.role||'student')==='student'||!u.role){ c++; list.innerHTML+=`<div class="bg-black border border-white/10 p-3 rounded-xl flex justify-between"><div><p class="font-bold text-xs">${u.indexNumber||'No SHKE'} • ${u.firstName||''} • ${u.grade||''} - student.html</p><p class="text-[9px] text-gray-400">UserId ${d.id} • ${u.email||''}</p></div><button onclick="delUser('${d.id}')" class="bg-red-600 px-2 py-1 rounded-full text-[9px]">Delete</button></div>`; } }); document.getElementById('sCount').innerText=c; document.getElementById('totalStudents').innerText=c; document.getElementById('liveUsers').innerText=`Live: ${c} SHKE`; }
+async function loadTeachers(){ let FB=window.FB; let snap=await FB.getDocs(FB.collection(FB.db,"users")); let list=document.getElementById('teacherList'); list.innerHTML=""; let c=0; snap.forEach(d=>{ let u=d.data(); if((u.role||'').toLowerCase()==='teacher'){ c++; teachersMap[d.id]=u; list.innerHTML+=`<div class="bg-black border border-white/10 p-3 rounded-xl flex justify-between"><div><p class="font-bold text-xs">👩‍🏫 ${u.firstName||u.name||''} • ${u.email||''} - teachers.html</p><p class="text-[9px] text-gray-400">UserId ${d.id} • ${u.indexNumber||''}</p></div><button onclick="assignTeacherId.value='${d.id}'; assignTeacherName.value='${u.firstName||''}'; showTab('tuition')" class="bg-[#ffcc1a] text-black px-3 py-1 rounded-full text-[9px] font-bold">Assign Tuition</button></div>`; } }); document.getElementById('teCount').innerText=c; document.getElementById('totalTeachers').innerText=c; }
+async function loadParents(){ let FB=window.FB; let snap=await FB.getDocs(FB.collection(FB.db,"parent_chats")); let map={}; snap.forEach(d=>{ let v=d.data(); map[v.shke]=(map[v.shke]||0)+1; }); let list=document.getElementById('parentList'); list.innerHTML=""; Object.keys(map).forEach(k=>{ list.innerHTML+=`<div class="bg-black border border-white/10 p-3 rounded-xl"><p class="font-bold text-xs">👨‍👩‍👧 Parent SHKE ${k} - parent.html - ${map[k]} msgs</p></div>`; }); document.getElementById('pCount').innerText=Object.keys(map).length; }
+async function loadSubscriptions(){ let FB=window.FB; let snap=await FB.getDocs(FB.collection(FB.db,"subscriptions")); let list=document.getElementById('subscriptionList'); list.innerHTML=""; let p=0; snap.forEach(d=>{ let s=d.data(); if(s.status!=='approved') p++; list.innerHTML+=`<div class="bg-black border border-white/10 p-3 rounded-xl flex justify-between"><div><p class="font-bold text-xs">💰 ${s.shke||''} • ${s.mpesaCode||''} • ${s.amount||''} KES • ${s.status||''} - wallet.html Till 0701305109</p></div><div class="flex gap-2"><button onclick="approveSub('${d.id}')" class="bg-green-600 px-3 py-1 rounded-full text-[9px]">Approve 90d</button><button onclick="delSub('${d.id}')" class="bg-red-600 px-3 py-1 rounded-full text-[9px]">Delete</button></div></div>`; }); document.getElementById('subCount').innerText=p; }
+async function loadResources(){ let FB=window.FB; let snap=await FB.getDocs(FB.collection(FB.db,"resources")); let list=document.getElementById('resourceList'); list.innerHTML=""; let arr=[]; snap.forEach(d=>arr.push({id:d.id,...d.data()})); allResCache=arr; document.getElementById('totalResources').innerText=arr.length; arr.forEach(r=>{ list.innerHTML+=`<div class="bg-black border border-white/10 p-3 rounded-xl flex justify-between"><div><p class="font-bold text-xs">📚 ${r.title} • ${r.type} • ${r.grade} • ${r.subject} - Shows in ${r.type==='Notes'?'notes.html':r.type==='Design'?'curriculum-designs.html':r.type==='Exam'?'exam.html':r.type==='Scheme'?'schemes.html':r.type}</p><p class="text-[9px] text-gray-400">${r.url||'No URL'}</p></div><button onclick="delRes('${r.id}')" class="bg-red-600 px-3 py-1 rounded-full text-[9px]">Delete</button></div>`; }); }
+async function loadDaily(){ let FB=window.FB; let snap=await FB.getDocs(FB.collection(FB.db,"homework_submissions")); let list=document.getElementById('dailyMonitorList'); list.innerHTML=""; snap.forEach(d=>{ let s=d.data(); list.innerHTML+=`<div class="bg-black border border-white/10 p-2 rounded-xl text-[10px]">${s.userId||''} • ${s.subject||''} • ${s.score||0}/10 - homework.html daily FROM notes.html</div>`; }); }
+async function loadHuman(){ let FB=window.FB; let snap=await FB.getDocs(FB.collection(FB.db,"parent_chats")); let list=document.getElementById('conversationList'); list.innerHTML=""; snap.forEach(d=>{ let m=d.data(); list.innerHTML+=`<div class="bg-black border border-white/10 p-2 rounded-xl text-[10px]">${m.shke}: ${m.message.slice(0,50)} - care-chat.html</div>`; }); document.getElementById('msgCount').innerText=snap.size; }
+async function delUser(id){ if(!confirm("Delete "+id+"?")) return; let FB=window.FB; await FB.deleteDoc(FB.doc(FB.db,"users", id)); loadStudents(); loadTeachers(); }
+async function approveSub(id){ let FB=window.FB; await FB.updateDoc(FB.doc(FB.db,"subscriptions", id), {status:'approved'}); loadSubscriptions(); }
+async function delSub(id){ let FB=window.FB; await FB.deleteDoc(FB.doc(FB.db,"subscriptions", id)); loadSubscriptions(); }
+async function delRes(id){ let FB=window.FB; await FB.deleteDoc(FB.doc(FB.db,"resources", id)); loadResources(); }
+async function addResource(){ let FB=window.FB; let t=resTitle.value.trim(); if(!t) return alert("Title"); await FB.addDoc(FB.collection(FB.db,"resources"), {title:t, type:resType.value, grade:resGrade.value, subject:resSubject.value, description:resDesc.value, url:resUrl.value, createdAt:FB.serverTimestamp()}); loadResources(); }
+function doSearch(){ let term=globalSearch.value.toLowerCase(); if(term.length<2) return; showTab('tuition'); }
+setTimeout(()=>{ let FB=window.FB; FB.onAuthStateChanged(FB.auth, async()=>{ await loadTeachers(); await loadStudents(); await loadParents(); await loadSubscriptions(); await loadTuition(); await loadResources(); }); },900);
 </script>
 </body></html>
