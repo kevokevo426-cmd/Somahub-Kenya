@@ -9,10 +9,10 @@
 <style>body{font-family:'Nunito',sans-serif}</style>
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 import { getFirestore, doc, runTransaction, serverTimestamp, getDoc, updateDoc, increment } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 const cfg={apiKey:"AIzaSyA93BNes3AmFyxIEgjSbvbIWqLyorLsuj8",authDomain:"somahubkenya-9e458.firebaseapp.com",projectId:"somahubkenya-9e458",storageBucket:"somahubkenya-9e458.firebasestorage.app",messagingSenderId:"615579085715",appId:"1:615579085715:web:28fca37ba498324bb49666"};
-const app=initializeApp(cfg); window.FB={auth:getAuth(app),db:getFirestore(app),createUserWithEmailAndPassword,doc,runTransaction,serverTimestamp,getDoc,updateDoc,increment};
+const app=initializeApp(cfg); window.FB={auth:getAuth(app),db:getFirestore(app),createUserWithEmailAndPassword,signInWithEmailAndPassword,doc,runTransaction,serverTimestamp,getDoc,updateDoc,increment};
 </script>
 </head>
 <body class="min-h-screen bg-[#fef9f0] flex justify-center p-0">
@@ -21,7 +21,9 @@ const app=initializeApp(cfg); window.FB={auth:getAuth(app),db:getFirestore(app),
 <div class="p-5">
 <div class="flex items-center gap-2"><div class="w-8 h-8 bg-black rounded-full flex items-center justify-center text-white font-black">S</div><p class="font-black text-[18px]">SomaHub</p><span class="ml-auto text-[10px] bg-white border px-2 py-1 rounded-full">CBC • CBE</span></div>
 <h1 id="mainTitle" class="text-[30px] font-[900] mt-6 leading-none">Create account</h1>
-<p id="mainSub" class="text-[13px] text-gray-600 mt-2">Grade 1-9 • All genders • Fun + Serious</p>
+<!-- NEW CONVINCING STATEMENT -->
+<p id="mainSub" class="text-[13px] text-gray-700 mt-2 leading-snug font-bold">From Playgroup to Grade 9 — Preprimary, Lower, Upper & Junior School. One App, Every Class, Every Child. 🌟</p>
+
 <div id="roleBtns" class="flex gap-2 mt-5">
 <button type="button" id="bS" class="flex-1 bg-black text-white rounded-full py-3.5 text-[13px] font-black border-2 border-black">🎒 Student</button>
 <button type="button" id="bP" class="flex-1 bg-white text-black rounded-full py-3.5 text-[13px] font-black border-2 border-black">👪 Parent</button>
@@ -36,12 +38,14 @@ const app=initializeApp(cfg); window.FB={auth:getAuth(app),db:getFirestore(app),
 <label class="flex items-center gap-2 text-[12px] font-bold pt-1"><input id="terms" type="checkbox" class="w-5 h-5 rounded border-2 border-black"> I agree to <span onclick="openTerms()" class="underline text-[#4a86ff] cursor-pointer">Terms & Privacy</span></label>
 <button id="btn1" type="button" onclick="step1Go()" class="w-full bg-black text-white py-4 rounded-full font-black text-[15px] mt-2 active:scale-95">Confirm ✓</button>
 <p id="msg1" class="text-xs text-center text-red-500 font-bold"></p>
+<!-- LOGIN LINK - WHERE IS LOGIN -->
+<p class="text-center text-[13px] font-bold mt-3">Already have an account? <a href="index.html" class="underline text-[#4a86ff]">Log In here →</a></p>
 </div>
 </div>
 <div id="step2" class="hidden bg-white rounded-[2rem] p-5 mt-4 border-2 border-black shadow-[4px_4px_0px_0px_#000]">
 <h2 class="font-black">Additional information</h2><p id="roleLabel" class="text-[11px] text-gray-500 mb-3"></p>
 <div id="fs" class="space-y-2">
-<select id="sGrade" class="w-full bg-[#fef3c7] border-2 border-black rounded-2xl p-3.5 text-sm"><option>Grade 1</option><option>Grade 2</option><option>Grade 3</option><option>Grade 4</option><option>Grade 5</option><option selected>Grade 6</option><option>Grade 7</option><option>Grade 8</option><option>Grade 9</option></select>
+<select id="sGrade" class="w-full bg-[#fef3c7] border-2 border-black rounded-2xl p-3.5 text-sm"><option>Playgroup</option><option>PP1</option><option>PP2</option><option>Grade 1</option><option>Grade 2</option><option>Grade 3</option><option>Grade 4</option><option>Grade 5</option><option selected>Grade 6</option><option>Grade 7</option><option>Grade 8</option><option>Grade 9</option></select>
 <input id="sCountry" value="Kenya" placeholder="Country *" class="w-full bg-[#f6f3ff] border-2 border-black rounded-2xl p-3.5 text-sm">
 <input id="sCounty" placeholder="County *" class="w-full bg-[#e8f8ff] border-2 border-black rounded-2xl p-3.5 text-sm">
 <input id="sTown" placeholder="Town *" class="w-full bg-[#fff7e0] border-2 border-black rounded-2xl p-3.5 text-sm">
@@ -53,7 +57,7 @@ const app=initializeApp(cfg); window.FB={auth:getAuth(app),db:getFirestore(app),
 <input id="tTown" placeholder="Town *" class="w-full bg-[#fff7e0] border-2 border-black rounded-2xl p-3.5 text-sm">
 <input id="tSchool" placeholder="School *" class="w-full bg-white border-2 border-black rounded-2xl p-3.5 text-sm">
 <input id="tTSC" placeholder="TSC Number (Optional)" class="w-full bg-[#e8fff4] border-2 border-black rounded-2xl p-3.5 text-sm">
-<select id="tLevel" class="w-full bg-[#fef3c7] border-2 border-black rounded-2xl p-3.5 text-sm"><option>Lower Primary</option><option>Upper Primary</option><option>Junior Secondary</option></select>
+<select id="tLevel" class="w-full bg-[#fef3c7] border-2 border-black rounded-2xl p-3.5 text-sm"><option>Preprimary</option><option>Lower Primary</option><option>Upper Primary</option><option>Junior Secondary</option></select>
 </div>
 <div id="fp" class="hidden space-y-2">
 <input id="pIndex" placeholder="STUDENT INDEX e.g SHKE00500 *" class="w-full bg-[#fff7e0] border-2 border-black rounded-2xl p-3.5 text-sm uppercase font-black">
@@ -69,14 +73,9 @@ const app=initializeApp(cfg); window.FB={auth:getAuth(app),db:getFirestore(app),
 <h2 class="font-black text-[20px]">Terms & Privacy 📚</h2>
 <div class="text-[13px] mt-4 leading-6 space-y-3">
 <p>👉 <b>SomaHub is not meant to replace books and schools.</b></p>
-<p>👉 <b>Use SomaHub for quick study or revision at your convenience.</b></p>
-<p>👉 <b>Avoid misconduct.</b> No cheating, no abuse, no bad language.</p>
-<p>👉 <b>No sharing of personal data.</b> We never share your info. Student data is private.</p>
-<p>👉 <b>AI can make mistakes.</b> Teachers verify all marking. Don't rely only on AI.</p>
-<p>👉 <b>Complete your assignments.</b> Mon-Fri 10 marks daily, Weekly Sun-Sun 100 marks.</p>
-<p>👉 <b>Parents will check your work.</b> Parent account links via student index.</p>
-<p>👉 <b>No direct contact in the app,</b> concerns to human assistant only (Admin).</p>
-<p>👉 <b>The information we collect is to enhance our service</b> – County, Town, School helps us give you better CBC content.</p>
+<p>👉 <b>From Playgroup to Grade 9 - Preprimary to Junior School, all levels.</b></p>
+<p>👉 <b>Avoid misconduct.</b> No cheating, no abuse.</p>
+<p>👉 <b>No sharing of personal data.</b> Student data is private.</p>
 </div>
 <button onclick="closeTerms()" class="w-full bg-black text-white py-3.5 rounded-full font-black mt-6">I Understand ✓</button>
 </div>
@@ -98,7 +97,7 @@ let editMode=false, editId="";
   if(edit){
     editMode=true; editId=edit.toUpperCase();
     document.getElementById('mainTitle').innerText='Edit Profile ✏️';
-    document.getElementById('mainSub').innerText='Update your info - '+editId;
+    document.getElementById('mainSub').innerText='Update your info — Preprimary to Junior School (Playgroup to Grade 9) ✨';
     document.getElementById('roleBtns').classList.add('hidden');
     document.getElementById('step1').classList.add('hidden');
     document.getElementById('step2').classList.remove('hidden');
@@ -109,13 +108,6 @@ let editMode=false, editId="";
     document.getElementById('btnSave').classList.remove('hidden');
     document.getElementById('roleLabel').innerText='Teacher • '+editId;
     role='teacher';
-    // prefill from localStorage
-    try{
-      document.getElementById('tCountry').value=localStorage.getItem('sh_country')||'Kenya';
-      document.getElementById('tCounty').value=localStorage.getItem('sh_county')||'';
-      document.getElementById('tTown').value=localStorage.getItem('sh_town')||'';
-      document.getElementById('tSchool').value=localStorage.getItem('sh_school')||'Junior School';
-    }catch(e){}
   }
 })();
 async function step1Go(){
@@ -125,21 +117,9 @@ async function step1Go(){
  try{ const cr=await FB.createUserWithEmailAndPassword(FB.auth,email,pass); tmpUser=cr.user; tmpEmail=email; tmpReferral=referral; step1.classList.add('hidden'); step2.classList.remove('hidden'); roleLabel.innerText=role==='student'?'Student':role==='parent'?'Parent':'Teacher'; fs.classList.toggle('hidden',role!=='student'); fp.classList.toggle('hidden',role!=='parent'); ft.classList.toggle('hidden',role!=='teacher'); }catch(e){ msg1.innerText=e.message; btn1.innerText="Confirm ✓"; btn1.disabled=false; }
 }
 async function saveEdit(){
- const FB=window.FB;
- const ex={ country:tCountry.value.trim(), county:tCounty.value.trim(), town:tTown.value.trim(), school:tSchool.value.trim(), tsc:tTSC.value.trim(), level:tLevel.value };
- if(!ex.country||!ex.county||!ex.town||!ex.school) return msg2.innerText="Fill all fields";
- btnSave.innerText="Saving..."; btnSave.disabled=true;
- try{
-   const idx = editId || localStorage.getItem('sh_index');
-   // update users collection if logged in
-   try{
-     const uid = FB.auth.currentUser?.uid || localStorage.getItem('sh_uid');
-     if(uid) await FB.updateDoc(FB.doc(FB.db,"users",uid), {...ex});
-     if(idx) await FB.updateDoc(FB.doc(FB.db,"teacher_index",idx), {...ex});
-   }catch(e){ console.log(e); }
-   localStorage.setItem('sh_country',ex.country); localStorage.setItem('sh_county',ex.county); localStorage.setItem('sh_town',ex.town); localStorage.setItem('sh_school',ex.school);
-   alert('Profile Updated ✓'); window.location.href='/teachers.html';
- }catch(e){ msg2.innerText=e.message; btnSave.innerText="Save Changes ✓"; btnSave.disabled=false; }
+ const FB=window.FB; const ex={ country:tCountry.value.trim(), county:tCounty.value.trim(), town:tTown.value.trim(), school:tSchool.value.trim(), tsc:tTSC.value.trim(), level:tLevel.value };
+ if(!ex.country||!ex.county||!ex.town||!ex.school) return msg2.innerText="Fill all fields"; btnSave.innerText="Saving..."; btnSave.disabled=true;
+ try{ const idx = editId || localStorage.getItem('sh_index'); try{ const uid = FB.auth.currentUser?.uid || localStorage.getItem('sh_uid'); if(uid) await FB.updateDoc(FB.doc(FB.db,"users",uid), {...ex}); if(idx) await FB.updateDoc(FB.doc(FB.db,"teacher_index",idx), {...ex}); }catch(e){} localStorage.setItem('sh_country',ex.country); localStorage.setItem('sh_county',ex.county); localStorage.setItem('sh_town',ex.town); localStorage.setItem('sh_school',ex.school); alert('Profile Updated ✓'); window.location.href='/teachers.html'; }catch(e){ msg2.innerText=e.message; btnSave.innerText="Save Changes ✓"; btnSave.disabled=false; }
 }
 async function finalReg(){
  const FB=window.FB; let ex={referral:tmpReferral}, pre="SHKE", ctr="students", col="student_index", from=500;
@@ -148,23 +128,10 @@ async function finalReg(){
  else{ const idx=pIndex.value.trim().toUpperCase(); if(!idx) return msg2.innerText="Student Index required"; ex={...ex, childIndex:idx}; pre="SHKEP"; ctr="parents"; col="parent_index"; from=100; }
  btn2.innerText="Finishing..."; btn2.disabled=true;
  try{ let finalId=pre+String(from).padStart(5,'0'); await FB.runTransaction(FB.db, async(t)=>{ const r=FB.doc(FB.db,"counters",ctr); const s=await t.get(r); let n=from; if(s.exists()) n=s.data().count||from; finalId=pre+String(n).padStart(5,'0'); t.set(r,{count:n+1},{merge:true}); t.set(FB.doc(FB.db,"users",tmpUser.uid),{uid:tmpUser.uid,email:tmpEmail,role:role==='student'?'learner':role,indexNumber:finalId,points:0,kesBalance:0,referralsCount:0,...ex,createdAt:FB.serverTimestamp()}); t.set(FB.doc(FB.db,col,finalId),{indexNumber:finalId,userId:tmpUser.uid,email:tmpEmail,...ex,createdAt:FB.serverTimestamp()}); });
- if(tmpReferral){
-   try{
-     for(let colName of ["student_index","teacher_index","parent_index"]){
-       let snap = await FB.getDoc(FB.doc(FB.db, colName, tmpReferral));
-       if(snap.exists()){
-         let refUid = snap.data().userId;
-         await FB.updateDoc(FB.doc(FB.db, "users", refUid), {points: FB.increment(100), referralsCount: FB.increment(1)});
-         break;
-       }
-     }
-   }catch(e){ console.log("Referral award failed", e); }
- }
- try{ localStorage.setItem('sh_username', tmpEmail.split('@')[0]); localStorage.setItem('sh_role', role); localStorage.setItem('sh_index', finalId); localStorage.setItem('sh_grade', ex.grade||ex.level||'Grade 6'); localStorage.setItem('sh_points','0'); localStorage.setItem('sh_loggedIn','true'); localStorage.setItem('sh_uid', tmpUser.uid); localStorage.setItem('sh_country',ex.country||''); localStorage.setItem('sh_county',ex.county||''); localStorage.setItem('sh_town',ex.town||''); localStorage.setItem('sh_school',ex.school||''); }catch(e){}
- let redirectUrl = '/dashboard.html';
- if(role==='teacher') redirectUrl = '/teachers.html';
- if(role==='parent') redirectUrl = '/parent.html';
- document.body.innerHTML=`<div class="min-h-screen flex justify-center items-center p-6 bg-[#fef9f0]"><div class="bg-white border-2 border-black rounded-[2rem] p-8 max-w-[360px] w-full text-center shadow-[6px_6px_0px_0px_#000]"><div class="w-14 h-14 bg-[#2ac5a0] border-2 border-black rounded-full flex items-center justify-center mx-auto text-xl">✓</div><h2 class="font-black mt-4 text-xl">Account created!</h2><div class="mt-6 bg-black text-white p-4 rounded-2xl border-2 border-black"><p class="text-[10px] opacity-60">YOUR ADMISSION NUMBER</p><p class="text-2xl font-black mt-1 tracking-widest">${finalId}</p><button onclick="navigator.clipboard.writeText('${finalId}'); this.innerText='Copied!'" class="mt-2 bg-white text-black px-3 py-1 rounded-full text-[11px] font-black">Copy 📋</button></div><p class="text-[11px] mt-3">You used referral: <b>${tmpReferral||'None'}</b> - Owner got 100 points</p><button onclick="location.href='${redirectUrl}'" class="w-full bg-[#ffcc1a] border-2 border-black text-black py-3 rounded-full font-black text-sm mt-6">Go to dashboard 🚀</button></div></div>`; }catch(e){ msg2.innerText=e.message; btn2.innerText="Finish registration 🚀"; btn2.disabled=false; }
+ if(tmpReferral){ try{ for(let colName of ["student_index","teacher_index","parent_index"]){ let snap = await FB.getDoc(FB.doc(FB.db, colName, tmpReferral)); if(snap.exists()){ let refUid = snap.data().userId; await FB.updateDoc(FB.doc(FB.db, "users", refUid), {points: FB.increment(100), referralsCount: FB.increment(1)}); break; } } }catch(e){} }
+ try{ localStorage.setItem('sh_username', tmpEmail.split('@')[0]); localStorage.setItem('sh_role', role); localStorage.setItem('sh_index', finalId); localStorage.setItem('sh_grade', ex.grade||ex.level||'Grade 6'); localStorage.setItem('sh_points','0'); localStorage.setItem('sh_loggedIn','true'); localStorage.setItem('sh_uid', tmpUser.uid); }catch(e){}
+ let redirectUrl = '/dashboard.html'; if(role==='teacher') redirectUrl = '/teachers.html'; if(role==='parent') redirectUrl = '/parent.html';
+ document.body.innerHTML=`<div class="min-h-screen flex justify-center items-center p-6 bg-[#fef9f0]"><div class="bg-white border-2 border-black rounded-[2rem] p-8 max-w-[360px] w-full text-center shadow-[6px_6px_0px_0px_#000]"><div class="w-14 h-14 bg-[#2ac5a0] border-2 border-black rounded-full flex items-center justify-center mx-auto text-xl">✓</div><h2 class="font-black mt-4 text-xl">Account created!</h2><div class="mt-6 bg-black text-white p-4 rounded-2xl border-2 border-black"><p class="text-[10px] opacity-60">YOUR ADMISSION NUMBER</p><p class="text-2xl font-black mt-1 tracking-widest">${finalId}</p></div><button onclick="location.href='${redirectUrl}'" class="w-full bg-[#ffcc1a] border-2 border-black text-black py-3 rounded-full font-black text-sm mt-6">Go to dashboard 🚀</button></div></div>`; }catch(e){ msg2.innerText=e.message; btn2.innerText="Finish registration 🚀"; btn2.disabled=false; }
 }
 render();
 </script>
