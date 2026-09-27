@@ -5,7 +5,7 @@
 <script src="https://cdn.tailwindcss.com"></script>
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;800;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-<style>body{font-family:'Nunito',sans-serif;background:#f0fdf4}.no-scrollbar::-webkit-scrollbar{display:none}</style>
+<style>body{font-family:'Nunito',sans-serif;background:#f0fdf4}</style>
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import { getFirestore, doc, getDoc, setDoc, addDoc, updateDoc, collection, getDocs, query, where, orderBy, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
@@ -25,74 +25,59 @@ window.FB={db,doc,getDoc,setDoc,addDoc,updateDoc,collection,getDocs,query,where,
 </div>
 
 <div class="p-3 space-y-3">
-<!-- LOGIN -->
 <div id="loginBox" class="bg-white rounded-[1.5rem] p-6 border-2 border-black shadow-[3px_3px_0_0_#000] text-center">
 <div class="bg-[#4a86ff] w-14 h-14 rounded-full flex items-center justify-center mx-auto border-2 border-black"><i class="fa-solid fa-id-card text-white text-xl"></i></div>
 <h2 class="font-black text-[15px] mt-3">Enter Child SHKE Index</h2>
-<p class="text-[10px] text-gray-500 mt-1">You will see ONLY your child HW + correction + exams + weak & strong areas</p>
+<p class="text-[10px] text-gray-500 mt-1">You will see ONLY your child HW + correction + teacher assigned</p>
 <input id="indexInput" placeholder="SHKE00500" class="w-full bg-[#f6f6f7] border-2 border-black p-4 rounded-full text-center font-black text-[16px] mt-4 tracking-widest uppercase">
 <button onclick="parentLogin()" class="w-full bg-black text-white py-3.5 rounded-full font-black mt-3 text-[11px]">🔓 Login - See My Child Only</button>
 </div>
 
-<!-- DASHBOARD -->
 <div id="dashboard" class="hidden space-y-3">
 <div class="bg-white rounded-[1.5rem] p-4 border-2 border-black shadow-[3px_3px_0_0_#000]">
 <div class="flex justify-between"><div><p class="font-black text-[13px]" id="childName">Child...</p><p class="text-[10px] text-gray-600" id="childInfo">Grade...</p><p class="text-[9px] bg-black text-white inline px-2 py-0.5 rounded-full mt-1 font-bold" id="indexDisplay">SHKE</p></div><button onclick="logoutParent()" class="bg-black text-white px-3 py-1.5 rounded-full text-[9px] font-black h-fit">Logout</button></div>
 </div>
 
-<!-- STRENGTH & WEAK - NEW -->
 <div class="grid grid-cols-2 gap-2">
-<div class="bg-[#dcfce7] border-2 border-black rounded-xl p-3 shadow-[1px_1px_0_0_#000]">
-<p class="font-black text-[10px]">💪 Strength</p>
-<div id="strongList" class="text-[9px] mt-2 font-bold leading-4">Loading...</div>
-</div>
-<div class="bg-[#ffeaea] border-2 border-black rounded-xl p-3 shadow-[1px_1px_0_0_#000]">
-<p class="font-black text-[10px]">⚠️ Weak Areas</p>
-<div id="weakList" class="text-[9px] mt-2 font-bold leading-4">Loading...</div>
-</div>
+<div class="bg-[#dcfce7] border-2 border-black rounded-xl p-3 shadow-[1px_1px_0_0_#000]"><p class="font-black text-[10px]">💪 Strength</p><div id="strongList" class="text-[9px] mt-2 font-bold leading-4">Loading...</div></div>
+<div class="bg-[#ffeaea] border-2 border-black rounded-xl p-3 shadow-[1px_1px_0_0_#000]"><p class="font-black text-[10px]">⚠️ Weak Areas</p><div id="weakList" class="text-[9px] mt-2 font-bold leading-4">Loading...</div></div>
 </div>
 
-<div class="bg-[#fff7e0] border-2 border-black rounded-xl p-3 shadow-[1px_1px_0_0_#000]">
-<p class="font-black text-[10px]">💡 Suggestions for Weak Areas</p>
-<div id="suggestionList" class="text-[9px] mt-2 space-y-2">Loading suggestions + notes link where info is...</div>
-</div>
+<div class="bg-[#fff7e0] border-2 border-black rounded-xl p-3 shadow-[1px_1px_0_0_#000]"><p class="font-black text-[10px]">💡 Suggestions for Weak Areas</p><div id="suggestionList" class="text-[9px] mt-2 space-y-2">Loading...</div></div>
 
-<!-- Tabs Daily / Weekly -->
 <div class="bg-white rounded-[1.2rem] border-2 border-black shadow-[2px_2px_0_0_#000] overflow-hidden">
 <div class="flex border-b-2 border-black">
-<button onclick="showTab('daily')" id="tabDaily" class="flex-1 bg-black text-white py-3 font-black text-[10px]">📝 Daily HW - How Done + Correction</button>
-<button onclick="showTab('weekly')" id="tabWeekly" class="flex-1 bg-white py-3 font-black text-[10px]">📅 Exams Performance</button>
+<button onclick="showTab('daily')" id="tabDaily" class="flex-1 bg-black text-white py-3 font-black text-[10px]">📝 Daily HW - Correction</button>
+<button onclick="showTab('weekly')" id="tabWeekly" class="flex-1 bg-white py-3 font-black text-[10px]">📅 Exams</button>
 </div>
-<div class="p-3">
-<div id="dailyHWList" class="space-y-2 max-h-[500px] overflow-y-auto"></div>
-<div id="weeklyList" class="hidden space-y-2 max-h-[500px] overflow-y-auto"></div>
-</div>
+<div class="p-3"><div id="dailyHWList" class="space-y-2 max-h-[500px] overflow-y-auto"></div><div id="weeklyList" class="hidden space-y-2 max-h-[500px] overflow-y-auto"></div></div>
 </div>
 
-<!-- HOME SCHOOLING - NEW -->
+<!-- HOME SCHOOLING - TEACHER LEARNER SCHOOLING -->
 <div class="bg-white rounded-[1.5rem] p-4 border-2 border-black shadow-[3px_3px_0_0_#000]">
-<div class="flex justify-between items-center"><p class="font-black text-[11px]">🏠 Home Schooling - Connect Teacher</p><span id="hsStatus" class="bg-[#f6f6f7] border border-black px-2 py-0.5 rounded-full text-[8px] font-black">No Request</span></div>
-<p class="text-[9px] text-gray-500 mt-1">Parent arranges home teacher — Admin must approve — You can terminate anytime (admin notified)</p>
+<div class="flex justify-between items-center"><p class="font-black text-[11px]">🏠 Home Tuition - Teacher ↔ Learner</p><span id="hsStatus" class="bg-[#f6f6f7] border border-black px-2 py-0.5 rounded-full text-[8px] font-black">No Request</span></div>
+<p class="text-[9px] text-gray-500 mt-1">Parent arranges home teacher — Admin must approve & assign teacher — Seen in Super Admin Student+Parent+Teacher</p>
 
 <div id="hsForm" class="mt-3 space-y-2">
-<select id="hsSubject" class="w-full bg-[#f6f6f7] border-2 border-black rounded-full px-4 py-2.5 text-[10px] font-bold">
-<option>Mathematics</option><option>English</option><option>Science</option><option>ICT & Coding</option><option>Foreign Language</option><option>All Subjects</option>
-</select>
-<input id="hsReason" placeholder="Reason e.g. Weak in fractions, need extra help" class="w-full bg-[#f6f6f7] border-2 border-black rounded-full px-4 py-2.5 text-[10px] font-bold">
-<button onclick="requestHomeschool()" class="w-full bg-[#4a86ff] text-white border-2 border-black rounded-full py-3 font-black text-[10px]">📨 Request Home Schooling - Admin Approval</button>
+<select id="hsSubject" class="w-full bg-[#f6f6f7] border-2 border-black rounded-full px-4 py-2.5 text-[10px] font-bold"><option>Mathematics - Tuition</option><option>English - Tuition</option><option>Science - Tuition</option><option>All Subjects - Full Tuition</option><option>ICT & Coding - Tuition</option><option>Foreign Language - Tuition</option></select>
+<input id="hsPhone" placeholder="Parent phone 07xx - Teacher will call" class="w-full bg-[#f6f6f7] border-2 border-black rounded-full px-4 py-2.5 text-[10px] font-bold">
+<input id="hsLocation" placeholder="Location e.g Umoja, Nairobi" class="w-full bg-[#f6f6f7] border-2 border-black rounded-full px-4 py-2.5 text-[10px] font-bold">
+<input id="hsDays" placeholder="Days e.g Mon, Wed, Fri - 3 days/week" class="w-full bg-[#f6f6f7] border-2 border-black rounded-full px-4 py-2.5 text-[10px] font-bold">
+<input id="hsReason" placeholder="Reason e.g Weak in fractions, need home tutor" class="w-full bg-[#f6f6f7] border-2 border-black rounded-full px-4 py-2.5 text-[10px] font-bold">
+<button onclick="requestHomeschool()" class="w-full bg-[#4a86ff] text-white border-2 border-black rounded-full py-3 font-black text-[10px]">📨 Request Home Tuition - Admin Assigns Teacher</button>
 </div>
 
 <div id="hsActive" class="hidden mt-3 bg-[#e0f2ff] border-2 border-black rounded-xl p-3">
 <p class="font-black text-[10px]" id="hsActiveText">Home schooling active...</p>
-<button onclick="terminateHomeschool()" class="w-full mt-3 bg-red-500 text-white border-2 border-black rounded-full py-2.5 font-black text-[10px]">❌ Terminate Home Schooling - Notify Admin</button>
+<div id="hsTeacherInfo" class="mt-2 bg-white border-2 border-black rounded-xl p-2.5"></div>
+<button onclick="terminateHomeschool()" class="w-full mt-3 bg-red-500 text-white border-2 border-black rounded-full py-2.5 font-black text-[10px]">❌ Terminate Home Tuition - Notify Admin</button>
 </div>
 </div>
 
-<!-- Chat -->
 <div class="bg-white rounded-[1.5rem] p-3 border-2 border-black shadow-[2px_2px_0_0_#000]">
 <p class="font-black text-[11px]">💬 Chat with Admin - <span id="chatIndex">SHKE</span></p>
 <div id="chatBox" class="bg-[#e5ddd5] rounded-xl p-3 h-[250px] overflow-y-auto mt-3 space-y-2 border-2 border-black"></div>
-<div class="flex gap-2 mt-3"><input id="parentMsg" placeholder="Ask about correction, weak areas..." class="flex-1 bg-[#f6f6f7] border-2 border-black rounded-full px-4 py-3 text-[10px] font-bold"><button onclick="sendParentMsg()" class="bg-[#25d366] w-11 h-11 rounded-full flex items-center justify-center text-white border-2 border-black"><i class="fa-solid fa-paper-plane text-[12px]"></i></button></div>
+<div class="flex gap-2 mt-3"><input id="parentMsg" placeholder="Ask about teacher, correction..." class="flex-1 bg-[#f6f6f7] border-2 border-black rounded-full px-4 py-3 text-[10px] font-bold"><button onclick="sendParentMsg()" class="bg-[#25d366] w-11 h-11 rounded-full flex items-center justify-center text-white border-2 border-black"><i class="fa-solid fa-paper-plane text-[12px]"></i></button></div>
 </div>
 
 </div>
@@ -101,16 +86,13 @@ window.FB={db,doc,getDoc,setDoc,addDoc,updateDoc,collection,getDocs,query,where,
 
 <script>
 let childData=null, childUserId=null, currentIndex=null, allHWCache=[], hsDocId=null;
-
 function showTab(t){
- dailyHWList.classList.toggle('hidden', t!=='daily');
- weeklyList.classList.toggle('hidden', t!=='weekly');
+ dailyHWList.classList.toggle('hidden', t!=='daily'); weeklyList.classList.toggle('hidden', t!=='weekly');
  tabDaily.className = t==='daily'? "flex-1 bg-black text-white py-3 font-black text-[10px]" : "flex-1 bg-white py-3 font-black text-[10px]";
  tabWeekly.className = t==='weekly'? "flex-1 bg-black text-white py-3 font-black text-[10px]" : "flex-1 bg-white py-3 font-black text-[10px]";
 }
 async function parentLogin(){
- let FB=window.FB, idx=indexInput.value.trim().toUpperCase();
- if(!idx) return alert("Enter SHKE");
+ let FB=window.FB, idx=indexInput.value.trim().toUpperCase(); if(!idx) return alert("Enter SHKE");
  if(!idx.startsWith('SHKE')) idx="SHKE"+idx.replace(/[^0-9]/g,'').padStart(5,'0');
  try{
   let snap=await FB.getDocs(FB.query(FB.collection(FB.db,"users"), FB.where("indexNumber","==",idx)));
@@ -118,9 +100,8 @@ async function parentLogin(){
   else { snap.forEach(x=>{childData=x.data(); childUserId=x.id;}); }
   currentIndex=idx; loginBox.classList.add('hidden'); dashboard.classList.remove('hidden');
   childName.innerText=`${childData.firstName||childData.name||'Learner'} • ${idx} - ONLY YOUR CHILD`;
-  childInfo.innerText=`${childData.grade||'Grade 6'} • ${childData.email||''}`; indexDisplay.innerText=idx; chatIndex.innerText=idx;
-  loadAll();
- }catch(e){ alert(e.message); if(e.message.includes('permissions')) alert("Update Firestore Rules: allow read for users, student_index, homework_submissions, exam_submissions, homeschooling_requests, parent_chats"); }
+  childInfo.innerText=`${childData.grade||'Grade 6'} • ${childData.email||''}`; indexDisplay.innerText=idx; chatIndex.innerText=idx; loadAll();
+ }catch(e){ alert(e.message); }
 }
 function logoutParent(){ loginBox.classList.remove('hidden'); dashboard.classList.add('hidden'); }
 async function loadAll(){ await loadDailyHW(); await loadWeeklyExams(); await loadChat(); await checkHomeschool(); }
@@ -130,45 +111,23 @@ async function loadDailyHW(){
  let q=FB.query(FB.collection(FB.db,"homework_submissions"), FB.where("userId","==",childUserId), FB.orderBy("timestamp","desc"));
  let snap=await FB.getDocs(q); let all=[]; snap.forEach(d=>all.push({id:d.id,...d.data()})); allHWCache=all;
  let list=document.getElementById('dailyHWList'); list.innerHTML="";
- if(all.length===0){ list.innerHTML=`<p class="text-[10px] text-center py-4">No HW yet for ${currentIndex} - Only your child data</p>`; strongList.innerText="No data yet"; weakList.innerText="No data yet"; suggestionList.innerText="Complete HW first"; return; }
-
- // Strength / Weak calculation per subject
- let bySub={};
- all.forEach(s=>{ let sub=s.subject||'General'; if(!bySub[sub]) bySub[sub]=[]; bySub[sub].push(s.score||0); });
- let strong=[], weak=[], sugHTML="";
- for(let sub in bySub){ let avg=Math.round(bySub[sub].reduce((a,b)=>a+b,0)/bySub[sub].length); if(avg>=7) strong.push(`${sub} ${avg}/10`); else if(avg<=4) weak.push(`${sub} ${avg}/10`); }
- strongList.innerHTML = strong.length? strong.map(s=>`✅ ${s}`).join("<br>") : "Keep working - no strong yet";
- weakList.innerHTML = weak.length? weak.map(s=>`⚠️ ${s}`).join("<br>") : "✅ No major weak - Good!";
- sugHTML = weak.length? weak.map(w=>{ let sub=w.split(" ")[0]; return `<div class="bg-white border-2 border-black rounded-xl p-2 flex justify-between items-center"><div><p class="font-black">${sub} - Weak</p><p class="text-[8px]">Practice daily + Read notes link</p></div><a href="notes.html?search=${encodeURIComponent(sub)}&grade=${encodeURIComponent(childData.grade||'Grade 6')}" class="bg-black text-white px-3 py-1 rounded-full text-[8px] font-black">📚 Notes</a></div>`; }).join("") : `<div class="bg-white border-2 border-black rounded-xl p-2 text-center font-black">Great! Child doing well - Encourage to keep up 💪</div>`;
- suggestionList.innerHTML = sugHTML + `<div class="bg-[#f6f6f7] border border-black rounded-xl p-2 mt-2"><p class="font-black text-[9px]">AI Tutor Suggestion:</p><p class="text-[8px]">Ask AI Tutor: "${weak.length? weak[0] : 'General revision'} ${childData.grade} weak areas help" - AI will explain with KICD notes</p><button onclick="location.href='ai.assistant.html?q=${encodeURIComponent((weak[0]||'revision')+' '+ (childData.grade||'') +' weak help')}&grade=${encodeURIComponent(childData.grade||'')}'" class="mt-2 bg-[#ffcc1a] border-2 border-black rounded-full px-3 py-1 text-[8px] font-black">🤖 Ask AI for Weak Area</button></div>`;
-
- // Show how was done + correction - ONLY HIS CHILD
+ if(all.length===0){ list.innerHTML=`<p class="text-[10px] text-center py-4">No HW yet for ${currentIndex}</p>`; strongList.innerText="No data"; weakList.innerText="No data"; suggestionList.innerText="Complete HW first"; return; }
+ let bySub={}; all.forEach(s=>{ let sub=s.subject||'General'; if(!bySub[sub]) bySub[sub]=[]; bySub[sub].push(s.score||0); });
+ let strong=[], weak=[], sugHTML=""; for(let sub in bySub){ let avg=Math.round(bySub[sub].reduce((a,b)=>a+b,0)/bySub[sub].length); if(avg>=7) strong.push(`${sub} ${avg}/10`); else if(avg<=4) weak.push(`${sub} ${avg}/10`); }
+ strongList.innerHTML = strong.length? strong.map(s=>`✅ ${s}`).join("<br>") : "Keep working"; weakList.innerHTML = weak.length? weak.map(s=>`⚠️ ${s}`).join("<br>") : "✅ Good!";
+ sugHTML = weak.length? weak.map(w=>{ let sub=w.split(" ")[0]; return `<div class="bg-white border-2 border-black rounded-xl p-2 flex justify-between items-center"><div><p class="font-black">${sub} - Weak</p></div><a href="notes.html?search=${encodeURIComponent(sub)}" class="bg-black text-white px-3 py-1 rounded-full text-[8px] font-black">📚 Notes</a></div>`; }).join("") : `<div class="bg-white border-2 border-black rounded-xl p-2 text-center font-black">Great! Child doing well 💪</div>`;
+ suggestionList.innerHTML=sugHTML;
  all.slice(0,30).forEach(s=>{
-  list.innerHTML+=`<div class="bg-[#f6f6f7] border-2 border-black rounded-xl p-3">
-  <div class="flex justify-between items-start"><div><p class="font-black text-[11px]">${s.subject||'Subject'} • ${s.date||''}</p><p class="text-[8px] text-gray-500">SHKE ${currentIndex} ONLY - Your child</p></div><span class="bg-black text-white px-2.5 py-1 rounded-full text-[10px] font-black">${s.score||0}/10</span></div>
-  <div class="mt-2 bg-white border border-black rounded-xl p-2"><p class="font-black text-[8px]">HOW WAS DONE:</p><p class="text-[9px] mt-1">${s.studentAnswer||s.answer||s.howDone||'Student work: '+ (s.score>=7?'Good attempt ✅':'Needs improvement ⚠️') }</p></div>
-  <div class="mt-2 bg-[#fff7e0] border border-black rounded-xl p-2"><p class="font-black text-[8px]">CORRECTION + TEACHER FEEDBACK:</p><p class="text-[9px] mt-1">${s.correction||s.feedback||s.teacherCorrection||'Correction: Review notes and try again'}</p></div>
-  <div class="mt-2 flex gap-2"><a href="notes.html?search=${encodeURIComponent(s.subject||'')}" class="flex-1 bg-white border-2 border-black rounded-full py-2 text-center font-black text-[8px]">📚 Notes Link Where Info Is</a><button onclick="location.href='ai.assistant.html?q=${encodeURIComponent(s.subject+' '+s.date+' correction')}&grade=${encodeURIComponent(childData.grade||'')}'" class="flex-1 bg-[#ffcc1a] border-2 border-black rounded-full py-2 font-black text-[8px]">🤖 Ask AI Correction</button></div>
-  </div>`;
+  list.innerHTML+=`<div class="bg-[#f6f6f7] border-2 border-black rounded-xl p-3"><div class="flex justify-between"><p class="font-black text-[11px]">${s.subject||'Subject'} • ${s.date||''}</p><span class="bg-black text-white px-2.5 py-1 rounded-full text-[10px] font-black">${s.score||0}/10</span></div><div class="mt-2 bg-white border border-black rounded-xl p-2"><p class="font-black text-[8px]">HOW DONE:</p><p class="text-[9px] mt-1">${s.studentAnswer||s.answer||''}</p></div><div class="mt-2 bg-[#fff7e0] border border-black rounded-xl p-2"><p class="font-black text-[8px]">CORRECTION:</p><p class="text-[9px] mt-1">${s.correction||s.feedback||''}</p></div></div>`;
  });
 }
-
 async function loadWeeklyExams(){
  let FB=window.FB; if(!childUserId) return;
  let q=FB.query(FB.collection(FB.db,"exam_submissions"), FB.where("userId","==",childUserId), FB.orderBy("timestamp","desc"));
  let snap=await FB.getDocs(q); let all=[]; snap.forEach(d=>all.push(d.data()));
- let list=document.getElementById('weeklyList'); list.innerHTML="";
- if(all.length===0){ list.innerHTML=`<div class="bg-[#ffeaea] border-2 border-black rounded-xl p-3 text-center"><p class="font-black text-[10px]">⚠️ No weekly exam yet for ${currentIndex}</p><p class="text-[8px]">Weekly is Sunday to Sunday 100 Marks - Only your child</p></div>`; return; }
- all.forEach(e=>{
-  list.innerHTML+=`<div class="bg-[#f6f6f7] border-2 border-black rounded-xl p-3">
-  <div class="flex justify-between"><p class="font-black text-[10px]">Exam ${e.week||''} • ${e.date||''} • SHKE ${currentIndex} ONLY</p><span class="bg-[#4a86ff] text-white px-2 py-0.5 rounded-full text-[9px] font-black">${e.score||0}/100</span></div>
-  <div class="mt-2 grid grid-cols-3 gap-1 text-[8px] font-black text-center"><div class="bg-white border border-black rounded p-1">Sec A<br>${e.secA||'-'}/20</div><div class="bg-white border border-black rounded p-1">Sec B<br>${e.secB||'-'}/30</div><div class="bg-white border border-black rounded p-1">Sec C<br>${e.secC||'-'}/50</div></div>
-  <div class="mt-2 bg-white border border-black rounded-xl p-2"><p class="font-black text-[8px]">PERFORMANCE + CORRECTION:</p><p class="text-[9px] mt-1">${e.feedback||e.correction||'Good effort, check weak sections'}</p></div>
-  </div>`;
- });
+ let list=document.getElementById('weeklyList'); list.innerHTML=""; if(all.length===0){ list.innerHTML=`<p class="text-[10px] text-center">No exam yet</p>`; return; }
+ all.forEach(e=>{ list.innerHTML+=`<div class="bg-[#f6f6f7] border-2 border-black rounded-xl p-3"><div class="flex justify-between"><p class="font-black text-[10px]">Exam ${e.week||''} • ${e.date||''}</p><span class="bg-[#4a86ff] text-white px-2 py-0.5 rounded-full text-[9px] font-black">${e.score||0}/100</span></div></div>`; });
 }
-
-// HOME SCHOOLING
 async function checkHomeschool(){
  let FB=window.FB; if(!currentIndex) return;
  let q=FB.query(FB.collection(FB.db,"homeschooling_requests"), FB.where("shke","==",currentIndex), FB.orderBy("timestamp","desc"));
@@ -176,40 +135,36 @@ async function checkHomeschool(){
  if(last && last.status!=='terminated'){
   hsDocId=last.id; hsForm.classList.add('hidden'); hsActive.classList.remove('hidden');
   hsStatus.innerText=last.status.toUpperCase(); hsStatus.className=`${last.status==='approved'?'bg-green-500 text-white':'bg-yellow-400 text-black'} border border-black px-2 py-0.5 rounded-full text-[8px] font-black`;
-  hsActiveText.innerText=`${last.status==='pending'?'⏳ Pending admin approval':last.status==='approved'?'✅ Approved - Teacher will contact':''} • ${last.subject} • ${currentIndex} ONLY`;
+  hsActiveText.innerText=`${last.status==='pending'?'⏳ Pending admin approval':last.status==='approved'?'✅ Approved - Teacher assigned':''} • ${last.subject} • ${currentIndex} • ${last.days||''} ${last.location||''}`;
+  let tInfo=""; if(last.status==='approved'){
+    if(last.teacherId){
+      try{ let tDoc=await FB.getDoc(FB.doc(FB.db,"users", last.teacherId)); if(tDoc.exists()){ let t=tDoc.data(); tInfo=`<p class="font-black text-[10px]">👩‍🏫 Teacher Assigned - Teacher ↔ Learner Schooling</p><p class="text-[9px] mt-1 font-bold">Teacher: ${t.firstName||t.name||''} • ${t.email||''} • Phone: ${t.phone||last.teacherEmail||''}</p><p class="text-[8px] opacity-70">ID ${last.teacherId} • Connected via SHKE ${currentIndex} • Seen in Super Admin</p><p class="text-[8px] mt-1">📞 Parent Phone: ${last.parentPhone||''} • 📍 ${last.location||''} • 📅 ${last.days||''}</p>`; } else { tInfo=`<p class="font-black text-[9px]">Teacher: ${last.teacherName||''} ${last.teacherEmail||''}</p>`; } }catch(e){ tInfo=`<p class="text-[9px]">Teacher: ${last.teacherName||''}</p>`; }
+    } else { tInfo=`<p class="text-[9px]">Waiting teacher assignment by admin...</p>`; }
+  } else { tInfo=`<p class="text-[9px]">Request: ${last.subject} • ${last.reason||''} • Phone ${last.parentPhone||''} • Loc ${last.location||''} • Days ${last.days||''}</p>`; }
+  hsTeacherInfo.innerHTML=tInfo;
  } else { hsForm.classList.remove('hidden'); hsActive.classList.add('hidden'); hsStatus.innerText="No Request"; hsDocId=null; }
 }
 async function requestHomeschool(){
  let FB=window.FB; if(!currentIndex) return;
- let sub=hsSubject.value, reason=hsReason.value.trim(); if(!reason) return alert("Enter reason for home schooling");
+ let sub=hsSubject.value, reason=hsReason.value.trim(), phone=hsPhone.value.trim(), loc=hsLocation.value.trim(), days=hsDays.value.trim();
+ if(!reason||!phone) return alert("Enter reason + phone for teacher to call");
  try{
-  await FB.addDoc(FB.collection(FB.db,"homeschooling_requests"), {shke:currentIndex, userId:childUserId, childName:childData.firstName||childData.name||'', grade:childData.grade||'', subject:sub, reason:reason, status:'pending', timestamp:FB.serverTimestamp()});
-  await FB.addDoc(FB.collection(FB.db,"admin_notifications"), {type:'homeschool_request', shke:currentIndex, subject:sub, reason:reason, status:'pending', timestamp:FB.serverTimestamp(), message:`Parent ${currentIndex} requests home schooling for ${sub} - ${reason}`});
-  alert(`✅ Request sent for ${currentIndex} - Admin must approve`); hsReason.value=""; checkHomeschool();
+  await FB.addDoc(FB.collection(FB.db,"homeschooling_requests"), {shke:currentIndex, userId:childUserId, childName:childData.firstName||childData.name||'', grade:childData.grade||'', subject:sub, reason:reason, parentPhone:phone, location:loc, days:days, type:'home_tuition', status:'pending', timestamp:FB.serverTimestamp()});
+  await FB.addDoc(FB.collection(FB.db,"admin_notifications"), {type:'homeschool_request_tuition', shke:currentIndex, subject:sub, reason:reason, parentPhone:phone, location:loc, days:days, timestamp:FB.serverTimestamp(), message:`Parent ${currentIndex} requests TUITION ${sub} at ${loc} ${days} phone ${phone} - ${reason} - Teacher ↔ Learner`});
+  alert(`✅ Tuition request sent for ${currentIndex} - Admin will assign teacher - Seen in Super Admin Teacher ↔ Learner`); hsReason.value=""; hsPhone.value=""; hsLocation.value=""; hsDays.value=""; checkHomeschool();
  }catch(e){ alert(e.message); }
 }
 async function terminateHomeschool(){
- let FB=window.FB; if(!hsDocId) return; if(!confirm("Terminate home schooling? Admin will be notified.")) return;
- try{
-  await FB.updateDoc(FB.doc(FB.db,"homeschooling_requests", hsDocId), {status:'terminated', terminatedAt:FB.serverTimestamp()});
-  await FB.addDoc(FB.collection(FB.db,"admin_notifications"), {type:'homeschool_terminated', shke:currentIndex, docId:hsDocId, timestamp:FB.serverTimestamp(), message:`Parent ${currentIndex} terminated home schooling - ID ${hsDocId}`});
-  alert(`❌ Terminated for ${currentIndex} - Admin notified`); checkHomeschool();
- }catch(e){ alert(e.message); }
+ let FB=window.FB; if(!hsDocId) return; if(!confirm("Terminate tuition? Admin notified.")) return;
+ await FB.updateDoc(FB.doc(FB.db,"homeschooling_requests", hsDocId), {status:'terminated', terminatedAt:FB.serverTimestamp(), terminatedBy:'parent'});
+ await FB.addDoc(FB.collection(FB.db,"admin_notifications"), {type:'homeschool_terminated', shke:currentIndex, docId:hsDocId, timestamp:FB.serverTimestamp(), message:`Parent ${currentIndex} terminated tuition Teacher ↔ Learner - ${hsDocId}`});
+ alert(`❌ Terminated ${currentIndex} - Admin notified`); checkHomeschool();
 }
-
 async function loadChat(){
- let FB=window.FB; if(!currentIndex) return;
- try{
-  let q=FB.query(FB.collection(FB.db,"parent_chats"), FB.where("shke","==",currentIndex), FB.orderBy("timestamp","asc"));
-  let snap=await FB.getDocs(q); let box=document.getElementById('chatBox'); box.innerHTML="";
-  snap.forEach(d=>{ let m=d.data(); let isParent=m.from==='parent'; box.innerHTML+=`<div class="flex ${isParent?'justify-end':'justify-start'}"><div class="${isParent?'bg-[#dcf8c6]':'bg-white'} border-2 border-black rounded-xl p-2 max-w-[80%]"><p class="text-[10px] font-bold">${m.message}</p><p class="text-[7px] text-gray-500">${isParent?'You - Your child '+currentIndex:'Admin'}</p></div></div>`; });
-  box.scrollTop=box.scrollHeight;
- }catch(e){}
+ let FB=window.FB; if(!currentIndex) return; try{ let q=FB.query(FB.collection(FB.db,"parent_chats"), FB.where("shke","==",currentIndex), FB.orderBy("timestamp","asc")); let snap=await FB.getDocs(q); let box=document.getElementById('chatBox'); box.innerHTML=""; snap.forEach(d=>{ let m=d.data(); let isParent=m.from==='parent'; box.innerHTML+=`<div class="flex ${isParent?'justify-end':'justify-start'}"><div class="${isParent?'bg-[#dcf8c6]':'bg-white'} border-2 border-black rounded-xl p-2 max-w-[80%]"><p class="text-[10px] font-bold">${m.message}</p></div></div>`; }); box.scrollTop=box.scrollHeight; }catch(e){}
 }
 async function sendParentMsg(){
- let FB=window.FB; let txt=parentMsg.value.trim(); if(!txt||!currentIndex) return;
- let box=document.getElementById('chatBox'); box.innerHTML+=`<div class="flex justify-end"><div class="bg-[#dcf8c6] border-2 border-black rounded-xl p-2 max-w-[80%]"><p class="text-[10px] font-bold">${txt}</p></div></div>`; parentMsg.value=""; box.scrollTop=box.scrollHeight;
- try{ await FB.addDoc(FB.collection(FB.db,"parent_chats"), {shke:currentIndex, userId:childUserId, message:txt, from:'parent', timestamp:FB.serverTimestamp()}); }catch(e){}
+ let FB=window.FB; let txt=parentMsg.value.trim(); if(!txt||!currentIndex) return; let box=document.getElementById('chatBox'); box.innerHTML+=`<div class="flex justify-end"><div class="bg-[#dcf8c6] border-2 border-black rounded-xl p-2 max-w-[80%]"><p class="text-[10px] font-bold">${txt}</p></div></div>`; parentMsg.value=""; box.scrollTop=box.scrollHeight; try{ await FB.addDoc(FB.collection(FB.db,"parent_chats"), {shke:currentIndex, userId:childUserId, message:txt, from:'parent', timestamp:FB.serverTimestamp()}); }catch(e){}
 }
 </script>
 </body></html>
