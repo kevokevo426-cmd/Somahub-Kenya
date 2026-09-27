@@ -23,8 +23,9 @@ const app=initializeApp(cfg); window.FB={auth:getAuth(app),db:getFirestore(app),
 </div>
 <div class="p-3 space-y-3">
 <div class="flex gap-2 overflow-x-auto">
-<a href="ict.html" class="bg-[#4a86ff] text-white px-4 py-2 rounded-full text-[10px] font-black border-2 border-black whitespace-nowrap">💻 ICT & Coding Page →</a>
-<a href="foreign-language.html" class="bg-pink-500 text-white px-4 py-2 rounded-full text-[10px] font-black border-2 border-black whitespace-nowrap">🌐 Foreign Language Page →</a>
+<a href="ict.html" class="bg-[#4a86ff] text-white px-4 py-2 rounded-full text-[10px] font-black border-2 border-black whitespace-nowrap">💻 ICT & Coding →</a>
+<a href="foreign-language.html" class="bg-pink-500 text-white px-4 py-2 rounded-full text-[10px] font-black border-2 border-black whitespace-nowrap">🌐 Foreign Language →</a>
+<a href="games.html" class="bg-[#ffcc1a] text-black px-4 py-2 rounded-full text-[10px] font-black border-2 border-black whitespace-nowrap">🎮 Games →</a>
 </div>
 <div class="bg-white rounded-xl p-3 border-2 border-black shadow-[2px_2px_0_0_#000] space-y-2">
 <input id="searchIn" placeholder="Search notes... e.g. Photosynthesis, ICT, French" class="w-full bg-[#f6f6f7] border-2 border-black rounded-full p-3 text-[11px] font-bold">
@@ -38,9 +39,54 @@ const app=initializeApp(cfg); window.FB={auth:getAuth(app),db:getFirestore(app),
 </div>
 </div>
 <script>
-let currentSHKE="SHKE";
-async function loadNotes(){let FB=window.FB,grade=gradeSel.value,sub=subSel.value,search=searchIn.value.toLowerCase(),list=document.getElementById('notesList'); list.innerHTML="<p class='text-center py-4 text-[11px]'>Loading KICD Notes...</p>"; try{let q; if(grade==="All Grades"&&sub==="All Subjects") q=FB.query(FB.collection(FB.db,"resources"),FB.where("type","==","Notes")); else if(grade==="All Grades") q=FB.query(FB.collection(FB.db,"resources"),FB.where("subject","==",sub),FB.where("type","==","Notes")); else if(sub==="All Subjects") q=FB.query(FB.collection(FB.db,"resources"),FB.where("grade","==",grade),FB.where("type","==","Notes")); else q=FB.query(FB.collection(FB.db,"resources"),FB.where("grade","==",grade),FB.where("subject","==",sub),FB.where("type","==","Notes")); let snap=await FB.getDocs(q); list.innerHTML=""; let filtered=[]; snap.forEach(d=>{let n=d.data(); if(!search|| (n.title&&n.title.toLowerCase().includes(search)) || (n.subject&&n.subject.toLowerCase().includes(search))) filtered.push({id:d.id,...n});}); if(filtered.length===0){list.innerHTML=`<div class="bg-white border-2 border-dashed border-black rounded-xl p-4 text-center"><p class="font-black text-[11px]">No Notes Yet for ${grade} ${sub}</p><p class="text-[9px] text-gray-500 mt-1">Try ICT or Foreign Language pages</p><div class="mt-3 flex gap-2 justify-center"><a href="ict.html" class="bg-[#4a86ff] text-white px-3 py-2 rounded-full text-[9px] font-black border-2 border-black">💻 ICT</a><a href="foreign-language.html" class="bg-pink-500 text-white px-3 py-2 rounded-full text-[9px] font-black border-2 border-black">🌐 Foreign</a><a href="ai.assistant.html?subject=${encodeURIComponent(sub)}&grade=${grade}" class="bg-black text-white px-3 py-2 rounded-full text-[9px] font-black">Ask AI Tutor</a></div></div>`;return;} filtered.forEach(n=>{list.innerHTML+=`<div class="bg-white border-2 border-black rounded-xl p-3 shadow-[2px_2px_0_0_#000]"><div class="flex justify-between"><p class="font-black text-[12px]">${n.title||n.subject||sub}</p><span class="bg-[#e0f2ff] px-2 py-0.5 rounded-full text-[8px] font-black border border-black">${n.grade||grade}</span></div><p class="text-[10px] text-gray-600 mt-1 line-clamp-2">${n.description||n.content||'KICD aligned notes...'}</p><div class="mt-2 flex gap-2"><button class="flex-1 bg-black text-white rounded-full py-2 font-black text-[9px]">Read Notes →</button><button onclick="location.href='ai.assistant.html?q=${encodeURIComponent(n.title||sub)}'" class="bg-[#ffcc1a] border-2 border-black rounded-full px-3 py-2 font-black text-[9px]">Ask AI</button></div></div>`;});}catch(e){list.innerHTML="<p class='text-center text-[10px] text-red-500'>Error loading notes - check Firebase</p>";}}
-setTimeout(()=>{let FB=window.FB; FB.onAuthStateChanged(FB.auth, async(u)=>{if(u){let s=await FB.getDoc(FB.doc(FB.db,"users",u.uid)); if(s.exists()){currentSHKE=s.data().indexNumber||"SHKE"; indexB.innerText=currentSHKE; gradeSel.value=s.data().grade||"Grade 6";} loadNotes();}});},600);
+let currentSHKE="SHKE", currentGrade="Grade 6";
+function goAI(text, grade, subject){
+  // CLEAN STUDENT VIEW - uses?q= not admin params
+  let q = encodeURIComponent(`${text} ${grade} ${subject} KICD notes`);
+  location.href=`ai.assistant.html?q=${q}&grade=${encodeURIComponent(grade)}&subject=${encodeURIComponent(subject)}`;
+}
+async function loadNotes(){
+ let FB=window.FB, grade=gradeSel.value, sub=subSel.value, search=searchIn.value.toLowerCase(), list=document.getElementById('notesList');
+ list.innerHTML="<p class='text-center py-4 text-[11px]'>Loading KICD Notes...</p>";
+ try{
+  let q;
+  if(grade==="All Grades"&&sub==="All Subjects") q=FB.query(FB.collection(FB.db,"resources"),FB.where("type","==","Notes"));
+  else if(grade==="All Grades") q=FB.query(FB.collection(FB.db,"resources"),FB.where("subject","==",sub),FB.where("type","==","Notes"));
+  else if(sub==="All Subjects") q=FB.query(FB.collection(FB.db,"resources"),FB.where("grade","==",grade),FB.where("type","==","Notes"));
+  else q=FB.query(FB.collection(FB.db,"resources"),FB.where("grade","==",grade),FB.where("subject","==",sub),FB.where("type","==","Notes"));
+  let snap=await FB.getDocs(q);
+  list.innerHTML="";
+  let filtered=[];
+  snap.forEach(d=>{let n=d.data(); if(!search|| (n.title&&n.title.toLowerCase().includes(search)) || (n.subject&&n.subject.toLowerCase().includes(search)) || (n.description&&n.description.toLowerCase().includes(search))) filtered.push({id:d.id,...n});});
+  if(filtered.length===0){
+    list.innerHTML=`<div class="bg-white border-2 border-dashed border-black rounded-xl p-4 text-center">
+    <p class="font-black text-[11px]">No Notes Yet for ${grade} - ${sub} ${search? '('+search+')':''}</p>
+    <p class="text-[9px] text-gray-500 mt-1">AI will explain from KICD + connect to all files</p>
+    <div class="mt-3 grid grid-cols-2 gap-2">
+      <button onclick="goAI('${search||sub}','${grade}','${sub}')" class="bg-black text-white py-2.5 rounded-full text-[9px] font-black border-2 border-black">🤖 Ask AI Tutor - Clean</button>
+      <a href="ai.assistant.html?q=${encodeURIComponent((search||sub)+' '+grade+' KICD')}" class="bg-[#ffcc1a] border-2 border-black py-2.5 rounded-full text-[9px] font-black text-center">Search AI - No Admin</a>
+    </div>
+    <div class="mt-2 flex gap-2 justify-center">
+      <a href="ict.html" class="bg-[#4a86ff] text-white px-3 py-1.5 rounded-full text-[9px] font-black border-2 border-black">💻 ICT</a>
+      <a href="foreign-language.html" class="bg-pink-500 text-white px-3 py-1.5 rounded-full text-[9px] font-black border-2 border-black">🌐 Foreign</a>
+      <a href="games.html" class="bg-[#ffcc1a] text-black px-3 py-1.5 rounded-full text-[9px] font-black border-2 border-black">🎮 Games</a>
+    </div>
+    </div>`;return;
+  }
+  filtered.forEach(n=>{
+    let safeTitle = (n.title||sub).replace(/'/g,"");
+    list.innerHTML+=`<div class="bg-white border-2 border-black rounded-xl p-3 shadow-[2px_2px_0_0_#000]"><div class="flex justify-between"><p class="font-black text-[12px]">${n.title||n.subject||sub}</p><span class="bg-[#e0f2ff] px-2 py-0.5 rounded-full text-[8px] font-black border border-black">${n.grade||grade}</span></div><p class="text-[10px] text-gray-600 mt-1 line-clamp-3">${n.description||n.content||'KICD aligned notes - Tap Ask AI for full explanation connected to HW 10 Marks, Exam 100 Marks, ICT, Foreign, Games'}</p><div class="mt-2 flex gap-2"><button onclick="this.nextElementSibling.classList.toggle('hidden')" class="flex-1 bg-black text-white rounded-full py-2 font-black text-[9px]">Read Notes →</button><button onclick="goAI('${safeTitle}','${n.grade||grade}','${n.subject||sub}')" class="bg-[#ffcc1a] border-2 border-black rounded-full px-3 py-2 font-black text-[9px]">Ask AI 🤖</button></div><div class="hidden mt-2 bg-[#f6f6f7] border-2 border-black rounded-xl p-3 text-[10px] leading-5">${n.content||n.description||'Full notes coming soon - Ask AI Tutor for explanation'}</div></div>`;
+  });
+ }catch(e){console.error(e); list.innerHTML="<p class='text-center text-[10px] text-red-500'>Error loading notes - check Firebase rules</p>";}
+}
+setTimeout(()=>{
+ let FB=window.FB;
+ let p=new URLSearchParams(location.search);
+ if(p.get('search')){ document.getElementById('searchIn').value=p.get('search'); }
+ FB.onAuthStateChanged(FB.auth, async(u)=>{
+  if(u){let s=await FB.getDoc(FB.doc(FB.db,"users",u.uid)); if(s.exists()){currentSHKE=s.data().indexNumber||"SHKE"; currentGrade=s.data().grade||"Grade 6"; indexB.innerText=currentSHKE; gradeSel.value=s.data().grade||"Grade 6";} loadNotes();}
+ });
+},600);
 document.getElementById('searchIn').addEventListener('keypress',e=>{if(e.key==='Enter') loadNotes();});
 </script>
 </body></html>
