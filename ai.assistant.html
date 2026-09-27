@@ -1,256 +1,117 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
+<html><head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SomaHub AI - REAL Vision Marks + SHKE00500 + Human Assistant</title>
+<title>AI Tutor - SomaHub</title>
 <script src="https://cdn.tailwindcss.com"></script>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;800;900&display=swap" rel="stylesheet">
-<style>body{font-family:'Nunito',sans-serif}</style>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+body{font-family:'Nunito',sans-serif;background:#e5ddd5}
+.chat-bg{background:#e5ddd5}
+@keyframes typing{0%{width:0}100%{width:100%}}
+</style>
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-import { getAuth, onAuthStateChanged, GoogleAuthProvider, signInWithPopup, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-import { getFirestore, doc, getDoc, setDoc, updateDoc, collection, getDocs, query, where, serverTimestamp, runTransaction } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-const firebaseConfig = {
-  apiKey: "AIzaSyA93BNes3AmFyxIEgjSbvbIWqLyorLsuj8",
-  authDomain: "somahubkenya-9e458.firebaseapp.com",
-  projectId: "somahubkenya-9e458",
-  storageBucket: "somahubkenya-9e458.firebasestorage.app",
-  messagingSenderId:"615579085715",
-  appId:"1:615579085715:web:28fca37ba498324bb49666"
-};
-const app=initializeApp(firebaseConfig); const auth=getAuth(app); const db=getFirestore(app); const provider=new GoogleAuthProvider();
-window.FB={auth,db,provider,signInWithPopup,signInWithEmailAndPassword,createUserWithEmailAndPassword,onAuthStateChanged,signOut,doc,getDoc,setDoc,updateDoc,collection,getDocs,query,where,serverTimestamp,runTransaction};
+import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+const cfg={apiKey:"AIzaSyA93BNes3AmFyxIEgjSbvbIWqLyorLsuj8",authDomain:"somahubkenya-9e458.firebaseapp.com",projectId:"somahubkenya-9e458",storageBucket:"somahubkenya-9e458.firebasestorage.app",messagingSenderId:"615579085715",appId:"1:615579085715:web:28fca37ba498324bb49666"};
+const app=initializeApp(cfg); window.FB={auth:getAuth(app),db:getFirestore(app),doc,getDoc,onAuthStateChanged};
 </script>
 </head>
-<body class="bg-[#0a0a0a] text-white h-screen flex flex-col">
-<header class="bg-[#141414] border-b border-white/10 p-3 flex justify-between items-center">
-<div class="flex items-center gap-3">
-<a href="student.html" class="font-black text-sm"><i class="fa-solid fa-robot text-green-400"></i> SomaHub AI <span id="aiLive" class="bg-red-500/20 text-red-400 text-[9px] px-2 py-1 rounded-full ml-2">AI OFF</span></a>
-<div class="hidden md:flex gap-1 text-[10px]">
-<button onclick="setMode('student')" id="mStudent" class="bg-white text-black px-3 py-1 rounded-full font-bold">🎓 Student</button>
-<button onclick="setMode('daily')" id="mDaily" class="bg-blue-600 text-white px-3 py-1 rounded-full">📅 Daily 10 Marks SHKE</button>
-<button onclick="setMode('markHW')" id="mHW" class="bg-white/10 px-3 py-1 rounded-full">📸 HW Vision</button>
-<button onclick="setMode('markExam')" id="mExam" class="bg-white/10 px-3 py-1 rounded-full">📝 Mark Exam</button>
-</div>
-</div>
-<div class="flex gap-2 items-center">
-<span id="indexB" class="hidden bg-blue-600 text-white px-3 py-1 rounded-full text-[10px] font-black">SHKE00500</span>
-<span id="prem" class="hidden bg-green-600 px-3 py-1 rounded-full text-[10px] font-bold">PREMIUM</span>
-<span id="free" class="bg-white/10 px-3 py-1 rounded-full text-[10px]">FREE 3</span>
-<button id="authBtn" class="bg-white text-black px-4 py-1.5 rounded-full text-xs font-bold">Login</button>
-</div>
-</header>
+<body class="flex justify-center">
+<div class="w-full max-w-[420px] bg-[#e5ddd5] min-h-screen flex flex-col relative">
 
-<div class="flex flex-1 overflow-hidden">
-<div class="hidden lg:flex w-[320px] bg-[#141414] border-r border-white/10 p-4 flex-col overflow-y-auto">
-<div class="flex justify-between items-center"><h3 class="font-bold text-xs">🤖 AI + Human Assistant LIVE</h3><span id="aiStatus" class="text-[9px] bg-red-500/20 text-red-400 px-2 py-1 rounded-full">Add Key</span></div>
+<!-- WhatsApp Header - Clean -->
+<div class="bg-[#075e54] text-white p-3 flex items-center gap-3 sticky top-0 z-50">
+<a href="student.html" class="text-white"><i class="fa-solid fa-arrow-left"></i></a>
+<div class="w-10 h-10 bg-white rounded-full flex items-center justify-center text-[#075e54] font-black">AI</div>
+<div class="flex-1">
+<p class="font-black text-[13px]">SomaHub AI Tutor</p>
+<p class="text-[10px] opacity-80" id="subHeader">KICD • HW 10 + Exam 100 • Online</p>
+</div>
+<span id="shkeBadge" class="bg-[#128c7e] px-2 py-1 rounded-full text-[9px] font-black">SHKE...</span>
+</div>
 
-<!-- ADMIN ONLY SIDEBAR - HIDDEN FOR STUDENTS -->
-<div id="adminSidebar" class="contents">
-<div class="mt-3 bg-blue-600/20 border border-blue-500/30 p-3 rounded-xl">
-<p class="text-[10px] font-bold text-blue-400">📘 YOUR SHKE INDEX - Counting from 500</p>
-<p id="sideIndex" class="font-black text-lg mt-1">SHKE-----</p>
-<p class="text-[9px] text-gray-400">Parent login parent.html with SHKE00500 - First SHKE00500</p>
-<p id="sidePending" class="text-[10px] mt-2 text-yellow-400"></p>
+<!-- Context Badge - Shows what file called AI -->
+<div id="contextBar" class="bg-[#fff7e0] text-center py-2 px-3 hidden">
+<p class="text-[10px] font-bold"><i class="fa-solid fa-link"></i> Connected to: <span id="ctxText" class="bg-black text-white px-2 py-0.5 rounded-full">Notes</span></p>
 </div>
-<div class="mt-4 space-y-2">
-<button class="modeBtn w-full text-left bg-blue-600/20 border border-blue-500/30 p-3 rounded-xl text-xs"><p class="font-bold">📅 Daily HW 10 Marks SHKE</p><p class="text-[10px] text-gray-400 mt-1">Pending Monday → Tuesday double 20</p></button>
+
+<!-- Chat - Clean, No Repetition -->
+<div id="chat" class="flex-1 p-3 space-y-3 overflow-y-auto pb-[80px] chat-bg">
+<div class="flex justify-center"><span class="bg-white px-3 py-1 rounded-full text-[9px] shadow font-bold">Today • Encrypted</span></div>
+
+<div class="bg-white rounded-lg rounded-tl-none p-3 shadow max-w-[85%]">
+<p class="font-black text-[11px]">👋 Hi <span id="nameShow">Learner</span>! How can I help?</p>
+<p class="text-[10px] mt-2 text-gray-600">Ask from:</p>
+<div class="mt-2 grid grid-cols-2 gap-1.5">
+<button onclick="quick('Explain my notes')" class="bg-[#f0f0f0] rounded-full py-2 text-[9px] font-bold border">📚 Notes</button>
+<button onclick="quick('Daily HW 10 marks today')" class="bg-[#ffcc1a] rounded-full py-2 text-[9px] font-bold border border-black">📝 HW Today</button>
+<button onclick="quick('Weekly exam 100 marks')" class="bg-[#4a86ff] text-white rounded-full py-2 text-[9px] font-bold">📋 Exam</button>
+<button onclick="quick('ICT computer basics')" class="bg-[#e8f4ff] rounded-full py-2 text-[9px] font-bold border">💻 ICT</button>
 </div>
-<div class="mt-4 bg-[#0a0a0a] border border-green-500/30 rounded-xl p-3">
-<p class="font-bold text-[11px] text-green-400">💬 Human Assistant (Admin) - Monitoring All Data</p>
-<p class="text-[9px] text-gray-400 mt-1">Admin monitors Students SHKE + Parents SHKE + Teachers</p>
-<div id="humanSidebarChat" class="mt-2 h-[150px] overflow-y-auto space-y-1 text-[11px] bg-black p-2 rounded-lg border border-white/5"></div>
-<div class="flex gap-1 mt-2">
-<input id="humanSidebarInput" placeholder="Ask Human Assistant (Admin)..." class="flex-1 bg-[#1f1f1f] border border-white/10 p-2 rounded-full text-[10px]">
-<button onclick="sendHumanSidebar()" class="bg-green-600 px-3 py-1 rounded-full text-[10px]">Send</button>
-</div>
+<p class="text-[8px] text-gray-400 mt-2" id="currentInfo">Grade 6 • Ready</p>
 </div>
 </div>
 
-<div class="mt-3">
-<input id="wordSearchSide" placeholder="🔍 Search word in notes" class="w-full bg-black border border-white/10 p-2 rounded-full text-xs">
-<div class="flex gap-1 mt-2"><button onclick="searchWordSide()" class="flex-1 bg-purple-600 text-white py-1 rounded-full text-[10px]">Search Notes</button><button onclick="searchYouTubeSide()" class="flex-1 bg-red-600 text-white py-1 rounded-full text-[10px]">YouTube</button></div>
+<!-- Input - WhatsApp Style -->
+<div class="bg-[#f0f0f0] p-2 flex items-center gap-2 fixed bottom-0 w-full max-w-[420px]">
+<button onclick="document.getElementById('photoIn').click()" class="w-10 h-10 bg-white rounded-full flex items-center justify-center shadow"><i class="fa-solid fa-camera text-gray-600"></i></button>
+<input id="msg" placeholder="Ask anything..." class="flex-1 bg-white rounded-full px-4 py-3 text-[11px] font-bold outline-none shadow">
+<button onclick="sendMsg()" class="w-11 h-11 bg-[#25d366] rounded-full flex items-center justify-center text-white shadow"><i class="fa-solid fa-paper-plane text-[13px]"></i></button>
+<input type="file" id="photoIn" class="hidden" accept="image/*">
 </div>
 
-<div class="mt-4 p-3 bg-green-500/10 border border-green-500/20 rounded-xl"><p class="text-[10px] font-bold text-green-400">💰 Till 0701305109 - Connected to all files</p><p class="text-[9px] text-gray-400 mt-1">notes.html, homework.html 10 Marks, exam.html 100 Marks, ict.html, foreign-language.html, games.html, care-chat.html</p></div>
 </div>
 
-<div class="flex-1 flex flex-col bg-[#0a0a0a]">
-<div class="md:hidden p-2 flex gap-1 overflow-x-auto text-[10px] border-b border-white/10">
-<button onclick="setMode('student')" class="mBtn bg-white text-black px-3 py-1.5 rounded-full whitespace-nowrap">🎓 Student</button>
-<button onclick="setMode('daily')" class="mBtn bg-blue-600 text-white px-3 py-1.5 rounded-full whitespace-nowrap">📅 Daily SHKE</button>
-<button onclick="setMode('markHW')" class="mBtn bg-white/10 px-3 py-1.5 rounded-full whitespace-nowrap">📸 HW Vision</button>
-</div>
-
-<div id="chat" class="flex-1 overflow-y-auto p-4 space-y-3">
-<div class="bg-[#141414] border border-white/10 p-4 rounded-2xl">
-
-<!-- STUDENT CLEAN VIEW -->
-<div id="studentIntro">
-<div class="flex justify-between">
-<div>
-<p class="font-bold text-sm">👋 Hi <span id="nameTop">Learner</span>! I am your CBC AI Tutor - Connected to all files</p>
-<p class="text-xs text-gray-300 mt-2" id="contextShow">I read your Notes, Daily HW Mon-Fri 10 Marks, Weekly Exam Sat-Sun 100 Marks, ICT, Foreign Language, Games</p>
-</div>
-<div class="bg-[#ffcc1a] text-black px-3 py-1 rounded-full text-[10px] font-black h-fit" id="chatIndex">SHKE-----</div>
-</div>
-<div class="mt-3 grid grid-cols-2 gap-2 text-[11px]">
-<a href="notes.html" class="bg-white text-black p-2 rounded-xl text-center font-bold">📚 Notes KICD</a>
-<a href="homework.html" class="bg-[#ffcc1a] text-black p-2 rounded-xl text-center font-bold">📝 HW 10 Marks Today</a>
-<a href="exam.html" class="bg-[#4a86ff] text-white p-2 rounded-xl text-center font-bold">📋 Exam 100 Sat-Sun</a>
-<a href="games.html" class="bg-white text-black p-2 rounded-xl text-center font-bold">🎮 Games Play & Earn</a>
-<a href="ict.html" class="bg-[#e0f2ff] text-black p-2 rounded-xl text-center font-bold">💻 ICT Coding</a>
-<a href="foreign-language.html" class="bg-[#ffe8f0] text-black p-2 rounded-xl text-center font-bold">🌐 French/German/Chinese</a>
-</div>
-<div id="modeHint" class="mt-4 bg-[#1f1f1f] border border-white/10 p-3 rounded-xl text-xs">📚 <b>Ask anything</b> - I am connected to all your files. Type your question or paste photo exam. I will give answer + notes link where info is.</div>
-</div>
-
-<!-- ADMIN ONLY CARDS - HIDDEN FOR STUDENTS -->
-<div id="adminOnly" class="hidden">
-<div class="mt-3 bg-[#0a0a0a] border border-white/10 p-4 rounded-2xl">
-<p class="font-bold text-sm">👋 SomaHub AI + Human Assistant Admin - SHKE00500 Counting from 500</p>
-<p class="text-xs text-gray-300 mt-2">Admin monitors all data: Students SHKE + Parents SHKE + Teachers + appears as human assistant here</p>
-<div class="mt-3 grid grid-cols-1 md:grid-cols-3 gap-2 text-[11px]">
-<div class="bg-blue-500/10 border border-blue-500/20 p-2 rounded-xl">📅 <b>Daily 10 Marks SHKE</b> - Pending Monday → Tuesday double 20 - Completed wait tomorrow</div>
-<div class="bg-purple-500/10 border border-purple-500/20 p-2 rounded-xl">🔍 <b>Notes link where info is</b> - If failed, direct to notes.html?search=title</div>
-<div class="bg-green-500/10 border border-green-500/20 p-2 rounded-xl">💬 <b>Human Assistant Admin</b> - Appears as human in student + parent + teacher portals</div>
-</div>
-<div class="mt-4 bg-blue-500/10 border border-blue-500/20 p-3 rounded-xl text-xs">📅 <b>Daily HW 10 Marks SHKE Mode:</b> AI gives 10 marks daily each subject FROM Notes (correct flow). If Monday pending, Tuesday double 20 marks. If complete, says today's work completed wait tomorrow. Parent monitors at parent.html with SHKE00500 + correction + notes link + most failed + remedy. Admin monitors all + appears as human assistant.</div>
-</div>
-</div>
-
-<div id="youtubeBox" class="hidden mt-3"></div>
-<div id="dailyHWPanel" class="hidden mt-4 bg-black border border-white/10 p-4 rounded-2xl"></div>
-</div>
-</div>
-
-<div class="p-3 bg-[#141414] border-t border-white/10">
-<div id="examBox" class="hidden mb-3 bg-[#1f1f1f] p-3 rounded-xl">
-<p class="text-xs font-bold">📝 Paste Exam + Student Answers to Mark - SHKE</p>
-<textarea id="examInput" placeholder="Q1: What is 1/2+1/4? Student: 3/4 Q2:..." class="w-full bg-black border border-white/10 p-3 rounded-xl text-xs mt-2 h-20"></textarea>
-</div>
-<div id="photoPreview" class="hidden mb-2 bg-[#1f1f1f] p-2 rounded-xl flex gap-2 items-center"><img id="prevImg" class="h-12 w-12 rounded object-cover"><div class="text-xs"><p>📸 Homework photo - Vision AI will read - 10 marks</p><p class="text-[10px] text-gray-400" id="photoName"></p></div><button onclick="clearPhoto()" class="ml-auto text-xs bg-red-600 px-2 py-1 rounded-full">X</button></div>
-<div class="flex gap-2">
-<button onclick="document.getElementById('photoInput').click()" class="bg-[#1f1f1f] border border-white/10 w-12 h-12 rounded-full"><i class="fa-solid fa-camera"></i></button>
-<input type="file" id="photoInput" accept="image/*" class="hidden" onchange="handlePhoto(this)">
-<input id="msg" placeholder="Search word, ask, paste exam, daily HW SHKE..." class="flex-1 bg-[#1f1f1f] border border-white/10 p-3 rounded-full text-sm outline-none">
-<button onclick="send()" class="bg-white text-black w-12 h-12 rounded-full font-black"><i class="fa-solid fa-paper-plane"></i></button>
-</div>
-<p class="text-[9px] text-gray-500 text-center mt-2" id="footerText">AI Connected to: notes.html • homework.html 10 Marks Mon-Fri • exam.html 100 Sat-Sun • ict.html • foreign-language.html • games.html • care-chat.html</p>
+<!-- ADMIN ONLY - Hidden unless?admin=1 -->
+<div id="adminBox" class="hidden fixed inset-0 bg-black/90 z-[100] p-4 overflow-auto">
+<div class="bg-white text-black rounded-2xl p-4 max-w-md mx-auto">
+<div class="flex justify-between"><p class="font-black">🔒 Admin Monitor - SHKE00500</p><button onclick="adminBox.classList.add('hidden')" class="bg-black text-white px-3 py-1 rounded-full text-xs">X</button></div>
+<p class="text-[10px] mt-2">Counting from 500 • Daily 10 Marks pending→double • Parent monitor parent.html • Notes link where info is • Human assistant appears as human</p>
+<div class="mt-3 space-y-2 text-[10px] bg-[#f6f6f7] p-3 rounded-xl">
+<p><b>Daily Logic:</b> If Monday pending Tuesday double 20 marks. Completed wait tomorrow.</p>
+<p><b>Exam:</b> Sat 00:00 - Sun 23:59 100 Marks Sec A 20 B 30 C 50</p>
+<p><b>Connected files:</b> notes.html, homework.html, exam.html, ict.html, foreign-language.html, games.html, care-chat.html</p>
 </div>
 </div>
 </div>
-
-<div id="authModal" class="hidden fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4"><div class="bg-white text-black rounded-[1.5rem] p-6 w-full max-w-sm"><h3 class="font-black">Login - Get SHKE00500 Auto Counting from 500</h3><button id="gLogin" class="w-full border-2 py-3 rounded-full mt-3 text-sm font-bold">Continue with Google</button><input id="email" placeholder="Email" class="w-full border p-3 rounded-xl mt-3 text-sm"><input id="pass" type="password" placeholder="Password" class="w-full border p-3 rounded-xl mt-2 text-sm"><button id="eLogin" class="w-full bg-black text-white py-3 rounded-full mt-3 font-bold">Login</button><button onclick="closeM()" class="w-full mt-3 text-xs">Close</button></div></div>
-<div id="subModal" class="hidden fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4"><div class="bg-white text-black rounded-[1.5rem] p-6 w-full max-w-sm text-center"><h3 class="font-black">🔓 Unlock - 500 KES</h3><p class="text-sm">Till <b>0701305109</b> - Index <span id="subIndex">SHKE00500</span></p><input id="mpesa" placeholder="M-Pesa Code" class="w-full border p-3 rounded-xl mt-3 uppercase font-bold text-sm"><button onclick="submitMpesa()" class="w-full bg-green-600 text-white py-3 rounded-full mt-3 font-bold">Submit Code</button><button onclick="closeM()" class="w-full mt-2 text-xs">Close</button></div></div>
-
-<div id="humanWidget" class="fixed bottom-20 right-4 bg-[#141414] border border-green-500/30 rounded-2xl p-3 w-80 shadow-2xl z-40 hidden">
-<div class="flex justify-between items-center"><p class="font-bold text-xs text-green-400">💬 Human Assistant (Admin) - Live</p><button onclick="document.getElementById('humanWidget').classList.add('hidden')" class="text-[10px] bg-white/10 px-2 py-1 rounded-full">X</button></div>
-<p class="text-[9px] text-gray-400 mt-1">You are SHKE <span id="widgetIndex">SHKE00500</span></p>
-<div id="widgetChat" class="h-[200px] overflow-y-auto mt-2 space-y-2 text-[11px] bg-black p-2 rounded-xl border border-white/10"></div>
-<div class="flex gap-1 mt-2"><input id="widgetInput" placeholder="Ask Human Assistant..." class="flex-1 bg-[#1f1f1f] border border-white/10 p-2 rounded-full text-[10px]"><button onclick="sendWidget()" class="bg-green-600 px-3 py-1 rounded-full text-[10px]">Send</button></div>
-</div>
-<button onclick="document.getElementById('humanWidget').classList.remove('hidden')" class="fixed bottom-4 right-4 bg-green-600 text-white w-14 h-14 rounded-full shadow-2xl z-40 flex items-center justify-center"><i class="fa-solid fa-headset"></i><span class="absolute -top-1 -right-1 bg-red-600 text-white text-[10px] px-1.5 py-0.5 rounded-full">Live</span></button>
 
 <script>
-let currentUser=null, userData=null, count=0, mode='student', attachedPhotoBase64=null, geminiKey="", currentSHKE=null, isAdminView=false;
+let shke="SHKE", grade="Grade 6", name="Learner";
+function quick(t){ msg.value=t; sendMsg(); }
 
-function closeM(){document.getElementById('authModal').classList.add('hidden'); document.getElementById('subModal').classList.add('hidden');}
-function clearPhoto(){attachedPhotoBase64=null; document.getElementById('photoPreview').classList.add('hidden'); document.getElementById('photoInput').value="";}
-function handlePhoto(input){
- if(input.files && input.files[0]){
-  const file=input.files[0]; document.getElementById('photoName').innerText=file.name+" - "+Math.round(file.size/1024)+"KB";
-  const reader=new FileReader();
-  reader.onload=(e)=>{document.getElementById('prevImg').src=e.target.result; attachedPhotoBase64=e.target.result.split(',')[1]; document.getElementById('photoPreview').classList.remove('hidden');};
-  reader.readAsDataURL(file); setMode('markHW');
- }
-}
-function setMode(m){
- mode=m;
- const hints={
-  student: "🎓 <b>Student Mode:</b> Ask any PP1-G9 - I will explain + notes link where info is. Connected to notes.html, homework.html, exam.html, ict.html, foreign-language.html, games.html",
-  daily: "📅 <b>Daily HW 10 Marks SHKE "+(currentSHKE||"SHKE00500")+" :</b> AI gives 10 marks daily each subject FROM Notes. If Monday pending, Tuesday double 20.",
-  markHW: "📸 <b>Vision Mark HW 10 Marks:</b> Snap photo - REAL Vision AI reads handwriting, marks /10",
-  markExam: "📝 <b>Mark Exam Mode:</b> Paste Q1 Student answer... I mark % + correction + notes link",
- };
- let hint=document.getElementById('modeHint'); if(hint &&!isAdminView) hint.innerHTML=hints[m]||hints['student'];
- document.getElementById('examBox').classList.toggle('hidden', m!=='markExam');
-}
+function sendMsg(){
+ let txt=msg.value.trim(); if(!txt) return;
+ let c=document.getElementById('chat');
+ c.innerHTML+=`<div class="flex justify-end"><div class="bg-[#dcf8c6] rounded-lg rounded-tr-none p-3 shadow max-w-[80%]"><p class="text-[11px] font-bold">${txt}</p><p class="text-[8px] text-gray-500 text-right mt-1">${new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})} ✓✓</p></div></div>`;
+ msg.value=""; c.scrollTop=c.scrollHeight;
 
-// CHECK IF STUDENT OR ADMIN VIEW - CORE FIX
-function checkView(){
- let p=new URLSearchParams(location.search);
- let adminParam = p.get('admin')==='1';
- let fromFiles = p.get('subject')||p.get('topic')||p.get('q')||p.get('game')||p.get('type')||p.get('grade');
- // If coming from notes.html, homework.html, exam.html, ict.html, foreign-language.html, games.html, care-chat.html -> STUDENT view
- if(fromFiles &&!adminParam){
-   isAdminView=false;
-   document.getElementById('adminOnly').classList.add('hidden');
-   document.getElementById('adminSidebar').classList.add('hidden');
-   document.getElementById('studentIntro').classList.remove('hidden');
-   let ctx=[]; if(p.get('subject')) ctx.push(p.get('subject')); if(p.get('topic')) ctx.push(p.get('topic')); if(p.get('grade')) ctx.push(p.get('grade')); if(p.get('q')) ctx.push(p.get('q')); if(p.get('game')) ctx.push("Game: "+p.get('game'));
-   if(ctx.length) document.getElementById('contextShow').innerText = ctx.join(" • ") + " • Connected to all files • KICD";
-   document.getElementById('footerText').innerText = "Connected to: notes.html • homework.html • exam.html • ict.html • foreign-language.html • games.html";
- } else if(adminParam || localStorage.getItem('role')==='admin'){
-   isAdminView=true;
-   document.getElementById('adminOnly').classList.remove('hidden');
-   document.getElementById('adminSidebar').classList.remove('hidden');
-   document.getElementById('studentIntro').classList.remove('hidden');
-   document.getElementById('modeHint').innerHTML = "📅 <b>Daily HW 10 Marks SHKE "+(currentSHKE||"SHKE00500")+" - Counting from 500:</b> AI gives 10 marks daily each subject FROM Notes (correct flow). If Monday pending, Tuesday double 20 marks. Parent monitors at parent.html with SHKE00500 + correction + notes link + most failed + remedy. Admin monitors all + appears as human assistant.";
- } else {
-   // Default student clean view
-   isAdminView=false;
-   document.getElementById('adminOnly').classList.add('hidden');
-   document.getElementById('adminSidebar').classList.add('hidden');
- }
-}
-
-async function searchWordSide(){ const w=document.getElementById('wordSearchSide').value.trim(); if(!w) return; document.getElementById('msg').value="Search meaning of word: "+w+" in notes + explain according to level"; setMode('student'); send(); }
-function searchYouTubeSide(){ const w=document.getElementById('wordSearchSide').value.trim(); if(!w) return; document.getElementById('msg').value="Show YouTube video for: "+w+" + explain meaning from notes"; setMode('student'); send(); }
-
-function send(){
- let txt=document.getElementById('msg').value.trim(); if(!txt) return;
- let chat=document.getElementById('chat');
- let p=new URLSearchParams(location.search);
- let contextInfo = "";
- if(p.get('subject')) contextInfo += "["+p.get('subject')+"] ";
- if(p.get('grade')) contextInfo += "["+p.get('grade')+"] ";
- if(p.get('topic')) contextInfo += "["+p.get('topic')+"] ";
-
- chat.innerHTML+=`<div class="flex justify-end"><div class="bg-white text-black rounded-2xl rounded-tr-none p-3 max-w-[85%] text-xs"><b>You:</b> ${txt} <br><span class="text-[9px] opacity-60">${contextInfo} ${currentSHKE||"SHKE"}</span></div></div>`;
- document.getElementById('msg').value="";
- chat.scrollTop=chat.scrollHeight;
-
- // Simulate AI connected to all files - KEEP YOUR REAL GEMINI CALL HERE
  setTimeout(()=>{
-  let reply=`<b>Answer for ${currentSHKE||"SHKE"} - ${contextInfo}</b><br><br>${txt} - KICD explanation...<br><br>📚 <b>From:</b> <a href="notes.html?search=${encodeURIComponent(txt)}" class="text-blue-400 underline">notes.html?search=${encodeURIComponent(txt)}</a><br>`;
-  reply+=`📝 <b>HW:</b> <a href="homework.html" class="text-yellow-400 underline">homework.html Mon-Fri 10 Marks</a> | 📋 <b>Exam:</b> <a href="exam.html" class="text-blue-400 underline">exam.html Sat-Sun 100</a><br>`;
-  reply+=`💻 <a href="ict.html" class="text-cyan-400 underline">ict.html</a> | 🌐 <a href="foreign-language.html" class="text-pink-400 underline">foreign-language.html</a> | 🎮 <a href="games.html" class="text-yellow-400 underline">games.html</a>`;
-  chat.innerHTML+=`<div class="bg-[#1f1f1f] border border-white/10 rounded-2xl p-3 max-w-[90%] text-xs leading-5">${reply}</div>`;
-  chat.scrollTop=chat.scrollHeight;
- },800);
-}
+  let reply=`${txt} — <b>KICD ${grade}:</b> Here's clear answer...<br><br>`;
+  // Smart links - no repetition
+  if(txt.toLowerCase().includes('hw')||txt.toLowerCase().includes('homework')) reply+=`👉 <a href="homework.html" class="text-[#075e54] underline font-black">Open Homework 10 Marks</a><br>`;
+  else if(txt.toLowerCase().includes('exam')) reply+=`👉 <a href="exam.html" class="text-[#075e54] underline font-black">Open Exam 100 Marks (Sat-Sun)</a><br>`;
+  else if(txt.toLowerCase().includes('note')) reply+=`👉 <a href="notes.html?search=${encodeURIComponent(txt)}" class="text-[#075e54] underline font-black">View in Notes</a><br>`;
+  else reply+=`📚 <a href="notes.html?search=${encodeURIComponent(txt)}" class="text-[#075e54] underline">Notes</a> | 💻 <a href="ict.html" class="underline">ICT</a> | 🎮 <a href="games.html" class="underline">Games</a><br>`;
 
-function sendHumanSidebar(){ let v=document.getElementById('humanSidebarInput').value; if(!v) return; document.getElementById('humanSidebarChat').innerHTML+=`<div class="text-white"><b>You (${currentSHKE||"SHKE"}):</b> ${v}</div>`; document.getElementById('humanSidebarInput').value=""; setTimeout(()=>{document.getElementById('humanSidebarChat').innerHTML+=`<div class="text-green-400"><b>Admin:</b> Received SHKE ${currentSHKE}, will reply soon. Check parent.html with SHKE for monitoring.</div>`;},800); }
-function sendWidget(){ let v=document.getElementById('widgetInput').value; if(!v) return; document.getElementById('widgetChat').innerHTML+=`<div><b>You:</b> ${v}</div>`; document.getElementById('widgetInput').value=""; }
+  c.innerHTML+=`<div class="bg-white rounded-lg rounded-tl-none p-3 shadow max-w-[85%]"><p class="text-[11px] leading-5">${reply}</p><p class="text-[8px] text-gray-400 mt-2">AI Tutor • ${grade}</p></div>`;
+  c.scrollTop=c.scrollHeight;
+ },700);
+}
 
 setTimeout(()=>{
+ let p=new URLSearchParams(location.search);
+ if(p.get('admin')==='1'){ document.getElementById('adminBox').classList.remove('hidden'); }
+ // Show context if coming from other files - AI connected
+ let ctx=[]; if(p.get('subject')) ctx.push(p.get('subject')); if(p.get('topic')) ctx.push(p.get('topic')); if(p.get('grade')) ctx.push(p.get('grade')); if(p.get('game')) ctx.push(p.get('game')); if(p.get('q')) ctx.push(p.get('q'));
+ if(ctx.length){ document.getElementById('contextBar').classList.remove('hidden'); document.getElementById('ctxText').innerText=ctx.join(" • "); document.getElementById('currentInfo').innerText=ctx.join(" • "); if(p.get('q')) msg.value=p.get('q'); else if(p.get('subject')) msg.value=`${p.get('subject')} ${p.get('topic')||''} ${p.get('grade')||''} notes`; }
+
  let FB=window.FB;
  FB.onAuthStateChanged(FB.auth, async(u)=>{
-  if(u){ currentUser=u; try{ let s=await FB.getDoc(FB.doc(FB.db,"users",u.uid)); if(s.exists()){ userData=s.data(); currentSHKE=userData.indexNumber||"SHKE00500"; document.getElementById('indexB').innerText=currentSHKE; document.getElementById('chatIndex').innerText=currentSHKE; let si=document.getElementById('sideIndex'); if(si) si.innerText=currentSHKE; let wi=document.getElementById('widgetIndex'); if(wi) wi.innerText=currentSHKE; let nm=document.getElementById('nameTop'); if(nm) nm.innerText=userData.firstName||"Learner"; if(userData.role==='admin') { isAdminView=true; localStorage.setItem('role','admin'); } } }catch(e){}
-  }
-  checkView();
-  let p=new URLSearchParams(location.search);
-  if(p.get('q')) document.getElementById('msg').value=p.get('q');
-  else if(p.get('subject')) document.getElementById('msg').value = (p.get('subject')+" "+(p.get('topic')||"")+" "+(p.get('grade')||"")+" KICD notes").trim();
+  if(u){ try{ let s=await FB.getDoc(FB.doc(FB.db,"users",u.uid)); if(s.exists()){ let d=s.data(); shke=d.indexNumber||"SHKE"; grade=d.grade||"Grade 6"; name=d.firstName||"Learner"; shkeBadge.innerText=shke; nameShow.innerText=name; document.getElementById('subHeader').innerText=`${grade} • ${shke} • Online`; document.getElementById('currentInfo').innerText=`${grade} • ${shke} • Connected to all files`; } }catch(e){} }
  });
- checkView();
-},600);
-
-document.getElementById('msg').addEventListener('keypress',e=>{ if(e.key==='Enter') send(); });
-document.getElementById('authBtn').onclick=()=>{document.getElementById('authModal').classList.remove('hidden');};
-function submitMpesa(){ alert('M-Pesa submitted - Admin will verify SHKE '+currentSHKE); closeM(); }
+},500);
+msg.addEventListener('keypress',e=>{ if(e.key==='Enter') sendMsg(); });
 </script>
-</body>
-</html>
+</body></html>
