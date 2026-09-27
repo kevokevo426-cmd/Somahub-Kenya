@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Care Chat - SomaHub</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+body{font-family:'Nunito',sans-serif;background:#e5ddd5}
+.chat-bg{background-image:url('https://user-images.githubusercontent.com/15075759/28719144-86dc0f70-73b1-11e7-911d-60d70fcded21.png');}
+</style>
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+import { getFirestore, doc, getDoc, collection, addDoc, query, where, orderBy, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+const cfg={apiKey:"AIzaSyA93BNes3AmFyxIEgjSbvbIWqLyorLsuj8",authDomain:"somahubkenya-9e458.firebaseapp.com",projectId:"somahubkenya-9e458",storageBucket:"somahubkenya-9e458.firebasestorage.app",messagingSenderId:"615579085715",appId:"1:615579085715:web:28fca37ba498324bb49666"};
+const app=initializeApp(cfg); window.FB={auth:getAuth(app),db:getFirestore(app),doc,getDoc,collection,addDoc,query,where,orderBy,onSnapshot,serverTimestamp,onAuthStateChanged};
+</script>
+</head>
+<body class="flex justify-center"><div class="w-full max-w-[420px] bg-[#e5ddd5] min-h-screen flex flex-col relative">
+
+<!-- WhatsApp Header -->
+<div class="bg-[#075e54] text-white p-3 flex items-center gap-3 sticky top-0 z-50">
+<a href="student.html" class="text-white text-[18px]"><i class="fa-solid fa-arrow-left"></i></a>
+<img src="https://i.pravatar.cc/100?img=12" class="w-10 h-10 rounded-full">
+<div class="flex-1">
+<p class="font-black text-[14px] leading-none">SomaHub Support</p>
+<p class="text-[10px] opacity-80 mt-1"><span class="w-2 h-2 bg-green-400 rounded-full inline-block"></span> Online • Replies in minutes</p>
+</div>
+<a href="tel:0701305109" class="w-8 h-8 bg-[#128c7e] rounded-full flex items-center justify-center"><i class="fa-solid fa-phone text-[12px]"></i></a>
+</div>
+
+<!-- SHKE Badge -->
+<div class="bg-[#fff7e0] text-center py-2 border-b border-black/10">
+<p class="text-[10px] font-black">🔒 Chat secure • Your SHKE: <span id="shkeShow" class="bg-black text-white px-2 py-0.5 rounded-full">SHKE...</span> • Grade: <span id="gradeShow">...</span></p>
+</div>
+
+<!-- Messages Area -->
+<div id="chatArea" class="flex-1 chat-bg p-3 space-y-2 overflow-y-auto pb-[80px]">
+<div class="flex justify-center"><span class="bg-[#fff7e0] border shadow text-[9px] px-3 py-1 rounded-full font-bold">Today - Encrypted</span></div>
+<div class="bg-white border shadow rounded-lg rounded-tl-none p-3 max-w-[80%]">
+<p class="font-black text-[11px]">👋 Hi! SomaHub Care here</p>
+<p class="text-[11px] mt-1">How can we help? Ask about:</p>
+<p class="text-[10px] mt-2 leading-4">• Daily HW 10 Marks (Mon-Fri)<br>• Weekly Exam 100 Marks (Sat-Sun)<br>• Notes, ICT, Foreign Language, Games<br>• Payments, Points to KES</p>
+<p class="text-[8px] text-gray-500 mt-2 text-right">11:34 AM</p>
+</div>
+</div>
+
+<!-- Input Area - WhatsApp Style -->
+<div class="bg-[#f0f0f0] p-2 flex items-center gap-2 fixed bottom-0 w-full max-w-[420px] border-t">
+<button class="w-10 h-10 bg-white rounded-full flex items-center justify-center text-gray-500"><i class="fa-solid fa-face-smile"></i></button>
+<input id="msgInput" placeholder="Type a message..." class="flex-1 bg-white rounded-full px-4 py-3 text-[12px] font-bold border outline-none">
+<button id="sendBtn" onclick="sendMsg()" class="w-11 h-11 bg-[#25d366] rounded-full flex items-center justify-center text-white shadow"><i class="fa-solid fa-paper-plane text-[14px]"></i></button>
+</div>
+
+</div>
+<script>
+let currentUser=null, shke="SHKE", grade="Grade 6", name="Learner";
+async function sendMsg(){
+ let txt=document.getElementById('msgInput').value.trim(); if(!txt) return;
+ let area=document.getElementById('chatArea');
+ // Student message UI
+ area.innerHTML+=`<div class="flex justify-end"><div class="bg-[#dcf8c6] border shadow rounded-lg rounded-tr-none p-3 max-w-[80%]"><p class="text-[11px] font-bold">${txt}</p><p class="text-[8px] text-gray-500 mt-1 text-right">${new Date().toLocaleTimeString()} ✓✓</p></div></div>`;
+ document.getElementById('msgInput').value="";
+ area.scrollTop=area.scrollHeight;
+ // Save to Firebase
+ try{
+  let FB=window.FB;
+  await FB.addDoc(FB.collection(FB.db,"care_chats"),{userId:currentUser?.uid||"guest",shke:shke,grade:grade,name:name,message:txt,from:"student",time:FB.serverTimestamp()});
+ }catch(e){}
+ // Auto reply simulation (until admin replies in admin.html)
+ setTimeout(()=>{ area.innerHTML+=`<div class="bg-white border shadow rounded-lg rounded-tl-none p-3 max-w-[80%]"><p class="text-[11px]">✅ Received! Admin will reply soon. SHKE ${shke} noted. For urgent call 0701305109</p><p class="text-[8px] text-gray-500 mt-2 text-right">Now</p></div>`; area.scrollTop=area.scrollHeight; },800);
+}
+// Load chat history
+function loadChats(){
+ let FB=window.FB; if(!currentUser) return;
+ let q=FB.query(FB.collection(FB.db,"care_chats"),FB.where("userId","==",currentUser.uid),FB.orderBy("time","asc"));
+ FB.onSnapshot(q,(snap)=>{let area=document.getElementById('chatArea'); snap.forEach(d=>{let m=d.data(); if(m.from==="admin"){area.innerHTML+=`<div class="bg-white border shadow rounded-lg rounded-tl-none p-3 max-w-[80%]"><p class="text-[11px]">${m.message}</p><p class="text-[8px] text-gray-500 mt-1 text-right">Admin</p></div>`;}}); area.scrollTop=area.scrollHeight;});
+}
+setTimeout(()=>{let FB=window.FB; let p=new URLSearchParams(location.search); shke=p.get('shke')||localStorage.getItem('sh_index')||"SHKE"; grade=p.get('grade')||"Grade 6"; name=p.get('name')||"Learner"; document.getElementById('shkeShow').innerText=shke; document.getElementById('gradeShow').innerText=grade; FB.onAuthStateChanged(FB.auth, async(u)=>{if(u){currentUser=u; let s=await FB.getDoc(FB.doc(FB.db,"users",u.uid)); if(s.exists()){let d=s.data(); shke=d.indexNumber||shke; grade=d.grade||grade; name=d.firstName||name; document.getElementById('shkeShow').innerText=shke; document.getElementById('gradeShow').innerText=grade;} loadChats();}});},500);
+document.getElementById('msgInput').addEventListener('keypress',e=>{if(e.key==='Enter') sendMsg();});
+</script>
+</body></html>
