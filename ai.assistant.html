@@ -1,117 +1,125 @@
 <!DOCTYPE html>
 <html><head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AI Tutor - SomaHub</title>
+<title>AI Tutor - SomaHub Gemini + AI Brain</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;800;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-<style>
-body{font-family:'Nunito',sans-serif;background:#e5ddd5}
-.chat-bg{background:#e5ddd5}
-@keyframes typing{0%{width:0}100%{width:100%}}
-</style>
+<style>body{font-family:'Nunito',sans-serif;background:#e5ddd5}</style>
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+import { getFirestore, doc, getDoc, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 const cfg={apiKey:"AIzaSyA93BNes3AmFyxIEgjSbvbIWqLyorLsuj8",authDomain:"somahubkenya-9e458.firebaseapp.com",projectId:"somahubkenya-9e458",storageBucket:"somahubkenya-9e458.firebasestorage.app",messagingSenderId:"615579085715",appId:"1:615579085715:web:28fca37ba498324bb49666"};
-const app=initializeApp(cfg); window.FB={auth:getAuth(app),db:getFirestore(app),doc,getDoc,onAuthStateChanged};
+const app=initializeApp(cfg); window.FB={auth:getAuth(app),db:getFirestore(app),doc,getDoc,collection,getDocs,onAuthStateChanged};
 </script>
 </head>
 <body class="flex justify-center">
 <div class="w-full max-w-[420px] bg-[#e5ddd5] min-h-screen flex flex-col relative">
-
-<!-- WhatsApp Header - Clean -->
 <div class="bg-[#075e54] text-white p-3 flex items-center gap-3 sticky top-0 z-50">
 <a href="student.html" class="text-white"><i class="fa-solid fa-arrow-left"></i></a>
 <div class="w-10 h-10 bg-white rounded-full flex items-center justify-center text-[#075e54] font-black">AI</div>
-<div class="flex-1">
-<p class="font-black text-[13px]">SomaHub AI Tutor</p>
-<p class="text-[10px] opacity-80" id="subHeader">KICD • HW 10 + Exam 100 • Online</p>
-</div>
+<div class="flex-1"><p class="font-black text-[13px]">SomaHub AI Tutor - Gemini + AI Brain</p><p class="text-[10px] opacity-80" id="subHeader">Gemini 1.5 Flash • HW 10 + Exam 100 • ai_brain: loading...</p></div>
 <span id="shkeBadge" class="bg-[#128c7e] px-2 py-1 rounded-full text-[9px] font-black">SHKE...</span>
 </div>
-
-<!-- Context Badge - Shows what file called AI -->
-<div id="contextBar" class="bg-[#fff7e0] text-center py-2 px-3 hidden">
-<p class="text-[10px] font-bold"><i class="fa-solid fa-link"></i> Connected to: <span id="ctxText" class="bg-black text-white px-2 py-0.5 rounded-full">Notes</span></p>
-</div>
-
-<!-- Chat - Clean, No Repetition -->
-<div id="chat" class="flex-1 p-3 space-y-3 overflow-y-auto pb-[80px] chat-bg">
-<div class="flex justify-center"><span class="bg-white px-3 py-1 rounded-full text-[9px] shadow font-bold">Today • Encrypted</span></div>
-
+<div id="contextBar" class="bg-[#fff7e0] text-center py-2 px-3"><p class="text-[10px] font-bold">🧠 <span id="brainCount">0 brain</span> • 🤖 Gemini Connected • <span id="ctxText">KICD</span></p></div>
+<div id="chat" class="flex-1 p-3 space-y-3 overflow-y-auto pb-[90px]">
+<div class="flex justify-center"><span class="bg-white px-3 py-1 rounded-full text-[9px] shadow font-bold">Today • Gemini + ai_brain • Encrypted</span></div>
 <div class="bg-white rounded-lg rounded-tl-none p-3 shadow max-w-[85%]">
-<p class="font-black text-[11px]">👋 Hi <span id="nameShow">Learner</span>! How can I help?</p>
-<p class="text-[10px] mt-2 text-gray-600">Ask from:</p>
+<p class="font-black text-[11px]">👋 Hi <span id="nameShow">Learner</span>! I'm now Gemini + your AI Brain.</p>
+<p class="text-[10px] mt-2">Admin feeds me photo in admin.html → I use Gemini to:</p>
 <div class="mt-2 grid grid-cols-2 gap-1.5">
-<button onclick="quick('Explain my notes')" class="bg-[#f0f0f0] rounded-full py-2 text-[9px] font-bold border">📚 Notes</button>
-<button onclick="quick('Daily HW 10 marks today')" class="bg-[#ffcc1a] rounded-full py-2 text-[9px] font-bold border border-black">📝 HW Today</button>
-<button onclick="quick('Weekly exam 100 marks')" class="bg-[#4a86ff] text-white rounded-full py-2 text-[9px] font-bold">📋 Exam</button>
-<button onclick="quick('ICT computer basics')" class="bg-[#e8f4ff] rounded-full py-2 text-[9px] font-bold border">💻 ICT</button>
+<button onclick="quick('Summarize notes from ai_brain')" class="bg-[#f0f0f0] rounded-full py-2 text-[9px] font-bold border">📚 Summarize</button>
+<button onclick="quick('Set homework 10 marks from ai_brain')" class="bg-[#ffcc1a] rounded-full py-2 text-[9px] font-bold border border-black">📝 HW 10 Marks</button>
+<button onclick="quick('Set exam 100 marks from ai_brain')" class="bg-[#4a86ff] text-white rounded-full py-2 text-[9px] font-bold">📋 Exam 100</button>
+<button onclick="quick('Explain this topic from photo')" class="bg-[#e8f4ff] rounded-full py-2 text-[9px] font-bold border">📸 Photo Explain</button>
 </div>
-<p class="text-[8px] text-gray-400 mt-2" id="currentInfo">Grade 6 • Ready</p>
+<p class="text-[8px] text-gray-400 mt-2" id="currentInfo">Gemini + ai_brain ready...</p>
 </div>
 </div>
-
-<!-- Input - WhatsApp Style -->
 <div class="bg-[#f0f0f0] p-2 flex items-center gap-2 fixed bottom-0 w-full max-w-[420px]">
 <button onclick="document.getElementById('photoIn').click()" class="w-10 h-10 bg-white rounded-full flex items-center justify-center shadow"><i class="fa-solid fa-camera text-gray-600"></i></button>
-<input id="msg" placeholder="Ask anything..." class="flex-1 bg-white rounded-full px-4 py-3 text-[11px] font-bold outline-none shadow">
-<button onclick="sendMsg()" class="w-11 h-11 bg-[#25d366] rounded-full flex items-center justify-center text-white shadow"><i class="fa-solid fa-paper-plane text-[13px]"></i></button>
-<input type="file" id="photoIn" class="hidden" accept="image/*">
-</div>
-
-</div>
-
-<!-- ADMIN ONLY - Hidden unless?admin=1 -->
-<div id="adminBox" class="hidden fixed inset-0 bg-black/90 z-[100] p-4 overflow-auto">
-<div class="bg-white text-black rounded-2xl p-4 max-w-md mx-auto">
-<div class="flex justify-between"><p class="font-black">🔒 Admin Monitor - SHKE00500</p><button onclick="adminBox.classList.add('hidden')" class="bg-black text-white px-3 py-1 rounded-full text-xs">X</button></div>
-<p class="text-[10px] mt-2">Counting from 500 • Daily 10 Marks pending→double • Parent monitor parent.html • Notes link where info is • Human assistant appears as human</p>
-<div class="mt-3 space-y-2 text-[10px] bg-[#f6f6f7] p-3 rounded-xl">
-<p><b>Daily Logic:</b> If Monday pending Tuesday double 20 marks. Completed wait tomorrow.</p>
-<p><b>Exam:</b> Sat 00:00 - Sun 23:59 100 Marks Sec A 20 B 30 C 50</p>
-<p><b>Connected files:</b> notes.html, homework.html, exam.html, ict.html, foreign-language.html, games.html, care-chat.html</p>
+<input id="msg" placeholder="Ask Gemini + AI Brain..." class="flex-1 bg-white rounded-full px-4 py-3 text-[11px] font-bold outline-none shadow">
+<button onclick="sendMsg()" id="sendBtn" class="w-11 h-11 bg-[#25d366] rounded-full flex items-center justify-center text-white shadow"><i class="fa-solid fa-paper-plane text-[13px]"></i></button>
+<input type="file" id="photoIn" class="hidden" accept="image/*" onchange="handlePhoto(this)">
 </div>
 </div>
-</div>
-
 <script>
+const GEMINI_API_KEY="PASTE_YOUR_GEMINI_KEY_HERE";
+const GEMINI_MODEL="gemini-1.5-flash";
 let shke="SHKE", grade="Grade 6", name="Learner";
+let aiBrain=[], resources=[], uploadedPhoto='', isThinking=false;
+
 function quick(t){ msg.value=t; sendMsg(); }
-
-function sendMsg(){
- let txt=msg.value.trim(); if(!txt) return;
- let c=document.getElementById('chat');
- c.innerHTML+=`<div class="flex justify-end"><div class="bg-[#dcf8c6] rounded-lg rounded-tr-none p-3 shadow max-w-[80%]"><p class="text-[11px] font-bold">${txt}</p><p class="text-[8px] text-gray-500 text-right mt-1">${new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})} ✓✓</p></div></div>`;
- msg.value=""; c.scrollTop=c.scrollHeight;
-
- setTimeout(()=>{
-  let reply=`${txt} — <b>KICD ${grade}:</b> Here's clear answer...<br><br>`;
-  // Smart links - no repetition
-  if(txt.toLowerCase().includes('hw')||txt.toLowerCase().includes('homework')) reply+=`👉 <a href="homework.html" class="text-[#075e54] underline font-black">Open Homework 10 Marks</a><br>`;
-  else if(txt.toLowerCase().includes('exam')) reply+=`👉 <a href="exam.html" class="text-[#075e54] underline font-black">Open Exam 100 Marks (Sat-Sun)</a><br>`;
-  else if(txt.toLowerCase().includes('note')) reply+=`👉 <a href="notes.html?search=${encodeURIComponent(txt)}" class="text-[#075e54] underline font-black">View in Notes</a><br>`;
-  else reply+=`📚 <a href="notes.html?search=${encodeURIComponent(txt)}" class="text-[#075e54] underline">Notes</a> | 💻 <a href="ict.html" class="underline">ICT</a> | 🎮 <a href="games.html" class="underline">Games</a><br>`;
-
-  c.innerHTML+=`<div class="bg-white rounded-lg rounded-tl-none p-3 shadow max-w-[85%]"><p class="text-[11px] leading-5">${reply}</p><p class="text-[8px] text-gray-400 mt-2">AI Tutor • ${grade}</p></div>`;
+function handlePhoto(input){
+ let f=input.files[0]; if(!f) return;
+ let r=new FileReader(); r.onload=e=>{ uploadedPhoto=e.target.result;
+  let c=document.getElementById('chat');
+  c.innerHTML+=`<div class="flex justify-end"><div class="bg-[#dcf8c6] rounded-lg rounded-tr-none p-2 shadow max-w-[80%]"><img src="${uploadedPhoto}" class="rounded-lg max-h-[200px]"><p class="text-[9px] font-bold mt-1">📸 Photo for Gemini + AI Brain</p></div></div>`;
   c.scrollTop=c.scrollHeight;
- },700);
+ }; r.readAsDataURL(f);
 }
 
-setTimeout(()=>{
- let p=new URLSearchParams(location.search);
- if(p.get('admin')==='1'){ document.getElementById('adminBox').classList.remove('hidden'); }
- // Show context if coming from other files - AI connected
- let ctx=[]; if(p.get('subject')) ctx.push(p.get('subject')); if(p.get('topic')) ctx.push(p.get('topic')); if(p.get('grade')) ctx.push(p.get('grade')); if(p.get('game')) ctx.push(p.get('game')); if(p.get('q')) ctx.push(p.get('q'));
- if(ctx.length){ document.getElementById('contextBar').classList.remove('hidden'); document.getElementById('ctxText').innerText=ctx.join(" • "); document.getElementById('currentInfo').innerText=ctx.join(" • "); if(p.get('q')) msg.value=p.get('q'); else if(p.get('subject')) msg.value=`${p.get('subject')} ${p.get('topic')||''} ${p.get('grade')||''} notes`; }
-
+async function loadBrain(){
  let FB=window.FB;
- FB.onAuthStateChanged(FB.auth, async(u)=>{
-  if(u){ try{ let s=await FB.getDoc(FB.doc(FB.db,"users",u.uid)); if(s.exists()){ let d=s.data(); shke=d.indexNumber||"SHKE"; grade=d.grade||"Grade 6"; name=d.firstName||"Learner"; shkeBadge.innerText=shke; nameShow.innerText=name; document.getElementById('subHeader').innerText=`${grade} • ${shke} • Online`; document.getElementById('currentInfo').innerText=`${grade} • ${shke} • Connected to all files`; } }catch(e){} }
- });
-},500);
+ try{
+  let snap=await FB.getDocs(FB.collection(FB.db,'ai_brain')); aiBrain=[]; snap.forEach(d=>aiBrain.push({id:d.id,...d.data()}));
+  let snap2=await FB.getDocs(FB.collection(FB.db,'resources')); resources=[]; snap2.forEach(d=>resources.push({id:d.id,...d.data()}));
+  document.getElementById('subHeader').innerText=`Gemini ${GEMINI_MODEL} • ai_brain: ${aiBrain.length} • ${grade} • ${shke}`;
+  document.getElementById('brainCount').innerText=`${aiBrain.length} brain`;
+  document.getElementById('currentInfo').innerText=`${grade} • ${shke} • Gemini connected • ${aiBrain.length} brain loaded`;
+ }catch(e){ document.getElementById('subHeader').innerText=`Error: ${e.message}`; }
+}
+
+async function askGemini(userQuestion){
+ if(GEMINI_API_KEY.includes('PASTE')) return "⚠️ Admin: Paste Gemini API Key in ai-tutor.html line GEMINI_API_KEY. Get from aistudio.google.com/app/apikey";
+ let contextText = aiBrain.slice(-3).map(m=>`Title:${m.title} Grade:${m.grade} Subject:${m.subject} Use:${m.use} Text:${(m.text||'').slice(0,1200)}`).join("\n---\n") || "No AI Brain yet - Admin needs to feed in admin.html";
+ let systemPrompt = `You are SomaHub AI Tutor Kenya KICD PP1-Grade9. SHKE ${shke}, Grade ${grade}.
+AI Brain fed by Admin:
+${contextText}
+
+Rules:
+- If user asks Homework 10 marks: Create 4 questions from AI Brain notes = 2+2+3+3 =10
+- If Exam 100 marks: Sec A 20 MCQ, Sec B 30 short, Sec C 50 long - Sat-Sun weekly
+- If Summarize: Summarize clearly from AI Brain text/photo
+- Always cite which brain material you used
+- KICD, simple English
+User: ${userQuestion}`;
+
+ let parts=[{text: systemPrompt}];
+ if(uploadedPhoto) parts.push({inline_data:{mime_type:"image/jpeg", data: uploadedPhoto.split(',')[1]}});
+ let body={contents:[{parts}]};
+ let res=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent?key=${GEMINI_API_KEY}`,{method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(body)});
+ let data=await res.json();
+ if(data.error) throw new Error(data.error.message);
+ return data.candidates?.[0]?.content?.parts?.[0]?.text || "Gemini no reply";
+}
+
+async function sendMsg(){
+ if(isThinking) return;
+ let txt=msg.value.trim(); if(!txt &&!uploadedPhoto) return;
+ let c=document.getElementById('chat');
+ if(txt) c.innerHTML+=`<div class="flex justify-end"><div class="bg-[#dcf8c6] rounded-lg rounded-tr-none p-3 shadow max-w-[80%]"><p class="text-[11px] font-bold">${txt}</p></div></div>`;
+ msg.value=""; c.scrollTop=c.scrollHeight;
+ isThinking=true; document.getElementById('sendBtn').innerHTML='<i class="fa-solid fa-spinner fa-spin"></i>';
+ c.innerHTML+=`<div id="thinking" class="bg-white rounded-lg rounded-tl-none p-3 shadow max-w-[85%]"><p class="text-[10px]"><i class="fa-solid fa-robot"></i> Gemini thinking with ${aiBrain.length} brain materials...</p></div>`;
+ c.scrollTop=c.scrollHeight;
+ try{
+  let answer=await askGemini(txt || "Explain this photo from AI Brain");
+  document.getElementById('thinking')?.remove();
+  // format links
+  answer=answer.replace(/\n/g,'<br>');
+  let extra=`<br><br>👉 <a href="notes.html" class="text-[#075e54] underline font-black">Notes</a> | <a href="homework.html" class="underline">HW 10</a> | <a href="exam.html" class="underline">Exam 100</a>`;
+  c.innerHTML+=`<div class="bg-white rounded-lg rounded-tl-none p-3 shadow max-w-[85%]"><p class="text-[11px] leading-5">${answer}${extra}</p><p class="text-[8px] text-gray-400 mt-2">Gemini 1.5 Flash • Used ${aiBrain.length} brain • ${grade} ${shke}</p></div>`;
+ }catch(e){
+  document.getElementById('thinking')?.remove();
+  c.innerHTML+=`<div class="bg-[#ffeaea] rounded-lg rounded-tl-none p-3 shadow max-w-[85%]"><p class="text-[10px]">❌ Gemini Error: ${e.message}<br>Check API key + enable Generative Language API. Also publish rules: ai_brain allow read true.</p></div>`;
+ }
+ c.scrollTop=c.scrollHeight;
+ isThinking=false; document.getElementById('sendBtn').innerHTML='<i class="fa-solid fa-paper-plane text-[13px]"></i>'; uploadedPhoto='';
+}
+
+setTimeout(()=>{ loadBrain(); let FB=window.FB; FB.onAuthStateChanged(FB.auth, async(u)=>{ if(u){ try{ let s=await FB.getDoc(FB.doc(FB.db,"users",u.uid)); if(s.exists()){ let d=s.data(); shke=d.indexNumber||"SHKE"; grade=d.grade||"Grade 6"; name=d.firstName||"Learner"; shkeBadge.innerText=shke; nameShow.innerText=name; loadBrain(); } }catch(e){} } }); },600);
 msg.addEventListener('keypress',e=>{ if(e.key==='Enter') sendMsg(); });
 </script>
 </body></html>
