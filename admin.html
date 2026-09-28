@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SomaHub Admin - Classy</title>
+<title>SomaHub Admin - Parent + Teacher Request</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
 <style>body{font-family:'Inter',sans-serif}</style>
@@ -15,139 +15,131 @@ window.FB={db,collection,getDocs,doc,getDoc,updateDoc,deleteDoc,addDoc,serverTim
 </script>
 </head>
 <body class="bg-[#f7f7f5] text-[#111] min-h-screen">
-
-<!-- HEADER -->
 <header class="bg-white border-b sticky top-0 z-50">
 <div class="max-w-6xl mx-auto px-6 py-4 flex justify-between items-center">
-<div><h1 class="font-extrabold text-[18px] tracking-tight">SomaHub Admin</h1><p class="text-[11px] text-gray-500 -mt-1">Feed resources • SHKE00500+ • One collection: <span class="font-bold text-black">resources</span></p></div>
-<div class="flex gap-2"><span id="live" class="bg-black text-white px-3 py-1.5 rounded-full text-[10px] font-bold">Live 0</span><button onclick="loadAll()" class="bg-[#ffcc1a] px-4 py-1.5 rounded-full text-[11px] font-bold">Reload</button></div>
+<div><h1 class="font-extrabold text-[18px] tracking-tight">SomaHub Admin</h1><p class="text-[10px] text-gray-500 -mt-1">Parent + Teacher can request homeschooling • SHKE + SHKET</p></div>
+<div class="flex gap-2">
+<button onclick="showTab('resources')" id="btn-resources" class="bg-white border px-4 py-2 rounded-full text-[11px] font-bold">📚 Resources</button>
+<button onclick="showTab('ai')" id="btn-ai" class="bg-white border px-4 py-2 rounded-full text-[11px] font-bold">🤖 AI Brain</button>
+<button onclick="showTab('tuition')" id="btn-tuition" class="bg-black text-white px-4 py-2 rounded-full text-[11px] font-bold">🏠 Tuition <span id="tuitionCountTop" class="bg-[#ffcc1a] text-black px-1.5 rounded-full ml-1">0</span></button>
+</div>
 </div>
 </header>
 
-<div class="max-w-6xl mx-auto px-6 py-6 grid grid-cols-12 gap-6">
+<div class="max-w-6xl mx-auto px-6 py-6">
 
-<!-- LEFT - FEED RESOURCES - MAIN -->
+<!-- RESOURCES -->
+<div id="tab-resources" class="hidden">
+<div class="grid grid-cols-12 gap-6">
 <div class="col-span-12 lg:col-span-7">
-<div class="bg-white rounded-[24px] border shadow-sm p-6">
-<div class="flex justify-between items-center mb-5">
-<h2 class="font-extrabold text-[15px]">Feed New Resource</h2>
-<p class="text-[10px] bg-gray-100 px-2 py-1 rounded-full">Shows instantly in student files</p>
+<div class="bg-white rounded-[24px] border p-6 shadow-sm">
+<h2 class="font-extrabold text-[15px] mb-4">📚 Feed Resource</h2>
+<div class="grid grid-cols-3 gap-2 mb-4">
+<button onclick="setType('Notes')" id="tNotes" class="typeBtn bg-black text-white p-3 rounded-2xl text-left"><p class="text-[12px] font-bold">📘 Notes</p></button>
+<button onclick="setType('Design')" id="tDesign" class="typeBtn bg-white border p-3 rounded-2xl text-left"><p class="text-[12px] font-bold">🎨 Design</p></button>
+<button onclick="setType('Exam')" id="tExam" class="typeBtn bg-white border p-3 rounded-2xl text-left"><p class="text-[12px] font-bold">📝 Exam</p></button>
+<button onclick="setType('Homework')" id="tHomework" class="typeBtn bg-white border p-3 rounded-2xl text-left"><p class="text-[12px] font-bold">📝 Homework</p></button>
+<button onclick="setType('Scheme')" id="tScheme" class="typeBtn bg-white border p-3 rounded-2xl text-left"><p class="text-[12px] font-bold">🗂️ Scheme</p></button>
+<button onclick="setType('LessonPlan')" id="tLessonPlan" class="typeBtn bg-white border p-3 rounded-2xl text-left"><p class="text-[12px] font-bold">📋 Lesson</p></button>
 </div>
-
-<!-- QUICK TYPE SELECTOR - HUMAN FRIENDLY -->
-<p class="text-[11px] font-bold text-gray-500 mb-2">WHERE WILL IT SHOW?</p>
-<div class="grid grid-cols-3 gap-2 mb-4" id="typeGrid">
-<button onclick="setType('Notes')" id="btnNotes" class="typeBtn bg-black text-white p-3 rounded-2xl text-left"><p class="text-[12px] font-bold">📘 Notes</p><p class="text-[9px] opacity-70">notes.html</p></button>
-<button onclick="setType('Design')" id="btnDesign" class="typeBtn bg-white border p-3 rounded-2xl text-left"><p class="text-[12px] font-bold">🎨 Design</p><p class="text-[9px] text-gray-500">curriculum-designs.html</p></button>
-<button onclick="setType('Exam')" id="btnExam" class="typeBtn bg-white border p-3 rounded-2xl text-left"><p class="text-[12px] font-bold">📝 Exam</p><p class="text-[9px] text-gray-500">exam.html</p></button>
-<button onclick="setType('Homework')" id="btnHomework" class="typeBtn bg-white border p-3 rounded-2xl text-left"><p class="text-[12px] font-bold">📝 Homework</p><p class="text-[9px] text-gray-500">homework.html</p></button>
-<button onclick="setType('Scheme')" id="btnScheme" class="typeBtn bg-white border p-3 rounded-2xl text-left"><p class="text-[12px] font-bold">🗂️ Scheme</p><p class="text-[9px] text-gray-500">schemes.html</p></button>
-<button onclick="setType('LessonPlan')" id="btnLessonPlan" class="typeBtn bg-white border p-3 rounded-2xl text-left"><p class="text-[12px] font-bold">📋 Lesson Plan</p><p class="text-[9px] text-gray-500">lesson-plans.html</p></button>
-</div>
-
 <input type="hidden" id="rType" value="Notes">
-
-<div class="space-y-3">
-<input id="rTitle" placeholder="Title — e.g. Grade 6 Fractions Notes" class="w-full bg-[#f7f7f5] border border-black/5 p-4 rounded-2xl text-[13px] outline-none focus:border-black">
-
-<div class="grid grid-cols-2 gap-3">
-<select id="rGrade" class="bg-[#f7f7f5] border border-black/5 p-4 rounded-2xl text-[13px]"><option>PP1</option><option>PP2</option><option>Grade 1</option><option>Grade 2</option><option>Grade 3</option><option>Grade 4</option><option>Grade 5</option><option selected>Grade 6</option><option>Grade 7</option><option>Grade 8</option><option>Grade 9</option></select>
-<select id="rSubject" class="bg-[#f7f7f5] border border-black/5 p-4 rounded-2xl text-[13px]"><option>Mathematics</option><option>English</option><option>Kiswahili</option><option>Science</option><option>SST</option><option>CRE</option><option>Computer</option><option>ICT</option><option>French</option></select>
+<input id="rTitle" placeholder="Title — e.g. Grade 6 Fractions" class="w-full bg-[#f7f7f5] border p-4 rounded-2xl text-[13px] mb-3 outline-none">
+<div class="grid grid-cols-2 gap-3 mb-3"><select id="rGrade" class="bg-[#f7f7f5] border p-4 rounded-2xl text-[13px]"><option>Grade 6</option><option>Grade 7</option><option>Grade 8</option><option>Grade 5</option></select><select id="rSubject" class="bg-[#f7f7f5] border p-4 rounded-2xl text-[13px]"><option>Mathematics</option><option>English</option><option>Science</option></select></div>
+<input id="rUrl" placeholder="Drive / PDF / YouTube link" class="w-full bg-[#f7f7f5] border p-4 rounded-2xl text-[13px] mb-3 outline-none"><textarea id="rDesc" placeholder="Description..." class="w-full bg-[#f7f7f5] border p-4 rounded-2xl text-[13px] h-[80px] mb-3 outline-none"></textarea>
+<button onclick="addResource()" class="w-full bg-black text-white py-4 rounded-2xl font-bold text-[13px]">+ Add to <span id="showWhere">notes.html</span></button><p id="rMsg" class="text-[11px] text-center font-bold mt-2"></p>
 </div>
-
-<input id="rUrl" placeholder="Paste Drive / PDF / YouTube link here" class="w-full bg-[#f7f7f5] border border-black/5 p-4 rounded-2xl text-[13px] outline-none focus:border-black">
-<textarea id="rDesc" placeholder="Short description — where info is, what student will learn..." class="w-full bg-[#f7f7f5] border border-black/5 p-4 rounded-2xl text-[13px] h-[90px] outline-none focus:border-black"></textarea>
-
-<button onclick="addResource()" class="w-full bg-black text-white py-4 rounded-2xl font-bold text-[13px]">+ Add to Library → Instantly shows in <span id="showWhere">notes.html</span></button>
-<p id="rMsg" class="text-[11px] text-center font-bold mt-2"></p>
+<div class="bg-white rounded-[24px] border p-6 mt-6"><h3 class="font-bold text-[13px]">Recent Resources</h3><div id="rList" class="mt-4 space-y-2 max-h-[400px] overflow-y-auto"></div></div>
+</div>
+<div class="col-span-12 lg:col-span-5"><div class="grid grid-cols-2 gap-3"><div class="bg-white rounded-[20px] border p-5"><p class="text-[10px] text-gray-400">Students</p><p id="sCount" class="font-black text-[22px]">0</p></div><div class="bg-white rounded-[20px] border p-5"><p class="text-[10px] text-gray-400">Teachers</p><p id="tCount2" class="font-black text-[22px]">0</p></div></div></div>
 </div>
 </div>
 
-<!-- RESOURCE LIST - CLEAN -->
-<div class="bg-white rounded-[24px] border shadow-sm p-6 mt-6">
-<h3 class="font-bold text-[13px] mb-4">Recent Resources - One collection: resources</h3>
-<input id="searchRes" oninput="filterRes()" placeholder="Search title, grade, subject..." class="w-full bg-[#f7f7f5] p-3 rounded-xl text-[12px] mb-3 outline-none">
-<div id="rList" class="space-y-2 max-h-[400px] overflow-y-auto"></div>
+<!-- AI BRAIN -->
+<div id="tab-ai" class="hidden">
+<div class="grid grid-cols-12 gap-6">
+<div class="col-span-12 lg:col-span-7">
+<div class="bg-white rounded-[24px] border p-6">
+<h2 class="font-extrabold text-[16px]">🤖 Feed SomaHub AI Brain</h2><p class="text-[11px] text-gray-500">Take photo of textbook → AI uses for Exam/Homework</p>
+<div class="mt-5 bg-[#f7f7f5] p-4 rounded-2xl border-2 border-dashed">
+<div class="grid grid-cols-2 gap-3"><button onclick="openCamera()" class="bg-black text-white py-3 rounded-xl text-[12px] font-bold">📷 Open Camera</button><label class="bg-white border py-3 rounded-xl text-[12px] font-bold text-center cursor-pointer">🖼️ Choose Photo<input type="file" id="fileInput" accept="image/*" capture="environment" class="hidden" onchange="handleFile(this)"></label></div>
+<video id="video" autoplay playsinline class="hidden w-full mt-3 rounded-2xl bg-black h-[240px]"></video><canvas id="canvas" class="hidden"></canvas>
+<div class="flex gap-2 mt-3 hidden" id="camBtns"><button onclick="takePhoto()" class="flex-1 bg-[#ffcc1a] py-2.5 rounded-xl font-bold text-[12px]">📸 Capture</button><button onclick="closeCamera()" class="flex-1 bg-white border py-2.5 rounded-xl font-bold text-[12px]">Close</button></div>
+<img id="preview" class="hidden w-full mt-3 rounded-2xl border max-h-[300px] object-contain bg-white"><p id="photoStatus" class="text-[10px] mt-2"></p>
+</div>
+<div class="mt-5 space-y-3"><input id="aiTitle" placeholder="Title" class="w-full bg-[#f7f7f5] border p-4 rounded-2xl text-[13px]"><div class="grid grid-cols-3 gap-3"><select id="aiSubject" class="bg-[#f7f7f5] border p-3 rounded-2xl text-[12px]"><option>Mathematics</option><option>English</option></select><select id="aiGrade" class="bg-[#f7f7f5] border p-3 rounded-2xl text-[12px]"><option>Grade 6</option></select><select id="aiUse" class="bg-[#f7f7f5] border p-3 rounded-2xl text-[12px]"><option value="all">All</option><option value="exam">EXAM</option><option value="homework">HOMEWORK</option></select></div><textarea id="aiText" placeholder="Paste text..." class="w-full bg-[#f7f7f5] border p-4 rounded-2xl text-[13px] h-[100px]"></textarea><button onclick="addAiBrain()" class="w-full bg-[#ffcc1a] py-4 rounded-2xl font-bold text-[13px]">🧠 Feed to AI</button><p id="aiMsg" class="text-[11px] text-center"></p></div>
+</div>
+</div>
+<div class="col-span-12 lg:col-span-5"><div class="bg-black text-white rounded-[24px] p-6"><h3 class="font-bold text-[13px]">🧠 AI Library</h3><div id="aiList" class="mt-4 space-y-3 max-h-[700px] overflow-y-auto"></div></div></div>
 </div>
 </div>
 
-<!-- RIGHT - STATS + TUITION - CLEAN -->
-<div class="col-span-12 lg:col-span-5 space-y-6">
-
-<div class="grid grid-cols-2 gap-3">
-<div class="bg-white rounded-[20px] border p-5"><p class="text-[10px] text-gray-400">Students</p><p id="sCount" class="font-black text-[22px]">0</p><p class="text-[9px]">SHKE00500+ • student.html</p></div>
-<div class="bg-white rounded-[20px] border p-5"><p class="text-[10px] text-gray-400">Teachers</p><p id="tCount2" class="font-black text-[22px]">0</p><p class="text-[9px]">User ID • teachers.html</p></div>
-<div class="bg-[#ffcc1a] rounded-[20px] p-5"><p class="text-[10px] text-black/60">Tuition Requests</p><p id="tuitionCount" class="font-black text-[22px]">0</p><p class="text-[9px]">Parent→Teacher via SHKE</p></div>
-<div class="bg-black text-white rounded-[20px] p-5"><p class="text-[10px] text-white/60">Wallet</p><p id="subCount" class="font-black text-[22px]">0</p><p class="text-[9px]">Till 0701305109</p></div>
-</div>
-
-<div class="bg-white rounded-[24px] border shadow-sm p-6">
-<div class="flex justify-between items-center mb-4"><h3 class="font-bold text-[13px]">🏠 Tuition - Teacher ↔ Learner - FIXED</h3><button onclick="loadTuition()" class="bg-black text-white px-3 py-1 rounded-full text-[10px]">Reload</button></div>
-<p class="text-[10px] text-gray-500 mb-3">Student+Parent+Teacher via SHKE • Student sees NO phone • Teacher sees Parent phone • Connects parent.html → teachers.html → student.html</p>
-<p id="tStatus" class="text-[10px] bg-[#f7f7f5] p-2 rounded-xl">Loading...</p>
-<div id="tList" class="mt-3 space-y-2 max-h-[300px] overflow-y-auto"></div>
-
-<div class="mt-4 bg-[#f7f7f5] p-4 rounded-2xl">
-<p class="font-bold text-[11px]">Assign Teacher</p>
-<input id="docId" placeholder="Doc ID - click Select from list" class="w-full bg-white border p-2.5 rounded-xl text-[11px] mt-2">
-<div class="grid grid-cols-2 gap-2 mt-2"><input id="teachId" placeholder="Teacher UserId" class="bg-white border p-2.5 rounded-xl text-[11px]"><input id="teachName" placeholder="Mr Kamau" class="bg-white border p-2.5 rounded-xl text-[11px]"></div>
-<button onclick="assign()" class="w-full bg-black text-white py-3 rounded-xl font-bold mt-3 text-[11px]">Approve + Assign</button>
-<p id="aMsg" class="text-[10px] mt-2 text-green-600 font-bold"></p>
+<!-- TUITION - PARENT + TEACHER -->
+<div id="tab-tuition">
+<div class="max-w-4xl mx-auto bg-white rounded-[24px] border p-6 shadow-sm">
+<div class="flex justify-between items-center"><h2 class="font-extrabold text-[16px]">🏠 Homeschooling Requests — Parent + Teacher can request</h2><button onclick="loadTuition()" class="bg-black text-white px-4 py-2 rounded-full text-[11px] font-bold">🔄 Reload</button></div>
+<p id="tStatus" class="text-[11px] mt-3 bg-[#f7f7f5] p-3 rounded-xl">Loading homeschooling_requests...</p>
+<div id="tList" class="mt-5 space-y-4"></div>
 </div>
 </div>
 
-</div>
 </div>
 
 <script>
-let currentType='Notes'; let allRes=[];
-function setType(t){ currentType=t; document.getElementById('rType').value=t; document.getElementById('showWhere').innerText = t=='Notes'?'notes.html':t=='Design'?'curriculum-designs.html':t=='Exam'?'exam.html':t=='Homework'?'homework.html':t=='Scheme'?'schemes.html':'lesson-plans.html'; document.querySelectorAll('.typeBtn').forEach(b=>{ b.className='typeBtn bg-white border p-3 rounded-2xl text-left'; }); document.getElementById('btn'+t).className='typeBtn bg-black text-white p-3 rounded-2xl text-left'; }
-
-async function addResource(){
- let FB=window.FB; let title=rTitle.value.trim(); if(!title) return alert('Title please');
- let doc = {title, type:document.getElementById('rType').value, grade:rGrade.value, subject:rSubject.value, url:rUrl.value.trim(), description:rDesc.value.trim(), createdAt:FB.serverTimestamp()};
- await FB.addDoc(FB.collection(FB.db,'resources'), doc);
- rMsg.innerText=`✅ Added "${title}" as ${doc.type} → will show in ${document.getElementById('showWhere').innerText}`;
- rTitle.value=''; rUrl.value=''; rDesc.value=''; loadRes();
-}
-
-async function loadRes(){
- let FB=window.FB; let snap=await FB.getDocs(FB.collection(FB.db,'resources')); allRes=[]; snap.forEach(d=>allRes.push({id:d.id,...d.data()}));
- document.getElementById('subCount').innerText=allRes.length; // temp use as resources count too
- rList.innerHTML=''; allRes.slice(-30).reverse().forEach(r=>{
-  rList.innerHTML+=`<div class="flex justify-between items-center bg-[#f7f7f5] p-3 rounded-2xl"><div><p class="font-bold text-[11px]">${r.title} • <span class="bg-black text-white px-1.5 py-0.5 rounded-full text-[8px]">${r.type}</span></p><p class="text-[9px] text-gray-500">${r.grade} • ${r.subject} → ${r.type=='Notes'?'notes.html':r.type=='Design'?'curriculum-designs.html':r.type=='Exam'?'exam.html':r.type}</p></div><button onclick="delRes('${r.id}')" class="text-[10px] text-red-500 font-bold">Delete</button></div>`;
- });
- filterRes();
-}
-function filterRes(){
- let q=searchRes.value.toLowerCase(); let filtered=allRes.filter(r=> (r.title||'').toLowerCase().includes(q) || (r.grade||'').toLowerCase().includes(q) || (r.subject||'').toLowerCase().includes(q));
- if(q){ rList.innerHTML=''; filtered.slice(0,30).forEach(r=>{ rList.innerHTML+=`<div class="bg-[#f7f7f5] p-3 rounded-2xl"><p class="font-bold text-[11px]">${r.title}</p><p class="text-[9px] text-gray-500">${r.grade} ${r.subject} ${r.type}</p></div>`; }); }
-}
-async function delRes(id){ if(!confirm('Delete?')) return; let FB=window.FB; await FB.deleteDoc(FB.doc(FB.db,'resources',id)); loadRes(); }
+let currentType='Notes', allRes=[], photoBase64='', stream=null;
+function showTab(t){['resources','ai','tuition'].forEach(x=>{document.getElementById('tab-'+x).classList.add('hidden'); document.getElementById('btn-'+x).className='bg-white border px-4 py-2 rounded-full text-[11px] font-bold';}); document.getElementById('tab-'+t).classList.remove('hidden'); document.getElementById('btn-'+t).className='bg-black text-white px-4 py-2 rounded-full text-[11px] font-bold'; if(t=='resources') loadRes(); if(t=='ai') loadAi(); if(t=='tuition') loadTuition();}
+function setType(t){ currentType=t; document.getElementById('rType').value=t; document.getElementById('showWhere').innerText=t=='Notes'?'notes.html':t=='Design'?'curriculum-designs.html':t=='Exam'?'exam.html':t=='Homework'?'homework.html':t=='Scheme'?'schemes.html':'lesson-plans.html'; document.querySelectorAll('.typeBtn').forEach(b=>b.className='typeBtn bg-white border p-3 rounded-2xl text-left'); document.getElementById('t'+t).className='typeBtn bg-black text-white p-3 rounded-2xl text-left'; }
+async function openCamera(){ try{ stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:'environment'}}); let v=document.getElementById('video'); v.srcObject=stream; v.classList.remove('hidden'); document.getElementById('camBtns').classList.remove('hidden'); }catch(e){ alert(e.message); } }
+function closeCamera(){ if(stream) stream.getTracks().forEach(t=>t.stop()); document.getElementById('video').classList.add('hidden'); document.getElementById('camBtns').classList.add('hidden'); }
+function takePhoto(){ let v=document.getElementById('video'); let c=document.getElementById('canvas'); c.width=v.videoWidth; c.height=v.videoHeight; c.getContext('2d').drawImage(v,0,0); photoBase64=c.toDataURL('image/jpeg',0.7); document.getElementById('preview').src=photoBase64; document.getElementById('preview').classList.remove('hidden'); closeCamera(); }
+function handleFile(i){ let f=i.files[0]; let r=new FileReader(); r.onload=e=>{ photoBase64=e.target.result; document.getElementById('preview').src=photoBase64; document.getElementById('preview').classList.remove('hidden'); }; r.readAsDataURL(f); }
+async function addResource(){ let FB=window.FB; let title=rTitle.value.trim(); if(!title) return; await FB.addDoc(FB.collection(FB.db,'resources'), {title, type:document.getElementById('rType').value, grade:rGrade.value, subject:rSubject.value, url:rUrl.value, description:rDesc.value, createdAt:FB.serverTimestamp()}); rMsg.innerText='✅ Added'; loadRes(); }
+async function loadRes(){ let FB=window.FB; let snap=await FB.getDocs(FB.collection(FB.db,'resources')); allRes=[]; snap.forEach(d=>allRes.push({id:d.id,...d.data()})); rList.innerHTML=''; allRes.slice(-20).reverse().forEach(r=>{ rList.innerHTML+=`<div class="bg-[#f7f7f5] p-3 rounded-2xl flex justify-between"><p class="font-bold text-[11px]">${r.title}</p><button onclick="delRes('${r.id}')" class="text-red-500 text-[10px]">Delete</button></div>`; }); }
+async function delRes(id){ let FB=window.FB; await FB.deleteDoc(FB.doc(FB.db,'resources',id)); loadRes(); }
+async function addAiBrain(){ let FB=window.FB; await FB.addDoc(FB.collection(FB.db,'ai_brain'), {title:aiTitle.value, subject:aiSubject.value, grade:aiGrade.value, use:aiUse.value, text:aiText.value, photo:photoBase64, createdAt:FB.serverTimestamp()}); aiMsg.innerText='🧠 Fed'; photoBase64=''; document.getElementById('preview').classList.add('hidden'); loadAi(); }
+async function loadAi(){ let FB=window.FB; let snap=await FB.getDocs(FB.collection(FB.db,'ai_brain')); aiList.innerHTML=''; snap.forEach(d=>{ let m=d.data(); aiList.innerHTML+=`<div class="bg-white/10 p-3 rounded-2xl"><p class="text-[11px] font-bold">${m.title} ${m.use}</p>${m.photo?`<img src="${m.photo}" class="mt-2 rounded-xl max-h-[100px]">`:''}</div>`; }); }
 
 async function loadTuition(){
- let FB=window.FB; tStatus.innerText='Loading homeschooling_requests (FIXED no orderBy)...';
+ let FB=window.FB;
  try{
   let snap=await FB.getDocs(FB.collection(FB.db,'homeschooling_requests'));
   let docs=[]; snap.forEach(d=>docs.push({id:d.id,...d.data()}));
-  tuitionCount.innerText=docs.length; tStatus.innerText=`✅ Found ${docs.length} - Student+Parent+Teacher via SHKE`;
-  tList.innerHTML=''; docs.forEach(r=>{
-   tList.innerHTML+=`<div class="bg-[#f7f7f5] p-3 rounded-2xl"><p class="font-bold text-[11px]">${r.shke||''} • ${r.childName||''} • ${r.grade||''} • ${r.subject||''} • ${(r.status||'pending').toUpperCase()}</p><p class="text-[9px] text-gray-500">Parent ${r.parentPhone||''} • ${r.location||''} • Teacher ${r.teacherName||'Not assigned'} • Doc ${r.id}</p><button onclick="docId.value='${r.id}'" class="mt-1 bg-white border px-2 py-1 rounded-full text-[8px] font-bold">📌 Select Doc ID</button></div>`;
+  document.getElementById('tuitionCountTop').innerText=docs.length;
+  document.getElementById('tStatus').innerText=`✅ Found ${docs.length} — Parent + Teacher requests — FIXED NO orderBy`;
+  let list=document.getElementById('tList'); list.innerHTML='';
+  if(docs.length==0){ list.innerHTML=`<div class="bg-[#f7f7f5] p-8 rounded-2xl text-center"><p class="font-bold text-[13px]">No requests yet</p><p class="text-[11px] text-gray-500 mt-1">Example:<br>1. Parent of SHKE00512 is requesting for homeschooling.<br>2. Parent of SHKE00512 is requesting for student John and teacher SHKET-8F3A<br>3. Teacher SHKET-8F3A is requesting for student SHKE00512</p></div>`; return; }
+  docs.forEach(r=>{
+    let col=r.status=='approved'?'bg-green-500':r.status=='rejected'?'bg-red-500':'bg-[#ffcc1a]';
+    let isTeacher = (r.requestedBy||'').toLowerCase()=='teacher' || r.teacherRequest==true;
+    let line1 = isTeacher? `Teacher of <b>${r.teacherId? 'SHKET-'+r.teacherId.slice(-5):'SHKET...' } (${r.teacherName||'Teacher'})</b> is requesting for homeschooling.` : `Parent of <b>${r.shke||'SHKE...'}</b> is requesting for homeschooling.`;
+    let line2 = isTeacher? `Teacher <b>${r.teacherId? 'SHKET-'+r.teacherId.slice(-5):''}</b> is requesting for homeschooling for student <b>${r.childName||r.shke||'Student'}</b> and parent <b>${r.shke||''}</b>` : `Parent of <b>${r.shke||'SHKE...'}</b> is requesting for homeschooling for student <b>${r.childName||r.shke||'Student'}</b> and teacher <b>${r.teacherId?'SHKET-'+r.teacherId.slice(-5):'Not assigned'}</b>`;
+
+    list.innerHTML+=`
+    <div class="border rounded-[20px] p-5">
+      <div class="flex justify-between"><span class="${col} text-[9px] px-3 py-1 rounded-full font-bold">${(r.status||'pending').toUpperCase()} • ${isTeacher?'TEACHER REQUEST':'PARENT REQUEST'}</span><span class="text-[10px] text-gray-400">${r.id}</span></div>
+      <div class="mt-3 space-y-1 text-[13px] leading-7">
+        <p>1. ${line1}</p>
+        <p>2. ${line2}</p>
+        <p class="text-[11px] text-gray-600 mt-2 bg-[#f7f7f5] p-2 rounded-xl">Child: ${r.childName||'-'} | SHKE: ${r.shke||'-'} | Grade: ${r.grade||'-'} | Subject: ${r.subject||'-'} | Parent Phone: ${r.parentPhone||'-'} | Teacher: ${r.teacherName||'-'} (${r.teacherId||''}) | SHKET: ${r.teacherId? 'SHKET-'+r.teacherId.slice(-5):''} | Location: ${r.location||'-'}</p>
+      </div>
+      <div class="mt-4 grid grid-cols-3 gap-2">
+        <button onclick="approveTuition('${r.id}')" class="bg-black text-white py-3 rounded-xl font-bold text-[11px]">✅ Approve</button>
+        <button onclick="rejectTuition('${r.id}')" class="bg-white border border-red-300 text-red-600 py-3 rounded-xl font-bold text-[11px]">❌ Reject</button>
+        <button onclick="toggleAssign('${r.id}')" class="bg-[#ffcc1a] text-black py-3 rounded-xl font-bold text-[11px]">👩‍🏫 Assign Teacher</button>
+      </div>
+      <div id="assign-${r.id}" class="hidden mt-3 bg-[#f7f7f5] p-3 rounded-xl">
+        <div class="grid grid-cols-2 gap-2"><input id="tid-${r.id}" placeholder="Teacher UserId / SHKET..." class="bg-white border p-2 rounded-xl text-[11px]" value="${r.teacherId||''}"><input id="tname-${r.id}" placeholder="Mr Kamau" class="bg-white border p-2 rounded-xl text-[11px]" value="${r.teacherName||''}"></div>
+        <button onclick="doAssign('${r.id}')" class="w-full bg-black text-white py-2 rounded-xl text-[11px] font-bold mt-2">Confirm Assign + Approve</button>
+      </div>
+    </div>`;
   });
- }catch(e){ tStatus.innerText='❌ '+e.message; }
+ }catch(e){ document.getElementById('tStatus').innerText='❌ '+e.message; }
 }
-async function assign(){
- let FB=window.FB; let d=docId.value.trim(), t=teachId.value.trim(), n=teachName.value.trim(); if(!d||!t) return alert('Doc ID + Teacher UserId');
- let td=await FB.getDoc(FB.doc(FB.db,'users',t)); let email=td.exists()?td.data().email||'':'';
- await FB.updateDoc(FB.doc(FB.db,'homeschooling_requests',d), {status:'approved', teacherId:t, teacherName:n, teacherEmail:email});
- aMsg.innerText=`✅ Assigned ${n} to ${d}`; loadTuition();
-}
-async function loadStudents(){
- let FB=window.FB; let snap=await FB.getDocs(FB.collection(FB.db,'users')); let c=0; snap.forEach(d=>{ let u=d.data(); if((u.role||'student')=='student'||!u.role) c++; }); sCount.innerText=c; live.innerText=`Live ${c}`;
- let tc=0; snap.forEach(d=>{ if((d.data().role||'').toLowerCase()=='teacher') tc++; }); tCount2.innerText=tc;
-}
-function loadAll(){ loadRes(); loadTuition(); loadStudents(); }
-setTimeout(loadAll, 800);
+async function approveTuition(id){ let FB=window.FB; await FB.updateDoc(FB.doc(FB.db,'homeschooling_requests',id), {status:'approved'}); loadTuition(); }
+async function rejectTuition(id){ let FB=window.FB; if(!confirm('Reject '+id+'?')) return; await FB.updateDoc(FB.doc(FB.db,'homeschooling_requests',id), {status:'rejected'}); loadTuition(); }
+function toggleAssign(id){ document.getElementById('assign-'+id).classList.toggle('hidden'); }
+async function doAssign(id){ let FB=window.FB; let tId=document.getElementById('tid-'+id).value.trim(); let tName=document.getElementById('tname-'+id).value.trim(); let td=await FB.getDoc(FB.doc(FB.db,'users',tId)); let em=td.exists()?td.data().email||'':''; await FB.updateDoc(FB.doc(FB.db,'homeschooling_requests',id), {status:'approved', teacherId:tId, teacherName:tName, teacherEmail:em}); loadTuition(); }
+async function loadCounts(){ let FB=window.FB; let snap=await FB.getDocs(FB.collection(FB.db,'users')); let sc=0,tc=0; snap.forEach(d=>{ let r=(d.data().role||'').toLowerCase(); if(r=='teacher') tc++; else sc++; }); document.getElementById('sCount').innerText=sc; document.getElementById('tCount2').innerText=tc; }
+setTimeout(()=>{ showTab('tuition'); loadCounts(); loadTuition(); },900);
 </script>
 </body>
 </html>
