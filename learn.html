@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SomaHub Homework - Learn</title>
+<link rel="icon" href="logo.png">
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>body{font-family:'Plus Jakarta Sans',sans-serif}</style>
+</head>
+<body class="bg-[#fdf6ec]">
+
+<!-- HEADER WITH LOGO.png -->
+<div class="sticky top-0 z-30 bg-[#0a4a3a] text-white flex items-center gap-3 px-4 py-3">
+  <a href="index.html" class="text-[22px]">←</a>
+  <img src="logo.png" class="w-10 h-10 rounded-full bg-white p-1 object-contain">
+  <div class="leading-tight">
+    <div class="font-extrabold text-[15px]">SomaHub Homework</div>
+    <div id="todayDate" class="text-[11px] opacity-80"></div>
+  </div>
+  <div class="ml-auto bg-white/15 px-3 py-1.5 rounded-full text-[11px] font-bold">SHKE00502 • G7</div>
+</div>
+
+<div class="max-w-[600px] mx-auto p-3">
+
+<!-- STATUS CARD -->
+<div class="bg-white rounded-[20px] p-4 shadow">
+<div id="nextSub" class="font-bold text-[13px] mb-3"></div>
+<div class="grid grid-cols-4 gap-2">
+<button onclick="startHW()" class="bg-[#ffb703] rounded-xl py-3 font-extrabold text-[12px]">📝 HW 10</button>
+<button onclick="startExam()" class="bg-[#2196f3] text-white rounded-xl py-3 font-extrabold text-[12px]">📄 Exam 100</button>
+<button onclick="openTimetable()" class="bg-[#0a4a3a] text-white rounded-xl py-3 font-extrabold text-[12px]">📅 Table</button>
+<button onclick="takePhoto()" class="bg-[#eafbe9] border rounded-xl py-3 font-extrabold text-[12px]">📷 Photo</button>
+</div>
+<input type="file" id="photoInput" accept="image/*" hidden>
+</div>
+
+<!-- WORK AREA -->
+<div id="workArea" class="hidden bg-white rounded-[20px] p-4 shadow mt-3">
+<h4 id="workTitle" class="font-extrabold"></h4>
+<div id="questions" class="mt-3 space-y-3"></div>
+<button onclick="checkAnswers()" class="w-full mt-4 bg-[#ffb703] rounded-xl py-3 font-extrabold">Check Now ✅</button>
+<div id="result" class="hidden mt-3"></div>
+<button id="corrBtn" onclick="showCorrection()" class="hidden w-full mt-2 bg-[#2196f3] text-white rounded-xl py-3 font-bold">View Correction 👁️</button>
+</div>
+
+</div>
+
+<!-- TIMETABLE MODAL -->
+<div id="ttModal" class="fixed inset-0 bg-black/50 hidden z-50 overflow-auto p-4">
+<div class="bg-white rounded-[20px] p-4 max-w-[600px] mx-auto">
+<div class="flex justify-between items-center">
+<h3 class="font-extrabold">📅 Weekly Timetable - Mon to Fri</h3>
+<button onclick="closeTimetable()" class="bg-black text-white px-3 py-1 rounded-full text-[12px]">X</button>
+</div>
+<p class="text-[11px] text-black/50 mt-1">✅ = Done after homework, ⏳ = Pending</p>
+<div id="ttTable" class="mt-3 overflow-auto"></div>
+<button onclick="resetWeek()" class="w-full mt-3 bg-black/5 rounded-xl py-2 text-[12px]">Reset Week</button>
+</div>
+</div>
+
+<script>
+let brainContext = localStorage.getItem('brainCache') || 'CBC Grade 7 Kenya';
+let todayName = new Date().toLocaleDateString('en-KE',{weekday:'long'});
+let weekKey = 'tt_'+new Date().getFullYear()+'_W'+getWeekNum();
+let timetable = JSON.parse(localStorage.getItem(weekKey)||'{}');
+const subjects = ["English","Kiswahili","Math","Science","SST","CRE"];
+const weekDays = ["Monday","Tuesday","Wednesday","Thursday","Friday"];
+document.getElementById('todayDate').innerText = new Date().toLocaleDateString('en-KE',{weekday:'long', day:'numeric', month:'short', year:'numeric'});
+
+function getWeekNum(){let d=new Date();let onejan=new Date(d.getFullYear(),0,1);return Math.ceil((((d-onejan)/86400000)+onejan.getDay()+1)/7);}
+function updateNext(){
+ let doneToday = subjects.filter(s=>timetable[todayName+'_'+s]).length;
+ let next = subjects.find(s=>!timetable[todayName+'_'+s]);
+ document.getElementById('nextSub').innerHTML = `${todayName}: ${doneToday}/${subjects.length} done ${doneToday==6?'🎉':''} • ${next?`Next: <span class='text-[#0a4a3a]'>${next}</span> ⏳ Pending`:'✅ All done today'}`;
+}
+updateNext();
+
+function openTimetable(){
+ let html=`<table class="w-full text-[12px] border-collapse"><tr class="bg-[#0a4a3a] text-white"><th class="p-2 border">Day</th><th class="p-2 border">Subject</th><th class="p-2 border">Status</th></tr>`;
+ weekDays.forEach(day=>{
+  subjects.forEach((sub,i)=>{
+   let key=day+'_'+sub; let done=timetable[key];
+   let status = done? '✅ Done' : (day==todayName? '⏳ Pending' : '⬜ Not yet');
+   html+=`<tr><td class="p-2 border">${i==0?'<b>'+day+'</b>':''}</td><td class="p-2 border">${sub}</td><td class="p-2 border">${status} ${day==todayName&&!done?`<button onclick="startHWFor('${sub}')" class="ml-1 bg-[#ffb703] px-2 py-0.5 rounded-full text-[10px] font-bold">Do</button>`:''}</td></tr>`;
+  });
+ });
+ html+=`</table>`;
+ document.getElementById('ttTable').innerHTML=html;
+ document.getElementById('ttModal').classList.remove('hidden');
+}
+function closeTimetable(){document.getElementById('ttModal').classList.add('hidden');}
+function resetWeek(){if(confirm('Reset week?')){localStorage.removeItem(weekKey);timetable={};updateNext();openTimetable();}}
+
+let currentQs=[],currentSubject="Math";
+function startHW(){let n=subjects.find(s=>!timetable[todayName+'_'+s])||"Math";startHWFor(n);}
+function startHWFor(sub){currentSubject=sub;askAI(`Daily HW 10 marks ${sub} MIXED Grade 6 revision + Grade 7 + Grade 8 sneak. Return ONLY JSON [{"q":"...","marks":2,"answer":"..."}]`,`Daily HW 10 - ${sub} - ${todayName}`);}
+function startExam(){askAI("Exam 100 marks Grade 7 full term mixed subjects JSON","Exam 100 - Grade 7");}
+
+async function askAI(question,title){
+ document.getElementById('workArea').classList.remove('hidden');
+ document.getElementById('workTitle').innerText="⏳ "+title;
+ document.getElementById('questions').innerHTML="Generating fast...";
+ try{
+  const r=await fetch('/api/gemini',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({question,grade:"Grade 7",shke:"SHKE00502",brainContext,photo:""})});
+  const d=await r.json(); let txt=d.answer||d.error||"Error";
+  try{let m=txt.match(/\[[\s\S]*\]/);currentQs=JSON.parse(m[0]);}catch{currentQs=txt.split(/\n(?=Q\d+|\d+\.)/).filter(x=>x.trim()).map(t=>({q:t,marks:2,answer:""}));}
+  renderQs(title);
+ }catch(e){document.getElementById('questions').innerHTML="Network slow - tap again";}
+}
+function renderQs(title){
+ document.getElementById('workTitle').innerText=title;
+ document.getElementById('questions').innerHTML=currentQs.map((c,i)=>`<div class="border rounded-xl p-3"><b>Q${i+1} (${c.marks||2} mks)</b><br>${c.q}<input id="ans${i}" type="text" placeholder="Write answer here on page..." class="w-full mt-2 border rounded-lg p-2 text-[13px]"></div>`).join('');
+ document.getElementById('result').classList.add('hidden');document.getElementById('corrBtn').classList.add('hidden');
+ window.scrollTo(0,300);
+}
+function checkAnswers(){
+ let score=0,total=0,html="<div class='font-bold'>Result</div>";
+ currentQs.forEach((c,i)=>{
+  let user=(document.getElementById('ans'+i)?.value||"").trim();let m=c.marks||2;total+=m;
+  let got=user?(c.answer? (c.answer.toLowerCase().includes(user.toLowerCase())?m:1):m):0;score+=got;
+  html+=`<div class="border rounded-xl p-2 mt-2 text-[12px]">${got==m?'✅':'📝'} Q${i+1}: ${got}/${m}</div>`;
+ });
+ html+=`<h3 class="font-extrabold mt-2">Score ${score}/${total}</h3>`;
+ document.getElementById('result').innerHTML=html;document.getElementById('result').classList.remove('hidden');document.getElementById('corrBtn').classList.remove('hidden');
+ if(score>0){timetable[todayName+'_'+currentSubject]=true;localStorage.setItem(weekKey,JSON.stringify(timetable));updateNext();}
+}
+function showCorrection(){
+ let html="<div class='font-bold'>Correction</div>";
+ currentQs.forEach((c,i)=>{html+=`<div class="border rounded-xl p-3 mt-2 text-[12px]"><b>Q${i+1}</b>: ${c.q}<br><span class="text-green-600">✔ ${c.answer||"See notes"}</span></div>`;});
+ document.getElementById('result').innerHTML=html;
+}
+function takePhoto(){document.getElementById('photoInput').click();}
+document.getElementById('photoInput').addEventListener('change',async e=>{
+ let file=e.target.files[0];if(!file)return;
+ let reader=new FileReader();
+ reader.onload=async()=>{
+  let b64=reader.result.split(',')[1];
+  document.getElementById('workArea').classList.remove('hidden');
+  document.getElementById('workTitle').innerText="📷 Marking photo...";
+  const r=await fetch('/api/gemini',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({question:"Mark photo HW Grade 7 score + correction",grade:"Grade 7",shke:"SHKE00502",brainContext,photo:b64})});
+  let d=await r.json();
+  document.getElementById('questions').innerHTML=`<div class="border rounded-xl p-3 text-[13px]">${(d.answer||d.error).replace(/\n/g,'<br>')}</div>`;
+  timetable[todayName+'_'+currentSubject]=true;localStorage.setItem(weekKey,JSON.stringify(timetable));updateNext();
+ };
+ reader.readAsDataURL(file);
+});
+</script>
+</body>
+</html>
