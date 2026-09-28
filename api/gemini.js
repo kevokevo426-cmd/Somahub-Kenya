@@ -7,18 +7,17 @@ export default async function handler(req, res) {
   try {
     const { question, grade, shke, brainContext, photo } = req.body;
     const apiKey = process.env.GEMINI_API_KEY;
-    if (!apiKey) throw new Error("Add GEMINI_API_KEY in Vercel");
+    if (!apiKey) throw new Error("GEMINI_API_KEY missing in Vercel");
 
-    const prompt = `You are SomaHub AI. Grade ${grade} SHKE ${shke}. LEVEL LOCK ${grade} only, max Grade ${grade.match(/\d+/)?.[0]||7}. If higher, say "Master ${grade} first".
-ALL FILES from admin:
-${brainContext}
+    const prompt = `You are SomaHub AI Grade ${grade} SHKE ${shke}. LEVEL LOCK ${grade} only.
+FILES: ${brainContext}
 Q: ${question}`;
 
     let parts = [{text: prompt}];
     if (photo) parts.push({inline_data:{mime_type:"image/jpeg", data: photo}});
 
-    // Try latest models: 3.8-flash -> 2.5-flash -> 2.5-flash-lite
-    const models = ["gemini-3.8-flash", "gemini-2.5-flash", "gemini-2.5-flash-lite"];
+    // For new users - only Gemini 3.x allowed per Google Sep 2026
+    const models = ["gemini-3.8-flash", "gemini-3.5-flash", "gemini-3.5-flash-lite", "gemini-3.1-flash-lite"];
     let lastErr = "";
     for (let m of models) {
       const url = `https://generativelanguage.googleapis.com/v1beta/models/${m}:generateContent?key=${apiKey}`;
@@ -37,7 +36,6 @@ Q: ${question}`;
       lastErr = JSON.stringify(data.error||data);
     }
     throw new Error(lastErr);
-
   } catch (e) {
     res.status(500).json({ error: e.message });
   }
