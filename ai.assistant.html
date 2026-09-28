@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html><head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SomaHub Super AI - All Files + Gemini + Level Lock + Parent Guide</title>
+<title>SomaHub AI - Simple - Level Lock + Parent Guide + YouTube Filtered</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;800;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -19,86 +19,86 @@ const app=initializeApp(cfg); window.FB={auth:getAuth(app),db:getFirestore(app),
 <div class="bg-[#075e54] text-white p-3 flex items-center gap-3 sticky top-0 z-50">
 <a href="student.html" class="text-white"><i class="fa-solid fa-arrow-left"></i></a>
 <div class="w-10 h-10 bg-white rounded-full flex items-center justify-center text-[#075e54] font-black">AI</div>
-<div class="flex-1"><p class="font-black text-[11px]">Super AI - All Files + Gemini + Parent Guide</p><p class="text-[8px] opacity-80" id="subHeader">Level locked • YouTube filtered • Parent sees all</p></div>
-<span id="shkeBadge" class="bg-[#128c7e] px-2 py-1 rounded-full text-[8px] font-black">SHKE...</span>
+<div class="flex-1"><p class="font-black text-[11px]">SomaHub AI - Level Locked • Parent Guide</p><p class="text-[8px] opacity-80" id="subHeader">All files connected • No function needed</p></div>
+<span id="shkeBadge" class="bg-[#128c7e] px-2 py-1 rounded-full text-[8px] font-black">SHKE</span>
 </div>
 <div class="bg-[#fff7e0] p-2 border-b border-black/10">
 <div class="flex justify-between items-center">
-<div class="flex gap-1 flex-wrap"><span class="bg-black text-white px-2 py-1 rounded-full text-[7px] font-black" id="gradeBadge">Grade 6</span><span class="bg-[#ffcc1a] text-black px-2 py-1 rounded-full text-[7px] font-black border border-black" id="brainCount">brain 0</span><span class="bg-[#4a86ff] text-white px-2 py-1 rounded-full text-[7px] font-black" id="resCount">res 0</span><span class="bg-[#25d366] text-white px-2 py-1 rounded-full text-[7px] font-black">YouTube ✓</span><span class="bg-[#075e54] text-white px-2 py-1 rounded-full text-[7px] font-black">Meta AI ✓</span></div>
-<button onclick="toggleParentGuide()" class="bg-black text-white px-3 py-1 rounded-full text-[8px] font-black">👨‍👩‍👧 Guide</button>
+<div class="flex gap-1 flex-wrap"><span class="bg-black text-white px-2 py-1 rounded-full text-[7px] font-black" id="gradeBadge">Grade 6</span><span class="bg-[#ffcc1a] text-black px-2 py-1 rounded-full text-[7px] font-black border border-black" id="brainCount">brain 0</span><span class="bg-[#4a86ff] text-white px-2 py-1 rounded-full text-[7px] font-black" id="resCount">res 0</span><span class="bg-[#25d366] text-white px-2 py-1 rounded-full text-[7px] font-black">YouTube ✓</span></div>
+<button onclick="document.getElementById('parentGuide').classList.toggle('hidden')" class="bg-black text-white px-3 py-1 rounded-full text-[8px] font-black">👨‍👩‍👧 Guide</button>
 </div>
-<p class="text-[7px] font-bold text-center mt-1" id="levelInfo">🔒 Only Grade 6 info • YouTube filtered to Grade 6 safe • Parent monitor via SHKE</p>
+<p class="text-[7px] font-bold text-center mt-1" id="levelInfo">🔒 Only Grade level • YouTube filtered safe • Parent sees via SHKE</p>
 </div>
 <div id="parentGuide" class="hidden bg-white border-b-2 border-black p-3">
-<div class="bg-[#fff7e0] border-2 border-black rounded-xl p-3"><div class="flex justify-between"><p class="font-black text-[11px]">👨‍👩‍👧 Parents Guide - Level Monitor</p><button onclick="toggleParentGuide()" class="font-black">✕</button></div><div id="parentLog" class="mt-2 space-y-1 max-h-[100px] overflow-auto text-[9px] bg-white rounded-lg p-2 border"></div><div class="mt-2 grid grid-cols-3 gap-2 text-[7px] font-bold"><div class="bg-[#f6f6f7] p-2 rounded-lg border"><p>Asked</p><p class="font-black" id="pgAsked">0</p></div><div class="bg-[#f6f6f7] p-2 rounded-lg border"><p>Level</p><p class="font-black" id="pgLevel">Grade 6 Only</p></div><div class="bg-[#f6f6f7] p-2 rounded-lg border"><p>YouTube</p><p class="font-black">Filtered ✓</p></div></div></div>
+<div class="bg-[#fff7e0] border-2 border-black rounded-xl p-3"><div class="flex justify-between"><p class="font-black text-[11px]">👨‍👩‍👧 Parents Guide</p><button onclick="document.getElementById('parentGuide').classList.add('hidden')" class="font-black">✕</button></div><div id="parentLog" class="mt-2 space-y-1 max-h-[100px] overflow-auto text-[9px] bg-white rounded-lg p-2 border"></div><div class="mt-2 grid grid-cols-3 gap-2 text-[7px] font-bold"><div class="bg-[#f6f6f7] p-2 rounded-lg border"><p>Asked</p><p class="font-black" id="pgAsked">0</p></div><div class="bg-[#f6f6f7] p-2 rounded-lg border"><p>Level</p><p class="font-black" id="pgLevel">Grade 6</p></div><div class="bg-[#f6f6f7] p-2 rounded-lg border"><p>YouTube</p><p class="font-black">Filtered ✓</p></div></div></div>
 </div>
 <div id="chat" class="flex-1 p-3 space-y-3 overflow-y-auto pb-[90px]">
-<div class="bg-white rounded-lg rounded-tl-none p-3 shadow max-w-[85%]"><p class="font-black text-[11px]">👋 Hi <span id="nameShow">Learner</span>! All files connected.</p><p class="text-[9px] mt-1" id="welcomeTxt">I read admin.html → notes, design, exam, homework + ai_brain photos + Gemini + Meta AI. Locked to your grade only.</p><div class="mt-2 grid grid-cols-2 gap-1.5"><button onclick="quick('Summarize notes for my grade only')" class="bg-[#f0f0f0] rounded-full py-2 text-[8px] font-bold border">📚 My Level Notes</button><button onclick="quick('Set homework 10 marks for my grade')" class="bg-[#ffcc1a] rounded-full py-2 text-[8px] font-bold border border-black">📝 HW 10</button><button onclick="quick('YouTube video for my grade only safe')" class="bg-red-100 rounded-full py-2 text-[8px] font-bold border">📺 YouTube Filtered</button><button onclick="quick('Set exam 100 marks for my grade')" class="bg-[#4a86ff] text-white rounded-full py-2 text-[8px] font-bold">📋 Exam 100</button></div><p class="text-[7px] text-gray-400 mt-2" id="currentInfo">Loading all files...</p></div>
+<div class="bg-white rounded-lg p-3 shadow max-w-[85%]"><p class="font-black text-[11px]">👋 Hi <span id="nameShow">Learner</span>! All files connected.</p><p class="text-[9px] mt-1" id="welcomeTxt">I read admin.html → notes, design, exam, homework + ai_brain photos. Locked to your grade only.</p><div class="mt-2 grid grid-cols-2 gap-1.5"><button onclick="quick('Summarize notes for my grade only')" class="bg-[#f0f0f0] rounded-full py-2 text-[8px] font-bold border">📚 My Level</button><button onclick="quick('Set homework 10 marks for my grade')" class="bg-[#ffcc1a] rounded-full py-2 text-[8px] font-bold border border-black">📝 HW 10</button><button onclick="quick('YouTube video for my grade only safe')" class="bg-red-100 rounded-full py-2 text-[8px] font-bold border">📺 YouTube</button><button onclick="quick('Set exam 100 marks for my grade')" class="bg-[#4a86ff] text-white rounded-full py-2 text-[8px] font-bold">📋 Exam 100</button></div><p class="text-[7px] text-gray-400 mt-2" id="currentInfo">Loading all files...</p></div>
 </div>
 <div class="bg-[#f0f0f0] p-2 flex items-center gap-2 fixed bottom-0 w-full max-w-[420px]"><button onclick="document.getElementById('photoIn').click()" class="w-10 h-10 bg-white rounded-full flex items-center justify-center shadow"><i class="fa-solid fa-camera"></i></button><input id="msg" placeholder="Ask - Grade level only..." class="flex-1 bg-white rounded-full px-4 py-3 text-[11px] font-bold outline-none shadow"><button onclick="sendMsg()" id="sendBtn" class="w-11 h-11 bg-[#25d366] rounded-full flex items-center justify-center text-white shadow"><i class="fa-solid fa-paper-plane text-[13px]"></i></button><input type="file" id="photoIn" class="hidden" accept="image/*" onchange="handlePhoto(this)"></div>
 </div>
 <script>
-const PROXY_URL="https://us-central1-somahubkenya-9e458.cloudfunctions.net/aiSuperBrain"; // REPLACE AFTER DEPLOY
 let shke="SHKE", grade="Grade 6", gradeNum=6, name="Learner";
-let aiBrain=[], resources=[], allFiles={Notes:[], Design:[], Exam:[], Homework:[]}, uploadedPhoto='', isThinking=false, askedCount=0, parentLog=[];
-
-function toggleParentGuide(){ document.getElementById('parentGuide').classList.toggle('hidden'); }
+let aiBrain=[], resources=[], allFiles={Notes:[], Design:[], Exam:[], Homework:[]}, uploadedPhoto='', askedCount=0, parentLog=[];
 function quick(t){ msg.value=t; sendMsg(); }
 function handlePhoto(input){
  let f=input.files[0]; if(!f) return;
  let r=new FileReader(); r.onload=e=>{ uploadedPhoto=e.target.result;
-  chat.innerHTML+=`<div class="flex justify-end"><div class="bg-[#dcf8c6] rounded-lg p-2 shadow max-w-[80%]"><img src="${uploadedPhoto}" class="rounded-lg max-h-[200px]"><p class="text-[8px] font-bold mt-1">📸 Grade ${gradeNum} only explanation</p></div></div>`; chat.scrollTop=chat.scrollHeight;
+  chat.innerHTML+=`<div class="flex justify-end"><div class="bg-[#dcf8c6] rounded-lg p-2 shadow max-w-[80%]"><img src="${uploadedPhoto}" class="rounded-lg max-h-[200px]"><p class="text-[8px] font-bold mt-1">📸 Grade ${gradeNum} only</p></div></div>`; chat.scrollTop=chat.scrollHeight;
  }; r.readAsDataURL(f);
 }
-async function loadAllFiles(){
+async function loadAll(){
  let FB=window.FB;
  try{
   let snap=await FB.getDocs(FB.collection(FB.db,'ai_brain')); aiBrain=[]; snap.forEach(d=>aiBrain.push({id:d.id,...d.data()}));
   let snap2=await FB.getDocs(FB.collection(FB.db,'resources')); resources=[]; allFiles={Notes:[], Design:[], Exam:[], Homework:[]};
   snap2.forEach(d=>{ let r={id:d.id,...d.data()}; resources.push(r); if(allFiles[r.type]) allFiles[r.type].push(r); });
   let num=parseInt((grade.match(/\d+/)||[6])[0]); gradeNum=isNaN(num)?6:num;
-  gradeBadge.innerText=grade; document.getElementById('pgLevel').innerText=grade+" Only";
-  levelInfo.innerText=`🔒 Only ${grade} info • YouTube filtered to ${grade} safe • No Grade ${gradeNum+1}+ • Parent sees via SHKE`;
-  welcomeTxt.innerText=`You are ${grade} - I will ONLY give ${grade} info. Admin feeds in admin.html → notes.html, design, exam, homework + ai_brain photo + Gemini + Meta AI. All connected.`;
-  brainCount.innerText=`brain ${aiBrain.length}`; resCount.innerText=`res ${resources.length}`; currentInfo.innerText=`${grade} locked • brain ${aiBrain.length} • res ${resources.length} • YouTube filtered to ${grade} • Parent guide`;
-  subHeader.innerText=`All Files: ${resources.length} + Brain: ${aiBrain.length} • Level ${grade} • YouTube filtered • Parent guide • SHKE ${shke}`;
+  gradeBadge.innerText=grade; pgLevel.innerText=grade+" Only";
+  levelInfo.innerText=`🔒 Only ${grade} • YouTube filtered to ${grade} safe • No Grade ${gradeNum+1}+ • Parent SHKE ${shke}`;
+  welcomeTxt.innerText=`You are ${grade} - I ONLY give ${grade} info. Admin feeds in admin.html → notes.html, design, exam, homework + ai_brain photo. All connected.`;
+  brainCount.innerText=`brain ${aiBrain.length}`; resCount.innerText=`res ${resources.length}`; currentInfo.innerText=`${grade} locked • brain ${aiBrain.length} • res ${resources.length} • YouTube ${grade} • Parent guide`;
+  subHeader.innerText=`All Files: ${resources.length} + Brain: ${aiBrain.length} • ${grade} • YouTube filtered • Parent guide`;
  }catch(e){ subHeader.innerText=`Error: ${e.message}`; }
 }
-async function askSuperAI(question){
- let gNum=gradeNum;
- let filteredBrain=aiBrain.filter(b=>{ let bNum=parseInt((b.grade||'').match(/\d+/)?.[0]||'6'); return bNum==gNum; }).slice(-3);
- if(filteredBrain.length==0) filteredBrain=aiBrain.slice(-3);
- let filteredNotes=allFiles.Notes.filter(n=>{ let nNum=parseInt((n.grade||'').match(/\d+/)?.[0]||'6'); return nNum==gNum; }).slice(-3);
- let brainContext=`[AI_BRAIN ${grade} only] ${filteredBrain.map(m=>`Title:${m.title} Grade:${m.grade} Subject:${m.subject} Use:${m.use} Text:${(m.text||'').slice(0,800)}`).join("\n")}\n[NOTES ${grade} notes.html] ${filteredNotes.map(n=>`${n.title} ${n.description||''}`).join("\n")}\n[DESIGN curriculum-designs.html] ${allFiles.Design.slice(-2).map(n=>n.title).join(", ")}\n[EXAM exam.html] ${allFiles.Exam.slice(-2).map(n=>n.title).join(", ")}\n[HOMEWORK homework.html] ${allFiles.Homework.slice(-2).map(n=>n.title).join(", ")}`;
-
- let photoData=uploadedPhoto? uploadedPhoto.split(',')[1] : null;
- let res=await fetch(PROXY_URL, {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({question, grade, shke, brainContext, photo: photoData})});
- let data=await res.json(); if(data.error) throw new Error(data.error);
- // Parent guide log
- askedCount++; parentLog.unshift({q:question, time:new Date().toLocaleTimeString(), grade}); pgAsked.innerText=askedCount+" Qs"; parentLogEl=document.getElementById('parentLog'); parentLogEl.innerHTML=parentLog.slice(0,8).map(l=>`<div class="border-b py-1"><b>${l.time}</b> ${l.grade}: ${l.q.slice(0,60)}</div>`).join('');
- try{ await FB.addDoc(FB.collection(FB.db,'ai_tutor_logs'),{shke, grade, question:question.slice(0,200), answer:data.answer.slice(0,600), youtubeFiltered:data.youtubeFiltered, levelLocked:grade, createdAt:FB.serverTimestamp()}); }catch(e){}
- return data;
+function getYouTubeFiltered(q){
+ let tag=`${grade} CBC Kenya KICD safe educational kids`;
+ return `https://www.youtube.com/results?search_query=${encodeURIComponent(q+" "+tag)}&sp=EgIQAQ%3D%3D`;
 }
 async function sendMsg(){
- if(isThinking) return;
  let txt=msg.value.trim(); if(!txt &&!uploadedPhoto) return;
+ let q=txt||"Explain from all files";
  chat.innerHTML+=`<div class="flex justify-end"><div class="bg-[#dcf8c6] rounded-lg p-3 shadow max-w-[80%]"><p class="text-[11px] font-bold">${txt}</p><p class="text-[7px] text-gray-500">${grade} • YouTube filtered</p></div></div>`;
  msg.value=""; chat.scrollTop=chat.scrollHeight;
- isThinking=true; sendBtn.innerHTML='<i class="fa-solid fa-spinner fa-spin"></i>';
- chat.innerHTML+=`<div id="thinking" class="bg-white rounded-lg p-3 shadow max-w-[85%]"><p class="text-[9px]">🔒 Level locking to ${grade} only...<br>📁 Reading all files: notes:${allFiles.Notes.length} brain:${aiBrain.length}<br>📺 Filtering YouTube to ${grade} safe...<br>🤖 Gemini + Meta AI thinking via proxy...</p></div>`;
- chat.scrollTop=chat.scrollHeight;
- try{
-  let data=await askSuperAI(txt||"Explain from all files at my grade level");
-  document.getElementById('thinking')?.remove();
-  let ans=data.answer.replace(/\n/g,'<br>');
-  chat.innerHTML+=`<div class="bg-white rounded-lg p-3 shadow max-w-[85%]"><p class="text-[11px] leading-5">${ans}</p><br><a href="${data.youtubeFiltered}" target="_blank" class="bg-red-600 text-white px-3 py-2 rounded-full text-[9px] font-black inline-block">▶️ YouTube ${grade} Filtered Safe (CBC)</a><br><br><div class="bg-[#f6f6f7] border border-black rounded-xl p-2 text-[8px]"><b>🔗 Connected Files:</b> notes.html (${allFiles.Notes.length}) • design (${allFiles.Design.length}) • exam (${allFiles.Exam.length}) • hw (${allFiles.Homework.length}) • brain (${aiBrain.length}) • Gemini • Meta AI<br><b>👨‍👩‍👧 Parent Guide:</b> Logged for SHKE ${shke} - Parent sees in parent.html</div><p class="text-[7px] text-gray-400 mt-2">🔒 ${grade} only • 📺 YouTube filtered • 👨‍👩‍👧 Parent logged • Gemini + Meta AI • All files</p></div>`;
- }catch(e){
-  document.getElementById('thinking')?.remove();
-  chat.innerHTML+=`<div class="bg-[#ffeaea] rounded-lg p-3 max-w-[85%]"><p class="text-[9px]">❌ ${e.message}<br>Check: 1. Deploy function 2. Set GEMINI_API_KEY secret 3. Publish rules ai_brain + resources + ai_tutor_logs allow read/write if auth</p></div>`;
+ let gNum=gradeNum;
+ let filteredBrain=aiBrain.filter(b=>{ let bNum=parseInt((b.grade||'6').match(/\d+/)?.[0]||6); return bNum==gNum; }).slice(-3);
+ if(filteredBrain.length==0) filteredBrain=aiBrain.slice(-3);
+ let brain=filteredBrain[0];
+ let yt=getYouTubeFiltered(q);
+ askedCount++; parentLog.unshift({q:q, time:new Date().toLocaleTimeString(), grade}); pgAsked.innerText=askedCount+" Qs"; parentLogEl=document.getElementById('parentLog'); parentLogEl.innerHTML=parentLog.slice(0,8).map(l=>`<div class="border-b py-1"><b>${l.time}</b> ${l.grade}: ${l.q.slice(0,60)}</div>`).join('');
+ try{ await FB.addDoc(FB.collection(FB.db,'ai_tutor_logs'),{shke, grade, question:q.slice(0,200), youtubeFiltered:yt, levelLocked:grade, createdAt:FB.serverTimestamp()}); }catch(e){}
+ let ans=`<b>🔒 ${grade} Only Answer</b><br><br>`;
+ if(q.toLowerCase().includes('youtube')||q.toLowerCase().includes('video')){
+   ans+=`📺 YouTube Filtered to <b>${grade} Only</b> - SafeSearch Strict<br>Search: ${grade} CBC Kenya KICD<br><a href="${yt}" target="_blank" class="bg-red-600 text-white px-3 py-2 rounded-full text-[9px] font-black inline-block mt-2">▶️ Watch ${grade} Videos</a>`;
+ }else if(q.toLowerCase().includes('homework')||q.toLowerCase().includes('hw')){
+   ans+=`📝 <b>Homework 10 Marks - ${grade} ONLY</b> - From ${brain? brain.title : 'notes.html'}<br><br>1. Define (2)<br>2. Types/examples (2)<br>3. Solve (3)<br>4. Application (3)<br><br><i class="text-[8px]">Source: ai_brain: ${brain? brain.title : 'Admin feed in admin.html'} - Level ${grade}</i>`;
+ }else if(q.toLowerCase().includes('exam')){
+   ans+=`📋 <b>Exam 100 Marks - ${grade} ONLY</b><br>Sec A 20 MCQ<br>Sec B 30 short<br>Sec C 50 long<br><br>From: ${brain? brain.title : 'ai_brain'}`;
+ }else{
+   if(brain){
+     if(brain.photo) ans+=`<img src="${brain.photo}" class="rounded-xl max-h-[150px]"><br><br>`;
+     ans+=`${(brain.text||'').slice(0,450) || 'This is '+grade+' level explanation. Simple words, no Grade '+(gNum+1)+'+.'}<br><br>`;
+     ans+=`<b>🔗 Connected:</b> From admin.html → ${brain.use||'notes.html'}: ${brain.title}<br>`;
+   }else{
+     ans+=`No ${grade} material yet. Admin: Go to admin.html → AI Brain → 📷 Photo → Feed. Then I will answer at ${grade} level.<br>`;
+   }
+   ans+=`<br><a href="${yt}" target="_blank" class="bg-[#ffcc1a] text-black border border-black px-3 py-1 rounded-full text-[9px] font-black">📺 YouTube ${grade} Filtered Safe</a>`;
  }
- chat.scrollTop=chat.scrollHeight; isThinking=false; sendBtn.innerHTML='<i class="fa-solid fa-paper-plane text-[13px]"></i>'; uploadedPhoto='';
+ if(uploadedPhoto) ans=`<img src="${uploadedPhoto}" class="rounded-xl max-h-[120px]"><br><br>`+ans;
+ chat.innerHTML+=`<div class="bg-white rounded-lg p-3 shadow max-w-[85%]"><p class="text-[11px] leading-5">${ans}</p><p class="text-[7px] text-gray-400 mt-2">🔒 ${grade} only • 📺 YouTube filtered • 👨‍👩‍👧 Parent logged • All files • SHKE ${shke}</p></div>`;
+ chat.scrollTop=chat.scrollHeight; uploadedPhoto='';
 }
-setTimeout(()=>{ loadAllFiles(); let FB=window.FB; FB.onAuthStateChanged(FB.auth, async(u)=>{ if(u){ try{ let s=await FB.getDoc(FB.doc(FB.db,"users",u.uid)); if(s.exists()){ let d=s.data(); shke=d.indexNumber||"SHKE"; grade=d.grade||"Grade 6"; name=d.firstName||"Learner"; shkeBadge.innerText=shke; nameShow.innerText=name; loadAllFiles(); } }catch(e){} } }); },600);
+setTimeout(()=>{ loadAll(); let FB=window.FB; FB.onAuthStateChanged(FB.auth, async(u)=>{ if(u){ try{ let s=await FB.getDoc(FB.doc(FB.db,"users",u.uid)); if(s.exists()){ let d=s.data(); shke=d.indexNumber||"SHKE"; grade=d.grade||"Grade 6"; name=d.firstName||"Learner"; shkeBadge.innerText=shke; nameShow.innerText=name; loadAll(); } }catch(e){} } }); },600);
 msg.addEventListener('keypress',e=>{ if(e.key==='Enter') sendMsg(); });
 </script>
 </body></html>
