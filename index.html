@@ -4,137 +4,90 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>SomaHub Kenya - PP1 to Grade 9</title>
-<script src="https://cdn.tailwindcss.com"></script>
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
-<style>body{font-family:'Plus Jakarta Sans',sans-serif;background:#0a0a0a;color:white;scroll-behavior:smooth}</style>
+<!-- FAST: No Tailwind CDN, No Google Fonts blocking -->
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#0a0a0a;color:white;scroll-behavior:smooth;-webkit-font-smoothing:antialiased}
+.bg-sh{background:#22c55e}
+.text-sh{color:#22c55e}
+.text-yellow{color:#facc15}
+</style>
 </head>
 <body>
 
-<header class="sticky top-0 z-50 bg-[#0a0a0a] border-b border-white/10">
-<div class="max-w-[1200px] mx-auto px-6 h-[72px] flex items-center justify-between">
-<div class="flex items-center gap-3">
-<div class="h-[42px] w-[42px] bg-[#22c55e] rounded-xl grid place-items-center font-extrabold text-black text-[16px]">SH</div>
-<span class="font-extrabold text-[18px]">SomaHub</span>
-<span class="text-[10px] bg-[#ef4444] text-white px-3 py-1 rounded-full font-bold tracking-widest">KENYA</span>
+<header style="position:sticky;top:0;z-index:50;background:#0a0a0a;border-bottom:1px solid rgba(255,255,255,0.1)">
+<div style="max-width:1200px;margin:0 auto;padding:0 24px;height:72px;display:flex;align-items:center;justify-content:space-between">
+<div style="display:flex;align-items:center;gap:12px">
+<div style="height:42px;width:42px;background:#22c55e;border-radius:12px;display:grid;place-items:center;font-weight:800;color:black;font-size:16px">SH</div>
+<span style="font-weight:800;font-size:18px">SomaHub</span>
+<span style="font-size:10px;background:#ef4444;color:white;padding:4px 12px;border-radius:9999px;font-weight:700;letter-spacing:0.1em">KENYA</span>
 </div>
-<a href="registration.html" class="bg-white text-black px-7 py-3 rounded-full font-extrabold text-[13px]">Enroll</a>
+<a href="registration.html" style="background:white;color:black;padding:12px 28px;border-radius:9999px;font-weight:800;font-size:13px;text-decoration:none">Enroll</a>
 </div>
 </header>
 
-<main class="max-w-[1200px] mx-auto px-6 py-12">
+<main style="max-width:1200px;margin:0 auto;padding:48px 24px">
 
-<!-- HERO -->
-<div class="grid md:grid-cols-2 gap-12 items-center">
+<div style="display:grid;gap:48px" class="md-grid">
 <div>
-<div class="inline-flex bg-white/10 border border-white/10 rounded-full px-4 py-2 text-[10px] font-bold tracking-widest">PP1 • PP2 • GRADE 1-3 • GRADE 4-6 • GRADE 7-9 • ONE PLATFORM</div>
+<div style="display:inline-flex;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.1);border-radius:9999px;padding:8px 16px;font-size:10px;font-weight:700;letter-spacing:0.1em">PP1 • PP2 • GRADE 1-3 • GRADE 4-6 • GRADE 7-9 • ONE PLATFORM</div>
 
-<!-- CHANGE 2: 3 TAPS DIFFERENT COLORS, PARENT MONITORS -->
-<h1 class="mt-6 text-[38px] md:text-[48px] font-extrabold leading-[0.92]">
-<span class="text-white">Where every learner understands.</span><br>
-<span class="text-[#22c55e]">Where every parent monitors.</span><br>
-<span class="text-[#facc15]">Where every teacher breathes.</span>
+<h1 style="margin-top:24px;font-size:clamp(32px,5vw,48px);font-weight:800;line-height:0.92">
+<span style="color:white">Where every learner understands.</span><br>
+<span class="text-sh">Where every parent monitors.</span><br>
+<span class="text-yellow">Where every teacher breathes.</span>
 </h1>
 
-<p class="mt-6 text-[15px] leading-7 text-white/60">SomaHub is the bridge between <b class="text-white">learner, teacher and parent.</b> From PP1 counting to Grade 9 Senior prep — summarized notes, visual lessons and 10-mark daily practice in one simple app.</p>
-<p class="mt-4 text-[14px] leading-7 text-white/50">We don't replace your school. We make school make sense. Less paperwork. Just snap handwritten work — instant marking with full elaboration.</p>
-<a href="registration.html" class="mt-6 inline-block bg-[#22c55e] text-black px-8 py-4 rounded-full font-extrabold text-[14px]">Enroll Now →</a>
+<p style="margin-top:24px;font-size:15px;line-height:28px;color:rgba(255,255,255,0.6)">SomaHub is the bridge between <b style="color:white">learner, teacher and parent.</b> From PP1 counting to Grade 9 Senior prep — summarized notes, visual lessons and 10-mark daily practice in one simple app.</p>
+<p style="margin-top:16px;font-size:14px;line-height:28px;color:rgba(255,255,255,0.5)">We don't replace your school. We make school make sense. Less paperwork. Just snap handwritten work — instant marking with full elaboration.</p>
+<!-- MIDDLE ENROLL REMOVED AS YOU ASKED -->
 </div>
 
-<!-- CHANGE 5: APPEALING, ELABORATED, PROFESSIONAL -->
-<div class="bg-[#141414] border border-white/10 rounded-[32px] p-8 relative overflow-hidden">
-<div class="absolute -top-20 -right-20 h-[200px] w-[200px] bg-[#22c55e]/20 blur-[60px] rounded-full"></div>
-<p class="text-[11px] tracking-[0.25em] font-bold text-white/30">BUILT FOR 3 PEOPLE • ONE ECOSYSTEM</p>
+<div style="background:#141414;border:1px solid rgba(255,255,255,0.1);border-radius:32px;padding:32px;position:relative;overflow:hidden">
+<p style="font-size:11px;letter-spacing:0.25em;font-weight:700;color:rgba(255,255,255,0.3)">BUILT FOR 3 PEOPLE • ONE ECOSYSTEM</p>
 
-<div class="mt-8 space-y-7">
-<div class="group bg-white/[0.04] hover:bg-white/[0.07] border border-white/10 rounded-[20px] p-5 transition">
-<div class="flex gap-4">
-<div class="h-11 w-11 bg-white rounded-full grid place-items-center text-black font-extrabold text-[16px]">L</div>
-<div class="flex-1">
-<h3 class="font-extrabold text-[16px]">Learner — Learn at your comfort</h3>
-<p class="mt-2 text-[13px] leading-6 text-white/55">No more bulky books. Visual & summarized CBC notes, diagram-based lessons, daily 10-mark practice, instant marking with full corrections. Works offline — even in matatu.</p>
-<div class="mt-3 flex gap-2 flex-wrap">
-<span class="text-[10px] bg-white/10 px-3 py-1 rounded-full">Visual Notes</span>
-<span class="text-[10px] bg-white/10 px-3 py-1 rounded-full">Offline Mode</span>
-<span class="text-[10px] bg-white/10 px-3 py-1 rounded-full">Auto-Correction</span>
-</div>
-</div>
-</div>
+<div style="margin-top:32px;display:flex;flex-direction:column;gap:28px">
+<div style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);border-radius:20px;padding:20px">
+<div style="display:flex;gap:16px"><div style="height:44px;width:44px;background:white;border-radius:9999px;display:grid;place-items:center;color:black;font-weight:800;flex-shrink:0">L</div><div><h3 style="font-weight:800;font-size:16px">Learner — Learn at your comfort</h3><p style="margin-top:8px;font-size:13px;line-height:24px;color:rgba(255,255,255,0.55)">No more bulky books. Visual & summarized CBC notes, diagram-based lessons, daily 10-mark practice, instant marking with full corrections. Works offline — even in matatu.</p></div></div>
 </div>
 
-<div class="group bg-[#22c55e]/10 hover:bg-[#22c55e]/15 border border-[#22c55e]/20 rounded-[20px] p-5 transition">
-<div class="flex gap-4">
-<div class="h-11 w-11 bg-[#22c55e] rounded-full grid place-items-center text-black font-extrabold text-[16px]">T</div>
-<div class="flex-1">
-<h3 class="font-extrabold text-[16px] text-white">Teacher — No more midnight marking</h3>
-<p class="mt-2 text-[13px] leading-6 text-white/60">Teach, don't do paperwork. Ready summarized notes, KICD-aligned schemes, instant lesson plans, snap-to-mark written work, weak learner radar & research center. Save 3 hours daily.</p>
-<div class="mt-3 flex gap-2 flex-wrap">
-<span class="text-[10px] bg-[#22c55e]/20 px-3 py-1 rounded-full text-[#22c55e]">Auto-Marking</span>
-<span class="text-[10px] bg-[#22c55e]/20 px-3 py-1 rounded-full text-[#22c55e]">Schemes Ready</span>
-<span class="text-[10px] bg-[#22c55e]/20 px-3 py-1 rounded-full text-[#22c55e]">Progress Track</span>
+<div style="background:rgba(34,197,94,0.1);border:1px solid rgba(34,197,94,0.2);border-radius:20px;padding:20px">
+<div style="display:flex;gap:16px"><div style="height:44px;width:44px;background:#22c55e;border-radius:9999px;display:grid;place-items:center;color:black;font-weight:800;flex-shrink:0">T</div><div><h3 style="font-weight:800;font-size:16px;color:white">Teacher — No more midnight marking</h3><p style="margin-top:8px;font-size:13px;line-height:24px;color:rgba(255,255,255,0.6)">Teach, don't do paperwork. Ready summarized notes, KICD-aligned schemes, instant lesson plans, snap-to-mark written work, weak learner radar & research center. Save 3 hours daily.</p></div></div>
+</div>
+
+<div style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);border-radius:20px;padding:20px">
+<div style="display:flex;gap:16px"><div style="height:44px;width:44px;background:rgba(255,255,255,0.15);border-radius:9999px;display:grid;place-items:center;color:white;font-weight:800;flex-shrink:0">P</div><div><h3 style="font-weight:800;font-size:16px">Parent — Monitor with confidence</h3><p style="margin-top:8px;font-size:13px;line-height:24px;color:rgba(255,255,255,0.55)">Stop asking "Umefanya homework?" See exactly what your child learned today, where they are weak, and how to help — with solutions. No more CBC stress at home.</p></div></div>
 </div>
 </div>
+<p style="margin-top:32px;font-size:10px;color:rgba(255,255,255,0.25);border-top:1px solid rgba(255,255,255,0.1);padding-top:16px"> Curriculum content structured in line with KICD Competency Based Framework • PP1 to Grade 9</p>
 </div>
 </div>
 
-<div class="group bg-white/[0.04] hover:bg-white/[0.07] border border-white/10 rounded-[20px] p-5 transition">
-<div class="flex gap-4">
-<div class="h-11 w-11 bg-white/15 rounded-full grid place-items-center text-white font-extrabold text-[16px]">P</div>
-<div class="flex-1">
-<h3 class="font-extrabold text-[16px]">Parent — Monitor with confidence</h3>
-<p class="mt-2 text-[13px] leading-6 text-white/55">Stop asking "Umefanya homework?" See exactly what your child learned today, where they are weak, and how to help — with solutions. No more CBC stress at home.</p>
-<div class="mt-3 flex gap-2 flex-wrap">
-<span class="text-[10px] bg-white/10 px-3 py-1 rounded-full">Real-time Reports</span>
-<span class="text-[10px] bg-white/10 px-3 py-1 rounded-full">Weakness Alerts</span>
-<span class="text-[10px] bg-white/10 px-3 py-1 rounded-full">Guide Easily</span>
-</div>
-</div>
-</div>
+<div style="margin-top:64px;background:white;border-radius:32px;padding:32px;color:black">
+<h2 style="font-size:28px;font-weight:800;line-height:1.1">This is how SomaHub works.</h2>
+<p style="margin-top:8px;font-size:13px;color:rgba(0,0,0,0.6)">Real learners, real parents, real teachers — not stock photos.</p>
+
+<div style="margin-top:40px;display:grid;gap:24px;grid-template-columns:repeat(auto-fill,minmax(280px,1fr))">
+<div style="border-radius:22px;overflow:hidden;background:#f6f6f6;border:1px solid rgba(0,0,0,0.05)"><img src="./IMG-20260921-WA3927.jpg" loading="lazy" decoding="async" width="400" height="300" style="width:100%;height:300px;object-fit:cover"><div style="padding:24px"><p style="font-size:10px;font-weight:700;letter-spacing:0.2em;color:#059669">01 / THE FOCUSED LEARNER</p><h3 style="margin-top:8px;font-weight:800">When she finally gets it — alone, calm, confident.</h3></div></div>
+<div style="border-radius:22px;overflow:hidden;background:#f6f6f6;border:1px solid rgba(0,0,0,0.05)"><img src="./IMG-20260921-WA2304.jpg" loading="lazy" decoding="async" width="400" height="300" style="width:100%;height:300px;object-fit:cover"><div style="padding:24px"><p style="font-size:10px;font-weight:700;letter-spacing:0.2em;color:#7c3aed">02 / THE RELIEVED PARENT</p><h3 style="margin-top:8px;font-weight:800">CBC stopped being a fight at home.</h3></div></div>
+<div style="border-radius:22px;overflow:hidden;background:#f6f6f6;border:1px solid rgba(0,0,0,0.05)"><img src="./IMG-20260921-WA7674.jpg" loading="lazy" decoding="async" width="400" height="300" style="width:100%;height:300px;object-fit:cover"><div style="padding:24px"><p style="font-size:10px;font-weight:700;letter-spacing:0.2em;color:#d97706">03 / THE EMPOWERED TEACHER</p><h3 style="margin-top:8px;font-weight:800">One visual, 40 pupils say "Tunaelewa."</h3></div></div>
+<div style="border-radius:22px;overflow:hidden;background:#f6f6f6;border:1px solid rgba(0,0,0,0.05)"><img src="./IMG-20260921-WA2656.jpg" loading="lazy" decoding="async" width="400" height="300" style="width:100%;height:300px;object-fit:cover"><div style="padding:24px"><p style="font-size:10px;font-weight:700;letter-spacing:0.2em;color:#059669">04 / THE SMART COMMUTER</p><h3 style="margin-top:8px;font-weight:800">2 hours traffic = 20 marks gained.</h3></div></div>
+<div style="border-radius:22px;overflow:hidden;background:#f6f6f6;border:1px solid rgba(0,0,0,0.05)"><img src="./IMG-20260921-WA8181.jpg" loading="lazy" decoding="async" width="400" height="300" style="width:100%;height:300px;object-fit:cover"><div style="padding:24px"><p style="font-size:10px;font-weight:700;letter-spacing:0.2em;color:#2563eb">05 / THE MODERN CLASSROOM</p><h3 style="margin-top:8px;font-weight:800">Teachers teach. SomaHub does paperwork.</h3></div></div>
+<div style="border-radius:22px;overflow:hidden;background:#f6f6f6;border:1px solid rgba(0,0,0,0.05)"><img src="./IMG-20260921-WA9610.jpg" loading="lazy" decoding="async" width="400" height="300" style="width:100%;height:300px;object-fit:cover"><div style="padding:24px"><p style="font-size:10px;font-weight:700;letter-spacing:0.2em;color:#2563eb">06 / THE MAGIC SNAP</p><h3 style="margin-top:8px;font-weight:800">Snap confusion. Get clarity.</h3></div></div>
 </div>
 </div>
 
-<p class="mt-8 text-[10px] text-white/25 border-t border-white/10 pt-4 flex items-center gap-2"><span class="h-1 w-1 bg-[#22c55e] rounded-full"></span> Curriculum content structured in line with KICD Competency Based Framework • PP1 to Grade 9</p>
-</div>
-</div>
-
-<!-- CHANGE 4: THIS IS HOW SOMAHUB WORKS -->
-<div class="mt-16 bg-white rounded-[32px] p-8 md:p-12 text-black">
-<h2 class="text-[28px] font-extrabold leading-[1.1]">This is how SomaHub works.</h2>
-<p class="mt-2 text-[13px] text-black/60">Real learners, real parents, real teachers — not stock photos.</p>
-
-<div class="mt-10 grid md:grid-cols-3 gap-6">
-<div class="rounded-[22px] overflow-hidden bg-[#f6f6f6] border border-black/5"><img src="./IMG-20260921-WA3927.jpg" class="w-full h-[300px] object-cover"><div class="p-6"><p class="text-[10px] font-bold tracking-[0.2em] text-emerald-600">01 / THE FOCUSED LEARNER</p><h3 class="mt-2 font-extrabold">When she finally gets it — alone, calm, confident.</h3><p class="mt-2 text-[12.5px] leading-6 text-black/60">On sofa, Grade 7 Science and technology open. She snaps, sees diagram, smiles — "Now I understand."</p></div></div>
-<div class="rounded-[22px] overflow-hidden bg-[#f6f6f6] border border-black/5"><img src="./IMG-20260921-WA2304.jpg" class="w-full h-[300px] object-cover"><div class="p-6"><p class="text-[10px] font-bold tracking-[0.2em] text-violet-600">02 / THE RELIEVED PARENT</p><h3 class="mt-2 font-extrabold">CBC stopped being a fight at home.</h3><p class="mt-2 text-[12.5px] leading-6 text-black/60">Dining table, laptop, books. Mum no longer says "masomo ni ngumu." She guides with a tap only.</p></div></div>
-<div class="rounded-[22px] overflow-hidden bg-[#f6f6f6] border border-black/5"><img src="./IMG-20260921-WA7674.jpg" class="w-full h-[300px] object-cover"><div class="p-6"><p class="text-[10px] font-bold tracking-[0.2em] text-amber-600">03 / THE EMPOWERED TEACHER</p><h3 class="mt-2 font-extrabold">One visual, 40 pupils say "Tunaelewa."</h3><p class="mt-2 text-[12.5px] leading-6 text-black/60">Fractions 1/2 + 1/4 = 3/4 was confusion — until laptop shows colored pieces. Boy nods. Teacher breathes.</p></div></div>
-<div class="rounded-[22px] overflow-hidden bg-[#f6f6f6] border border-black/5"><img src="./IMG-20260921-WA2656.jpg" class="w-full h-[300px] object-cover"><div class="p-6"><p class="text-[10px] font-bold tracking-[0.2em] text-emerald-600">04 / THE SMART COMMUTER</p><h3 class="mt-2 font-extrabold">2 hours traffic = 20 marks gained.</h3><p class="mt-2 text-[12.5px] leading-6 text-black/60">Others sleeping. He's revising offline on SomaHub — enjoy learning everywhere and anytime.</p></div></div>
-<div class="rounded-[22px] overflow-hidden bg-[#f6f6f6] border border-black/5"><img src="./IMG-20260921-WA8181.jpg" class="w-full h-[300px] object-cover"><div class="p-6"><p class="text-[10px] font-bold tracking-[0.2em] text-blue-600">05 / THE MODERN CLASSROOM</p><h3 class="mt-2 font-extrabold">Teachers teach. SomaHub does paperwork.</h3><p class="mt-2 text-[12.5px] leading-6 text-black/60">Data Handling on board, charts on laptop. Auto-marking, weak-student alerts. Save 3 hours daily.</p></div></div>
-<div class="rounded-[22px] overflow-hidden bg-[#f6f6f6] border border-black/5"><img src="./IMG-20260921-WA9610.jpg" class="w-full h-[300px] object-cover"><div class="p-6"><p class="text-[10px] font-bold tracking-[0.2em] text-blue-600">06 / THE MAGIC SNAP</p><h3 class="mt-2 font-extrabold">Snap confusion. Get clarity.</h3><p class="mt-2 text-[12.5px] leading-6 text-black/60">Math + Science open. One snap — full butterfly diagram + step-by-step appears instantly.</p></div></div>
-</div>
-</div>
-
-<!-- CHANGE 3: ORGANIZED NEATLY GREEN CARD AT END -->
-<div class="mt-16 flex justify-center">
-<div class="w-full max-w-[360px] bg-[#22c55e] rounded-[36px] p-8">
-<h2 class="text-[36px] font-extrabold leading-[0.9] tracking-tight text-black">
-Learn,<br>
-Teach,<br>
-Monitor — at<br>
-your comfort.
-</h2>
-<p class="mt-6 text-[14px] leading-6 font-medium text-black/80">
-PP1 to Grade 9. One app for learner, teacher and parent.
-</p>
-<p class="mt-6 text-[14px] leading-6 font-medium text-black/80">
-Modern, simple, fun and wide. We<br>
-don't replace books — we make<br>
-them work.
-</p>
-<a href="registration.html" class="mt-8 flex w-full items-center justify-center bg-black text-white rounded-full py-4 px-6 font-bold text-[15px] text-center leading-5 hover:bg-[#111]">
-Enroll Now → Registration
-</a>
+<div style="margin-top:64px;display:flex;justify-content:center">
+<div style="width:100%;max-width:360px;background:#22c55e;border-radius:36px;padding:32px">
+<h2 style="font-size:36px;font-weight:800;line-height:0.9;color:black">Learn,<br>Teach,<br>Monitor — at<br>your comfort.</h2>
+<p style="margin-top:24px;font-size:14px;line-height:24px;font-weight:500;color:rgba(0,0,0,0.8)">PP1 to Grade 9. One app for learner, teacher and parent.</p>
+<a href="registration.html" style="margin-top:32px;display:flex;justify-content:center;background:black;color:white;border-radius:9999px;padding:16px 24px;font-weight:700;font-size:15px;text-decoration:none">Enroll Now → Registration</a>
 </div>
 </div>
 
 </main>
-<footer class="py-10 text-center text-[11px] text-white/30">© 2026 SomaHub Kenya • PP1 to Grade 9 • Learn • Teach • Monitor</footer>
+<footer style="padding:40px 0;text-align:center;font-size:11px;color:rgba(255,255,255,0.3)">© 2026 SomaHub Kenya • PP1 to Grade 9 • Learn • Teach • Monitor</footer>
+
+<style>@media(min-width:768px){.md-grid{grid-template-columns:1fr 1fr}}</style>
 </body>
 </html>
