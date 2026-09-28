@@ -3,6 +3,7 @@
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Parent Portal - SomaHub</title>
 <script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;800;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <style>body{font-family:'Nunito',sans-serif;background:#f0fdf4}</style>
@@ -34,8 +35,48 @@ window.FB={db,doc,getDoc,setDoc,addDoc,updateDoc,collection,getDocs,query,where,
 </div>
 
 <div id="dashboard" class="hidden space-y-3">
+<!-- CHILD HEADER -->
 <div class="bg-white rounded-[1.5rem] p-4 border-2 border-black shadow-[3px_3px_0_0_#000]">
 <div class="flex justify-between"><div><p class="font-black text-[13px]" id="childName">Child...</p><p class="text-[10px] text-gray-600" id="childInfo">Grade...</p><p class="text-[9px] bg-black text-white inline px-2 py-0.5 rounded-full mt-1 font-bold" id="indexDisplay">SHKE</p></div><button onclick="logoutParent()" class="bg-black text-white px-3 py-1.5 rounded-full text-[9px] font-black h-fit">Logout</button></div>
+</div>
+
+<!-- OPTIONAL WHATSAPP LINK SETTING -->
+<div class="bg-white rounded-[1.2rem] p-3 border-2 border-black shadow-[2px_2px_0_0_#000]">
+<p class="font-black text-[11px]">🔔 Notifications - In-App (Optional WhatsApp)</p>
+<p class="text-[9px] opacity-60 mt-1">Reports are IN-APP. Add WhatsApp only if you want link.</p>
+<div class="mt-2 space-y-2">
+<div class="flex gap-2">
+<input id="waNumber" placeholder="07xxxxxxxx (optional)" class="flex-1 bg-[#f6f6f7] border-2 border-black rounded-full px-4 py-2.5 text-[10px] font-bold">
+<button onclick="saveParentWhatsApp()" class="bg-black text-white px-4 rounded-full font-black text-[9px] border-2 border-black">Save</button>
+</div>
+<div class="flex gap-2 text-[9px] font-bold">
+<label class="flex items-center gap-1"><input type="checkbox" id="waDaily" checked> Daily Report</label>
+<label class="flex items-center gap-1"><input type="checkbox" id="waWeekly" checked> Weekly Report</label>
+<span id="waStatus" class="ml-auto bg-[#f6f6f7] border border-black px-2 py-0.5 rounded-full text-[8px]">Not set</span>
+</div>
+<p class="text-[8px] opacity-50">If saved, we will show WhatsApp share button but reports remain in-app. No auto spam.</p>
+</div>
+</div>
+
+<!-- DAILY REPORT IN-APP -->
+<div class="bg-gradient-to-br from-black to-zinc-800 text-white rounded-[1.5rem] p-4 border-2 border-black shadow-[3px_3px_0_0_#000]">
+<div class="flex justify-between items-center"><p class="font-black text-[12px]">📅 Daily Report - Today</p><p class="text-[9px] bg-white text-black px-2 py-1 rounded-full font-black" id="todayDate"></p></div>
+<div class="grid grid-cols-3 gap-2 mt-3">
+<div class="bg-white text-black rounded-xl p-2 text-center border-2 border-black"><p class="font-black text-[16px]" id="dDone">0</p><p class="text-[8px] font-bold">Done Today</p></div>
+<div class="bg-[#ffcc1a] text-black rounded-xl p-2 text-center border-2 border-black"><p class="font-black text-[16px]" id="dScore">0/10</p><p class="text-[8px] font-bold">Avg Today</p></div>
+<div class="bg-[#4a86ff] text-white rounded-xl p-2 text-center border-2 border-black"><p class="font-black text-[16px]" id="dTime">0m</p><p class="text-[8px] font-bold">Time</p></div>
+</div>
+<div id="dailyList" class="mt-3 space-y-2"></div>
+</div>
+
+<!-- WEEKLY REPORT IN-APP -->
+<div class="bg-white rounded-[1.5rem] p-4 border-2 border-black shadow-[3px_3px_0_0_#000]">
+<div class="flex justify-between items-center"><p class="font-black text-[11px]">📊 Weekly Report - Last 7 Days</p><button onclick="shareWeeklyWhatsApp()" id="waShareBtn" class="hidden bg-[#25D366] text-white px-3 py-1 rounded-full font-black text-[9px] border-2 border-black">Share WA</button></div>
+<canvas id="weekChart" class="mt-3 w-full h-[130px]"></canvas>
+<div class="grid grid-cols-2 gap-2 mt-3">
+<div class="bg-[#f6f6f7] border-2 border-black rounded-xl p-2 text-center"><p class="font-black text-[14px]" id="wTotal">0</p><p class="text-[8px] font-bold">Total HW</p></div>
+<div class="bg-[#f6f6f7] border-2 border-black rounded-xl p-2 text-center"><p class="font-black text-[14px]" id="wAvg">0/10</p><p class="text-[8px] font-bold">Weekly Avg</p></div>
+</div>
 </div>
 
 <div class="grid grid-cols-2 gap-2">
@@ -43,41 +84,39 @@ window.FB={db,doc,getDoc,setDoc,addDoc,updateDoc,collection,getDocs,query,where,
 <div class="bg-[#ffeaea] border-2 border-black rounded-xl p-3 shadow-[1px_1px_0_0_#000]"><p class="font-black text-[10px]">⚠️ Weak Areas</p><div id="weakList" class="text-[9px] mt-2 font-bold leading-4">Loading...</div></div>
 </div>
 
-<div class="bg-[#fff7e0] border-2 border-black rounded-xl p-3 shadow-[1px_1px_0_0_#000]"><p class="font-black text-[10px]">💡 Suggestions for Weak Areas</p><div id="suggestionList" class="text-[9px] mt-2 space-y-2">Loading...</div></div>
+<div class="bg-[#fff7e0] border-2 border-black rounded-xl p-3 shadow-[1px_1px_0_0_#000]"><p class="font-black text-[10px]">💡 Suggestions</p><div id="suggestionList" class="text-[9px] mt-2 space-y-2">Loading...</div></div>
 
+<!-- TABS -->
 <div class="bg-white rounded-[1.2rem] border-2 border-black shadow-[2px_2px_0_0_#000] overflow-hidden">
 <div class="flex border-b-2 border-black">
-<button onclick="showTab('daily')" id="tabDaily" class="flex-1 bg-black text-white py-3 font-black text-[10px]">📝 Daily HW - Correction</button>
-<button onclick="showTab('weekly')" id="tabWeekly" class="flex-1 bg-white py-3 font-black text-[10px]">📅 Exams</button>
+<button onclick="showTab('daily')" id="tabDaily" class="flex-1 bg-black text-white py-3 font-black text-[10px]">📝 Daily HW</button>
+<button onclick="showTab('weekly')" id="tabWeekly" class="flex-1 bg-white py-3 font-black text-[10px]">📅 Exams + History</button>
 </div>
 <div class="p-3"><div id="dailyHWList" class="space-y-2 max-h-[500px] overflow-y-auto"></div><div id="weeklyList" class="hidden space-y-2 max-h-[500px] overflow-y-auto"></div></div>
 </div>
 
-<!-- HOME SCHOOLING - TEACHER LEARNER SCHOOLING -->
+<!-- HOME SCHOOLING -->
 <div class="bg-white rounded-[1.5rem] p-4 border-2 border-black shadow-[3px_3px_0_0_#000]">
 <div class="flex justify-between items-center"><p class="font-black text-[11px]">🏠 Home Tuition - Teacher ↔ Learner</p><span id="hsStatus" class="bg-[#f6f6f7] border border-black px-2 py-0.5 rounded-full text-[8px] font-black">No Request</span></div>
-<p class="text-[9px] text-gray-500 mt-1">Parent arranges home teacher — Admin must approve & assign teacher — Seen in Super Admin Student+Parent+Teacher</p>
-
 <div id="hsForm" class="mt-3 space-y-2">
-<select id="hsSubject" class="w-full bg-[#f6f6f7] border-2 border-black rounded-full px-4 py-2.5 text-[10px] font-bold"><option>Mathematics - Tuition</option><option>English - Tuition</option><option>Science - Tuition</option><option>All Subjects - Full Tuition</option><option>ICT & Coding - Tuition</option><option>Foreign Language - Tuition</option></select>
-<input id="hsPhone" placeholder="Parent phone 07xx - Teacher will call" class="w-full bg-[#f6f6f7] border-2 border-black rounded-full px-4 py-2.5 text-[10px] font-bold">
+<select id="hsSubject" class="w-full bg-[#f6f6f7] border-2 border-black rounded-full px-4 py-2.5 text-[10px] font-bold"><option>Mathematics - Tuition</option><option>English - Tuition</option><option>Science - Tuition</option><option>All Subjects - Full Tuition</option></select>
+<input id="hsPhone" placeholder="Parent phone 07xx" class="w-full bg-[#f6f6f7] border-2 border-black rounded-full px-4 py-2.5 text-[10px] font-bold">
 <input id="hsLocation" placeholder="Location e.g Umoja, Nairobi" class="w-full bg-[#f6f6f7] border-2 border-black rounded-full px-4 py-2.5 text-[10px] font-bold">
-<input id="hsDays" placeholder="Days e.g Mon, Wed, Fri - 3 days/week" class="w-full bg-[#f6f6f7] border-2 border-black rounded-full px-4 py-2.5 text-[10px] font-bold">
-<input id="hsReason" placeholder="Reason e.g Weak in fractions, need home tutor" class="w-full bg-[#f6f6f7] border-2 border-black rounded-full px-4 py-2.5 text-[10px] font-bold">
-<button onclick="requestHomeschool()" class="w-full bg-[#4a86ff] text-white border-2 border-black rounded-full py-3 font-black text-[10px]">📨 Request Home Tuition - Admin Assigns Teacher</button>
+<input id="hsDays" placeholder="Days e.g Mon, Wed, Fri" class="w-full bg-[#f6f6f7] border-2 border-black rounded-full px-4 py-2.5 text-[10px] font-bold">
+<input id="hsReason" placeholder="Reason e.g Weak in fractions" class="w-full bg-[#f6f6f7] border-2 border-black rounded-full px-4 py-2.5 text-[10px] font-bold">
+<button onclick="requestHomeschool()" class="w-full bg-[#4a86ff] text-white border-2 border-black rounded-full py-3 font-black text-[10px]">📨 Request Home Tuition</button>
 </div>
-
 <div id="hsActive" class="hidden mt-3 bg-[#e0f2ff] border-2 border-black rounded-xl p-3">
 <p class="font-black text-[10px]" id="hsActiveText">Home schooling active...</p>
 <div id="hsTeacherInfo" class="mt-2 bg-white border-2 border-black rounded-xl p-2.5"></div>
-<button onclick="terminateHomeschool()" class="w-full mt-3 bg-red-500 text-white border-2 border-black rounded-full py-2.5 font-black text-[10px]">❌ Terminate Home Tuition - Notify Admin</button>
+<button onclick="terminateHomeschool()" class="w-full mt-3 bg-red-500 text-white border-2 border-black rounded-full py-2.5 font-black text-[10px]">❌ Terminate</button>
 </div>
 </div>
 
 <div class="bg-white rounded-[1.5rem] p-3 border-2 border-black shadow-[2px_2px_0_0_#000]">
 <p class="font-black text-[11px]">💬 Chat with Admin - <span id="chatIndex">SHKE</span></p>
 <div id="chatBox" class="bg-[#e5ddd5] rounded-xl p-3 h-[250px] overflow-y-auto mt-3 space-y-2 border-2 border-black"></div>
-<div class="flex gap-2 mt-3"><input id="parentMsg" placeholder="Ask about teacher, correction..." class="flex-1 bg-[#f6f6f7] border-2 border-black rounded-full px-4 py-3 text-[10px] font-bold"><button onclick="sendParentMsg()" class="bg-[#25d366] w-11 h-11 rounded-full flex items-center justify-center text-white border-2 border-black"><i class="fa-solid fa-paper-plane text-[12px]"></i></button></div>
+<div class="flex gap-2 mt-3"><input id="parentMsg" placeholder="Ask about teacher..." class="flex-1 bg-[#f6f6f7] border-2 border-black rounded-full px-4 py-3 text-[10px] font-bold"><button onclick="sendParentMsg()" class="bg-[#25d366] w-11 h-11 rounded-full flex items-center justify-center text-white border-2 border-black"><i class="fa-solid fa-paper-plane text-[12px]"></i></button></div>
 </div>
 
 </div>
@@ -85,11 +124,48 @@ window.FB={db,doc,getDoc,setDoc,addDoc,updateDoc,collection,getDocs,query,where,
 </div>
 
 <script>
-let childData=null, childUserId=null, currentIndex=null, allHWCache=[], hsDocId=null;
+let childData=null, childUserId=null, currentIndex=null, allHWCache=[], hsDocId=null, hist=[];
 function showTab(t){
  dailyHWList.classList.toggle('hidden', t!=='daily'); weeklyList.classList.toggle('hidden', t!=='weekly');
  tabDaily.className = t==='daily'? "flex-1 bg-black text-white py-3 font-black text-[10px]" : "flex-1 bg-white py-3 font-black text-[10px]";
  tabWeekly.className = t==='weekly'? "flex-1 bg-black text-white py-3 font-black text-[10px]" : "flex-1 bg-white py-3 font-black text-[10px]";
+}
+function loadLocalHistory(){
+ hist = JSON.parse(localStorage.getItem('soma_hw_history')||'[]');
+ renderDailyLocal(); renderWeeklyLocal();
+}
+function renderDailyLocal(){
+ let todayStr = new Date().toDateString(); let today = hist.filter(h=> new Date(h.date).toDateString()===todayStr);
+ let done=today.length; let avg=done? (today.reduce((s,h)=>s+h.score,0)/done).toFixed(1):0;
+ document.getElementById('dDone').innerText=done; document.getElementById('dScore').innerText=avg+"/10"; document.getElementById('dTime').innerText=(done*5)+"m";
+ document.getElementById('dailyList').innerHTML = today.length? today.map(h=>`<div class="bg-white text-black rounded-xl p-2 border-2 border-black flex justify-between"><div><p class="font-black text-[10px]">${h.subject}</p><p class="text-[8px]">${h.dateStr}</p></div><span class="font-black text-[10px] ${h.score>=7?'text-green-600':'text-red-600'}">${h.score}/${h.total}</span></div>`).join('') : `<p class="text-[10px] text-white/70 text-center py-2">No HW today yet - in-app</p>`;
+}
+function renderWeeklyLocal(){
+ let weekAgo=new Date(); weekAgo.setDate(weekAgo.getDate()-7); let week=hist.filter(h=> new Date(h.date)>=weekAgo);
+ document.getElementById('wTotal').innerText=week.length; let wAvg=week.length? (week.reduce((s,h)=>s+h.score,0)/week.length).toFixed(1):0; document.getElementById('wAvg').innerText=wAvg+"/10";
+ let days=[]; for(let i=6;i>=0;i--){let d=new Date(); d.setDate(d.getDate()-i); days.push(d);} let labels=days.map(d=>d.toLocaleDateString('en-KE',{weekday:'short'})); let scores=days.map(d=>{let dayStr=d.toDateString(); let dayHW=week.filter(h=> new Date(h.date).toDateString()===dayStr); if(!dayHW.length) return 0; return (dayHW.reduce((s,h)=>s+h.score,0)/dayHW.length).toFixed(1);});
+ if(window.myChart) window.myChart.destroy(); window.myChart=new Chart(document.getElementById('weekChart'),{type:'bar',data:{labels:labels,datasets:[{label:'Avg Score',data:scores,backgroundColor:'#4a86ff',borderColor:'#000',borderWidth:2,borderRadius:6}]},options:{responsive:true,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,max:10}}}});
+}
+// WHATSAPP OPTIONAL
+function saveParentWhatsApp(){
+ let num=waNumber.value.trim(); if(!num){ alert("Enter number or leave empty"); return; }
+ let settings={waNumber:num, waDaily:waDaily.checked, waWeekly:waWeekly.checked, shke:currentIndex, updated:new Date().toISOString()};
+ localStorage.setItem('soma_parent_wa_'+currentIndex, JSON.stringify(settings));
+ waStatus.innerText="Saved: "+num; waShareBtn.classList.remove('hidden');
+ // Save to Firebase optional
+ let FB=window.FB; if(FB && currentIndex){ FB.setDoc(FB.doc(FB.db,"parent_settings",currentIndex), {...settings, timestamp:FB.serverTimestamp()}, {merge:true}); }
+ alert("✅ WhatsApp saved: "+num+" - Reports still IN-APP, share button enabled. Optional only.");
+}
+function loadWaSetting(){
+ let saved=JSON.parse(localStorage.getItem('soma_parent_wa_'+currentIndex)||'null');
+ if(saved){ waNumber.value=saved.waNumber||""; waDaily.checked=saved.waDaily!==false; waWeekly.checked=saved.waWeekly!==false; waStatus.innerText="Saved: "+saved.waNumber; waShareBtn.classList.remove('hidden'); }
+}
+function shareWeeklyWhatsApp(){
+ let weekAgo=new Date(); weekAgo.setDate(weekAgo.getDate()-7); let week=hist.filter(h=> new Date(h.date)>=weekAgo);
+ let avg=week.length? (week.reduce((s,h)=>s+h.score,0)/week.length).toFixed(1):0;
+ let wa=waNumber.value.trim()||JSON.parse(localStorage.getItem('soma_parent_wa_'+currentIndex)||'{}').waNumber||"";
+ let msg=`*SomaHub Parent Report (IN-APP)*%0AChild: ${childData?.firstName||''} (${currentIndex})%0AGrade: ${childData?.grade||''}%0AWeekly Avg: ${avg}/10%0ATotal HW: ${week.length}%0A%0A${week.slice(-5).map(h=>`- ${h.dateStr}: ${h.subject} ${h.score}/${h.total}`).join('%0A')}`;
+ if(wa){ window.open(`https://wa.me/${wa.replace(/[^0-9]/g,'')}?text=${msg}`,'_blank'); } else { window.open(`https://wa.me/?text=${msg}`,'_blank'); }
 }
 async function parentLogin(){
  let FB=window.FB, idx=indexInput.value.trim().toUpperCase(); if(!idx) return alert("Enter SHKE");
@@ -100,18 +176,19 @@ async function parentLogin(){
   else { snap.forEach(x=>{childData=x.data(); childUserId=x.id;}); }
   currentIndex=idx; loginBox.classList.add('hidden'); dashboard.classList.remove('hidden');
   childName.innerText=`${childData.firstName||childData.name||'Learner'} • ${idx} - ONLY YOUR CHILD`;
-  childInfo.innerText=`${childData.grade||'Grade 6'} • ${childData.email||''}`; indexDisplay.innerText=idx; chatIndex.innerText=idx; loadAll();
+  childInfo.innerText=`${childData.grade||'Grade 6'} • ${childData.email||''}`; indexDisplay.innerText=idx; chatIndex.innerText=idx;
+  todayDate.innerText=new Date().toLocaleDateString('en-KE',{weekday:'short',day:'numeric',month:'short'});
+  loadLocalHistory(); loadWaSetting(); loadAll();
  }catch(e){ alert(e.message); }
 }
 function logoutParent(){ loginBox.classList.remove('hidden'); dashboard.classList.add('hidden'); }
 async function loadAll(){ await loadDailyHW(); await loadWeeklyExams(); await loadChat(); await checkHomeschool(); }
-
 async function loadDailyHW(){
  let FB=window.FB; if(!childUserId) return;
  let q=FB.query(FB.collection(FB.db,"homework_submissions"), FB.where("userId","==",childUserId), FB.orderBy("timestamp","desc"));
  let snap=await FB.getDocs(q); let all=[]; snap.forEach(d=>all.push({id:d.id,...d.data()})); allHWCache=all;
  let list=document.getElementById('dailyHWList'); list.innerHTML="";
- if(all.length===0){ list.innerHTML=`<p class="text-[10px] text-center py-4">No HW yet for ${currentIndex}</p>`; strongList.innerText="No data"; weakList.innerText="No data"; suggestionList.innerText="Complete HW first"; return; }
+ if(all.length===0){ list.innerHTML=`<p class="text-[10px] text-center py-4">No HW yet for ${currentIndex} - In-app reports from local history above show work</p>`; strongList.innerText="No data"; weakList.innerText="No data"; suggestionList.innerText="Complete HW first"; return; }
  let bySub={}; all.forEach(s=>{ let sub=s.subject||'General'; if(!bySub[sub]) bySub[sub]=[]; bySub[sub].push(s.score||0); });
  let strong=[], weak=[], sugHTML=""; for(let sub in bySub){ let avg=Math.round(bySub[sub].reduce((a,b)=>a+b,0)/bySub[sub].length); if(avg>=7) strong.push(`${sub} ${avg}/10`); else if(avg<=4) weak.push(`${sub} ${avg}/10`); }
  strongList.innerHTML = strong.length? strong.map(s=>`✅ ${s}`).join("<br>") : "Keep working"; weakList.innerHTML = weak.length? weak.map(s=>`⚠️ ${s}`).join("<br>") : "✅ Good!";
@@ -125,7 +202,7 @@ async function loadWeeklyExams(){
  let FB=window.FB; if(!childUserId) return;
  let q=FB.query(FB.collection(FB.db,"exam_submissions"), FB.where("userId","==",childUserId), FB.orderBy("timestamp","desc"));
  let snap=await FB.getDocs(q); let all=[]; snap.forEach(d=>all.push(d.data()));
- let list=document.getElementById('weeklyList'); list.innerHTML=""; if(all.length===0){ list.innerHTML=`<p class="text-[10px] text-center">No exam yet</p>`; return; }
+ let list=document.getElementById('weeklyList'); list.innerHTML=""; if(all.length===0){ list.innerHTML=`<p class="text-[10px] text-center">No exam yet - See weekly chart above for HW history (in-app)</p>`; return; }
  all.forEach(e=>{ list.innerHTML+=`<div class="bg-[#f6f6f7] border-2 border-black rounded-xl p-3"><div class="flex justify-between"><p class="font-black text-[10px]">Exam ${e.week||''} • ${e.date||''}</p><span class="bg-[#4a86ff] text-white px-2 py-0.5 rounded-full text-[9px] font-black">${e.score||0}/100</span></div></div>`; });
 }
 async function checkHomeschool(){
@@ -138,27 +215,27 @@ async function checkHomeschool(){
   hsActiveText.innerText=`${last.status==='pending'?'⏳ Pending admin approval':last.status==='approved'?'✅ Approved - Teacher assigned':''} • ${last.subject} • ${currentIndex} • ${last.days||''} ${last.location||''}`;
   let tInfo=""; if(last.status==='approved'){
     if(last.teacherId){
-      try{ let tDoc=await FB.getDoc(FB.doc(FB.db,"users", last.teacherId)); if(tDoc.exists()){ let t=tDoc.data(); tInfo=`<p class="font-black text-[10px]">👩‍🏫 Teacher Assigned - Teacher ↔ Learner Schooling</p><p class="text-[9px] mt-1 font-bold">Teacher: ${t.firstName||t.name||''} • ${t.email||''} • Phone: ${t.phone||last.teacherEmail||''}</p><p class="text-[8px] opacity-70">ID ${last.teacherId} • Connected via SHKE ${currentIndex} • Seen in Super Admin</p><p class="text-[8px] mt-1">📞 Parent Phone: ${last.parentPhone||''} • 📍 ${last.location||''} • 📅 ${last.days||''}</p>`; } else { tInfo=`<p class="font-black text-[9px]">Teacher: ${last.teacherName||''} ${last.teacherEmail||''}</p>`; } }catch(e){ tInfo=`<p class="text-[9px]">Teacher: ${last.teacherName||''}</p>`; }
-    } else { tInfo=`<p class="text-[9px]">Waiting teacher assignment by admin...</p>`; }
-  } else { tInfo=`<p class="text-[9px]">Request: ${last.subject} • ${last.reason||''} • Phone ${last.parentPhone||''} • Loc ${last.location||''} • Days ${last.days||''}</p>`; }
+      try{ let tDoc=await FB.getDoc(FB.doc(FB.db,"users", last.teacherId)); if(tDoc.exists()){ let t=tDoc.data(); tInfo=`<p class="font-black text-[10px]">👩‍🏫 Teacher Assigned</p><p class="text-[9px] mt-1 font-bold">Teacher: ${t.firstName||t.name||''} • ${t.email||''}</p>`; } }catch(e){ tInfo=`<p class="text-[9px]">Teacher: ${last.teacherName||''}</p>`; }
+    } else { tInfo=`<p class="text-[9px]">Waiting teacher assignment...</p>`; }
+  } else { tInfo=`<p class="text-[9px]">Request: ${last.subject} • ${last.reason||''}</p>`; }
   hsTeacherInfo.innerHTML=tInfo;
  } else { hsForm.classList.remove('hidden'); hsActive.classList.add('hidden'); hsStatus.innerText="No Request"; hsDocId=null; }
 }
 async function requestHomeschool(){
  let FB=window.FB; if(!currentIndex) return;
  let sub=hsSubject.value, reason=hsReason.value.trim(), phone=hsPhone.value.trim(), loc=hsLocation.value.trim(), days=hsDays.value.trim();
- if(!reason||!phone) return alert("Enter reason + phone for teacher to call");
+ if(!reason||!phone) return alert("Enter reason + phone");
  try{
   await FB.addDoc(FB.collection(FB.db,"homeschooling_requests"), {shke:currentIndex, userId:childUserId, childName:childData.firstName||childData.name||'', grade:childData.grade||'', subject:sub, reason:reason, parentPhone:phone, location:loc, days:days, type:'home_tuition', status:'pending', timestamp:FB.serverTimestamp()});
-  await FB.addDoc(FB.collection(FB.db,"admin_notifications"), {type:'homeschool_request_tuition', shke:currentIndex, subject:sub, reason:reason, parentPhone:phone, location:loc, days:days, timestamp:FB.serverTimestamp(), message:`Parent ${currentIndex} requests TUITION ${sub} at ${loc} ${days} phone ${phone} - ${reason} - Teacher ↔ Learner`});
-  alert(`✅ Tuition request sent for ${currentIndex} - Admin will assign teacher - Seen in Super Admin Teacher ↔ Learner`); hsReason.value=""; hsPhone.value=""; hsLocation.value=""; hsDays.value=""; checkHomeschool();
+  await FB.addDoc(FB.collection(FB.db,"admin_notifications"), {type:'homeschool_request_tuition', shke:currentIndex, subject:sub, reason:reason, parentPhone:phone, location:loc, days:days, timestamp:FB.serverTimestamp(), message:`Parent ${currentIndex} requests TUITION ${sub}`});
+  alert(`✅ Request sent`); hsReason.value=""; hsPhone.value=""; hsLocation.value=""; hsDays.value=""; checkHomeschool();
  }catch(e){ alert(e.message); }
 }
 async function terminateHomeschool(){
- let FB=window.FB; if(!hsDocId) return; if(!confirm("Terminate tuition? Admin notified.")) return;
+ let FB=window.FB; if(!hsDocId) return; if(!confirm("Terminate tuition?")) return;
  await FB.updateDoc(FB.doc(FB.db,"homeschooling_requests", hsDocId), {status:'terminated', terminatedAt:FB.serverTimestamp(), terminatedBy:'parent'});
- await FB.addDoc(FB.collection(FB.db,"admin_notifications"), {type:'homeschool_terminated', shke:currentIndex, docId:hsDocId, timestamp:FB.serverTimestamp(), message:`Parent ${currentIndex} terminated tuition Teacher ↔ Learner - ${hsDocId}`});
- alert(`❌ Terminated ${currentIndex} - Admin notified`); checkHomeschool();
+ await FB.addDoc(FB.collection(FB.db,"admin_notifications"), {type:'homeschool_terminated', shke:currentIndex, docId:hsDocId, timestamp:FB.serverTimestamp(), message:`Parent ${currentIndex} terminated tuition`});
+ alert(`❌ Terminated`); checkHomeschool();
 }
 async function loadChat(){
  let FB=window.FB; if(!currentIndex) return; try{ let q=FB.query(FB.collection(FB.db,"parent_chats"), FB.where("shke","==",currentIndex), FB.orderBy("timestamp","asc")); let snap=await FB.getDocs(q); let box=document.getElementById('chatBox'); box.innerHTML=""; snap.forEach(d=>{ let m=d.data(); let isParent=m.from==='parent'; box.innerHTML+=`<div class="flex ${isParent?'justify-end':'justify-start'}"><div class="${isParent?'bg-[#dcf8c6]':'bg-white'} border-2 border-black rounded-xl p-2 max-w-[80%]"><p class="text-[10px] font-bold">${m.message}</p></div></div>`; }); box.scrollTop=box.scrollHeight; }catch(e){}
