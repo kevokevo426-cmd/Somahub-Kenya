@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html><head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SomaHub Super AI - Vercel Gemini</title>
+<title>SomaHub Super AI - Oxford 🔊 + 🎤 Editable</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;800;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-<style>body{font-family:'Nunito',sans-serif;background:#e5ddd5}</style>
+<style>body{font-family:'Nunito',sans-serif;background:#e5ddd5}.pulse{animation:pulse 1s infinite}@keyframes pulse{0%,100%{opacity:1}50%{opacity:.6}}.fun-btn:active{transform:scale(0.95)}</style>
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
@@ -19,35 +19,86 @@ const app=initializeApp(cfg); window.FB={auth:getAuth(app),db:getFirestore(app),
 <div class="bg-[#075e54] text-white p-3 flex items-center gap-3 sticky top-0 z-50">
 <a href="student.html" class="text-white"><i class="fa-solid fa-arrow-left"></i></a>
 <div class="w-10 h-10 bg-white rounded-full flex items-center justify-center text-[#075e54] font-black">AI</div>
-<div class="flex-1"><p class="font-black text-[11px]">Super AI - All Files + Gemini + Parent Guide</p><p class="text-[8px] opacity-80" id="subHeader">Level locked • YouTube filtered • Vercel Gemini</p></div>
+<div class="flex-1"><p class="font-black text-[11px]">Super AI - Oxford 🔊 + 🎤 Editable</p><p class="text-[8px] opacity-80" id="subHeader">Level locked • YouTube filtered • Vercel Gemini</p></div>
+<button onclick="toggleBlindMode()" id="blindBtn" class="bg-white text-black px-2 py-1 rounded-full text-[7px] font-black border border-black">♿ BIG</button>
 <span id="shkeBadge" class="bg-[#128c7e] px-2 py-1 rounded-full text-[8px] font-black">SHKE</span>
 </div>
 <div class="bg-[#fff7e0] p-2 border-b border-black/10">
 <div class="flex justify-between items-center">
-<div class="flex gap-1 flex-wrap"><span class="bg-black text-white px-2 py-1 rounded-full text-[7px] font-black" id="gradeBadge">Grade 6</span><span class="bg-[#ffcc1a] text-black px-2 py-1 rounded-full text-[7px] font-black border border-black" id="brainCount">brain 0</span><span class="bg-[#4a86ff] text-white px-2 py-1 rounded-full text-[7px] font-black" id="resCount">res 0</span><span class="bg-[#25d366] text-white px-2 py-1 rounded-full text-[7px] font-black">Gemini ✓</span></div>
+<div class="flex gap-1 flex-wrap"><span class="bg-black text-white px-2 py-1 rounded-full text-[7px] font-black" id="gradeBadge">Grade 6</span><span class="bg-[#ffcc1a] text-black px-2 py-1 rounded-full text-[7px] font-black border border-black" id="brainCount">brain 0</span><span class="bg-[#4a86ff] text-white px-2 py-1 rounded-full text-[7px] font-black" id="resCount">res 0</span><span class="bg-[#25d366] text-white px-2 py-1 rounded-full text-[7px] font-black">🔊 Oxford Ready</span></div>
 <button onclick="document.getElementById('parentGuide').classList.toggle('hidden')" class="bg-black text-white px-3 py-1 rounded-full text-[8px] font-black">👨‍👩‍👧 Guide</button>
 </div>
-<p class="text-[7px] font-bold text-center mt-1" id="levelInfo">🔒 Only Grade level • YouTube filtered safe • Parent via SHKE</p>
+<p class="text-[7px] font-bold text-center mt-1" id="levelInfo">🔒 Only Grade level • Tap 🔊 Oxford Listen • Tap 🎤 Speak + Edit</p>
 </div>
 <div id="parentGuide" class="hidden bg-white border-b-2 border-black p-3">
 <div class="bg-[#fff7e0] border-2 border-black rounded-xl p-3"><div class="flex justify-between"><p class="font-black text-[11px]">👨‍👩‍👧 Parents Guide</p><button onclick="document.getElementById('parentGuide').classList.add('hidden')" class="font-black">✕</button></div><div id="parentLog" class="mt-2 space-y-1 max-h-[100px] overflow-auto text-[9px] bg-white rounded-lg p-2 border"></div><div class="mt-2 grid grid-cols-3 gap-2 text-[7px] font-bold"><div class="bg-[#f6f6f7] p-2 rounded-lg border"><p>Asked</p><p class="font-black" id="pgAsked">0</p></div><div class="bg-[#f6f6f7] p-2 rounded-lg border"><p>Level</p><p class="font-black" id="pgLevel">Grade 6</p></div><div class="bg-[#f6f6f7] p-2 rounded-lg border"><p>YouTube</p><p class="font-black">Filtered ✓</p></div></div></div>
 </div>
-<div id="chat" class="flex-1 p-3 space-y-3 overflow-y-auto pb-[90px]">
-<div class="bg-white rounded-lg p-3 shadow max-w-[85%]"><p class="font-black text-[11px]">👋 Hi <span id="nameShow">Learner</span>! Gemini connected via Vercel.</p><p class="text-[9px] mt-1" id="welcomeTxt">I read admin.html → notes, design, exam, homework + ai_brain + Gemini. Locked to your grade.</p><div class="mt-2 grid grid-cols-2 gap-1.5"><button onclick="quick('Summarize notes for my grade only')" class="bg-[#f0f0f0] rounded-full py-2 text-[8px] font-bold border">📚 My Level</button><button onclick="quick('Set homework 10 marks for my grade')" class="bg-[#ffcc1a] rounded-full py-2 text-[8px] font-bold border border-black">📝 HW 10</button><button onclick="quick('YouTube video for my grade only safe')" class="bg-red-100 rounded-full py-2 text-[8px] font-bold border">📺 YouTube</button><button onclick="quick('Set exam 100 marks for my grade')" class="bg-[#4a86ff] text-white rounded-full py-2 text-[8px] font-bold">📋 Exam 100</button></div><p class="text-[7px] text-gray-400 mt-2" id="currentInfo">Loading...</p></div>
+<div id="chat" class="flex-1 p-3 space-y-3 overflow-y-auto pb-[110px]">
+<div class="bg-white rounded-lg p-3 shadow max-w-[85%] border-2 border-black"><p class="font-black text-[11px]">👋 Hi <span id="nameShow">Learner</span>! Oxford 🔊 Ready + 🎤 Editable</p><p class="text-[9px] mt-1" id="welcomeTxt">Tap 🔊 to hear my answer like Oxford English. Tap 🎤 to speak your question and EDIT before sending. Playground friendly!</p><div class="mt-2 grid grid-cols-2 gap-1.5"><button onclick="quick('Summarize notes for my grade only')" class="bg-[#f0f0f0] rounded-full py-2 text-[8px] font-bold border-2 border-black fun-btn">📚 My Level 🔊</button><button onclick="quick('Set homework 10 marks for my grade')" class="bg-[#ffcc1a] rounded-full py-2 text-[8px] font-bold border-2 border-black fun-btn">📝 HW 10 🔊</button><button onclick="quick('YouTube video for my grade only safe')" class="bg-red-100 rounded-full py-2 text-[8px] font-bold border-2 border-black fun-btn">📺 YouTube 🔊</button><button onclick="quick('Set exam 100 marks for my grade')" class="bg-[#4a86ff] text-white rounded-full py-2 text-[8px] font-bold border-2 border-black fun-btn">📋 Exam 100 🔊</button></div><p class="text-[7px] text-gray-400 mt-2" id="currentInfo">Loading...</p></div>
 </div>
-<div class="bg-[#f0f0f0] p-2 flex items-center gap-2 fixed bottom-0 w-full max-w-[420px]"><button onclick="document.getElementById('photoIn').click()" class="w-10 h-10 bg-white rounded-full flex items-center justify-center shadow"><i class="fa-solid fa-camera"></i></button><input id="msg" placeholder="Ask - Grade level only..." class="flex-1 bg-white rounded-full px-4 py-3 text-[11px] font-bold outline-none shadow"><button onclick="sendMsg()" id="sendBtn" class="w-11 h-11 bg-[#25d366] rounded-full flex items-center justify-center text-white shadow"><i class="fa-solid fa-paper-plane text-[13px]"></i></button><input type="file" id="photoIn" class="hidden" accept="image/*" onchange="handlePhoto(this)"></div>
+
+<!-- INPUT - PLAYGROUND + EDITABLE -->
+<div class="bg-[#f0f0f0] p-2 flex flex-col gap-1 fixed bottom-0 w-full max-w-[420px] border-t-2 border-black">
+<div id="micStatus" class="hidden text-[9px] font-black text-center bg-[#ffcc1a] border-2 border-black rounded-full py-1 px-2"></div>
+<div class="flex items-center gap-2">
+<button onclick="document.getElementById('photoIn').click()" class="w-10 h-10 bg-white rounded-full flex items-center justify-center shadow border-2 border-black fun-btn"><i class="fa-solid fa-camera"></i></button>
+<input id="msg" placeholder="Type OR tap 🎤 to speak - EDITABLE" class="flex-1 bg-white rounded-full px-4 py-3 text-[11px] font-bold outline-none shadow border-2 border-black">
+<button onclick="startVoiceAsk()" id="micBtn" class="w-11 h-11 bg-black text-white rounded-full flex items-center justify-center shadow border-2 border-black fun-btn">🎤</button>
+<button onclick="sendMsg()" id="sendBtn" class="w-11 h-11 bg-[#25d366] rounded-full flex items-center justify-center text-white shadow border-2 border-black fun-btn"><i class="fa-solid fa-paper-plane text-[13px]"></i></button>
+</div>
+<p class="text-[7px] text-center font-bold opacity-60">🎤 Speak → EDIT box → Send • 🔊 Tap Listen on AI answer like Oxford</p>
+<input type="file" id="photoIn" class="hidden" accept="image/*" onchange="handlePhoto(this)">
+</div>
 </div>
 <script>
 const PROXY_URL="/api/gemini";
 let shke="SHKE", grade="Grade 6", gradeNum=6;
-let aiBrain=[], resources=[], allFiles={Notes:[], Design:[], Exam:[], Homework:[]}, uploadedPhoto='', isThinking=false, askedCount=0, parentLog=[];
+let aiBrain=[], resources=[], allFiles={Notes:[], Design:[], Exam:[], Homework:[]}, uploadedPhoto='', isThinking=false, askedCount=0, parentLog=[], blindMode=false, recognition=null, isRecording=false;
+
+// OXFORD VOICE - SAME AS HOMEWORK
+function speakText(t){
+ if(!('speechSynthesis' in window)) return;
+ speechSynthesis.cancel();
+ let clean=t.replace(/[*_`<>]/g,'').replace(/<br>/g,'. ').slice(0,800);
+ let utt=new SpeechSynthesisUtterance(clean);
+ let isSw=/Kiswahili|Nomino|Wingi|Sarufi/i.test(clean);
+ let vs=speechSynthesis.getVoices();
+ if(vs.length===0){setTimeout(()=>speakText(t),300); return;}
+ let eng=vs.find(v=>v.name.includes('Google UK English Female'))||vs.find(v=>v.lang==='en-GB')||vs.find(v=>v.lang.startsWith('en'))||vs[0];
+ let sw=vs.find(v=>v.lang.includes('sw'));
+ utt.voice=isSw&&sw?sw:eng; utt.lang=isSw?'sw-KE':'en-GB'; utt.rate=blindMode?0.75:0.85; utt.pitch=1;
+ speechSynthesis.speak(utt);
+}
+if('speechSynthesis' in window){speechSynthesis.onvoiceschanged=()=>speechSynthesis.getVoices(); speechSynthesis.getVoices();}
+function toggleBlindMode(){blindMode=!blindMode; document.documentElement.style.fontSize=blindMode?"118%":"100%"; blindBtn.innerText=blindMode?"♿ BIG ON":"♿ BIG"; if(blindMode) speakText("Big mode ON. Tap Oxford Listen to hear answers.");}
+
 function quick(t){ msg.value=t; sendMsg(); }
 function handlePhoto(input){
  let f=input.files[0]; if(!f) return;
  let r=new FileReader(); r.onload=e=>{ uploadedPhoto=e.target.result;
-  chat.innerHTML+=`<div class="flex justify-end"><div class="bg-[#dcf8c6] rounded-lg p-2 shadow max-w-[80%]"><img src="${uploadedPhoto}" class="rounded-lg max-h-[200px]"><p class="text-[8px] font-bold mt-1">📸 Grade ${gradeNum} only</p></div></div>`; chat.scrollTop=chat.scrollHeight;
+  chat.innerHTML+=`<div class="flex justify-end"><div class="bg-[#dcf8c6] rounded-lg p-2 shadow max-w-[80%] border-2 border-black"><img src="${uploadedPhoto}" class="rounded-lg max-h-[200px]"><p class="text-[8px] font-bold mt-1">📸 Grade ${gradeNum} only • Editable</p></div></div>`; chat.scrollTop=chat.scrollHeight;
  }; r.readAsDataURL(f);
 }
+
+// 🎤 VOICE ASK - EDITABLE
+function startVoiceAsk(){
+ const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+ if(!SR){alert("Use Chrome for voice"); return;}
+ if(isRecording&&recognition){recognition.stop(); return;}
+ recognition=new SR(); recognition.lang='en-KE'; recognition.interimResults=false;
+ let btn=document.getElementById('micBtn'), stat=document.getElementById('micStatus'), input=document.getElementById('msg');
+ btn.classList.add('pulse','bg-red-500'); btn.innerText="🔴"; stat.innerText="🎤 Listening... speak your question - you can EDIT before Send"; stat.classList.remove('hidden'); isRecording=true;
+ recognition.onresult=e=>{
+   let tr=e.results[0][0].transcript.trim();
+   input.value=tr; input.focus();
+   stat.innerHTML=`✅ Heard: <b>${tr}</b> - EDIT in box then Send`;
+   stat.className="text-[9px] font-black text-center bg-[#dcfce7] border-2 border-black rounded-full py-1 px-2";
+ };
+ recognition.onend=()=>{btn.classList.remove('pulse','bg-red-500'); btn.innerHTML="🎤"; isRecording=false; if(navigator.vibrate) navigator.vibrate(40); setTimeout(()=>stat.classList.add('hidden'),4000);};
+ recognition.onerror=()=>{stat.innerText="❌ Try again"; btn.classList.remove('pulse','bg-red-500'); btn.innerHTML="🎤"; isRecording=false;};
+ recognition.start();
+}
+
 async function loadAll(){
  let FB=window.FB;
  try{
@@ -56,9 +107,9 @@ async function loadAll(){
   snap2.forEach(d=>{ let r={id:d.id,...d.data()}; resources.push(r); if(allFiles[r.type]) allFiles[r.type].push(r); });
   let num=parseInt((grade.match(/\d+/)||[6])[0]); gradeNum=isNaN(num)?6:num;
   gradeBadge.innerText=grade; pgLevel.innerText=grade+" Only";
-  levelInfo.innerText=`🔒 Only ${grade} • YouTube filtered to ${grade} safe • No Grade ${gradeNum+1}+ • SHKE ${shke}`;
-  brainCount.innerText=`brain ${aiBrain.length}`; resCount.innerText=`res ${resources.length}`; currentInfo.innerText=`${grade} locked • brain ${aiBrain.length} • res ${resources.length} • Gemini Vercel`;
-  subHeader.innerText=`All Files: ${resources.length} + Brain: ${aiBrain.length} • ${grade} • Gemini via Vercel`;
+  levelInfo.innerText=`🔒 Only ${grade} • Tap 🔊 Oxford Listen • Tap 🎤 Speak + Edit`;
+  brainCount.innerText=`brain ${aiBrain.length}`; resCount.innerText=`res ${resources.length}`; currentInfo.innerText=`${grade} locked • brain ${aiBrain.length} • res ${resources.length} • Oxford 🔊 Ready`;
+  subHeader.innerText=`All Files: ${resources.length} + Brain: ${aiBrain.length} • ${grade} • 🔊🎤 Ready`;
  }catch(e){ subHeader.innerText=`Error: ${e.message}`; }
 }
 async function askSuperAI(question){
@@ -77,19 +128,22 @@ async function askSuperAI(question){
 async function sendMsg(){
  if(isThinking) return;
  let txt=msg.value.trim(); if(!txt &&!uploadedPhoto) return;
- chat.innerHTML+=`<div class="flex justify-end"><div class="bg-[#dcf8c6] rounded-lg p-3 shadow max-w-[80%]"><p class="text-[11px] font-bold">${txt}</p><p class="text-[7px] text-gray-500">${grade} • YouTube filtered</p></div></div>`;
+ chat.innerHTML+=`<div class="flex justify-end"><div class="bg-[#dcf8c6] rounded-lg p-3 shadow max-w-[80%] border-2 border-black"><p class="text-[11px] font-bold">${txt}</p><p class="text-[7px] text-gray-500">${grade} • Editable • YouTube filtered</p></div></div>`;
  msg.value=""; chat.scrollTop=chat.scrollHeight;
  isThinking=true; sendBtn.innerHTML='<i class="fa-solid fa-spinner fa-spin"></i>';
- chat.innerHTML+=`<div id="thinking" class="bg-white rounded-lg p-3 shadow max-w-[85%]"><p class="text-[9px]">🔒 Level locking to ${grade}...<br>📁 Reading all files...<br>🤖 Gemini via Vercel thinking...</p></div>`;
+ chat.innerHTML+=`<div id="thinking" class="bg-white rounded-lg p-3 shadow max-w-[85%] border-2 border-black"><p class="text-[9px]">🔒 Level locking to ${grade}...<br>📁 Reading all files...<br>🤖 Gemini via Vercel thinking...</p></div>`;
  chat.scrollTop=chat.scrollHeight;
  try{
   let data=await askSuperAI(txt||"Explain from all files at my grade level");
   document.getElementById('thinking')?.remove();
   let ans=data.answer.replace(/\n/g,'<br>');
-  chat.innerHTML+=`<div class="bg-white rounded-lg p-3 shadow max-w-[85%]"><p class="text-[11px] leading-5">${ans}</p><br><a href="${data.youtubeFiltered}" target="_blank" class="bg-red-600 text-white px-3 py-2 rounded-full text-[9px] font-black inline-block">▶️ YouTube ${grade} Filtered Safe</a><br><br><div class="bg-[#f6f6f7] border border-black rounded-xl p-2 text-[8px]"><b>🔗 Connected:</b> notes (${allFiles.Notes.length}) • design • exam • hw • brain (${aiBrain.length}) • Gemini Vercel<br><b>👨‍👩‍👧 Parent:</b> Logged SHKE ${shke}</div></div>`;
+  let ansId='ans_'+Date.now();
+  chat.innerHTML+=`<div class="bg-white rounded-lg p-3 shadow max-w-[85%] border-2 border-black" style="background:#fff"><p class="text-[11px] leading-5" id="${ansId}">${ans}</p><div class="mt-2 flex gap-2"><button onclick="speakText(document.getElementById('${ansId}').innerText)" class="bg-[#4a86ff] text-white px-3 py-1.5 rounded-full text-[9px] font-black border-2 border-black fun-btn">🔊 Oxford Listen</button><button onclick="speakText(document.getElementById('${ansId}').innerText)" class="bg-[#ffcc1a] text-black px-3 py-1.5 rounded-full text-[9px] font-black border-2 border-black fun-btn">🔊 Slow</button></div><br><a href="${data.youtubeFiltered}" target="_blank" class="bg-red-600 text-white px-3 py-2 rounded-full text-[9px] font-black inline-block border-2 border-black fun-btn">▶️ YouTube ${grade} Filtered Safe</a><br><br><div class="bg-[#f6f6f7] border-2 border-black rounded-xl p-2 text-[8px]"><b>🔗 Connected:</b> notes (${allFiles.Notes.length}) • design • exam • hw • brain (${aiBrain.length}) • Oxford 🔊 + 🎤 Editable<br><b>👨‍👩‍👧 Parent:</b> Logged SHKE ${shke}</div></div>`;
+  // Auto speak in blind mode
+  if(blindMode) speakText(data.answer.slice(0,500));
  }catch(e){
   document.getElementById('thinking')?.remove();
-  chat.innerHTML+=`<div class="bg-[#ffeaea] rounded-lg p-3 max-w-[85%]"><p class="text-[9px]">❌ ${e.message}<br>Fix: Vercel Settings → Env → GEMINI_API_KEY → Redeploy</p></div>`;
+  chat.innerHTML+=`<div class="bg-[#ffeaea] rounded-lg p-3 max-w-[85%] border-2 border-black"><p class="text-[9px]">❌ ${e.message}<br>Fix: Vercel Settings → Env → GEMINI_API_KEY → Redeploy</p></div>`;
  }
  chat.scrollTop=chat.scrollHeight; isThinking=false; sendBtn.innerHTML='<i class="fa-solid fa-paper-plane text-[13px]"></i>'; uploadedPhoto='';
 }
