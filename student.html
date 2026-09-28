@@ -21,7 +21,7 @@ const app=initializeApp(cfg); window.FB={auth:getAuth(app),db:getFirestore(app),
 <div class="bg-white border-b-2 border-black sticky top-0 z-40">
 <div class="p-3 flex items-center gap-2">
 <div class="w-10 h-10 rounded-full border-2 border-black bg-[#4a86ff] flex items-center justify-center overflow-hidden"><img src="logo.png" class="w-full h-full object-cover" onerror="this.style.display='none'"></div>
-<div class="flex-1"><p class="font-black text-[14px] leading-none">Hi, <span id="firstName">Learner</span>! 🎒</p><p class="text-[10px] font-bold text-gray-600"><span id="gradeShow">Grade 6</span> • Mon-Fri 10 + Sat-Sun 100</p></div>
+<div class="flex-1"><p class="font-black text-[14px] leading-none">Hi, <span id="firstName">Learner</span>! 🎒</p><p class="text-[10px] font-bold text-gray-600"><span id="gradeShow">Grade 6</span> • <span id="todayDate">Mon 28 Sept</span></p><p class="text-[8px] font-black opacity-60">SomaHub Homework</p></div>
 <div class="bg-black text-white border-2 border-black px-3 py-1 rounded-full"><p id="indexShow" class="font-black text-[10px]">SHKE...</p></div>
 </div>
 <div class="bg-black text-white overflow-hidden whitespace-nowrap border-y-2 border-black h-8 flex items-center"><div class="marquee flex gap-8 text-[10px] font-black"><span>⏰ TODAY: Mon-Fri 10 Marks Daily HW!</span><span>📋 SAT-SUN: Weekly 100 Marks Exam</span><span>🎮 NEW: Games - Play & Earn Points!</span><span>💡 KICD Aligned • CBC & CBE</span></div></div>
@@ -40,6 +40,18 @@ const app=initializeApp(cfg); window.FB={auth:getAuth(app),db:getFirestore(app),
 <div class="bg-[#4a86ff] border-2 border-black rounded-xl p-3 shadow-[2px_2px_0_0_#000] text-white"><p class="font-black text-[11px]">📋 Weekly Exam</p><p class="text-[8px] font-bold">Sat-Sun • 100 Marks</p><a href="exam.html" class="mt-2 block text-center w-full bg-white text-black rounded-full py-2 font-black text-[10px]">Start →</a></div>
 </div>
 </div>
+
+<!-- NEW: TIMETABLE CARD - Mon to Fri ✅ ⏳ -->
+<div class="bg-[#0a4a3a] rounded-[1.3rem] p-4 border-2 border-black shadow-[3px_3px_0_0_#000] text-white">
+<div class="flex justify-between items-center">
+<p class="font-black text-[12px]">📅 Timetable Mon-Fri</p>
+<span id="ttSummary" class="bg-[#ffcc1a] text-black px-2 py-1 rounded-full text-[8px] font-black">0/6 today</span>
+</div>
+<p id="ttNext" class="text-[9px] mt-1 opacity-80">Next: Loading...</p>
+<div id="ttMini" class="mt-3 grid grid-cols-3 gap-1.5"></div>
+<button onclick="openTimetable()" class="mt-3 w-full bg-white text-black border-2 border-black rounded-full py-2.5 font-black text-[10px] shadow-[2px_2px_0_0_#000]">View Full Timetable →</button>
+</div>
+
 <p class="font-black text-[14px]">🚀 Quick Access</p>
 <div class="grid grid-cols-2 gap-2">
 <a href="notes.html" class="bg-white rounded-xl p-3 border-2 border-black shadow-[2px_2px_0_0_#000]"><p class="font-black text-[12px]"><i class="fa-solid fa-book text-purple-600"></i> Notes</p><p class="text-[9px] text-gray-500">PP1-G9 • KICD</p></a>
@@ -75,10 +87,57 @@ const app=initializeApp(cfg); window.FB={auth:getAuth(app),db:getFirestore(app),
 </div>
 </div>
 </div>
+
+<!-- TIMETABLE MODAL -->
+<div id="ttModal" class="fixed inset-0 bg-black/60 hidden z-50 p-4 overflow-auto">
+<div class="bg-white rounded-[1.3rem] border-2 border-black max-w-[420px] mx-auto mt-10 p-4 shadow-[4px_4px_0_0_#000]">
+<div class="flex justify-between items-center"><p class="font-black text-[14px]">📅 Weekly Timetable</p><button onclick="closeTimetable()" class="bg-black text-white w-8 h-8 rounded-full font-black">X</button></div>
+<p class="text-[9px] font-bold opacity-60 mt-1">Mon-Fri • ✅ = Done after homework • ⏳ = Pending</p>
+<div id="ttFull" class="mt-3"></div>
+<button onclick="closeTimetable()" class="mt-4 w-full bg-[#ffcc1a] border-2 border-black rounded-full py-3 font-black text-[11px]">Close</button>
+</div>
+</div>
+
 <script>
 function copyRef(){ navigator.clipboard.writeText(document.getElementById('refLink').value); document.getElementById('convMsg').innerText="✓ Link Copied!"; }
 async function convertPoints(){ let pts=parseInt(document.getElementById('ptsBal').innerText)||0; if(pts<1000) return convMsg.innerText="❌ Need 1000 pts"; if(!confirm("Convert 1000 → 100 KES?")) return; const FB=window.FB; let uid=localStorage.getItem('sh_uid')||FB.auth.currentUser?.uid; await FB.updateDoc(FB.doc(FB.db,"users",uid),{points:FB.increment(-1000),kesBalance:FB.increment(100)}); ptsBal.innerText=pts-1000; convMsg.innerText="✓ 100 KES Added - Admin will pay"; }
 function doLogout(){ if(!confirm('Log out and reset?')) return; FB.signOut(FB.auth).then(()=>{ localStorage.clear(); sessionStorage.clear(); location.href='registration.html'; }); }
+
+// TIMETABLE LOGIC - Mon-Fri ✅ ⏳
+let todayName = new Date().toLocaleDateString('en-KE',{weekday:'long'});
+let weekKey = 'soma_tt_'+new Date().toISOString().slice(0,10);
+let timetable = JSON.parse(localStorage.getItem(weekKey)||'{}');
+const subjects = ["English","Kiswahili","Math","Science","SST","CRE"];
+const weekDays = ["Monday","Tuesday","Wednesday","Thursday","Friday"];
+document.getElementById('todayDate').innerText = new Date().toLocaleDateString('en-KE',{weekday:'short', day:'numeric', month:'short', year:'numeric'});
+function renderMini(){
+ let doneToday = subjects.filter(s=>timetable[todayName+'_'+s]).length;
+ document.getElementById('ttSummary').innerText = doneToday + "/6 today";
+ let next = subjects.find(s=>!timetable[todayName+'_'+s]);
+ document.getElementById('ttNext').innerText = next? "Next: "+next+" ⏳ Pending" : "🎉 All done today!";
+ let mini = subjects.map(s=>{
+  let done = timetable[todayName+'_'+s];
+  return `<div class="bg-white border-2 border-black rounded-xl p-2 text-center ${done?'bg-[#dcfce7]':''}"><p class="font-black text-[8px]">${s.slice(0,3)}</p><p class="text-[12px]">${done?'✅':'⏳'}</p></div>`;
+ }).join('');
+ document.getElementById('ttMini').innerHTML = mini;
+}
+function openTimetable(){
+ let html=`<table class="w-full text-[10px] border-2 border-black rounded-xl overflow-hidden"><tr class="bg-black text-white"><th class="p-2 border border-black">Day</th><th class="p-2 border border-black">Subject</th><th class="p-2 border border-black">Status</th></tr>`;
+ weekDays.forEach(day=>{
+  subjects.forEach((sub,i)=>{
+   let key=day+'_'+sub; let done=timetable[key];
+   let isToday = day===todayName;
+   let status = done? '✅ Done' : (isToday? '⏳ Pending' : '⬜');
+   html+=`<tr class="${isToday?'bg-[#fff7e0]':''}"><td class="p-2 border-2 border-black font-black">${i==0?day:''}</td><td class="p-2 border-2 border-black">${sub}</td><td class="p-2 border-2 border-black text-center font-black ${done?'text-green-600':''}">${status} ${isToday &&!done? `<a href="homework.html?subject=${sub}" class="ml-1 bg-black text-white px-2 py-0.5 rounded-full text-[8px]">Do</a>`:''}</td></tr>`;
+  });
+ });
+ html+=`</table>`;
+ document.getElementById('ttFull').innerHTML=html;
+ document.getElementById('ttModal').classList.remove('hidden');
+}
+function closeTimetable(){document.getElementById('ttModal').classList.add('hidden');}
+renderMini();
+
 async function checkTuition(userId, shke){
   try{
    let FB=window.FB; let q2=FB.query(FB.collection(FB.db,"homeschooling_requests"), FB.where("userId","==",userId), FB.orderBy("timestamp","desc"));
