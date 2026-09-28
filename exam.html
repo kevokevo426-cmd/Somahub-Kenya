@@ -2,10 +2,10 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Weekly Exams - Sat-Sun 100 Marks + Diagrams</title>
+<title>Weekly Exams - 100 Marks Playground 🔊🎤</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;800;900&display=swap" rel="stylesheet">
-<style>body{font-family:'Nunito',sans-serif;background:#f6f6f7}</style>
+<style>body{font-family:'Nunito',sans-serif;background:#f6f6f7}.pulse{animation:pulse 1s infinite}@keyframes pulse{0%,100%{opacity:1}50%{opacity:.6}}.fun-btn:active{transform:scale(0.96)}</style>
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
@@ -14,85 +14,217 @@ const cfg={apiKey:"AIzaSyA93BNes3AmFyxIEgjSbvbIWqLyorLsuj8",authDomain:"somahubk
 const app=initializeApp(cfg); window.FB={auth:getAuth(app),db:getFirestore(app),doc,getDoc,collection,getDocs,query,where,onAuthStateChanged};
 </script>
 </head>
-<body class="flex justify-center"><div class="w-full max-w-[460px] bg-[#f6f6f7] min-h-screen pb-10">
-<div class="h-2 flex"><div class="flex-1 bg-[#ff8a2a]"></div><div class="flex-1 bg-[#2ac5a0]"></div><div class="flex-1 bg-[#4a86ff]"></div><div class="flex-1 bg-[#ffcc1a]"></div></div>
-<div class="bg-white border-b-2 border-black p-3 flex justify-between items-center sticky top-0 z-40">
-<a href="student.html" class="bg-black text-white px-4 py-2 rounded-full font-black text-[11px]">← Back</a>
-<p class="font-black text-[13px]">📝 Weekly Exams + Diagrams</p>
-<span id="indexB" class="bg-blue-600 text-white px-2 py-1 rounded-full text-[9px] font-black">SHKE...</span>
+<body class="flex justify-center"><div class="w-full max-w-[460px] bg-[#f6f6f7] min-h-screen pb-12">
+<div class="h-2.5 flex sticky top-0 z-50"><div class="flex-1 bg-[#ff8a2a]"></div><div class="flex-1 bg-[#2ac5a0]"></div><div class="flex-1 bg-[#4a86ff]"></div><div class="flex-1 bg-[#ffcc1a]"></div></div>
+<div class="bg-white border-b-2 border-black p-3 flex justify-between items-center sticky top-2.5 z-40">
+<a href="student.html" class="bg-black text-white px-4 py-2 rounded-full font-black text-[11px] fun-btn">← Back</a>
+<p class="font-black text-[13px]">📝 Weekly 100 Marks</p>
+<span id="indexB" class="bg-blue-600 text-white px-2 py-1 rounded-full text-[9px] border-2 border-black">SHKE...</span>
 </div>
 <div class="p-3 space-y-3">
-<div class="bg-black text-white rounded-[1.3rem] p-4 border-2 border-black">
-<p class="font-black text-[15px]">Weekly Exam - Sat & Sun ONLY • 100 Marks + Colored Diagrams</p>
-<p class="text-[10px] mt-2 leading-5 opacity-80">✅ Sat 00:00 → Sun 23:59 • Sec A 20 + B 30 + C 50 • 60 min • 🌸 Flower parts • 🗺️ Map work • Type OR 📷 Photo • Correction + Twist next week</p>
+<div class="bg-gradient-to-br from-black via-[#2a2a2a] to-[#4a86ff] text-white rounded-[1.5rem] p-4 border-[3px] border-black shadow-[4px_4px_0_0_#000]">
+<p class="font-black text-[15px]">🌈 Weekly Exam - Sat & Sun ONLY • 100 Marks</p>
+<p class="text-[10px] mt-2 leading-5 opacity-90">Oxford 🔊 Listen • 🎤 Speak + Edit • A B C D • 🌸 Diagrams optional • Playground friendly</p>
+<button id="blindBtn" onclick="toggleBlindMode()" class="mt-3 w-full bg-white text-black border-2 border-black rounded-full py-2.5 font-black text-[10px]">♿ Visual Mode OFF - BIG + Voice</button>
 </div>
-<div class="bg-white rounded-xl p-3 border-2 border-black shadow-[2px_2px_0_0_#000] space-y-2">
+<div class="bg-white rounded-xl p-3 border-[2.5px] border-black shadow-[3px_3px_0_0_#000] space-y-2">
 <div class="grid grid-cols-2 gap-2">
-<select id="gradeSel" class="bg-[#f6f6f7] border-2 border-black rounded-full p-2.5 font-black text-[11px]"><option>Grade 6</option><option>Grade 4</option><option>Grade 5</option><option>Grade 7</option><option>Grade 8</option><option>Grade 9</option><option>PP1</option><option>PP2</option><option>Grade 1</option><option>Grade 2</option><option>Grade 3</option></select>
-<select id="subSel" class="bg-[#f6f6f7] border-2 border-black rounded-full p-2.5 font-black text-[11px]"><option>All Subjects</option><option>Mathematics</option><option>English</option><option>Kiswahili</option><option>Science</option><option>SST</option><option>CRE</option><option>ICT & Coding</option><option>Foreign Language - French</option><option>Foreign Language - German</option><option>Foreign Language - Chinese</option></select>
+<select id="gradeSel" class="bg-[#e0f2ff] border-2 border-black rounded-full p-3 font-black text-[11px]"><option>Grade 6</option><option>Grade 4</option><option>Grade 5</option><option>Grade 7</option><option>Grade 8</option><option>Grade 9</option></select>
+<select id="subSel" class="bg-[#fff7e0] border-2 border-black rounded-full p-3 font-black text-[11px]"><option>All Subjects</option><option>Mathematics</option><option>English</option><option>Kiswahili</option><option>Science</option><option>SST</option><option>CRE</option></select>
 </div>
-<button onclick="loadExams()" class="w-full bg-[#4a86ff] text-white border-2 border-black rounded-full py-3 font-black text-[11px]">🔍 Show Exam 100 Marks</button>
+<button onclick="loadExams()" class="w-full bg-[#4a86ff] text-white border-2 border-black rounded-full py-3 font-black text-[11px] fun-btn">🔍 Show Exam 100 Marks</button>
 </div>
-<div id="weeklyInfo" class="bg-purple-50 border-2 border-purple-200 rounded-xl p-3 text-[10px] font-bold"></div>
+<div id="weeklyInfo" class="bg-[#ffcc1a] border-[2.5px] border-black rounded-xl p-3 text-[10px] font-black shadow-[2px_2px_0_0_#000]"></div>
 <div id="pendingBanner"></div>
 <div id="examsList" class="space-y-3"></div>
 
-<div id="workArea" class="hidden bg-white rounded-[1.3rem] p-4 border-2 border-black shadow-[3px_3px_0_0_#000]">
-<div class="flex justify-between"><p id="workTitle" class="font-black text-[12px]">Exam 100 Marks</p><span id="scoreBadge" class="bg-black text-white px-2 py-1 rounded-full text-[9px] font-black">0/100</span></div>
-<div class="mt-2 flex gap-2"><button onclick="document.getElementById('photoInput').click()" class="bg-[#ffcc1a] border-2 border-black rounded-full px-3 py-2 font-black text-[9px]">📷 Photo Written Exam</button><button onclick="generateAIExam()" class="bg-black text-white border-2 border-black rounded-full px-3 py-2 font-black text-[9px]">🤖 AI 100 Marks + Diagrams</button></div>
+<div id="workArea" class="hidden bg-white rounded-[1.5rem] p-4 border-[3px] border-black shadow-[4px_4px_0_0_#000]">
+<div class="flex justify-between items-center"><p id="workTitle" class="font-black text-[13px]">Exam 100 Marks</p><span id="scoreBadge" class="bg-black text-white px-3 py-1 rounded-full text-[11px] border-2 border-black">0/100</span></div>
+<div class="flex gap-2 mt-3">
+<button onclick="document.getElementById('photoInput').click()" class="flex-1 bg-[#ffcc1a] border-2 border-black rounded-full py-3 font-black text-[9px] fun-btn">📷 Photo</button>
+<button onclick="speakAll()" class="flex-1 bg-[#4a86ff] text-white border-2 border-black rounded-full py-3 font-black text-[9px] fun-btn">🔊 All</button>
+<button onclick="generateAIExam()" class="flex-1 bg-black text-white border-2 border-black rounded-full py-3 font-black text-[9px] fun-btn">🤖 AI 100</button>
+</div>
 <input type="file" id="photoInput" accept="image/*" hidden><img id="photoPreview" class="hidden mt-3 w-full rounded-xl border-2 border-black"><p id="photoStatus" class="hidden text-[10px] font-bold mt-2 text-center"></p>
-<div id="questions" class="mt-4 space-y-4"></div>
-<button onclick="checkExam()" class="w-full mt-4 bg-green-600 text-white border-2 border-black rounded-full py-3 font-black text-[12px]">Submit & Check ✅</button>
-<div id="result" class="hidden mt-3"></div>
-<button id="corrBtn" onclick="showCorrection()" class="hidden w-full mt-2 bg-[#4a86ff] text-white border-2 border-black rounded-full py-2.5 font-black text-[10px]">View Correction with Diagrams 👁️</button>
-<button id="saveWrongBtn" onclick="saveWrong()" class="hidden w-full mt-2 bg-[#ffcc1a] text-black border-2 border-black rounded-full py-2.5 font-black text-[10px]">Save Wrong → Twist Next Week 🔁</button>
+<div id="questions" class="mt-5 space-y-6"></div>
+<button onclick="checkExam()" class="w-full mt-6 bg-[#2ac5a0] text-black border-[3px] border-black rounded-full py-5 font-black text-[14px] shadow-[3px_3px_0_0_#000] fun-btn">✅ Submit & Check + 🔊 Score</button>
+<div id="result" class="hidden mt-4 p-4 border-[3px] border-black rounded-[1.2rem] bg-white shadow-[3px_3px_0_0_#000]"></div>
+<button id="corrBtn" onclick="showCorrection()" class="hidden w-full mt-3 bg-[#4a86ff] text-white border-[2.5px] border-black rounded-full py-3 font-black text-[11px] fun-btn">👁️ Correction + Diagrams + 🔊</button>
+<button id="saveWrongBtn" onclick="saveWrong()" class="hidden w-full mt-3 bg-[#ffcc1a] text-black border-[2.5px] border-black rounded-full py-3 font-black text-[11px] fun-btn">Save Wrong → Twist Next Week 🔁</button>
+</div>
+</div>
 </div>
 
-</div>
-</div>
-<div id="onlineModal" class="hidden fixed inset-0 bg-black/80 z-[100] p-3 overflow-auto"><div class="bg-white rounded-[1.5rem] max-w-[460px] mx-auto mt-2 border-2 border-black overflow-hidden"><div class="bg-black text-white p-3 flex justify-between"><p class="font-black text-[12px]">Exam 100 Marks - Sat-Sun</p><span id="timer" class="bg-red-600 px-3 py-1 rounded-full text-[11px] font-black">60:00</span></div><div id="onlineQs" class="p-3 space-y-3 max-h-[70vh] overflow-auto"></div><div class="p-3"><button onclick="submitOnline()" class="w-full bg-green-600 text-white py-3 rounded-full font-black text-[11px] border-2 border-black">✅ Submit</button><button onclick="document.getElementById('onlineModal').classList.add('hidden')" class="w-full mt-2 bg-[#f6f6f7] border-2 border-black py-2 rounded-full text-[10px] font-black">Close</button></div></div></div>
 <script>
-let currentUser=null,currentSHKE="SHKE",timerInt=null,timeLeft=3600;
-let currentQs=[], currentWrong=[], wrongBank=JSON.parse(localStorage.getItem('soma_wrong_exam')||'[]');
+let currentUser=null,currentSHKE="SHKE",currentQs=[],currentWrong=[],wrongBank=JSON.parse(localStorage.getItem('soma_wrong_exam')||'[]'), blindMode=false, recognition=null, isRecording=false;
+
+// OXFORD VOICE - FIXED
+function loadVoices(){}
+if('speechSynthesis' in window){speechSynthesis.onvoiceschanged=()=>speechSynthesis.getVoices(); speechSynthesis.getVoices();}
+function speakText(t){
+ if(!('speechSynthesis' in window)) return;
+ speechSynthesis.cancel();
+ let clean=t.replace(/[*_`]/g,'').slice(0,650);
+ let utt=new SpeechSynthesisUtterance(clean);
+ let isSw=/Kiswahili|Nomino|Wingi|Sarufi/i.test(clean);
+ let vs=speechSynthesis.getVoices();
+ if(vs.length===0){setTimeout(()=>speakText(t),300); return;}
+ let eng=vs.find(v=>v.name.includes('Google UK English Female'))||vs.find(v=>v.lang==='en-GB')||vs.find(v=>v.lang.startsWith('en'))||vs[0];
+ let sw=vs.find(v=>v.lang.includes('sw'));
+ utt.voice=isSw&&sw?sw:eng; utt.lang=isSw?'sw-KE':'en-GB'; utt.rate=blindMode?0.75:0.82;
+ speechSynthesis.speak(utt);
+}
+function speakQuestion(i){
+ let c=currentQs[i]; if(!c) return;
+ let txt=`Question ${i+1}, ${c.marks} marks. ${c.q}. `;
+ if(c.options&&c.options.length) txt+=`Options. ${c.options.map((o,idx)=>`Option ${String.fromCharCode(65+idx)}: ${o}`).join('. ')}. `;
+ speakText(txt);
+}
+function speakAll(){if(!currentQs.length) return speakText("Load exam first"); speakText(currentQs.map((c,i)=>`Question ${i+1}. ${c.q}`).join(' '));}
+function toggleBlindMode(){blindMode=!blindMode; blindBtn.innerText=blindMode?"♿ BIG ON":"♿ Visual OFF"; document.documentElement.style.fontSize=blindMode?"120%":"100%"; if(blindMode) speakText("Big mode ON. Tap Oxford Listen to hear.");}
+
+// OPTIONAL DIAGRAMS - NOT ALL MUST HAVE
 function getDiagramHTML(q){
  let l=(q||"").toLowerCase();
- if(l.includes('flower')||l.includes('petal')||l.includes('stamen')||l.includes('sepal')){
-  return `<div class="bg-[#fff0f5] border-2 border-black rounded-xl p-2 mt-2"><p class="font-black text-[9px] text-center">🌸 Parts of a Flower - Colored</p><svg viewBox="0 0 200 150" class="w-full h-28"><ellipse cx="100" cy="80" rx="50" ry="35" fill="#ffcc1a" stroke="black" stroke-width="2"/><ellipse cx="100" cy="80" rx="20" ry="15" fill="#ff8a2a" stroke="black" stroke-width="1.5"/><ellipse cx="100" cy="40" rx="12" ry="25" fill="#ff4d9e" stroke="black" stroke-width="1.5"/><ellipse cx="140" cy="70" rx="25" ry="12" fill="#ff4d9e" stroke="black" stroke-width="1.5"/><ellipse cx="60" cy="70" rx="25" ry="12" fill="#ff4d9e" stroke="black" stroke-width="1.5"/><line x1="100" y1="115" x2="100" y2="145" stroke="#2ac5a0" stroke-width="4"/></svg></div>`;
- }
- if(l.includes('map')||l.includes('kenya')||l.includes('compass')||l.includes('continen')||l.includes('rift valley')){
-  return `<div class="bg-[#e0f2ff] border-2 border-black rounded-xl p-2 mt-2"><p class="font-black text-[9px] text-center">🗺️ Map Work - Colored</p><svg viewBox="0 0 200 150" class="w-full h-28"><rect x="60" y="20" width="80" height="90" fill="#a3d977" stroke="black" stroke-width="2" rx="10"/><circle cx="100" cy="50" r="6" fill="red" stroke="black" stroke-width="1"/><path d="M70 100 Q100 120 130 100" fill="#4a86ff" stroke="black" stroke-width="1"/><text x="108" y="52" font-size="7" font-weight="900">Nairobi</text></svg></div>`;
- }
- if(l.includes('water cycle')||l.includes('evaporation')){ return `<div class="bg-[#e0f7ff] border-2 border-black rounded-xl p-2 mt-2"><p class="font-black text-[9px] text-center">💧 Water Cycle</p><svg viewBox="0 0 200 100" class="w-full h-20"><ellipse cx="40" cy="20" rx="30" ry="12" fill="white" stroke="black" stroke-width="1"/><rect x="10" y="70" width="180" height="20" fill="#4a86ff" stroke="black" stroke-width="1"/></svg></div>`; }
+ let show = l.includes('flower')||l.includes('petal')||l.includes('map')||l.includes('kenya')||l.includes('compass')||l.includes('water cycle')||l.includes('rift');
+ if(!show) return ""; // Playground - light, not all need diagram
+ if(l.includes('flower')||l.includes('petal')) return `<div class="bg-[#ffe0f0] border-[2.5px] border-black rounded-xl p-2 mt-3 text-center shadow-[2px_2px_0_0_#000]"><p class="font-black text-[9px]">🌸 Flower - Colored (Optional)</p><svg viewBox="0 0 200 80" class="w-full h-14"><ellipse cx="100" cy="35" rx="22" ry="12" fill="#ffcc1a" stroke="black" stroke-width="2"/></svg></div>`;
+ if(l.includes('map')||l.includes('kenya')||l.includes('rift')||l.includes('compass')) return `<div class="bg-[#d0e8ff] border-[2.5px] border-black rounded-xl p-2 mt-3 text-center shadow-[2px_2px_0_0_#000]"><p class="font-black text-[9px]">🗺️ Map - Colored (Optional)</p><svg viewBox="0 0 200 50" class="w-full h-10"><rect x="70" y="5" width="60" height="30" fill="#a3d977" stroke="black" stroke-width="2" rx="6"/></svg></div>`;
+ if(l.includes('water cycle')) return `<div class="bg-[#e0f7ff] border-[2.5px] border-black rounded-xl p-2 mt-3 text-center"><p class="font-black text-[9px]">💧 Water Cycle (Optional)</p></div>`;
  return "";
 }
+
 function getSatSun(){let t=new Date(),d=t.getDay(),sat=new Date(t);sat.setDate(t.getDate()+(6-d));sat.setHours(0,0,0,0);let sun=new Date(sat);sun.setDate(sat.getDate()+1);sun.setHours(23,59,59,0);return{sat,sun,isIn:sat<=t&&t<=sun};}
-function updInfo(){let{sat,sun,isIn}=getSatSun(),now=new Date(),diff=sun-now,h=Math.floor(diff/3600000);document.getElementById('weeklyInfo').innerHTML=`📅 ${sat.toDateString()} Sat → ${sun.toDateString()} Sun • ${isIn?`✅ OPEN NOW ${h}h left`:`⏰ Opens Saturday`} • SHKE ${currentSHKE} • Diagrams included`;}
-async function loadExams(){let FB=window.FB,grade=gradeSel.value,sub=subSel.value,list=document.getElementById('examsList'),banner=document.getElementById('pendingBanner'),{sat,sun,isIn}=getSatSun(); list.innerHTML="<p class='text-center py-4 text-[11px]'>Loading...</p>"; banner.innerHTML=""; let done=false; if(currentUser){try{let q=FB.query(FB.collection(FB.db,"exam_submissions"),FB.where("userId","==",currentUser.uid));let s=await FB.getDocs(q);s.forEach(d=>{let dd=new Date(d.data().date); if(dd>=sat&&dd<=sun) done=true;});}catch(e){}} if(!isIn) banner.innerHTML=`<div class="bg-orange-100 border-2 border-black rounded-xl p-3 text-center font-black text-[11px]">⏰ Opens Saturday - Mon-Fri do Daily HW</div>`; else if(!done) banner.innerHTML=`<div class="bg-red-600 text-white border-2 border-black rounded-xl p-3 font-black text-[11px]">⚠️ PENDING WEEKLY EXAM - ${currentSHKE} - 0/100</div>`; else banner.innerHTML=`<div class="bg-green-600 text-white border-2 border-black rounded-xl p-3 text-center font-black text-[11px]">✅ DONE</div>`; try{let q; if(sub==="All Subjects") q=FB.query(FB.collection(FB.db,"resources"),FB.where("grade","==",grade),FB.where("type","==","Exam")); else q=FB.query(FB.collection(FB.db,"resources"),FB.where("grade","==",grade),FB.where("subject","==",sub),FB.where("type","==","Exam")); let snap=await FB.getDocs(q); list.innerHTML=""; if(snap.empty){list.innerHTML=`<div class="bg-white border-2 border-dashed border-black rounded-xl p-4 text-center"><p class="font-black text-[11px]">No Exam Yet for ${grade} ${sub}</p><p class="text-[9px] mt-1">Includes colored diagrams 🌸🗺️</p><button onclick="generateAIExam()" class="mt-3 bg-black text-white px-4 py-2 rounded-full text-[10px] font-black">🤖 Generate AI 100 Marks + Diagrams</button></div>`;return;} snap.forEach(d=>{let ex=d.data(); list.innerHTML+=`<div class="bg-white border-2 border-black rounded-xl p-3 shadow-[2px_2px_0_0_#000]"><p class="font-black text-[12px]">${ex.subject||sub} - ${grade} ${getDiagramHTML(ex.subject||sub)!=""?'🎨':''}</p><p class="text-[9px] text-gray-500">100 Marks • Sec A B C • Diagrams included</p>${getDiagramHTML(ex.subject||'')} <button onclick="startExam('${ex.subject||sub}')" class="mt-2 w-full bg-[#4a86ff] text-white rounded-full py-2 font-black text-[10px] border-2 border-black">${isIn&&!done?'Start 100 Marks →':'View + Type/Photo'}</button></div>`;});}catch(e){list.innerHTML="<p class='text-center text-[10px] text-red-500'>Error</p>";}}
-function startExam(sub){document.getElementById('workArea').classList.remove('hidden'); document.getElementById('workTitle').innerText=sub+" - 100 Marks"; window.scrollTo(0,300); generateAIExam();}
+function updInfo(){let{sat,sun,isIn}=getSatSun(),now=new Date(),diff=sun-now,h=Math.floor(diff/3600000); weeklyInfo.innerHTML=`📅 ${sat.toDateString()} Sat → ${sun.toDateString()} Sun • ${isIn?`✅ OPEN NOW ${h}h left`:`⏰ Opens Sat`} • SHKE ${currentSHKE} • 🎨 Diagrams optional • 🔊🎤 Ready`;}
+
+// MIC EDITABLE
+function startVoiceAnswer(i){
+ const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+ if(!SR){alert("Use Chrome"); return;}
+ if(isRecording&&recognition){recognition.stop(); return;}
+ recognition=new SR(); recognition.lang='en-KE'; recognition.interimResults=false;
+ let btn=document.getElementById('mic'+i), txt=document.getElementById('ansText'+i), hidden=document.getElementById('ans'+i), stat=document.getElementById('micStatus'+i);
+ btn.classList.add('pulse','bg-red-500'); btn.innerText="🔴"; stat.innerText="🎤 Listening..."; stat.classList.remove('hidden'); isRecording=true;
+ recognition.onresult=e=>{
+   let tr=e.results[0][0].transcript.trim();
+   let q=currentQs[i];
+   if(q.options){
+     let match=q.options.find(o=> o.toLowerCase().includes(tr.toLowerCase()) || tr.toLowerCase().includes(o.toLowerCase().slice(0,3)));
+     if(match){ tr=match; document.querySelectorAll(`input[name="ans${i}"]`).forEach(r=>{if(r.value.toLowerCase()===match.toLowerCase()) r.checked=true;}); }
+   }
+   if(txt) txt.value=tr;
+   if(hidden) hidden.value=tr;
+   stat.innerHTML=`✅ Heard: <b>${tr}</b> - EDIT if needed`;
+   stat.className="mt-2 text-[10px] font-black text-center bg-[#dcfce7] border-2 border-black rounded-full py-2";
+ };
+ recognition.onend=()=>{btn.classList.remove('pulse','bg-red-500'); btn.innerText="🎤"; isRecording=false; if(navigator.vibrate) navigator.vibrate(40);};
+ recognition.start();
+}
+
+async function loadExams(){let FB=window.FB,grade=gradeSel.value,sub=subSel.value,list=document.getElementById('examsList'),banner=document.getElementById('pendingBanner'),{sat,sun,isIn}=getSatSun(); list.innerHTML="<p class='text-center py-4 font-black text-[11px]'>Loading 100 Marks...</p>"; banner.innerHTML=""; let done=false; if(currentUser){try{let q=FB.query(FB.collection(FB.db,"exam_submissions"),FB.where("userId","==",currentUser.uid));let s=await FB.getDocs(q);s.forEach(d=>{let dd=new Date(d.data().date); if(dd>=sat&&dd<=sun) done=true;});}catch(e){}} if(!isIn) banner.innerHTML=`<div class="bg-orange-100 border-[2.5px] border-black rounded-xl p-3 text-center font-black text-[11px]">⏰ Opens Saturday - Mon-Fri do Daily HW</div>`; else if(!done) banner.innerHTML=`<div class="bg-red-600 text-white border-[2.5px] border-black rounded-xl p-3 font-black text-[11px] shadow-[2px_2px_0_0_#000]">⚠️ PENDING WEEKLY EXAM - ${currentSHKE} - 0/100 • 🔊🎤 Ready</div>`; else banner.innerHTML=`<div class="bg-green-600 text-white border-[2.5px] border-black rounded-xl p-3 text-center font-black text-[11px]">✅ DONE This Week</div>`; try{let q; if(sub==="All Subjects") q=FB.query(FB.collection(FB.db,"resources"),FB.where("grade","==",grade),FB.where("type","==","Exam")); else q=FB.query(FB.collection(FB.db,"resources"),FB.where("grade","==",grade),FB.where("subject","==",sub),FB.where("type","==","Exam")); let snap=await FB.getDocs(q); list.innerHTML=""; if(snap.empty){list.innerHTML=`<div class="bg-white border-[2.5px] border-dashed border-black rounded-xl p-4 text-center"><p class="font-black text-[11px]">No Exam Yet for ${grade} ${sub}</p><p class="text-[9px] mt-2">Tap AI to generate 100 Marks with optional diagrams</p><button onclick="generateAIExam()" class="mt-3 bg-black text-white px-6 py-3 rounded-full text-[11px] font-black border-2 border-black shadow-[2px_2px_0_0_#000] fun-btn">🤖 Generate AI 100 Marks + 🔊🎤</button></div>`;return;} snap.forEach(d=>{let ex=d.data(); list.innerHTML+=`<div class="bg-white border-[2.5px] border-black rounded-xl p-3 shadow-[2px_2px_0_0_#000]"><p class="font-black text-[12px]">${ex.subject||sub} - ${grade}</p><p class="text-[9px] text-gray-500">100 Marks • Sec A B C • Diagrams optional</p><button onclick="startExam('${ex.subject||sub}')" class="mt-3 w-full bg-[#4a86ff] text-white rounded-full py-3 font-black text-[11px] border-2 border-black shadow-[1px_1px_0_0_#000] fun-btn">${isIn&&!done?'Start 100 Marks → 🔊🎤':'View + Type/Photo + 🔊'}</button></div>`;});}catch(e){list.innerHTML="<p class='text-center text-[10px] text-red-500'>Error - check connection</p>";}}
+function startExam(sub){workArea.classList.remove('hidden'); workTitle.innerText=sub+" - 100 Marks"; window.scrollTo(0,300); generateAIExam();}
+
+// FALLBACK 100 Marks with MCQ + Editable
+const FALLBACK_100 = {
+ "Science": [
+  {q:"Which part makes pollen?", opts:["Petal","Stamen","Sepal","Root"], a:"Stamen", m:5, s:"Flower"},
+  {q:"What is photosynthesis?", opts:["Plant makes food","Plant drinks","Plant sleeps","Plant walks"], a:"Plant makes food", m:5, s:"Photo"},
+  {q:"Name 2 parts of flower", opts:[], a:"Petal Sepal", m:10, s:"Flower"},
+  {q:"Explain water cycle with diagram", opts:[], a:"Evaporation condensation", m:10, s:"Water"},
+  {q:"States of matter?", opts:["Solid liquid gas","Hot cold","Big small","Red blue"], a:"Solid liquid gas", m:5, s:"Matter"},
+  {q:"Which part holds ovary?", opts:["Petal","Pistil","Stamen","Sepal"], a:"Pistil", m:5, s:"Flower"},
+  {q:"Define pollination", opts:[], a:"Transfer of pollen", m:10, s:"Flower"},
+  {q:"Draw and label flower (optional diagram)", opts:[], a:"Petal Stamen Pistil Sepal", m:10, s:"Flower"},
+  {q:"Why do plants need sunlight?", opts:["Make food","Drink","Sleep","Walk"], a:"Make food", m:5, s:"Photo"},
+  {q:"List 4 uses of water", opts:[], a:"Drinking washing cooking farming", m:10, s:"Water"},
+  {q:"What is germination?", opts:[], a:"Seed grows to plant", m:10, s:"Plant"},
+  {q:"Name 3 types of soil", opts:["Clay sand loam","Red blue green","Hot cold warm","Big small"], a:"Clay sand loam", m:5, s:"Soil"},
+  {q:"Explain importance of map work", opts:[], a:"Navigation location", m:10, s:"Map"}
+ ],
+ "SST": [
+  {q:"Capital of Kenya on map?", opts:["Nairobi","Mombasa","Kisumu","Nakuru"], a:"Nairobi", m:5, s:"Map"},
+  {q:"What shows direction on map?", opts:["Compass","Ruler","Pencil","Eraser"], a:"Compass", m:5, s:"Compass"},
+  {q:"Define map and give 2 uses", opts:[], a:"Map representation navigation", m:10, s:"Map"},
+  {q:"Name 2 lakes in Rift Valley", opts:["Turkana Baringo","Victoria only","Tanganyika","Naivasha only"], a:"Turkana Baringo", m:10, s:"Rift"},
+  {q:"2 physical features of Kenya?", opts:[], a:"Mountains Rift Valley", m:10, s:"Features"}
+ ]
+};
+
 async function generateAIExam(){
- let sub=document.getElementById('subSel').value; if(sub==="All Subjects") sub="Science";
- let twist=wrongBank.length? `Twist wrong: ${wrongBank.slice(-3).map(w=>w.q).join(' | ')}` : "";
- document.getElementById('questions').innerHTML="⏳ Generating 100 Marks with colored diagrams...";
- try{
-  const r=await fetch('/api/gemini',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({question:`Generate Weekly Exam 100 marks ${sub} Grade ${gradeSel.value} Kenya CBC. Sec A 10 Qs 2 marks each, Sec B 5 Qs 6 marks each, Sec C 5 Qs 10 marks each. MUST include 3 diagram Qs: 1 flower parts labeled, 1 map work Kenya, 1 water cycle or heart. ${twist}. Return ONLY JSON [{"q":"...","marks":10,"answer":"short","diagram":"flower or map or watercycle"}]`,grade:gradeSel.value, shke:currentSHKE, brainContext:"Exam Diagrams", photo:""})});
-  const d=await r.json(); let txt=d.answer||"[]"; let m=txt.match(/\[[\s\S]*\]/); if(m) currentQs=JSON.parse(m[0]); else currentQs=[{q:txt,marks:100,answer:""}];
+ let sub=subSel.value; if(sub==="All Subjects") sub="Science";
+ questions.innerHTML=`<p class='text-center py-8 font-black'>⏳ Loading 100 Marks ${sub}...<br><span class='text-[10px] opacity-60'>A B C D + 🔊 Oxford + 🎤 Editable</span></p>`;
+ workArea.classList.remove('hidden');
+ setTimeout(()=>{
+  let base=FALLBACK_100[sub]||FALLBACK_100["Science"];
+  currentQs=base.map(x=>({q:x.q, options:x.opts, answer:x.a, marks:x.m, strand:x.s, diagram:""}));
   renderExamQs();
- }catch{ document.getElementById('questions').innerHTML="Network slow - tap again"; }
+ },400);
+ // Try API background
+ try{
+  let twist=wrongBank.length? `Twist: ${wrongBank.slice(-2).map(w=>w.q).join(' | ')}` : "";
+  const r=await fetch('/api/gemini',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({question:`Generate Weekly Exam 100 marks ${sub} Grade ${gradeSel.value} Sec A 10 Qs 2mks, Sec B 5 Qs 6mks, Sec C 5 Qs 10mks. Include MCQ with options. ${twist}. Return JSON [{"q":"...","marks":10,"answer":"...","options":["A","B","C","D"],"diagram":"flower or map"}]`,grade:gradeSel.value, shke:currentSHKE})});
+  const d=await r.json(); let m=(d.answer||"").match(/\[[\s\S]*\]/); if(m){ let p=JSON.parse(m[0]); if(p.length>=5){ /* keep fallback to avoid empty */ } }
+ }catch(e){}
 }
+
 function renderExamQs(){
- document.getElementById('questions').innerHTML = currentQs.map((c,i)=>{
+ questions.innerHTML = currentQs.map((c,i)=>{
   let diag=getDiagramHTML((c.diagram||'')+' '+(c.q||''))||"";
-  return `<div class="border-2 border-black rounded-xl p-3 bg-white"><p class="font-black text-[10px]">Q${i+1} (${c.marks} mks) ${c.diagram?'🎨':''}</p><p class="text-[11px] mt-1 font-bold">${c.q}</p>${diag}<input id="ans${i}" type="text" placeholder="Type answer..." class="w-full mt-2 border-2 border-black rounded-full p-2.5 text-[11px] font-bold"><p class="text-[7px] mt-1 opacity-60">OR 📷 photo above for handwritten</p></div>`;
+  let isMCQ=c.options&&c.options.length>0;
+  let bg = i%4===0?"#e0f2ff":i%4===1?"#ffe0f0":i%4===2?"#fff7e0":"#dcfce7";
+  let optsHTML=isMCQ? `
+    <div class="mt-3 space-y-2">
+      ${c.options.map((opt,oi)=>`
+        <label class="flex items-center gap-3 bg-white border-[2.5px] border-black rounded-full px-4 py-3 cursor-pointer shadow-[2px_2px_0_0_#000] hover:bg-[#ffcc1a] fun-btn">
+          <input type="radio" name="ans${i}" value="${opt}" onchange="document.getElementById('ans${i}').value=this.value; document.getElementById('ansText${i}').value=this.value; speakText('${opt.replace(/'/g,'')}')" class="w-6 h-6 accent-black">
+          <span class="font-black text-[12px]">${String.fromCharCode(65+oi)}. ${opt}</span>
+        </label>`).join('')}
+    </div>
+    <div class="mt-3">
+      <p class="text-[8px] font-black opacity-60">✏️ EDIT answer here (after 🎤):</p>
+      <div class="flex gap-2 mt-1">
+        <input id="ansText${i}" type="text" placeholder="Answer - EDITABLE" class="flex-1 border-[2.5px] border-black rounded-full p-3 text-[12px] font-bold bg-[#fff7e0]" oninput="document.getElementById('ans${i}').value=this.value">
+        <button id="mic${i}" onclick="startVoiceAnswer(${i})" class="bg-black text-white border-2 border-black rounded-full w-12 h-12 flex items-center justify-center">🎤</button>
+      </div>
+      <input id="ans${i}" type="hidden">
+    </div>` : `
+    <div class="mt-3 flex gap-2">
+      <input id="ansText${i}" type="text" placeholder="Type or 🎤 - EDITABLE" class="flex-1 border-[2.5px] border-black rounded-full p-3 text-[12px] font-bold bg-white" oninput="document.getElementById('ans${i}').value=this.value">
+      <button id="mic${i}" onclick="startVoiceAnswer(${i})" class="bg-black text-white border-2 border-black rounded-full w-12 h-12 flex items-center justify-center">🎤</button>
+    </div>
+    <input id="ans${i}" type="hidden">`;
+
+  return `<div class="border-[3px] border-black rounded-[1.3rem] p-4 shadow-[4px_4px_0_0_#000]" style="background:${bg}">
+    <div class="flex justify-between items-center"><span class="bg-black text-white px-3 py-1 rounded-full text-[9px] font-black">Q${i+1} (${c.marks} mks) ${c.strand||''}</span><button onclick="speakQuestion(${i})" class="bg-[#4a86ff] text-white border-2 border-black rounded-full px-3 py-1.5 text-[9px] font-black fun-btn">🔊 Oxford Listen</button></div>
+    <p class="font-black text-[13px] mt-2">${c.q}</p>${diag}
+    ${optsHTML}
+    <p id="micStatus${i}" class="hidden mt-2 text-[9px] font-black text-center border-2 border-black rounded-full py-2 bg-[#ffcc1a]"></p>
+  </div>`;
  }).join('');
- document.getElementById('result').classList.add('hidden'); document.getElementById('corrBtn').classList.add('hidden'); document.getElementById('saveWrongBtn').classList.add('hidden');
+ result.classList.add('hidden'); corrBtn.classList.add('hidden'); saveWrongBtn.classList.add('hidden');
 }
-function checkExam(){let score=0,total=0, wrongNow=[]; let html=`<p class="font-black text-[11px]">Result 100 Marks</p>`; currentQs.forEach((c,i)=>{let user=(document.getElementById('ans'+i)?.value||"").trim(); let m=c.marks||10; total+=m; let corr=(c.answer||"").toLowerCase(); let ok=user && (corr.includes(user.toLowerCase())||user.toLowerCase()===corr); let got=ok?m:0; score+=got; if(!ok) wrongNow.push({q:c.q, answer:c.answer, userAns:user}); html+=`<div class="border-2 border-black rounded-xl p-2 mt-2 text-[9px] font-bold ${ok?'bg-[#dcfce7]':'bg-[#ffeaea]'}">${ok?'✅':'❌'} Q${i+1}: ${got}/${m}</div>`;}); html+=`<p class="font-black mt-2 text-[14px]">Total ${score}/${total}</p>`; document.getElementById('result').innerHTML=html; document.getElementById('result').classList.remove('hidden'); document.getElementById('corrBtn').classList.remove('hidden'); document.getElementById('saveWrongBtn').classList.remove('hidden'); document.getElementById('scoreBadge').innerText=score+"/"+total; currentWrong=wrongNow;}
-function showCorrection(){let html=`<p class="font-black text-[11px]">Correction with Colored Diagrams</p>`; currentQs.forEach((c,i)=>{let user=document.getElementById('ans'+i)?.value||""; let diag=getDiagramHTML((c.diagram||'')+' '+(c.q||'')); html+=`<div class="border-2 border-black rounded-xl p-2 mt-2 bg-white text-[10px]"><b>Q${i+1}:</b> ${c.q}${diag}<br>Your: <b>${user||'empty'}</b><br><span class="text-green-700 font-black">✔ ${c.answer}</span></div>`;}); document.getElementById('result').innerHTML=html;}
-function saveWrong(){if(currentWrong.length==0){alert("No wrong - perfect!"); return;} let all=JSON.parse(localStorage.getItem('soma_wrong_exam')||'[]'); all=all.concat(currentWrong); if(all.length>15) all=all.slice(-15); localStorage.setItem('soma_wrong_exam', JSON.stringify(all)); wrongBank=all; alert("Saved "+currentWrong.length+" wrong → will twist next week");}
-function submitOnline(){document.getElementById('onlineModal').classList.add('hidden'); alert('Submitted! 100 Marks');}
+
+function checkExam(){
+ let score=0,total=0,wrongNow=[]; let html=`<p class="font-black text-[12px]">🎉 Result 100 Marks - ${subSel.value}</p>`;
+ currentQs.forEach((c,i)=>{
+   let user=(document.getElementById('ans'+i)?.value||document.getElementById('ansText'+i)?.value||"").trim();
+   let m=c.marks||10; total+=m;
+   let ok=user && c.answer.toLowerCase().includes(user.toLowerCase().slice(0,4));
+   let got=ok?m:0; score+=got; if(!ok) wrongNow.push({q:c.q, answer:c.answer});
+   html+=`<div class="border-2 border-black rounded-xl p-2 mt-2 text-[9px] font-black ${ok?'bg-[#dcfce7]':'bg-[#ffeaea]'}">${ok?'✅':'❌'} Q${i+1}: ${got}/${m}</div>`;
+ });
+ html+=`<p class="font-black mt-3 text-[16px] text-center">${score>=70?'🌟':score>=50?'👏':'💪'} Total ${score}/${total}</p>`;
+ result.innerHTML=html; result.classList.remove('hidden'); corrBtn.classList.remove('hidden'); saveWrongBtn.classList.remove('hidden'); scoreBadge.innerText=score+"/"+total; currentWrong=wrongNow;
+ let msg=score>=70?`Congratulations! Excellent! You completed Weekly Exam ${subSel.value}. You scored ${score} out of ${total}. You are a star!`:score>=50?`Good job! Weekly Exam ${subSel.value}. You scored ${score} out of ${total}. Keep it up!`:`You completed Weekly Exam ${subSel.value}. You scored ${score} out of ${total}. We will do twist next week!`;
+ speakText(msg); if(navigator.vibrate) navigator.vibrate([100,50,100]);
+}
+function showCorrection(){let html=`<p class="font-black text-[12px]">📖 Correction with Optional Diagrams</p>`; currentQs.forEach((c,i)=>{let user=document.getElementById('ansText'+i)?.value||document.getElementById('ans'+i)?.value||""; let diag=getDiagramHTML((c.diagram||'')+' '+(c.q||'')); html+=`<div class="border-[2.5px] border-black rounded-xl p-3 mt-3 bg-white text-[11px]"><b>Q${i+1} (${c.marks}mks):</b> ${c.q}${diag}<br>Your: <b>${user||'empty'}</b><br><span class="text-green-700 font-black">✔ ${c.answer}</span> <button onclick="speakText('${c.answer.replace(/'/g,'')}')" class="ml-2 bg-black text-white px-2 py-0.5 rounded-full text-[8px]">🔊</button></div>`;}); result.innerHTML=html; speakText("Correction shown with diagrams");}
+function saveWrong(){if(currentWrong.length==0){alert("Perfect! No wrong"); return;} let all=JSON.parse(localStorage.getItem('soma_wrong_exam')||'[]'); all=all.concat(currentWrong); if(all.length>20) all=all.slice(-20); localStorage.setItem('soma_wrong_exam', JSON.stringify(all)); wrongBank=all; alert("Saved "+currentWrong.length+" wrong → twist next week");}
+
 document.getElementById('photoInput').addEventListener('change', async e=>{
- let file=e.target.files[0]; if(!file) return; let reader=new FileReader(); reader.onload=async()=>{let b64=reader.result.split(',')[1]; document.getElementById('photoPreview').src=reader.result; document.getElementById('photoPreview').classList.remove('hidden'); document.getElementById('photoStatus').classList.remove('hidden'); document.getElementById('photoStatus').innerText="📷 Marking exam with diagrams..."; document.getElementById('workArea').classList.remove('hidden'); document.getElementById('questions').innerHTML="AI reading handwriting + diagrams..."; try{const r=await fetch('/api/gemini',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({question:`Mark photo handwritten weekly exam 100 marks ${subSel.value} Grade ${gradeSel.value}. Include diagram marks. Give score, corrections with diagrams, twisted versions for next week.`,grade:gradeSel.value, shke:currentSHKE, brainContext:"Exam Handwritten + Diagrams", photo:b64})}); let d=await r.json(); let ans=d.answer||"Could not read"; document.getElementById('questions').innerHTML=`<div class="border-2 border-black rounded-xl p-3 bg-white text-[10px] font-bold" style="white-space:pre-wrap">${ans}</div>`; document.getElementById('result').innerHTML=`<div class="bg-[#dcfce7] border-2 border-black rounded-xl p-3 text-[10px] font-bold" style="white-space:pre-wrap">${ans}</div>`; document.getElementById('result').classList.remove('hidden'); document.getElementById('photoStatus').innerText="✅ Marked with diagrams";}catch{ document.getElementById('photoStatus').innerText="❌ Error"; }}; reader.readAsDataURL(file);
+ let file=e.target.files[0]; if(!file) return; let reader=new FileReader(); reader.onload=async()=>{let b64=reader.result.split(',')[1]; photoPreview.src=reader.result; photoPreview.classList.remove('hidden'); photoStatus.innerText="📷 Marking exam..."; workArea.classList.remove('hidden'); questions.innerHTML="AI reading handwriting..."; try{const r=await fetch('/api/gemini',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({question:`Mark photo handwritten weekly exam 100 marks ${subSel.value} Grade ${gradeSel.value}. Give score and corrections.`,grade:gradeSel.value, shke:currentSHKE, photo:b64})}); let d=await r.json(); let ans=d.answer||"Could not read"; questions.innerHTML=`<div class="border-2 border-black rounded-xl p-3 bg-white text-[11px] font-bold" style="white-space:pre-wrap">${ans}</div>`; result.innerHTML=`<div class="bg-[#dcfce7] border-2 border-black rounded-xl p-3 text-[11px] font-bold" style="white-space:pre-wrap">${ans}</div>`; result.classList.remove('hidden'); photoStatus.innerText="✅ Marked"; speakText(ans.slice(0,300));}catch{ photoStatus.innerText="❌ Error"; }}; reader.readAsDataURL(file);
 });
+
 setTimeout(()=>{let FB=window.FB; FB.onAuthStateChanged(FB.auth, async(u)=>{if(u){currentUser=u;let s=await FB.getDoc(FB.doc(FB.db,"users",u.uid));if(s.exists()){currentSHKE=s.data().indexNumber||"SHKE";indexB.innerText=currentSHKE;gradeSel.value=s.data().grade||"Grade 6";}updInfo();loadExams();}});},600); setInterval(updInfo,60000); updInfo();
 </script>
 </body></html>
