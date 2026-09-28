@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html><head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Daily HW - Mon-Fri 10 Marks</title>
+<title>Daily HW - Mon-Fri 10 Marks - Diagrams</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;800;900&display=swap" rel="stylesheet">
 <style>body{font-family:'Nunito',sans-serif;background:#f6f6f7}</style>
@@ -17,30 +17,86 @@ const app=initializeApp(cfg); window.FB={auth:getAuth(app),db:getFirestore(app),
 <div class="h-2 flex"><div class="flex-1 bg-[#ff8a2a]"></div><div class="flex-1 bg-[#2ac5a0]"></div><div class="flex-1 bg-[#4a86ff]"></div><div class="flex-1 bg-[#ffcc1a]"></div></div>
 <div class="bg-white border-b-2 border-black p-3 flex justify-between items-center sticky top-0 z-40">
 <a href="student.html" class="bg-black text-white px-4 py-2 rounded-full font-black text-[11px]">← Back</a>
-<p class="font-black text-[13px]">📝 Daily HW</p>
+<p class="font-black text-[13px]">📝 HW + Diagrams</p>
 <span id="indexB" class="bg-blue-600 text-white px-2 py-1 rounded-full text-[9px] font-black">SHKE...</span>
 </div>
 <div class="p-3 space-y-3">
 <div class="bg-gradient-to-br from-green-600 to-emerald-700 text-white rounded-[1.5rem] p-5 border-2 border-black shadow-[3px_3px_0_0_#000]">
-<p class="font-black text-[16px]">📅 Daily HW - Mon to Fri ONLY - 10 Marks</p>
-<p class="text-[11px] mt-2">✅ Mon-Fri 10 Marks • ❌ Sat No HW • ❌ Sun Rest Day - Do Exam / Notes / ICT / Foreign Lang • If miss Mon → Tue 20 Marks</p>
+<p class="font-black text-[16px]">📅 Daily HW + Colored Diagrams</p>
+<p class="text-[11px] mt-2">🌸 Flower parts • 🗺️ Map work • Colored diagrams included • Mon-Fri 10 Marks • Type OR 📷 Photo</p>
 </div>
 <div class="bg-white rounded-xl p-3 border-2 border-black shadow-[2px_2px_0_0_#000] space-y-2">
 <div class="grid grid-cols-2 gap-2">
 <select id="gradeSel" class="bg-[#f6f6f7] border-2 border-black rounded-full p-2.5 font-black text-[11px]"><option>Grade 6</option><option>Grade 4</option><option>Grade 5</option><option>Grade 7</option><option>Grade 8</option><option>Grade 9</option></select>
-<select id="subSel" class="bg-[#f6f6f7] border-2 border-black rounded-full p-2.5 font-black text-[11px]"><option>All Subjects</option><option>Mathematics</option><option>English</option><option>Kiswahili</option><option>Science</option><option>SST</option><option>CRE</option><option>ICT & Coding</option><option>Foreign Language - French</option><option>Foreign Language - German</option><option>Foreign Language - Chinese</option></select>
+<select id="subSel" class="bg-[#f6f6f7] border-2 border-black rounded-full p-2.5 font-black text-[11px]"><option>All Subjects</option><option>Science</option><option>Mathematics</option><option>English</option><option>Kiswahili</option><option>SST</option><option>CRE</option><option>ICT & Coding</option><option>Foreign Language - French</option></select>
 </div>
-<button onclick="loadHW()" class="w-full bg-black text-white border-2 border-black rounded-full py-3 font-black text-[11px]">🔍 Show Today's HW - Mon-Fri</button>
+<button onclick="loadHW()" class="w-full bg-black text-white border-2 border-black rounded-full py-3 font-black text-[11px]">🔍 Show HW + Diagrams</button>
 </div>
 <div id="dayInfo" class="bg-white border-2 border-black rounded-xl p-3 text-[11px] font-bold text-center"></div>
 <div id="hwList" class="space-y-3"></div>
+<div id="workArea" class="hidden bg-white rounded-[1.3rem] p-4 border-2 border-black shadow-[3px_3px_0_0_#000]">
+<div class="flex justify-between"><p id="workTitle" class="font-black text-[12px]">Do HW</p><span id="scoreBadge" class="bg-black text-white px-2 py-1 rounded-full text-[9px] font-black">0/10</span></div>
+<div class="mt-2 flex gap-2"><button onclick="document.getElementById('photoInput').click()" class="bg-[#ffcc1a] border-2 border-black rounded-full px-3 py-2 font-black text-[9px]">📷 Photo</button><button onclick="generateAIHW()" class="bg-[#4a86ff] text-white border-2 border-black rounded-full px-3 py-2 font-black text-[9px]">🤖 AI + Diagrams</button></div>
+<input type="file" id="photoInput" accept="image/*" hidden><img id="photoPreview" class="hidden mt-3 w-full rounded-xl border-2 border-black"><p id="photoStatus" class="hidden text-[10px] font-bold mt-2 text-center"></p>
+<div id="questions" class="mt-4 space-y-4"></div>
+<button onclick="checkAnswers()" class="w-full mt-4 bg-black text-white border-2 border-black rounded-full py-3 font-black text-[12px]">Check Now ✅</button>
+<div id="result" class="hidden mt-3"></div>
+<button id="corrBtn" onclick="showCorrection()" class="hidden w-full mt-2 bg-[#4a86ff] text-white border-2 border-black rounded-full py-2.5 font-black text-[10px]">View Correction 👁️</button>
+<button id="saveWrongBtn" onclick="saveWrongForTomorrow()" class="hidden w-full mt-2 bg-[#ffcc1a] text-black border-2 border-black rounded-full py-2.5 font-black text-[10px]">Save Wrong → Twist Tomorrow 🔁</button>
+</div>
 </div>
 </div>
 <script>
-let currentSHKE="SHKE";
-function getDay(){let d=new Date().getDay(); if(d===0) return{can:false,msg:"😴 Sunday Rest Day - No HW - Do Weekly Exam Sat-Sun or ICT / Foreign Lang Notes"}; if(d===6) return{can:false,msg:"😴 Saturday - No HW - Weekly Exam Sat-Sun available"}; return{can:true,msg:`✅ Today ${new Date().toLocaleDateString('en-US',{weekday:'long'})} - Daily HW 10 Marks Available`};}
-function updDay(){let s=getDay(); document.getElementById('dayInfo').innerHTML=`${s.msg}<br><span class="text-[9px] text-gray-500">SHKE ${currentSHKE} • Mon-Fri 10 Marks</span>`;}
-async function loadHW(){let FB=window.FB,grade=gradeSel.value,sub=subSel.value,list=document.getElementById('hwList'),day=getDay(); if(!day.can){list.innerHTML=`<div class="bg-white border-2 border-dashed border-black rounded-xl p-4 text-center"><p class="font-black text-[11px]">${day.msg}</p><a href="exam.html" class="mt-3 inline-block bg-[#4a86ff] text-white px-4 py-2 rounded-full text-[10px] font-black border-2 border-black">Go to Weekly Exam Sat-Sun →</a><div class="mt-2 flex gap-2 justify-center"><a href="ict.html" class="bg-black text-white px-3 py-1.5 rounded-full text-[9px] font-black">💻 ICT</a><a href="foreign-language.html" class="bg-black text-white px-3 py-1.5 rounded-full text-[9px] font-black">🌐 Foreign</a></div></div>`;return;} list.innerHTML="<p class='text-center py-4 text-[11px]'>Loading...</p>"; try{let q; if(sub==="All Subjects") q=FB.query(FB.collection(FB.db,"resources"),FB.where("grade","==",grade),FB.where("type","==","Homework")); else q=FB.query(FB.collection(FB.db,"resources"),FB.where("grade","==",grade),FB.where("subject","==",sub),FB.where("type","==","Homework")); let snap=await FB.getDocs(q); list.innerHTML=""; if(snap.empty){list.innerHTML=`<div class="bg-white border-2 border-black rounded-xl p-4 text-center shadow-[2px_2px_0_0_#000]"><p class="font-black text-[11px]">No HW Yet for ${grade} - ${sub}</p><button onclick="location.href='ai.assistant.html?type=homework&subject=${encodeURIComponent(sub)}&grade=${grade}'" class="mt-3 bg-black text-white px-4 py-2 rounded-full text-[10px] font-black">Generate AI 10 Marks</button></div>`;return;} snap.forEach(d=>{let hw=d.data(); list.innerHTML+=`<div class="bg-white border-2 border-black rounded-xl p-3 shadow-[2px_2px_0_0_#000]"><div class="flex justify-between"><p class="font-black text-[12px]">${hw.subject||sub}</p><span class="bg-[#ffcc1a] px-2 py-0.5 rounded-full text-[8px] font-black border border-black">10 Marks</span></div><p class="text-[10px] text-gray-600 mt-1">${hw.title||'Daily HW Mon-Fri'}</p><button class="mt-2 w-full bg-black text-white rounded-full py-2 font-black text-[10px]">Do HW →</button></div>`;});}catch(e){list.innerHTML="<p class='text-center text-[10px] text-red-500'>Error</p>";}}
+let currentSHKE="SHKE"; let currentQs=[], currentSubject="Science", currentWrong=[], wrongBank=JSON.parse(localStorage.getItem('soma_wrong')||'[]');
+let todayName = new Date().toLocaleDateString('en-KE',{weekday:'long'}); let ttKey='soma_tt_'+new Date().toISOString().slice(0,10);
+function getDay(){let d=new Date().getDay(); if(d===0) return{can:false,msg:"😴 Sunday Rest - No HW"}; if(d===6) return{can:false,msg:"😴 Saturday - Exam Only"}; return{can:true,msg:`✅ Today ${new Date().toLocaleDateString('en-US',{weekday:'long'})} - HW 10 Marks`};}
+function updDay(){let s=getDay(); document.getElementById('dayInfo').innerHTML=`${s.msg} • SomaHub Homework ${todayName}`;}
+// COLORED DIAGRAMS LIBRARY
+function getDiagramHTML(q){
+ let l=q.toLowerCase();
+ if(l.includes('flower')||l.includes('parts of a flower')||l.includes('petal')||l.includes('stamen')){
+  return `<div class="bg-[#fff0f5] border-2 border-black rounded-xl p-2 mt-2"><p class="font-black text-[9px] text-center">🌸 Parts of a Flower - Colored Diagram</p>
+  <svg viewBox="0 0 200 150" class="w-full h-32 mt-1"><ellipse cx="100" cy="80" rx="50" ry="35" fill="#ffcc1a" stroke="black" stroke-width="2"/><ellipse cx="100" cy="80" rx="20" ry="15" fill="#ff8a2a" stroke="black" stroke-width="1.5"/><ellipse cx="100" cy="40" rx="12" ry="25" fill="#ff4d9e" stroke="black" stroke-width="1.5"/><ellipse cx="140" cy="70" rx="25" ry="12" fill="#ff4d9e" stroke="black" stroke-width="1.5"/><ellipse cx="60" cy="70" rx="25" ry="12" fill="#ff4d9e" stroke="black" stroke-width="1.5"/><line x1="100" y1="115" x2="100" y2="145" stroke="#2ac5a0" stroke-width="4"/><text x="115" y="50" font-size="7" font-weight="900">Petal</text><text x="115" y="85" font-size="7" font-weight="900">Ovary</text><text x="30" y="130" font-size="7" font-weight="900" fill="#2ac5a0">Sepal</text></svg>
+  <div class="grid grid-cols-2 gap-1 mt-2 text-[7px] font-black"><span class="bg-[#ff4d9e] text-white px-1 rounded">Petal (pink)</span><span class="bg-[#ffcc1a] px-1 rounded border">Ovary (yellow)</span><span class="bg-[#2ac5a0] text-white px-1 rounded">Sepal (green)</span><span class="bg-[#ff8a2a] text-white px-1 rounded">Stamen (orange)</span></div></div>`;
+ }
+ if(l.includes('map')||l.includes('kenya')||l.includes('compass')||l.includes('direction')){
+  return `<div class="bg-[#e0f2ff] border-2 border-black rounded-xl p-2 mt-2"><p class="font-black text-[9px] text-center">🗺️ Map Work - Kenya - Colored</p>
+  <svg viewBox="0 0 200 150" class="w-full h-28 mt-1"><rect x="60" y="20" width="80" height="90" fill="#a3d977" stroke="black" stroke-width="2" rx="10"/><circle cx="100" cy="50" r="6" fill="red" stroke="black" stroke-width="1"/><text x="108" y="52" font-size="7" font-weight="900">Nairobi</text><path d="M70 100 Q100 120 130 100" fill="#4a86ff" stroke="black" stroke-width="1"/><text x="70" y="135" font-size="6" font-weight="900">Lake Victoria</text><text x="10" y="15" font-size="8">N</text><line x1="15" y1="18" x2="15" y2="28" stroke="black" stroke-width="2" marker-end="url(#arr)"/></svg>
+  <div class="flex gap-1 mt-1 text-[6px] font-black justify-center"><span class="bg-[#a3d977] px-2 py-0.5 rounded border">Land</span><span class="bg-[#4a86ff] text-white px-2 py-0.5 rounded">Water</span><span class="bg-red-600 text-white px-2 py-0.5 rounded">City</span></div></div>`;
+ }
+ if(l.includes('water cycle')||l.includes('evaporation')){
+  return `<div class="bg-[#e0f7ff] border-2 border-black rounded-xl p-2 mt-2"><p class="font-black text-[9px] text-center">💧 Water Cycle - Colored</p><svg viewBox="0 0 200 100" class="w-full h-24"><ellipse cx="40" cy="20" rx="30" ry="12" fill="white" stroke="black" stroke-width="1"/><ellipse cx="150" cy="20" rx="25" ry="10" fill="white" stroke="black" stroke-width="1"/><path d="M40 30 Q100 60 160 30" fill="none" stroke="#4a86ff" stroke-width="2" stroke-dasharray="4 2"/><text x="85" y="55" font-size="6" font-weight="900">Evaporation</text><path d="M150 35 L150 70" stroke="#4a86ff" stroke-width="2"/><text x="155" y="55" font-size="6">Rain</text><rect x="10" y="70" width="180" height="20" fill="#4a86ff" stroke="black" stroke-width="1"/><text x="80" y="82" font-size="7" fill="white" font-weight="900">Ocean</text></svg></div>`;
+ }
+ if(l.includes('heart')||l.includes('human body')){
+  return `<div class="bg-[#ffe8e8] border-2 border-black rounded-xl p-2 mt-2"><p class="font-black text-[9px] text-center">❤️ Human Heart - Colored</p><svg viewBox="0 0 200 100" class="w-full h-24"><path d="M100 85 C 70 60, 30 40, 100 15 C 170 40, 130 60, 100 85" fill="#ff4d4d" stroke="black" stroke-width="2"/><line x1="100" y1="15" x2="100" y2="85" stroke="black" stroke-width="1"/><text x="60" y="50" font-size="6" font-weight="900">Left</text><text x="125" y="50" font-size="6" font-weight="900">Right</text></svg></div>`;
+ }
+ return "";
+}
+async function loadHW(){let FB=window.FB,grade=gradeSel.value,sub=subSel.value,list=document.getElementById('hwList'),day=getDay(); if(!day.can){list.innerHTML=`<div class="bg-white border-2 border-dashed border-black rounded-xl p-4 text-center"><p class="font-black text-[11px]">${day.msg}</p></div>`;return;} list.innerHTML="<p class='text-center py-4 text-[11px]'>Loading...</p>"; try{let q; if(sub==="All Subjects") q=FB.query(FB.collection(FB.db,"resources"),FB.where("grade","==",grade),FB.where("type","==","Homework")); else q=FB.query(FB.collection(FB.db,"resources"),FB.where("grade","==",grade),FB.where("subject","==",sub),FB.where("type","==","Homework")); let snap=await FB.getDocs(q); list.innerHTML=""; if(snap.empty){list.innerHTML=`<div class="bg-white border-2 border-black rounded-xl p-4 text-center"><p class="font-black text-[11px]">No HW Yet - Generate AI with Diagrams</p><button onclick="generateAIHW()" class="mt-3 bg-black text-white px-4 py-2 rounded-full text-[10px] font-black">🤖 Generate + Diagrams</button></div>`;return;} snap.forEach(d=>{let hw=d.data(); list.innerHTML+=`<div class="bg-white border-2 border-black rounded-xl p-3 shadow-[2px_2px_0_0_#000]"><p class="font-black text-[12px]">${hw.subject||sub}</p><p class="text-[10px]">${hw.title||'Daily HW'}</p>${getDiagramHTML(hw.title||''+hw.subject||'')} <button onclick="openWork('${hw.subject||sub}','${(hw.title||'').replace(/'/g,'')}')" class="mt-2 w-full bg-black text-white rounded-full py-2 font-black text-[10px]">Do HW Type/Photo →</button></div>`;});}catch(e){list.innerHTML="<p class='text-[10px] text-red-500 text-center'>Error</p>";}}
+function openWork(sub,title){currentSubject=sub; document.getElementById('workArea').classList.remove('hidden'); document.getElementById('workTitle').innerText=title? title.slice(0,30) : sub+" 10 Marks"; window.scrollTo(0,400); generateAIHW();}
+async function generateAIHW(){
+ let sub=document.getElementById('subSel').value; if(sub==="All Subjects") sub="Science"; currentSubject=sub;
+ let twist=wrongBank.length? `Twist these wrong: ${wrongBank.slice(-3).map(w=>w.q).join(' | ')}` : "";
+ document.getElementById('questions').innerHTML="⏳ Generating colored diagrams...";
+ try{
+  const r=await fetch('/api/gemini',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({question:`Generate Daily HW 10 marks ${sub} Grade ${gradeSel.value} Kenya CBC. 5 Qs 2 marks each. MUST include 1 diagram question: if Science ask parts of a flower with labels, if SST ask map work Kenya/compass. ${twist}. Return ONLY JSON [{"q":"...","marks":2,"answer":"short","diagram":"flower or map or watercycle or heart"}]`,grade:gradeSel.value, shke:currentSHKE, brainContext:"Diagrams", photo:""})});
+  const d=await r.json(); let txt=d.answer||"[]"; let m=txt.match(/\[[\s\S]*\]/); if(m) currentQs=JSON.parse(m[0]); else currentQs=[{q:txt,marks:10,answer:"",diagram:""}];
+  renderQs();
+ }catch{ document.getElementById('questions').innerHTML="Network slow - tap again"; }
+}
+function renderQs(){
+ document.getElementById('questions').innerHTML = currentQs.map((c,i)=>{
+  let diag = getDiagramHTML((c.diagram||'')+' '+(c.q||'')) || (c.diagram? getDiagramHTML(c.diagram):"");
+  return `<div class="border-2 border-black rounded-xl p-3 bg-[#f9f9f9]"><p class="font-black text-[10px]">Q${i+1} (${c.marks||2} mks) ${c.diagram? '🎨 Diagram':''}</p><p class="text-[11px] mt-1 font-bold">${c.q}</p>${diag}<input id="ans${i}" type="text" placeholder="Type answer OR use 📷 photo above..." class="w-full mt-2 border-2 border-black rounded-full p-2.5 text-[11px] font-bold bg-white"></div>`;
+ }).join('');
+ document.getElementById('result').classList.add('hidden'); document.getElementById('corrBtn').classList.add('hidden'); document.getElementById('saveWrongBtn').classList.add('hidden');
+}
+function checkAnswers(){let score=0,total=0, wrongNow=[]; let html=`<p class="font-black text-[11px]">Result</p>`; currentQs.forEach((c,i)=>{let user=(document.getElementById('ans'+i)?.value||"").trim(); let m=c.marks||2; total+=m; let corr=(c.answer||"").toLowerCase(); let ok=user && (corr.includes(user.toLowerCase())||user.toLowerCase()===corr); let got=ok?m:0; score+=got; if(!ok) wrongNow.push({q:c.q, answer:c.answer, userAns:user, subject:currentSubject, date:new Date().toISOString()}); html+=`<div class="border-2 border-black rounded-xl p-2 mt-2 text-[9px] font-bold ${ok?'bg-[#dcfce7]':'bg-[#ffeaea]'}">${ok?'✅':'❌'} Q${i+1}: ${got}/${m}</div>`;}); html+=`<p class="font-black mt-2">Score ${score}/${total}</p>`; document.getElementById('result').innerHTML=html; document.getElementById('result').classList.remove('hidden'); document.getElementById('corrBtn').classList.remove('hidden'); document.getElementById('saveWrongBtn').classList.remove('hidden'); document.getElementById('scoreBadge').innerText=score+"/"+total; currentWrong=wrongNow; let tt=JSON.parse(localStorage.getItem(ttKey)||'{}'); tt[todayName+'_'+currentSubject]=true; localStorage.setItem(ttKey, JSON.stringify(tt));}
+function showCorrection(){let html=`<p class="font-black text-[11px]">Correction with Diagrams</p>`; currentQs.forEach((c,i)=>{let user=document.getElementById('ans'+i)?.value||""; let diag=getDiagramHTML((c.diagram||'')+' '+(c.q||'')); html+=`<div class="border-2 border-black rounded-xl p-2 mt-2 bg-white text-[10px]"><b>Q${i+1}:</b> ${c.q}${diag}<br>Your: <b>${user||'empty'}</b><br><span class="text-green-700 font-black">✔ ${c.answer}</span></div>`;}); document.getElementById('result').innerHTML=html;}
+function saveWrongForTomorrow(){if(currentWrong.length==0){alert("No wrong"); return;} let all=JSON.parse(localStorage.getItem('soma_wrong')||'[]'); all=all.concat(currentWrong); if(all.length>15) all=all.slice(-15); localStorage.setItem('soma_wrong', JSON.stringify(all)); alert("Saved "+currentWrong.length+" wrong - will twist tomorrow 🔁");}
+document.getElementById('photoInput').addEventListener('change', async e=>{
+ let file=e.target.files[0]; if(!file) return; let reader=new FileReader(); reader.onload=async()=>{let b64=reader.result.split(',')[1]; document.getElementById('photoPreview').src=reader.result; document.getElementById('photoPreview').classList.remove('hidden'); document.getElementById('photoStatus').classList.remove('hidden'); document.getElementById('photoStatus').innerText="📷 Marking..."; document.getElementById('workArea').classList.remove('hidden'); document.getElementById('questions').innerHTML="AI reading handwriting..."; try{const r=await fetch('/api/gemini',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({question:`Mark handwritten homework ${currentSubject} Grade ${gradeSel.value}. Include diagram feedback if flower/map. Give score /10, corrections, twisted versions.`,grade:gradeSel.value, shke:currentSHKE, brainContext:"Handwritten + Diagrams", photo:b64})}); let d=await r.json(); let ans=d.answer||"Could not read"; document.getElementById('questions').innerHTML=`<div class="border-2 border-black rounded-xl p-3 bg-white text-[10px] font-bold" style="white-space:pre-wrap">${ans}</div>`; document.getElementById('result').innerHTML=`<div class="bg-[#dcfce7] border-2 border-black rounded-xl p-3 text-[10px] font-bold" style="white-space:pre-wrap">${ans}</div>`; document.getElementById('result').classList.remove('hidden'); document.getElementById('photoStatus').innerText="✅ Marked"; let tt=JSON.parse(localStorage.getItem(ttKey)||'{}'); tt[todayName+'_'+currentSubject]=true; localStorage.setItem(ttKey, JSON.stringify(tt));}catch{ document.getElementById('photoStatus').innerText="❌ Error"; }}; reader.readAsDataURL(file);
+});
 setTimeout(()=>{let FB=window.FB; FB.onAuthStateChanged(FB.auth, async(u)=>{if(u){let s=await FB.getDoc(FB.doc(FB.db,"users",u.uid)); if(s.exists()){currentSHKE=s.data().indexNumber||"SHKE"; indexB.innerText=currentSHKE; gradeSel.value=s.data().grade||"Grade 6";} updDay(); loadHW();}});},600); updDay();
 </script>
 </body></html>
