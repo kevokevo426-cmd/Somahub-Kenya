@@ -46,7 +46,6 @@ const app=initializeApp(cfg); window.FB={auth:getAuth(app),db:getFirestore(app),
 const PROXY_URL="/api/gemini";
 let shke="SHKE", grade="Grade 7", gradeNum=7, currentLang="en", currentSubject="English";
 let aiBrain=[], resources=[], allFiles={Notes:[], Design:[], Exam:[], Homework:[]}, uploadedPhoto='', isThinking=false, blindMode=false, recognition=null, isRecording=false, currentQs=[], voicesCache=[];
-
 function loadVoices(){ voicesCache = speechSynthesis.getVoices(); }
 if('speechSynthesis' in window){
   loadVoices();
