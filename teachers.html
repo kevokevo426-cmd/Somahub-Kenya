@@ -1,13 +1,12 @@
 <!DOCTYPE html>
 <html><head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Teachers - SomaHub - Abigail Added</title>
+<title>Teachers - SomaHub - Fixed Quick Access</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;800;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <style>body{font-family:'Nunito',sans-serif;background:#f6f6f7}
 @keyframes m{0%{transform:translateX(100%)}100%{transform:translateX(-100%)}}.marquee{animation:m 22s linear infinite}
-.note-card{background:#fff;border:2px solid #000;border-radius:16px;padding:10px 12px;display:flex;justify-content:space-between;align-items:center;height:58px;box-shadow:2px 2px 0 0 #000;margin-bottom:6px}
 </style>
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
@@ -26,71 +25,56 @@ window.FB={auth,db,doc,getDoc,collection,getDocs,query,where,orderBy,addDoc,serv
 <div class="flex-1"><p class="font-black text-[14px] leading-none">Welcome, Mwalimu! 👩‍🏫</p><p class="text-[10px] font-bold text-gray-600" id="teacherInfo">Junior School • Grade 7, 8, 9</p></div>
 <div class="bg-[#ffcc1a] border-2 border-black px-3 py-1 rounded-full shadow-[2px_2px_0_0_#000]"><p class="font-black text-[10px]" id="teacherIdShow">SHKET...</p></div>
 </div>
-<div class="bg-black text-white overflow-hidden whitespace-nowrap border-y-2 border-black h-8 flex items-center"><div class="marquee flex gap-8 text-[10px] font-black"><span>🎉 Karibu Mwalimu!</span><span>🏠 Tuition Learners Below</span><span>📚 Daily Homework 10 Marks</span><span>📝 Exams + Schemes + Lesson Plan</span><span>📸 Abigail Style Marker ADDED</span><span>✍️ Composition Strict/Fair/Medium</span></div></div>
+<div class="bg-black text-white overflow-hidden whitespace-nowrap border-y-2 border-black h-8 flex items-center"><div class="marquee flex gap-8 text-[10px] font-black"><span>🎉 Karibu Mwalimu!</span><span>🏠 Tuition Learners Below</span><span>📚 Daily Homework 10 Marks</span><span>📝 Exams + Schemes + Lesson Plan</span><span>📸 Smart Marker - Bold Choices</span></div></div>
 </div>
 
 <!-- 1. MY TUITION -->
 <div class="p-3">
 <div class="bg-[#dcfce7] border-2 border-black rounded-[1.3rem] p-4 shadow-[3px_3px_0_0_#000]">
-<div class="flex justify-between items-center"><p class="font-black text-[13px]">🏠 My Tuition - Teacher ↔ Learner</p><span id="tuitionCount" class="bg-black text-white px-2 py-1 rounded-full text-[9px] font-black">0 Assigned</span></div>
-<p class="text-[9px] mt-1 opacity-70">Admin assigned you in Super Admin • Parent + Teacher connected via SHKE</p>
-<div id="myTuitionList" class="mt-3 space-y-2">Loading tuition learners...</div>
+<div class="flex justify-between items-center"><p class="font-black text-[13px]">🏠 My Tuition</p><span id="tuitionCount" class="bg-black text-white px-2 py-1 rounded-full text-[9px] font-black">0 Assigned</span></div>
+<div id="myTuitionList" class="mt-3 space-y-2 text-[10px] font-bold">Loading...</div>
 </div>
 </div>
 
-<!-- NEW 1.5 ABIGAIL STYLE MARKER - ADDED HERE -->
+<!-- 1.5 SMART MARKER - NO ABIGAIL NAME, BOLD + ALL CHOICES -->
 <div class="p-3">
 <div class="bg-[#fffc8a] border-[2.5px] border-black rounded-[20px] p-4 shadow-[3px_3px_0_0_#000]">
-<div class="flex justify-between items-center"><p class="font-black text-[13px]">📸 Abigail-Style Marker - NEW</p><span class="bg-black text-white px-2 py-1 rounded-full text-[7px] font-black">Q + Answer + Reason</span></div>
-<p class="text-[9px] mt-2 font-bold">Snap exam photo → marks like Alexis Niombi: <b>Q1. Answer: D... Reason: Because... Learner: B ❌... Score: 0/1</b></p>
+<div class="flex justify-between items-center"><p class="font-black text-[13px]">📸 Smart Marker - NEW</p><span class="bg-black text-white px-2 py-1 rounded-full text-[7px] font-black">Bold + All Choices</span></div>
+<p class="text-[9px] mt-2 font-bold">Snap exam → <b>Answer in bold</b> + <b>Reason bold</b> + <b>All Choices A-D analysed</b> + Score</p>
 <div class="mt-3 bg-white border-2 border-black rounded-xl p-2">
-<div id="abigailPreview" class="hidden"><img id="abigailImg" class="rounded-lg max-h-[180px] mx-auto border-2 border-black"></div>
-<p id="abigailHint" class="text-[9px] text-center font-bold opacity-60 py-3">📸 Tap camera, snap exam paper</p>
-<div id="abigailResult" class="mt-2 text-[11px] leading-6 whitespace-pre-wrap font-bold hidden bg-[#fffde7] border-2 border-black rounded-xl p-3"></div>
+<div id="smartPreview" class="hidden"><img id="smartImg" class="rounded-lg max-h-[180px] mx-auto border-2 border-black"></div>
+<p id="smartHint" class="text-[9px] text-center font-bold opacity-60 py-3">📸 Tap camera, snap exam paper</p>
+<div id="smartResult" class="mt-2 text-[11px] leading-6 whitespace-pre-wrap font-bold hidden bg-[#fffde7] border-2 border-black rounded-xl p-3"></div>
 </div>
 <div class="mt-3 grid grid-cols-2 gap-2">
-<button onclick="document.getElementById('abigailPhoto').click()" class="bg-white border-2 border-black rounded-full py-3 font-black text-[11px] shadow-[2px_2px_0_0_#000]">📷 Snap Exam</button>
-<button onclick="markAbigail()" id="abigailBtn" class="bg-black text-white border-2 border-black rounded-full py-3 font-black text-[11px] shadow-[2px_2px_0_0_#000]">✨ Mark Abigail Style</button>
+<button onclick="document.getElementById('smartPhoto').click()" class="bg-white border-2 border-black rounded-full py-3 font-black text-[11px] shadow-[2px_2px_0_0_#000]">📷 Snap Exam</button>
+<button onclick="markSmart()" id="smartBtn" class="bg-black text-white border-2 border-black rounded-full py-3 font-black text-[11px] shadow-[2px_2px_0_0_#000]">✨ Mark Smart</button>
 </div>
-<input type="file" id="abigailPhoto" hidden accept="image/*" onchange="handleAbigailPhoto(this)">
-<p class="text-[7px] text-center mt-2 font-bold opacity-60">Uses same /api/gemini • Well explained per question</p>
+<input type="file" id="smartPhoto" hidden accept="image/*" onchange="handleSmartPhoto(this)">
 </div>
 </div>
 
-<!-- 2. REQUEST HOMESCHOOLING -->
+<!-- 2. REQUEST -->
 <div class="p-3">
 <div class="bg-[#ffcc1a] border-[2.5px] border-black rounded-[20px] p-4 shadow-[3px_3px_0_0_#000]">
 <p class="font-black text-[12px]">Request Homeschooling as Teacher</p>
-<p class="text-[8px] mt-1 font-bold">Teacher <span id="t_shke_label">SHKE...</span> is requesting for student SHKE...</p>
 <div class="mt-3 space-y-2">
 <input id="t_shke" placeholder="SHKE00501 - Student SHKE" class="w-full bg-white border-2 border-black rounded-full px-4 py-3 text-[11px] font-bold outline-none">
 <input id="t_name" placeholder="Susan - Student Name" class="w-full bg-white border-2 border-black rounded-full px-4 py-3 text-[11px] font-bold outline-none">
 <div class="grid grid-cols-2 gap-2">
 <input id="t_class" placeholder="7 - Class" class="bg-white border-2 border-black rounded-full px-4 py-3 text-[11px] font-bold outline-none">
-<select id="t_subject" class="bg-white border-2 border-black rounded-full px-4 py-3 text-[11px] font-bold outline-none"><option>All Subjects</option><option>Mathematics</option><option>English</option><option>Kiswahili</option><option>Science</option><option>Social</option><option>CRE</option><option>French - Foreign</option><option>German - Foreign</option><option>Chinese - Foreign</option></select>
+<select id="t_subject" class="bg-white border-2 border-black rounded-full px-4 py-3 text-[11px] font-bold outline-none"><option>All Subjects</option><option>Mathematics</option><option>English</option><option>Kiswahili</option><option>Science</option><option>Social</option><option>CRE</option></select>
 </div>
-<input id="t_parentPhone" placeholder="Parent Phone (If you have)" class="w-full bg-white border-2 border-black rounded-full px-4 py-3 text-[11px] font-bold outline-none">
+<input id="t_parentPhone" placeholder="Parent Phone" class="w-full bg-white border-2 border-black rounded-full px-4 py-3 text-[11px] font-bold outline-none">
 <input id="t_location" placeholder="Nairobi - Location" class="w-full bg-white border-2 border-black rounded-full px-4 py-3 text-[11px] font-bold outline-none">
-<textarea id="t_reason" placeholder="Reason / Days available e.g. Mon-Fri 4pm" class="w-full bg-white border-2 border-black rounded-2xl px-4 py-3 text-[11px] font-bold outline-none h-[60px]"></textarea>
-<button onclick="sendTeacherRequest()" id="sendBtn" class="w-full bg-black text-white rounded-full py-3 text-[11px] font-black border-2 border-black mt-2">⚡ Send Teacher Request → Admin Approves</button>
+<textarea id="t_reason" placeholder="Reason / Days e.g. Mon-Fri 4pm" class="w-full bg-white border-2 border-black rounded-2xl px-4 py-3 text-[11px] font-bold outline-none h-[60px]"></textarea>
+<button onclick="sendTeacherRequest()" id="sendBtn" class="w-full bg-black text-white rounded-full py-3 text-[11px] font-black border-2 border-black mt-2">⚡ Send Teacher Request</button>
 <p id="sendStatus" class="hidden text-[9px] font-black text-center mt-2 p-2 rounded-full border-2 border-black"></p>
 </div>
 </div>
 </div>
 
-<!-- 3. HOW TO USE -->
-<div class="p-3"><div class="bg-white rounded-[1.3rem] p-4 border-2 border-black shadow-[3px_3px_0_0_#000]">
-<p class="font-black text-[13px]">📘 How to use</p>
-<div class="mt-3 space-y-2 text-[11px] font-bold">
-<p>1. Tuition learners assigned by admin appear above</p>
-<p>2. NEW Abigail Marker above - Snap exam → Answer + Reason + Score per Q</p>
-<p>3. AI Marker: Snap & Solve → Correction + Notes link (in Teacher Tools)</p>
-<p>4. Composition: bold (alternative) • Set Out Of • Strict/Fair/Medium</p>
-</div>
-<div class="mt-3 bg-[#ffcc1a] border-2 border-black rounded-xl p-2"><p class="text-[9px] font-black">*Abigail style = Well explained per question like Alexis Niombi Kasarani</p></div>
-</div></div>
-
-<!-- 4. STUDENT ACCESS -->
+<!-- 3. STUDENT ACCESS -->
 <div class="p-3">
 <div class="bg-black text-white rounded-[1.5rem] p-4 border-2 border-black">
 <p class="font-black text-[13px]">🔒 Student Access Monitor</p>
@@ -99,20 +83,19 @@ window.FB={auth,db,doc,getDoc,collection,getDocs,query,where,orderBy,addDoc,serv
 </div>
 </div>
 
-<!-- 5. QUICK ACCESS - FIXED DOT LINK -->
+<!-- 4. QUICK ACCESS - FIXED -->
 <div class="px-3">
 <p class="font-black text-[14px] mb-2">🚀 Quick Access - Full Tools</p>
 <div class="grid grid-cols-2 gap-2">
-<div onclick="location.href='notes.html'" class="bg-white rounded-xl p-3 border-2 border-black shadow-[2px_2px_0_0_#000]"><p class="font-black text-[12px]">📚 Notes</p><p class="text-[9px] text-gray-500">PP1-G9</p></div>
-<div onclick="location.href='weekly-exams.html'" class="bg-white rounded-xl p-3 border-2 border-black shadow-[2px_2px_0_0_#000]"><p class="font-black text-[12px]">📝 Exams</p><p class="text-[9px] text-gray-500">Weekly/Monthly</p></div>
-<div onclick="location.href='homework.html'" class="bg-white rounded-xl p-3 border-2 border-black shadow-[2px_2px_0_0_#000]"><p class="font-black text-[12px]">📝 Homework</p><p class="text-[9px] text-gray-500">Daily 10 Marks</p></div>
-<div onclick="location.href='teacher-tools.html'" class="bg-[#ffcc1a] rounded-xl p-3 border-2 border-black shadow-[2px_2px_0_0_#000]"><p class="font-black text-[12px]">⚙️ Teacher Tools</p><p class="text-[9px] text-gray-500">Schemes • Lesson • 📸 Marker</p></div>
-<div onclick="location.href='ai.assistant.html'" class="bg-[#fffc8a] rounded-xl p-3 border-[2.5px] border-black shadow-[2px_2px_0_0_#000]"><p class="font-black text-[12px]">📸 Abigail AI</p><p class="text-[9px] text-gray-500">DOT file - Works!</p></div>
-<div onclick="location.href='teacher-tools.html#lesson'" class="bg-[#fff7e0] rounded-xl p-3 border-2 border-black shadow-[2px_2px_0_0_#000]"><p class="font-black text-[12px]">📝 Lesson Plan</p><p class="text-[9px] text-gray-500">CBC Ready</p></div>
-<div onclick="location.href='teacher-tools.html#written'" class="bg-[#dcfce7] rounded-xl p-3 border-2 border-black shadow-[2px_2px_0_0_#000]"><p class="font-black text-[12px]">📸 Written Marker</p><p class="text-[9px] text-gray-500">Snap & Mark</p></div>
-<div onclick="location.href='teacher-tools.html#comp'" class="bg-[#ffe0f0] rounded-xl p-3 border-2 border-black shadow-[2px_2px_0_0_#000]"><p class="font-black text-[12px]">✍️ Composition</p><p class="text-[9px] text-gray-500">Strict/Fair/Med</p></div>
+<div onclick="location.href='notes.html'" class="bg-white rounded-xl p-3 border-2 border-black shadow-[2px_2px_0_0_#000] cursor-pointer active:scale-95"><p class="font-black text-[12px]">📚 Notes</p><p class="text-[9px] text-gray-500">PP1-G9</p></div>
+<div onclick="location.href='weekly-exams.html'" class="bg-white rounded-xl p-3 border-2 border-black shadow-[2px_2px_0_0_#000] cursor-pointer active:scale-95"><p class="font-black text-[12px]">📝 Exams</p><p class="text-[9px] text-gray-500">Weekly/Monthly</p></div>
+<div onclick="location.href='homework.html'" class="bg-white rounded-xl p-3 border-2 border-black shadow-[2px_2px_0_0_#000] cursor-pointer active:scale-95"><p class="font-black text-[12px]">📝 Homework</p><p class="text-[9px] text-gray-500">Daily 10 Marks</p></div>
+<div onclick="location.href='teacher-tools.html'" class="bg-[#ffcc1a] rounded-xl p-3 border-2 border-black shadow-[2px_2px_0_0_#000] cursor-pointer active:scale-95"><p class="font-black text-[12px]">⚙️ Teacher Tools</p><p class="text-[9px] text-gray-500">Schemes • Lesson • Marker</p></div>
+<div onclick="location.href='ai.assistant.html'" class="bg-[#fffc8a] rounded-xl p-3 border-[2.5px] border-black shadow-[2px_2px_0_0_#000] cursor-pointer active:scale-95"><p class="font-black text-[12px]">🤖 Smart Marker</p><p class="text-[9px] text-gray-500">Bold + All Choices</p></div>
+<div onclick="location.href='teacher-tools.html#lesson'" class="bg-[#fff7e0] rounded-xl p-3 border-2 border-black shadow-[2px_2px_0_0_#000] cursor-pointer active:scale-95"><p class="font-black text-[12px]">📝 Lesson Plan</p><p class="text-[9px] text-gray-500">CBC Ready</p></div>
+<div onclick="location.href='teacher-tools.html#written'" class="bg-[#dcfce7] rounded-xl p-3 border-2 border-black shadow-[2px_2px_0_0_#000] cursor-pointer active:scale-95"><p class="font-black text-[12px]">📸 Written Marker</p><p class="text-[9px] text-gray-500">Snap & Mark</p></div>
+<div onclick="location.href='teacher-tools.html#comp'" class="bg-[#ffe0f0] rounded-xl p-3 border-2 border-black shadow-[2px_2px_0_0_#000] cursor-pointer active:scale-95"><p class="font-black text-[12px]">✍️ Composition</p><p class="text-[9px] text-gray-500">Strict/Fair/Med</p></div>
 </div>
-<div id="resList" class="mt-3"></div>
 </div>
 
 <div class="p-3 space-y-3">
@@ -121,60 +104,40 @@ window.FB={auth,db,doc,getDoc,collection,getDocs,query,where,orderBy,addDoc,serv
 <div class="mt-2 grid grid-cols-2 gap-2"><div class="bg-[#fff7e0] border-2 border-black rounded-xl p-2"><p class="text-[7px] font-black">YOUR CODE</p><p class="font-black text-[11px]" id="refCode">SHKET...</p></div><div class="bg-[#e8f8ff] border-2 border-black rounded-xl p-2"><p class="text-[7px] font-black">BALANCE</p><p class="font-black text-[11px]">0 pts = 0 KES</p></div></div>
 </div>
 <div class="grid grid-cols-2 gap-2">
-<button onclick="location.href='care-chat.html'" class="bg-[#25d366] text-white border-2 border-black rounded-full py-3 font-black text-[11px] shadow-[2px_2px_0_0_#000]">💬 Care Chat - Whatsapp</button>
-<button onclick="location.href='ai.assistant.html'" class="bg-[#4a86ff] text-white border-2 border-black rounded-full py-3 font-black text-[11px] shadow-[2px_2px_0_0_#000]">🤖 AI Assistant - DOT WORKS</button>
+<button onclick="location.href='care-chat.html'" class="bg-[#25d366] text-white border-2 border-black rounded-full py-3 font-black text-[11px] shadow-[2px_2px_0_0_#000]">💬 Care Chat</button>
+<button onclick="location.href='ai.assistant.html'" class="bg-[#4a86ff] text-white border-2 border-black rounded-full py-3 font-black text-[11px] shadow-[2px_2px_0_0_#000]">🤖 AI Assistant</button>
 </div>
 <div class="grid grid-cols-2 gap-2 pt-2">
-<button onclick="window.location.href='registration.html'" class="bg-white border-2 border-black rounded-full py-3 font-black text-[11px] shadow-[2px_2px_0_0_#000]">Edit Profile</button>
+<button onclick="location.href='registration.html'" class="bg-white border-2 border-black rounded-full py-3 font-black text-[11px] shadow-[2px_2px_0_0_#000]">Edit Profile</button>
 <button onclick="if(confirm('Log out?')){ FB.signOut(FB.auth).then(()=>location.href='index.html')}" class="bg-black text-white border-2 border-black rounded-full py-3 font-black text-[11px] shadow-[2px_2px_0_0_#000]">Log Out</button>
 </div>
 </div>
 
 <div id="adminAssistBtn" onclick="toggleAdminAssist()" style="position:fixed;bottom:20px;right:20px;z-index:9999;width:56px;height:56px;background:#25d366;border-radius:50%;border:2.5px solid #000;box-shadow:3px 3px 0 0 #000;display:grid;place-items:center;font-size:24px;cursor:pointer">💬</div>
 <div id="adminAssistPanel" style="position:fixed;bottom:90px;right:16px;z-index:9998;width:360px;max-width:calc(100vw - 32px);height:520px;background:#e5ddd5;border:2.5px solid #000;border-radius:20px;box-shadow:4px 4px 0 0 #000;display:none;flex-direction:column;overflow:hidden">
-<div style="background:#075e54;color:white;padding:12px;display:flex;align-items:center;gap:10px;border-bottom:2px solid #000"><div style="width:36px;height:36px;background:white;border-radius:50%;display:grid;place-items:center;color:#075e54;font-weight:900">A</div><div style="flex:1"><p style="font-weight:900;font-size:12px">Admin Assistant</p><p style="font-size:8px;opacity:0.8">Abigail Style Added</p></div><button onclick="toggleAdminAssist()" style="background:white;color:black;border:2px solid #000;border-radius:50%;width:28px;height:28px;font-weight:900">✕</button></div>
-<div id="adminChat" style="flex:1;overflow-y:auto;padding:12px;display:flex;flex-direction:column;gap:10px">
-<div style="align-self:flex-start;background:#fff;border:2px solid #000;border-radius:4px 16px 16px 16px;padding:8px 12px;max-width:85%;font-size:11px;box-shadow:2px 2px 0 0 #000"><b>👋 Abigail Ready!</b><br>Use top marker for exam photos.</div>
-</div>
+<div style="background:#075e54;color:white;padding:12px;display:flex;align-items:center;gap:10px;border-bottom:2px solid #000"><div style="width:36px;height:36px;background:white;border-radius:50%;display:grid;place-items:center;color:#075e54;font-weight:900">A</div><div style="flex:1"><p style="font-weight:900;font-size:12px">Admin Assistant</p><p style="font-size:8px;opacity:0.8">Smart Marker Ready</p></div><button onclick="toggleAdminAssist()" style="background:white;color:black;border:2px solid #000;border-radius:50%;width:28px;height:28px;font-weight:900">✕</button></div>
+<div id="adminChat" style="flex:1;overflow-y:auto;padding:12px;display:flex;flex-direction:column;gap:10px"></div>
 <div style="background:#f0f0f0;padding:8px;border-top:2px solid #000"><div style="display:flex;gap:6px"><input id="adminMsg" placeholder="Type" style="flex:1;background:white;border:2px solid #000;border-radius:9999px;padding:10px 14px;font-size:11px;font-weight:700;outline:none"><button onclick="sendAdminMsg()" style="width:40px;height:40px;background:#25d366;border:2px solid #000;border-radius:50%;display:grid;place-items:center;color:white"><i class="fa-solid fa-paper-plane"></i></button></div></div>
 </div>
 
 </div>
 <script>
-let currentTeacherId=null, userData=null, abigailPhotoData='';
+let currentTeacherId=null, userData=null, smartPhotoData='';
 const PROXY_URL="/api/gemini";
-const ABIGAIL_SYSTEM=`You are SomaHub Abigail-Style Marker - Kenyan CBC teacher marking like Alexis Niombi 6G Kasarani.
-RULES:
-1. Read ALL questions in photo.
-2. For EACH question output:
-**Q{number}. {stem short}**
-**Answer: {Correct letter}. {Correct text}**
-**Reason: {Simple 1-2 sentence why}**
-**Learner: {What learner ticked} - CORRECT ✅ or WRONG ❌**
-**Score: {0 or 1}/1
-3. After all: Score Page + Overall.
-4. Simple English, emojis, bold.
-NEVER say As an AI. Be teacher Mwalimu.`;
-
-function handleAbigailPhoto(input){let f=input.files[0]; if(!f) return; let r=new FileReader(); r.onload=e=>{abigailPhotoData=e.target.result; document.getElementById('abigailImg').src=abigailPhotoData; document.getElementById('abigailPreview').classList.remove('hidden'); document.getElementById('abigailHint').classList.add('hidden');}; r.readAsDataURL(f);}
-async function markAbigail(){if(!abigailPhotoData) return alert("Snap exam first 📸"); let btn=document.getElementById('abigailBtn'), resDiv=document.getElementById('abigailResult'); btn.innerText="⏳ Marking..."; btn.disabled=true; resDiv.classList.remove('hidden'); resDiv.innerText="Abigail marking... ✍️ Reading all questions..."; try{ let photo=abigailPhotoData.split(',')[1]; let resp=await fetch(PROXY_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({question: ABIGAIL_SYSTEM + "\n\nMark this photo Abigail style - well explained per question", grade:"Grade 7", shke:"SHKE", photo: photo})}); let data=await resp.json(); resDiv.innerText=data.reply||data.answer||data.text||"No response"; }catch(e){ resDiv.innerText="❌ Error: "+e.message; } btn.innerText="✨ Mark Abigail Style"; btn.disabled=false; }
-
+function handleSmartPhoto(input){let f=input.files[0]; if(!f) return; let r=new FileReader(); r.onload=e=>{smartPhotoData=e.target.result; document.getElementById('smartImg').src=smartPhotoData; document.getElementById('smartPreview').classList.remove('hidden'); document.getElementById('smartHint').classList.add('hidden');}; r.readAsDataURL(f);}
+async function markSmart(){if(!smartPhotoData) return alert("Snap exam first 📸"); let btn=document.getElementById('smartBtn'), resDiv=document.getElementById('smartResult'); btn.innerText="⏳ Marking..."; btn.disabled=true; resDiv.classList.remove('hidden'); resDiv.innerText="Marking... Analysing all choices A-D with bold..."; try{ let photo=smartPhotoData.split(',')[1]; let resp=await fetch(PROXY_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({question:"Mark this photo - analyse ALL choices A,B,C,D, bold Answer + Reason + key points, Score per Q, Overall", grade:"Grade 7", shke:"SHKE", mode:"mark", photo: photo})}); let data=await resp.json(); resDiv.innerText=data.answer||data.reply||data.text||JSON.stringify(data); }catch(e){ resDiv.innerText="❌ Error: "+e.message; } btn.innerText="✨ Mark Smart"; btn.disabled=false; }
 function toggleAdminAssist(){ let p=document.getElementById('adminAssistPanel'); p.style.display = (p.style.display==='none'||p.style.display==='')?'flex':'none'; }
-function quickAdmin(t){ document.getElementById('adminMsg').value=t; sendAdminMsg(); }
 function sendAdminMsg(){ let v=document.getElementById('adminMsg').value.trim(); if(!v) return; let chat=document.getElementById('adminChat'); chat.innerHTML+=`<div style="align-self:flex-end;background:#dcf8c6;border:2px solid #000;border-radius:16px 4px 16px 16px;padding:8px 12px;max-width:85%;font-size:11px;box-shadow:2px 2px 0 0 #000">${v}</div>`; document.getElementById('adminMsg').value=''; chat.scrollTop=chat.scrollHeight; }
-function accessStudent(){ let sid=document.getElementById('sid').value.trim().toUpperCase(); if(!sid) return alert("Enter SHKE"); let el=document.getElementById('sPrev'); el.classList.remove('hidden'); el.innerHTML=`<p class="font-black text-[10px]">Student ${sid} • Access granted</p>`; setTimeout(()=>location.href=`student-monitor.html?shke=${sid}`,800); }
+function accessStudent(){ let sid=document.getElementById('sid').value.trim().toUpperCase(); if(!sid) return alert("Enter SHKE"); let el=document.getElementById('sPrev'); el.classList.remove('hidden'); el.innerHTML=`<p class="font-black text-[10px]">Student ${sid}</p>`; setTimeout(()=>location.href=`student-monitor.html?shke=${sid}`,800); }
 async function loadMyTuitions(){
  let FB=window.FB; if(!currentTeacherId) return; let list=document.getElementById('myTuitionList'); list.innerHTML="Loading...";
  try{
   let docs=[];
   try{ let q1=FB.query(FB.collection(FB.db,"homeschooling_requests"), FB.where("teacherId","==",currentTeacherId)); let snap1=await FB.getDocs(q1); snap1.forEach(d=>docs.push({id:d.id,...d.data()})); }catch(e){}
-  try{ let q2=FB.query(FB.collection(FB.db,"homeschool_requests"), FB.where("teacherUid","==",currentTeacherId)); let snap2=await FB.getDocs(q2); snap2.forEach(d=>docs.push({id:d.id, shke:d.data().studentShke, childName:d.data().studentName, grade:d.data().studentClass, subject:d.data().subject, parentPhone:d.data().parentPhone, location:d.data().location, reason:d.data().reason, status:d.data().status,...d.data()})); }catch(e){}
   document.getElementById('tuitionCount').innerText=`${docs.length} Assigned`;
   if(docs.length===0){ list.innerHTML=`<div class="bg-white border-2 border-black rounded-xl p-3 text-center"><p class="font-black text-[10px]">No tuition assigned yet</p></div>`; return; }
-  list.innerHTML=""; docs.forEach(r=>{
-   list.innerHTML+=`<div class="bg-white border-2 border-black rounded-xl p-3"><div class="flex justify-between"><p class="font-black text-[11px]">🔗 ${r.shke||r.studentShke||''} • ${r.childName||r.studentName||''}</p><span class="bg-yellow-200 text-black px-2 py-0.5 rounded-full text-[7px] font-black">${(r.status||'PENDING').toUpperCase()}</span></div></div>`;
-  });
- }catch(e){ list.innerHTML=`<div class="bg-[#ffeaea] border-2 border-black rounded-xl p-3"><p class="text-[8px] font-bold">Error: ${e.message}</p></div>`; }
+  list.innerHTML=""; docs.forEach(r=>{ list.innerHTML+=`<div class="bg-white border-2 border-black rounded-xl p-3"><p class="font-black text-[11px]">🔗 ${r.shke||''} • ${r.childName||''}</p></div>`; });
+ }catch(e){ list.innerHTML=`Error: ${e.message}`; }
 }
 async function sendTeacherRequest(){
  let FB=window.FB; let btn=document.getElementById('sendBtn'), status=document.getElementById('sendStatus');
@@ -185,15 +148,14 @@ async function sendTeacherRequest(){
  let parentPhone=document.getElementById('t_parentPhone').value.trim();
  let location=document.getElementById('t_location').value.trim()||"Nairobi";
  let reason=document.getElementById('t_reason').value.trim();
- if(!studentShke||!studentName){ alert("Enter SHKE00501 + Susan"); return; }
+ if(!studentShke||!studentName){ alert("Enter SHKE + Name"); return; }
  btn.innerText="⏳ Sending..."; btn.disabled=true;
  try{
   let data={ teacherId: currentTeacherId, teacherShke: userData?.indexNumber||"SHKE", teacherName: userData?.firstName||"Teacher", teacherUid: currentTeacherId, shke: studentShke, studentShke, studentName, childName: studentName, studentClass, grade: studentClass, subject, parentPhone, location, reason, days: reason, type:"TEACHER_REQUEST", status:"PENDING", timestamp: FB.serverTimestamp(), createdAt: FB.serverTimestamp() };
   await FB.addDoc(FB.collection(FB.db,"homeschooling_requests"), data);
-  await FB.addDoc(FB.collection(FB.db,"homeschool_requests"), data);
   status.innerText="✅ Sent!"; status.className="text-[9px] font-black text-center mt-2 p-2 rounded-full border-2 border-black bg-[#dcfce7]"; status.classList.remove('hidden');
-  btn.innerText="✅ Sent"; loadMyTuitions(); setTimeout(()=>{btn.innerText="⚡ Send Teacher Request → Admin Approves"; btn.disabled=false;},3000);
- }catch(e){ status.innerText="❌ "+e.message; status.className="text-[9px] font-black text-center mt-2 p-2 rounded-full border-2 border-black bg-[#ffeaea]"; status.classList.remove('hidden'); btn.innerText="⚡ Send Teacher Request"; btn.disabled=false; }
+  btn.innerText="✅ Sent"; loadMyTuitions(); setTimeout(()=>{btn.innerText="⚡ Send Teacher Request"; btn.disabled=false;},3000);
+ }catch(e){ status.innerText="❌ "+e.message; status.className="text-[9px] font-black text-center mt-2 p-2 rounded-full border-2 border-black bg-[#ffeaea]"; status.classList.remove('hidden'); btn.innerText="⚡ Send"; btn.disabled=false; }
 }
 setTimeout(()=>{
  const FB=window.FB;
@@ -205,12 +167,11 @@ setTimeout(()=>{
      if(s.exists()){
        userData=s.data();
        document.getElementById('teacherIdShow').innerText=userData.indexNumber||"SHKET";
-       document.getElementById('t_shke_label').innerText=userData.indexNumber||"SHKE";
        document.getElementById('refCode').innerText=userData.indexNumber||"SHKET";
        document.getElementById('teacherInfo').innerText=(userData.subjects||"Junior School")+" • "+(userData.grade||"Grade 7,8,9");
        loadMyTuitions();
      }else{ loadMyTuitions(); }
-   }catch(e){ document.getElementById('myTuitionList').innerHTML=`<div class="bg-[#ffeaea] border-2 border-black rounded-xl p-2 text-[8px]">Error: ${e.message}</div>`; }
+   }catch(e){}
  });
 },600);
 </script>
