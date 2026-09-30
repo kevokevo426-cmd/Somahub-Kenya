@@ -47,7 +47,6 @@ ABIGAIL RULES - MUST FOLLOW EXACT FORMAT:
 REQUEST: ${question}
 Lang: ${langNote}`;
     } else {
-      // HOMEWORK JSON MODE - old logic kept
       prompt = `You are SomaHub Kenya CBC tutor. Grade=${grade} SHKE=${shke} Lang=${langNote}.
 FILES: ${(brainContext||"").slice(0,2500)}
 RULES:
@@ -62,14 +61,20 @@ Q: ${question}
 Lang: ${langNote}`;
     }
 
+    // FIXED: Use inlineData (new Google name) + inline_data fallback
     let parts = [{text: prompt}];
-    if (photo) parts.push({inline_data:{mime_type:"image/jpeg", data: photo}});
+    if (photo) {
+      parts.push({inlineData:{mimeType:"image/jpeg", data: photo}});
+    }
 
+    // FIXED MODELS - 1.5-flash-latest supports PHOTO - old 2.0-lite deleted by Google
     const models = [
-      "gemini-2.5-flash-lite",
+      "gemini-1.5-flash-latest",
       "gemini-1.5-flash",
       "gemini-1.5-flash-8b",
-      "gemini-2.0-flash-lite"
+      "gemini-2.0-flash",
+      "gemini-3.5-flash-lite",
+      "gemini-2.5-flash"
     ];
 
     let lastErr = "";
@@ -79,7 +84,7 @@ Lang: ${langNote}`;
           const url = `https://generativelanguage.googleapis.com/${ver}/models/${m}:generateContent?key=${apiKey}`;
           const r = await fetch(url,{
             method:'POST', headers:{'Content-Type':'application/json'},
-            body: JSON.stringify({contents:[{parts}]})
+            body: JSON.stringify({contents:[{parts}], generationConfig:{temperature:0.4, maxOutputTokens: 3000}})
           });
           const data = await r.json();
           let ans = data.candidates?.[0]?.content?.parts?.[0]?.text;
