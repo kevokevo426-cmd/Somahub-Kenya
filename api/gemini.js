@@ -10,71 +10,95 @@ export default async function handler(req, res) {
     if (!apiKey) throw new Error("Add GEMINI_API_KEY in Vercel Env → Redeploy");
 
     const qLower = (question||"").toLowerCase();
-    const isAbigail = mode==="abigail" || qLower.includes('abigail') || qLower.includes('well explained') || qLower.includes('mark this') || qLower.includes('kasa rani') || !!photo;
-    const isHW = !isAbigail && (qLower.includes('homework') || qLower.includes('10 marks') || qLower.includes('exam json'));
+    const isMarking =!!photo || mode==="mark" || qLower.includes('mark') || qLower.includes('q13') || qLower.includes('english') || qLower.length>20;
+    const isHW =!isMarking && (qLower.includes('homework') || qLower.includes('10 marks') || qLower.includes('exam json'));
     const isForeign = /french|german|chinese|français|deutsch/i.test(question||"") || ["fr","de","zh"].includes(lang||"");
 
-    let langNote = lang==="fr"? "French Foreign Language - use fr-FR, include English translation in brackets"
-                 : lang==="de"? "German Foreign Language - de-DE, include English translation"
-                 : lang==="zh"? "Chinese Foreign Language - zh-CN, include Pinyin + English"
+    let langNote = lang==="fr"? "French Foreign - fr-FR + English in brackets"
+                 : lang==="de"? "German Foreign - de-DE + English"
+                 : lang==="zh"? "Chinese Foreign - zh-CN + Pinyin + English"
                  : lang==="sw"? "Kiswahili - sw-KE"
                  : "English - en-KE";
 
     let prompt = "";
-    if(isAbigail){
-      prompt = `You are SomaHub Abigail-Style Marker - Kenyan CBC teacher like Alexis Niombi 6G Kasarani Mid Term 3.
-Grade=${grade||"Grade 6"} SHKE=${shke||""} Lang=${langNote}
-FILES: ${(brainContext||"").slice(0,1500)}
+    if(isMarking){
+      prompt = `You are SomaHub Smart Marker - Kenyan CBC Mwalimu marking Grade ${grade||"6"} English.
+SHKE=${shke||""} Lang=${langNote}
+FILES: ${(brainContext||"").slice(0,1200)}
 
-ABIGAIL RULES - MUST FOLLOW EXACT FORMAT:
-1. OCR all questions in photo.
-2. For EACH question output:
-**Q{num}. {Short stem}**
-**Answer: {Letter}. {Correct text}**
-**Reason: {1-2 simple sentences why correct - Grade 6 level}**
-**Learner: {What learner ticked/wrote visible, else "Not visible"} - {CORRECT ✅ or WRONG ❌ with short correction}**
-**Score: {0 or 1}/1
+MARKING STYLE - FOLLOW THIS EXACT FORMAT - NO NAME MENTION:
 
-3. After all questions:
-**Score Page: X/Y - Comment**
-**Overall: X/Y = Z% - Well done / Keep revising**
+For EACH question in photo, output like this:
 
-4. Playground friendly, simple English, emojis ✅ ❌ 🎉, bold.
-5. If cloze: explain idiom e.g. "play tricks ON not to".
-6. If composition: bold (correction) and give out of 40.
-7. NEVER output LEVEL LOCK, SYSTEM, SOURCE header. NEVER say "As an AI". Be Mwalimu.
+**Q13. Meaning of bi-annual competition**
 
-REQUEST: ${question}
+**Answer: B. Twice in a year**
+
+**Reason:** In standard English, **bi-annual means happening twice a year**. The prefix **bi- = two**. Annual = year. So twice a year.
+
+**All Choices:**
+**A. Every year** - Means once a year, once = annual, not bi-annual ❌
+**B. Twice in a year** - Correct, bi = 2 times in 12 months ✅
+**C. Thrice in a year** - Thrice = 3 times, not 2 ❌
+**D. Twice in a month** - That is bi-monthly, not bi-annual ❌
+
+**Learner:** Not visible - WRONG ❌ (Should tick B)
+**Score: 0/1**
+
+---
+**Q14. People who watch football match vs drama...**
+
+**Answer: A. audience**
+
+**Reason:** People watching **drama play = audience**. People watching **football = spectators**. Key difference: **play = audience**, **game = spectators**.
+
+**All Choices:**
+**A. an audience** - People watching a play/drama ✅ Correct for play
+**B. a congregation** - People in church, religious gathering ❌
+**C. a crowd** - General many people, no specific watch ❌
+**D. spectators** - People watching football/game ❌ Opposite
+
+**Learner:** Ticked C - WRONG ❌ (Should tick A)
+**Score: 0/1**
+
+---
+
+RULES:
+1. OCR all Q numbers, stems, A-D options from photo.
+2. For each: **Bold Answer, Reason, All Choices analysis, Learner, Score** like above.
+3. Explain WHY each wrong choice is wrong in simple Grade 6 English.
+4. Use **bold** for key terms: **bi-annual, audience, spectators, idioms, spelling**.
+5. Learner: if you can see tick/mark in photo, say "Ticked X - CORRECT ✅ / WRONG ❌", else "Not visible - WRONG ❌ (Should tick Y)".
+6. After all:
+**Score Page: 3/8 - Good try, revise idioms**
+**Overall: 3/8 = 37.5% - Keep revising! You can do better!**
+7. NO names like Abigail, Alexis, Niombi, Kasarani. Just Mwalimu.
+8. Playground friendly, emojis ✅ ❌ only.
+9. NEVER output LEVEL LOCK, SYSTEM, SOURCE.
+
+PHOTO TASK: ${question}
 Lang: ${langNote}`;
     } else {
       prompt = `You are SomaHub Kenya CBC tutor. Grade=${grade} SHKE=${shke} Lang=${langNote}.
 FILES: ${(brainContext||"").slice(0,2500)}
 RULES:
-- NEVER output LEVEL LOCK, SYSTEM, SOURCE, SHKE code header, **, ##.
-- NEVER say "LEVEL LOCK: GRADE X ACTIVE" - forbidden.
-- If homework 10 marks or exam: return ONLY JSON array, no extra text:
-[{"q":"Question?","options":["A","B","C","D"],"answer":"A","marks":2,"strand":"Topic","color":"#e0f2ff"}]
-5 questions, MCQ with 4 options where possible, colorful, playground friendly.
-${isForeign? `- Foreign ${langNote}: questions in foreign language + English translation` : ""}
-- If normal explanation: short clear paragraphs, simple formatting, no ** headers.
+- NEVER output LEVEL LOCK, SYSTEM, SOURCE, SHKE header, ##.
+- If homework: ONLY JSON: [{"q":"...","options":["A","B","C","D"],"answer":"A","marks":2,"strand":"...","color":"#e0f2ff"}] 5 questions.
+${isForeign? `- Foreign ${langNote}` : ""}
 Q: ${question}
 Lang: ${langNote}`;
     }
 
-    // FIXED: Use inlineData (new Google name) + inline_data fallback
     let parts = [{text: prompt}];
     if (photo) {
       parts.push({inlineData:{mimeType:"image/jpeg", data: photo}});
     }
 
-    // FIXED MODELS - 1.5-flash-latest supports PHOTO - old 2.0-lite deleted by Google
     const models = [
       "gemini-1.5-flash-latest",
       "gemini-1.5-flash",
-      "gemini-1.5-flash-8b",
       "gemini-2.0-flash",
-      "gemini-3.5-flash-lite",
-      "gemini-2.5-flash"
+      "gemini-3.5-flash-lite"
     ];
 
     let lastErr = "";
@@ -84,37 +108,27 @@ Lang: ${langNote}`;
           const url = `https://generativelanguage.googleapis.com/${ver}/models/${m}:generateContent?key=${apiKey}`;
           const r = await fetch(url,{
             method:'POST', headers:{'Content-Type':'application/json'},
-            body: JSON.stringify({contents:[{parts}], generationConfig:{temperature:0.4, maxOutputTokens: 3000}})
+            body: JSON.stringify({contents:[{parts}], generationConfig:{temperature:0.3, maxOutputTokens: 4000}})
           });
           const data = await r.json();
           let ans = data.candidates?.[0]?.content?.parts?.[0]?.text;
           if (ans) {
-            ans = ans.replace(/\*\*LEVEL LOCK[\s\S]*?\*\*/gi,'')
-                    .replace(/\*\*SYSTEM[\s\S]*?\*\*/gi,'')
-                    .replace(/\*\*SOURCE[\s\S]*?\*\*/gi,'')
-                    .replace(/##\s*GRADE.*$/gim,'')
-                    .replace(/LEVEL LOCK:.*$/gim,'')
-                    .trim();
-
+            ans = ans.replace(/\*\*LEVEL LOCK[\s\S]*?\*\*/gi,'').replace(/\*\*SYSTEM[\s\S]*?\*\*/gi,'').replace(/\*\*SOURCE[\s\S]*?\*\*/gi,'').replace(/LEVEL LOCK:.*$/gim,'').trim();
             if(isHW){
               let j = ans.match(/\[[\s\S]*\]/);
               if(j) ans = j[0];
             }
-
             return res.json({
               answer: ans,
-              youtubeFiltered: `https://www.youtube.com/results?search_query=${encodeURIComponent(question+" "+grade+" CBC Kenya safe")}&sp=EgIQAQ%3D%3D`,
-              model: m,
-              lang: lang||"en",
-              mode: isAbigail ? "abigail" : "homework"
+              youtubeFiltered: `https://www.youtube.com/results?search_query=${encodeURIComponent(question+" "+grade+" CBC")}&sp=EgIQAQ%3D%3D`,
+              model: m, lang: lang||"en", mode: isMarking? "marking" : "homework"
             });
           }
-          lastErr = JSON.stringify(data.error||data).slice(0,400);
+          lastErr = JSON.stringify(data.error||data).slice(0,500);
         } catch(e){ lastErr = e.message; }
       }
     }
-    throw new Error(lastErr || "All models busy, try again");
-
+    throw new Error(lastErr || "Busy, try again");
   } catch (e) {
     res.status(500).json({ error: e.message });
   }
