@@ -1,4 +1,4 @@
-export default async function handler(req, res) { 
+export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
@@ -10,49 +10,36 @@ export default async function handler(req, res) {
     if (!apiKey) throw new Error("Add GEMINI_API_KEY in Vercel → Redeploy");
 
     const qLower = (question||"").toLowerCase();
-    const isMarking =!!photo || mode==="mark" || (qLower.includes('mark') && qLower.length>15);
-    const isDraw = /draw|diagram|illustrate|label|sketch|structure of|parts of/i.test(question||"");
-    const isHW =!isMarking && !isDraw && (qLower.includes('homework') || qLower.includes('10 marks') || qLower.includes('exam json'));
+    const isMarking =!!photo || mode==="mark" || qLower.length>20;
+    const isDraw = /draw|diagram|illustrate|label|sketch|structure|parts of|insect|mountain|flower|map|circuit/i.test(question||"") && !photo;
+    const isMarkWithImage = !!photo && /insect|mountain|flower|leaf|diagram|image|picture|shown/i.test(question||"") || !!photo;
+    const isHW =!isMarking &&!isDraw && (qLower.includes('homework') || qLower.includes('10 marks') || qLower.includes('exam json'));
 
-    let langNote = lang==="fr"? "French - fr-FR + English" : lang==="de"? "German - de-DE + English" : lang==="zh"? "Chinese - zh-CN + English" : lang==="sw"? "Kiswahili" : "English - en-KE";
+    let langNote = lang==="fr"? "French" : lang==="de"? "German" : lang==="zh"? "Chinese" : lang==="sw"? "Kiswahili" : "English - en-KE";
 
     let prompt = "";
     if(isDraw){
-      prompt = `You are SomaHub PRO Diagram Drawer + CBC Tutor Grade ${grade||"7"} SHKE=${shke} Lang=${langNote}
-FILES: ${(brainContext||"").slice(0,1000)}
+      prompt = `You are SomaHub PRO Diagram Drawer - CBC Grade ${grade||"7"} SHKE=${shke} Lang=${langNote} FILES:${(brainContext||"").slice(0,800)}
 
-TASK: Draw DIAGRAM for: ${question}
+TASK: ${question}
 
-RULES - MUST FOLLOW:
-1. First give organized explanation with bold key words.
-2. Then give DIAGRAM as clean SVG code inside \`\`\`svg ... \`\`\` - simple, clear, CBC Grade 6-7 style.
-3. SVG must be 400x300 viewBox, white background, black stroke 2.5, bold labels, colorful fills.
-4. For photosynthesis: show sun, leaf, CO2 arrow, water arrow, oxygen out, chlorophyll label.
-5. For flower: show petals, sepal, stamen, pistil labeled.
-6. For water cycle: evaporation, condensation, precipitation arrows.
-7. For digestive system: mouth, esophagus, stomach, intestines labeled.
-8. Keep labels bold and readable.
-9. After SVG, give 3 key points with bold key words.
-
-OUTPUT FORMAT:
-**📚 Topic: Photosynthesis**
-
-**🔑 Key Words:** **sunlight**, **chlorophyll**, **carbon dioxide**, **water**, **oxygen**
-
-**📖 Explanation:** Plants make food using **sunlight**... etc 2-3 sentences bold key words.
+MUST OUTPUT:
+**📚 Topic: [topic]**
+**🔑 Key Words:** **word1**, **word2**, bold all science terms
+**📖 Explanation:** 2-3 sentences Grade 6-7 simple, bold key words
 
 **📊 DIAGRAM:**
 \`\`\`svg
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300" width="100%" style="background:white;border:2.5px solid black;border-radius:12px">
-... your diagram here ...
+<!-- SIMPLE CLEAR CBC DIAGRAM - use circles, rects, paths, text labels bold -->
+<!-- Example for insect: coiled body, label legs, etc -->
 </svg>
 \`\`\`
 
-**✅ Key Points:**
-1. **Sunlight** needed...
-2. **Chlorophyll** traps...
+**✅ Key Points:** 3 points bold.
 
-NO LEVEL LOCK. Playground friendly.`;
+For insect: draw coiled millipede/6 legs/spiral etc. For mountain: peak/valley. Keep SVG simple readable.
+NEVER LEVEL LOCK.`;
     } else if(isMarking){
       prompt = `You are SomaHub ULTRA PRO Marker - Kenyan CBC Expert, Grade ${grade||"7"}.
 SHKE=${shke||""} Lang=${langNote} FILES: ${(brainContext||"").slice(0,1000)}
@@ -77,28 +64,27 @@ Many **mushrooms** growing on **dead tree trunks** in the wild are **poisonous**
 
 **👨‍🎓 Learner:** Ticked B - **CORRECT ✅**
 **⭐ Score: 1/1**
+
+IF PHOTO CONTAINS IMAGE (insect, mountain, flower, leaf, map, circuit, animal):
+**📊 IMAGE COPIED FROM PAPER:**
+\`\`\`svg
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300" width="100%" style="background:white;border:2.5px solid black;border-radius:12px">
+<!-- Redraw the image seen in photo - clean, labelled, bold labels - e.g. millipede coiled, 8 legs etc -->
+</svg>
+\`\`\`
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 YOUR RULES:
 1. OCR Q numbers, stems, A-D options from photo 100% accurate.
 2. Use EXACT template above for EACH Q - with ━━━ lines.
-3. ALWAYS bold: **✅ Answer: X....**, **🔑 Key Words:** with **word** bold for each science term.
-4. Detailed Reason = 2-3 full sentences, simple Grade 6-7 English, bold key words inside.
-5. All Choices = One line per choice, bold key term, explain WHY wrong, with ❌ ✅ at end.
-6. Learner: If tick visible: "Ticked X - CORRECT ✅ / WRONG ❌ (Should be Y)", else "Not visible - WRONG ❌ (Should be Y)".
-7. After ALL Qs:
----
-**📊 SCORE BREAKDOWN** Q1:1/1 | Q2:1/1 | Q3:0/1
-**📊 Score Page: 5/6**
-**💯 Overall: 5/6 = 83% - Very Good! Keep revising! 🌟**
-**📝 Teacher Feedback: Brilliant effort!**
----
-8. NO names: Abigail, Alexis, Niombi, Kasarani. Only Mwalimu.
-9. NEVER output LEVEL LOCK, SYSTEM, SOURCE.
+3. ALWAYS bold: **✅ Answer**, **🔑 Key Words:** with **word** bold: **mushroom, poisonous, millipede, coil, spiral, 6 legs, 8 legs, arachnids, chlorophyll, photosynthesis, mountain, peak, valley, flower, petals, stamen, pistil**.
+4. Detailed Reason = 2-3 sentences, bold key words.
+5. All Choices = One line per choice, bold key term, ❌ ✅
+6. If photo has insect/mountain/flower/map/image: AFTER All Choices, COPY it as clean SVG labelled diagram in \`\`\`svg\`\`\` block.
+7. After ALL Qs: Score Breakdown, Overall %, Feedback.
+8. NO names, NO LEVEL LOCK.
 
-TASK: ${question} Lang: ${langNote}
-If question also says draw/diagram, add after marking: 
-**📊 DIAGRAM:** with \`\`\`svg code as described in draw prompt.`;
+TASK: ${question} Lang: ${langNote}`;
     } else {
       prompt = `You are SomaHub tutor Grade=${grade} SHKE=${shke} Lang=${langNote} FILES: ${(brainContext||"").slice(0,2000)} NEVER output LEVEL LOCK. If homework: ONLY JSON [{"q":"...","options":["A","B","C","D"],"answer":"A","marks":2}] Q: ${question}`;
     }
@@ -106,13 +92,14 @@ If question also says draw/diagram, add after marking:
     let parts = [{text: prompt}];
     if (photo) parts.push({inlineData:{mimeType:"image/jpeg", data: photo}});
 
-    const models = ["gemini-1.5-flash-latest","gemini-1.5-flash","gemini-2.0-flash"];
+    // FIXED MODELS 2026 - NO 2.0-flash - NO 404!
+    const models = ["gemini-1.5-flash-latest","gemini-1.5-flash","gemini-1.5-pro-latest","gemini-2.5-flash","gemini-3.0-flash"];
     let lastErr="";
     for(let m of models){
       for(let ver of ["v1beta","v1"]){
         try{
           const url=`https://generativelanguage.googleapis.com/${ver}/models/${m}:generateContent?key=${apiKey}`;
-          const r=await fetch(url,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({contents:[{parts}],generationConfig:{temperature:0.25,maxOutputTokens:6500}})});
+          const r=await fetch(url,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({contents:[{parts}],generationConfig:{temperature:0.25,maxOutputTokens:7000}})});
           const data=await r.json();
           let ans=data.candidates?.[0]?.content?.parts?.[0]?.text;
           if(ans){
@@ -120,7 +107,7 @@ If question also says draw/diagram, add after marking:
             if(isHW){ let j=ans.match(/\[[\s\S]*\]/); if(j) ans=j[0]; }
             return res.json({answer:ans,model:m,lang:lang||"en",mode:isDraw?"diagram":isMarking?"marking":"homework"});
           }
-          lastErr=JSON.stringify(data.error||data).slice(0,400);
+          lastErr=JSON.stringify(data.error||data).slice(0,500);
         }catch(e){ lastErr=e.message; }
       }
     }
