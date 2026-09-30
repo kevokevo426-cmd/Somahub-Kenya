@@ -1,108 +1,91 @@
 <!DOCTYPE html>
 <html><head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SomaHub AI Assistance</title>
+<title>SomaHub AI - Abigail Style Marker</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;800;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-<style>body{font-family:'Nunito',sans-serif;background:#e5ddd5}.pulse{animation:pulse 1s infinite}@keyframes pulse{0%,100%{opacity:1}50%{opacity:.6}}.fun-btn:active{transform:scale(0.95)}</style>
+<style>body{font-family:'Nunito',sans-serif;background:#e5ddd5}.fun-btn:active{transform:scale(0.96)}</style>
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-import { getFirestore, doc, getDoc, collection, getDocs, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 const cfg={apiKey:"AIzaSyA93BNes3AmFyxIEgjSbvbIWqLyorLsuj8",authDomain:"somahubkenya-9e458.firebaseapp.com",projectId:"somahubkenya-9e458",storageBucket:"somahubkenya-9e458.firebasestorage.app",messagingSenderId:"615579085715",appId:"1:615579085715:web:28fca37ba498324bb49666"};
-const app=initializeApp(cfg); window.FB={auth:getAuth(app),db:getFirestore(app),doc,getDoc,collection,getDocs,addDoc,serverTimestamp,onAuthStateChanged};
+const app=initializeApp(cfg); window.FB={auth:getAuth(app),db:getFirestore(app),doc,getDoc,onAuthStateChanged};
 </script>
 </head>
 <body class="flex justify-center">
 <div class="w-full max-w-[460px] bg-[#e5ddd5] min-h-screen flex flex-col relative">
 <div class="bg-[#075e54] text-white p-3 flex items-center gap-3 sticky top-0 z-50">
-<a href="student.html" class="text-white"><i class="fa-solid fa-arrow-left"></i></a>
+<a href="teachers.html" class="text-white"><i class="fa-solid fa-arrow-left"></i></a>
 <div class="w-10 h-10 bg-white rounded-full grid place-items-center text-[#075e54] font-black">AI</div>
-<div class="flex-1"><p class="font-black text-[11px]">AI Assistance - Listen + 🎤 Editable</p><p class="text-[8px] opacity-80" id="subHeader">Level locked • YouTube filtered • Ready</p></div>
-<button onclick="toggleBlindMode()" id="blindBtn" class="bg-white text-black px-2 py-1 rounded-full text-[7px] font-black border border-black">♿ BIG</button>
+<div class="flex-1"><p class="font-black text-[11px]">AI Abigail-Style Marker</p><p class="text-[8px] opacity-80">Well explained • Per question • Score</p></div>
 <span id="shkeBadge" class="bg-[#128c7e] px-2 py-1 rounded-full text-[8px] font-black">SHKE</span>
 </div>
-<div class="bg-[#fff7e0] p-2 border-b-2 border-black flex justify-between items-center">
-<div class="flex gap-1"><span id="gradeBadge" class="bg-black text-white px-2 py-1 rounded-full text-[7px] font-black">Grade 7</span><span id="brainCount" class="bg-[#ffcc1a] px-2 py-1 rounded-full text-[7px] font-black border border-black">brain 0</span><span id="resCount" class="bg-[#4a86ff] text-white px-2 py-1 rounded-full text-[7px] font-black">Ready</span></div>
-<select id="langSel" onchange="updateLang()" class="bg-white border-2 border-black rounded-full px-2 py-1 text-[8px] font-black"><option value="en">English</option><option value="sw">Kiswahili</option><option value="fr">French - Foreign</option><option value="de">German - Foreign</option><option value="zh">Chinese - Foreign</option></select>
-</div>
 <div id="chat" class="flex-1 p-3 space-y-4 overflow-y-auto pb-[120px]">
-<div class="bg-white rounded-[1rem] p-3 border-[2.5px] border-black max-w-[90%]"><p class="font-black text-[11px]">👋 Hi <span id="nameShow">Learner</span>! 🔊 + 🎤 Ready</p><p class="text-[9px] mt-1">Tap 🔊 Listen to hear answer. Tap 🎤 to speak and EDIT before sending. Playground friendly!</p><div class="mt-2 grid grid-cols-2 gap-1.5"><button onclick="quick('Set homework 10 marks for my grade')" class="bg-[#ffcc1a] border-2 border-black rounded-full py-2.5 text-[8px] font-black fun-btn">📝 HW 10 Marks</button><button onclick="quick('French homework bonjour')" class="bg-[#4a86ff] text-white border-2 border-black rounded-full py-2.5 text-[8px] font-black fun-btn">🇫🇷 French</button><button onclick="quick('German homework')" class="bg-black text-white border-2 border-black rounded-full py-2.5 text-[8px] font-black fun-btn">🇩🇪 German</button><button onclick="quick('Chinese homework')" class="bg-red-600 text-white border-2 border-black rounded-full py-2.5 text-[8px] font-black fun-btn">🇨🇳 Chinese</button></div><p class="text-[7px] text-gray-400 mt-2" id="currentInfo">Loading...</p></div>
+<div class="bg-white rounded-[1rem] p-3 border-[2.5px] border-black shadow-[3px_3px_0_0_#000]">
+<p class="font-black text-[12px]">👋 Hi Mwalimu! Abigail Style Ready ✅</p>
+<p class="text-[10px] mt-2 leading-5">Snap any exam photo - I will mark like this:<br><br><b>Q1. Answer: D...</b><br><b>Reason:...</b><br><b>Learner ticked A - close but D is best</b><br><b>Score: 0/1</b><br><br>Just like I marked Alexis 6G Kasarani Mid Term 3 English.</p>
+<div class="mt-3 grid grid-cols-2 gap-1.5">
+<button onclick="quick('Mark this photo Abigail style - well explained per question')" class="bg-[#ffcc1a] border-2 border-black rounded-full py-3 text-[8px] font-black">📸 Abigail Mark</button>
+<button onclick="quick('Mark composition strict out of 40 - bold errors (correction)')" class="bg-black text-white border-2 border-black rounded-full py-3 text-[8px] font-black">✍️ Comp 40</button>
+</div>
+</div>
 </div>
 <div class="bg-[#f0f0f0] p-2 fixed bottom-0 w-full max-w-[460px] border-t-[2.5px] border-black">
-<div id="micStatus" class="hidden text-[9px] font-black text-center bg-[#ffcc1a] border-2 border-black rounded-full py-1 mb-1"></div>
 <div class="flex items-center gap-2">
-<button onclick="document.getElementById('photoIn').click()" class="w-10 h-10 bg-white rounded-full grid place-items-center border-2 border-black fun-btn"><i class="fa-solid fa-camera"></i></button>
-<input id="msg" placeholder="Type OR 🎤 speak - EDITABLE" class="flex-1 bg-white rounded-full px-4 py-3 text-[11px] font-bold border-2 border-black outline-none">
-<button onclick="startVoiceAsk()" id="micBtn" class="w-11 h-11 bg-black text-white rounded-full grid place-items-center border-2 border-black fun-btn">🎤</button>
-<button onclick="sendMsg()" id="sendBtn" class="w-11 h-11 bg-[#25d366] rounded-full grid place-items-center text-white border-2 border-black fun-btn"><i class="fa-solid fa-paper-plane text-[13px]"></i></button>
+<button onclick="document.getElementById('photoIn').click()" class="w-11 h-11 bg-white rounded-full grid place-items-center border-2 border-black text-[18px]">📸</button>
+<input id="msg" placeholder="Snap photo OR type" class="flex-1 bg-white rounded-full px-4 py-3 text-[11px] font-bold border-2 border-black outline-none">
+<button onclick="sendMsg()" id="sendBtn" class="w-11 h-11 bg-[#25d366] rounded-full grid place-items-center text-white border-2 border-black"><i class="fa-solid fa-paper-plane"></i></button>
 </div>
-<p class="text-[7px] text-center font-bold opacity-60">🎤 Speak → EDIT → Send • 🔊 Tap Listen to hear</p>
+<p class="text-[7px] text-center font-black mt-1 opacity-60">ABIGAIL STYLE: Answer + Reason + Correction + Score</p>
 <input type="file" id="photoIn" hidden accept="image/*" onchange="handlePhoto(this)">
 </div>
 </div>
 <script>
 const PROXY_URL="/api/gemini";
-let shke="SHKE", grade="Grade 7", gradeNum=7, currentLang="en", currentSubject="English";
-let aiBrain=[], resources=[], allFiles={Notes:[], Design:[], Exam:[], Homework:[]}, uploadedPhoto='', isThinking=false, blindMode=false, recognition=null, isRecording=false, currentQs=[], voicesCache=[];
-function loadVoices(){ voicesCache = speechSynthesis.getVoices(); }
-if('speechSynthesis' in window){
-  loadVoices();
-  speechSynthesis.onvoiceschanged = loadVoices;
-  document.addEventListener('click', ()=>{ speechSynthesis.resume(); if(voicesCache.length===0) loadVoices(); }, {once:true});
+let shke="SHKE", grade="Grade 6", uploadedPhoto='', isThinking=false;
+function quick(t){document.getElementById('msg').value=t; sendMsg();}
+function handlePhoto(input){let f=input.files[0]; if(!f) return; let r=new FileReader(); r.onload=e=>{uploadedPhoto=e.target.result; document.getElementById('chat').innerHTML+=`<div class="flex justify-end"><div class="bg-[#dcf8c6] rounded-xl p-2 border-2 border-black max-w-[80%]"><img src="${uploadedPhoto}" class="rounded-lg max-h-[350px]"><p class="text-[8px] font-black mt-1 text-center">Photo ready - tap Abigail Mark</p></div></div>`; document.getElementById('chat').scrollTop=document.getElementById('chat').scrollHeight;}; r.readAsDataURL(f);}
+
+const ABIGAIL_SYSTEM = `You are SomaHub Abigail-Style Marker - Kenyan CBC teacher marking like Alexis Niombi 6G Kasarani Mid Term 3 2025.
+
+RULES FOR EVERY PHOTO:
+1. Read ALL questions in the photo (OCR).
+2. For EACH question, output in this EXACT format:
+**Q{number}. {Question stem short}**
+**Answer: {Correct letter}. {Correct text}**
+**Reason: {Simple 1-2 sentence explanation why, in Grade 6 English, no big words}**
+**Learner: {What learner ticked/wrote if visible, else "Not visible"} - {CORRECT ✅ or WRONG ❌ + why}**
+**Score: {0 or 1}/1
+
+3. After all questions, give PAGE SCORE and TOTAL.
+Example:
+**Score Page 1: 3/4 - Good!**
+**Overall so far: 17/20 = 85% - Well done!**
+
+4. Use simple English, emojis ✅ ❌ 🎉, bold, playground friendly.
+5. If cloze, explain idiom: "play tricks ON someone".
+6. If composition, use bold (correction) format and Strict/Fair/Medium.
+
+NEVER say "As an AI". Be teacher Mwalimu.`;
+
+async function sendMsg(){
+ if(isThinking) return; let txt=document.getElementById('msg').value.trim(); if(!txt &&!uploadedPhoto) return;
+ document.getElementById('chat').innerHTML+=`<div class="flex justify-end"><div class="bg-[#dcf8c6] border-2 border-black rounded-xl p-2 max-w-[80%]"><p class="text-[11px] font-bold">${txt||'📸 Photo + Abigail Mark'}</p></div></div>`;
+ document.getElementById('msg').value=""; document.getElementById('chat').scrollTop=document.getElementById('chat').scrollHeight; isThinking=true; document.getElementById('sendBtn').innerHTML='<i class="fa-solid fa-spinner fa-spin"></i>';
+ document.getElementById('chat').innerHTML+=`<div id="thinking" class="bg-white border-2 border-black rounded-xl p-3 max-w-[85%] shadow-[2px_2px_0_0_#000]"><p class="text-[9px] font-black">👩‍🏫 Abigail marking... reading questions... explaining reason...</p></div>`;
+ try{
+  let photoData=uploadedPhoto? uploadedPhoto.split(',')[1] : null;
+  let finalQuestion = ABIGAIL_SYSTEM + "\n\nSTUDENT REQUEST: " + (txt || "Mark this exam Abigail style - well explained per question with answer + reason + score like Alexis Kasarani");
+  let res=await fetch(PROXY_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({question:finalQuestion, grade, shke, photo:photoData, mode:"abigail"})});
+  let data=await res.json(); document.getElementById('thinking')?.remove();
+  let ans = (data.answer||"No answer").replace(/</g,'&lt;');
+  document.getElementById('chat').innerHTML+=`<div class="bg-white border-2 border-black rounded-xl p-3 max-w-[95%] shadow-[3px_3px_0_0_#000]"><p class="text-[11px] leading-[22px] whitespace-pre-wrap font-bold" style="font-family:Nunito">${ans}</p><div class="mt-3 flex gap-2"><button onclick="navigator.clipboard.writeText(this.parentNode.previousSibling.innerText)" class="bg-black text-white px-3 py-2 rounded-full text-[8px] font-black">Copy Marking</button><button onclick="location.href='teacher-tools.html#written'" class="bg-[#ffcc1a] border-2 border-black px-3 py-2 rounded-full text-[8px] font-black">Open Teacher Tools</button></div></div>`;
+ }catch(e){ document.getElementById('thinking')?.remove(); document.getElementById('chat').innerHTML+=`<div class="bg-[#ffeaea] border-2 border-black rounded-xl p-3"><p class="text-[9px] font-black">❌ ${e.message} - Check /api/gemini exists</p></div>`; }
+ document.getElementById('chat').scrollTop=document.getElementById('chat').scrollHeight; isThinking=false; document.getElementById('sendBtn').innerHTML='<i class="fa-solid fa-paper-plane"></i>'; uploadedPhoto='';
 }
-function speakText(t){
-  if(!('speechSynthesis' in window)){ alert("Voice needs Chrome"); return; }
-  speechSynthesis.cancel();
-  speechSynthesis.resume();
-  let clean=t.replace(/[*_`#<>]/g,'').replace(/<[^>]*>/g,' ').slice(0,700);
-  if(!clean.trim()) return;
-  let utt=new SpeechSynthesisUtterance(clean);
-  let isSw=/Kiswahili|Nomino/i.test(clean)||currentLang==="sw";
-  let isFr=currentLang==="fr"||/bonjour|français/i.test(clean);
-  let isDe=currentLang==="de"||/hallo|deutsch/i.test(clean);
-  let isZh=currentLang==="zh";
-  let vs=speechSynthesis.getVoices();
-  if(vs.length===0){ setTimeout(()=>speakText(t),300); loadVoices(); return; }
-  let voice = vs.find(v=> isSw? v.lang.toLowerCase().includes('sw'):isFr? v.lang.toLowerCase().includes('fr'):isDe? v.lang.toLowerCase().includes('de'):isZh? v.lang.toLowerCase().includes('zh'):v.lang==='en-GB') || vs.find(v=>v.lang.startsWith('en')) || vs[0];
-  if(voice) utt.voice=voice;
-  utt.lang=isSw?'sw-KE':isFr?'fr-FR':isDe?'de-DE':isZh?'zh-CN':'en-US';
-  utt.rate=blindMode?0.7:0.9; utt.volume=1; utt.pitch=1;
-  speechSynthesis.speak(utt);
-}
-function toggleBlindMode(){blindMode=!blindMode; document.documentElement.style.fontSize=blindMode?"120%":"100%"; blindBtn.innerText=blindMode?"♿ BIG ON":"♿ BIG"; if(blindMode) speakText("Big mode ON. Tap Listen to hear answers.");}
-function updateLang(){currentLang=langSel.value; speakText(currentLang==="fr"?"Bonjour! French mode ON":currentLang==="de"?"Hallo! German mode ON":currentLang==="zh"?"Ni hao! Chinese mode ON":currentLang==="sw"?"Habari! Kiswahili ON":"English mode ON");}
-function quick(t){msg.value=t; sendMsg();}
-function handlePhoto(input){let f=input.files[0]; if(!f) return; let r=new FileReader(); r.onload=e=>{uploadedPhoto=e.target.result; chat.innerHTML+=`<div class="flex justify-end"><div class="bg-[#dcf8c6] rounded-xl p-2 border-2 border-black max-w-[80%]"><img src="${uploadedPhoto}" class="rounded-lg max-h-[200px]"></div></div>`; chat.scrollTop=chat.scrollHeight;}; r.readAsDataURL(f);}
-function startVoiceAsk(){
- const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
- if(!SR){alert("Use Chrome"); return;}
- if(isRecording&&recognition){recognition.stop(); return;}
- recognition=new SR(); recognition.lang=currentLang==="fr"?"fr-FR":currentLang==="de"?"de-DE":currentLang==="zh"?"zh-CN":currentLang==="sw"?"sw-KE":"en-KE";
- let btn=document.getElementById('micBtn'), stat=document.getElementById('micStatus');
- btn.classList.add('pulse'); btn.style.background="#ef4444"; btn.innerText="🔴"; stat.innerText="🎤 Listening - you can EDIT before Send"; stat.classList.remove('hidden'); isRecording=true;
- recognition.onresult=e=>{let tr=e.results[0][0].transcript.trim(); msg.value=tr; msg.focus(); stat.innerHTML=`✅ Heard: <b>${tr}</b> - EDIT then Send`; stat.className="text-[9px] font-black text-center bg-[#dcfce7] border-2 border-black rounded-full py-1 mb-1";};
- recognition.onend=()=>{btn.classList.remove('pulse'); btn.style.background="black"; btn.innerHTML="🎤"; isRecording=false;};
- recognition.start();
-}
-async function loadAll(){ let FB=window.FB; try{ let snap=await FB.getDocs(FB.collection(FB.db,'ai_brain')); aiBrain=[]; snap.forEach(d=>aiBrain.push({id:d.id,...d.data()})); let snap2=await FB.getDocs(FB.collection(FB.db,'resources')); resources=[]; allFiles={Notes:[], Design:[], Exam:[], Homework:[]}; snap2.forEach(d=>{let r={id:d.id,...d.data()}; resources.push(r); if(allFiles[r.type]) allFiles[r.type].push(r);}); let num=parseInt((grade.match(/\d+/)||[7])[0]); gradeNum=isNaN(num)?7:num; gradeBadge.innerText=grade; currentInfo.innerText=`${grade} • ${resources.length} res • ${aiBrain.length} brain • 🔊 Ready • ${currentLang}`; brainCount.innerText=`brain ${aiBrain.length}`; resCount.innerText=`res ${resources.length}`; }catch(e){} }
-async function askSuperAI(question){
- let filteredBrain=aiBrain.filter(b=>parseInt((b.grade||'').match(/\d+/)?.[0]||'6')==gradeNum).slice(-3); if(!filteredBrain.length) filteredBrain=aiBrain.slice(-3);
- let brainContext=`[AI_BRAIN ${grade}] ${filteredBrain.map(m=>`${m.title}:${(m.text||'').slice(0,600)}`).join("\n")}`;
- let photoData=uploadedPhoto? uploadedPhoto.split(',')[1] : null;
- let isHW=question.toLowerCase().includes('homework')||question.toLowerCase().includes('10 marks'); let isForeign=/french|german|chinese/i.test(question)||["fr","de","zh"].includes(currentLang);
- let langInstruction=isForeign?(currentLang==="fr"?"French Foreign bonjour":currentLang==="de"?"German Foreign":currentLang==="zh"?"Chinese Foreign ni hao":"Foreign"):"English";
- let promptQ=isHW? `Generate HOMEWORK 10 marks ${grade} ${question} MUST return ONLY JSON array [{"q":"...","options":["A","B","C","D"],"answer":"A","marks":2,"strand":"Vocab","color":"#e0f2ff"}] 5 Qs, colorful, playground friendly. NO LEVEL LOCK, ONLY JSON.` : question + ` Answer in ${langInstruction} for ${grade}, short, no LEVEL LOCK header.`;
- let res=await fetch(PROXY_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({question:promptQ, grade, shke, brainContext, photo:photoData, lang:currentLang})});
- let data=await res.json(); if(data.error) throw new Error(data.error); return data;
-}
-function renderHomeworkCards(qs){ return qs.map((c,i)=>{ let isMCQ=c.options&&c.options.length>0; let bg=c.color|| (i%4===0?"#e0f2ff":i%4===1?"#ffe0f0":i%4===2?"#fff7e0":"#dcfce7"); let opts=isMCQ? `<div class="mt-3 space-y-2">${c.options.map((o,oi)=>`<label class="flex items-center gap-3 bg-white border-[2.5px] border-black rounded-full px-4 py-3 cursor-pointer shadow-[2px_2px_0_0_#000] fun-btn"><input type="radio" name="hw${i}" value="${o}" onchange="document.getElementById('hwans${i}').value=this.value; document.getElementById('hwtext${i}').value=this.value; speakText('${o.replace(/'/g,'')}')" class="w-5 h-5 accent-black"><span class="font-black text-[12px]">${String.fromCharCode(65+oi)}. ${o}</span></label>`).join('')}<div class="mt-2 flex gap-2"><input id="hwtext${i}" placeholder="EDITABLE" class="flex-1 border-2 border-black rounded-full p-2.5 text-[11px] font-bold bg-[#fff7e0]" oninput="document.getElementById('hwans${i}').value=this.value"><button id="hwmic${i}" onclick="startVoiceCard(${i})" class="bg-black text-white w-10 h-10 rounded-full border-2 border-black">🎤</button></div><input id="hwans${i}" type="hidden"></div>` : `<div class="mt-3 flex gap-2"><input id="hwtext${i}" placeholder="Type or 🎤 EDITABLE" class="flex-1 border-2 border-black rounded-full p-3 text-[11px] font-bold bg-white" oninput="document.getElementById('hwans${i}').value=this.value"><button id="hwmic${i}" onclick="startVoiceCard(${i})" class="bg-black text-white w-10 h-10 rounded-full border-2 border-black">🎤</button></div><input id="hwans${i}" type="hidden">`; return `<div class="border-[2.5px] border-black rounded-[1.2rem] p-3 shadow-[3px_3px_0_0_#000] mt-3" style="background:${bg}"><div class="flex justify-between"><span class="bg-black text-white px-2 py-1 rounded-full text-[8px] font-black">Q${i+1} • ${c.marks||2}mks</span><button onclick="speakQuestionCard(${i})" class="bg-[#4a86ff] text-white px-3 py-1 rounded-full text-[8px] font-black border-2 border-black fun-btn">🔊 Listen</button></div><p class="font-black text-[13px] mt-2">${c.q}</p>${opts}<p id="hwstat${i}" class="hidden mt-1 text-[8px] font-black text-center bg-[#ffcc1a] border-2 border-black rounded-full py-1"></p></div>`; }).join(''); }
-function speakQuestionCard(i){ let c=currentQs[i]; if(!c) return; speakText(`Question ${i+1}. ${c.q}. ${c.options? 'Options: '+c.options.join(', '):''}`); }
-function startVoiceCard(i){ const SR=window.SpeechRecognition||window.webkitSpeechRecognition; if(!SR) return; let rec=new SR(); rec.lang=currentLang==="fr"?"fr-FR":currentLang==="de"?"de-DE":currentLang==="zh"?"zh-CN":"en-KE"; let txt=document.getElementById('hwtext'+i), hid=document.getElementById('hwans'+i), stat=document.getElementById('hwstat'+i), btn=document.getElementById('hwmic'+i); btn.innerText="🔴"; stat.innerText="🎤 Listening..."; stat.classList.remove('hidden'); rec.onresult=e=>{ let tr=e.results[0][0].transcript.trim(); let match=currentQs[i].options?.find(o=> o.toLowerCase().includes(tr.toLowerCase())); if(match) tr=match; txt.value=tr; hid.value=tr; stat.innerHTML=`✅ Heard: <b>${tr}</b> - EDITABLE`; }; rec.onend=()=>{btn.innerText="🎤";}; rec.start();}
-function checkHomework(){ let score=0,total=0; let html=`<p class="font-black text-[12px]">Result</p>`; currentQs.forEach((c,i)=>{ let user=(document.getElementById('hwans'+i)?.value||document.getElementById('hwtext'+i)?.value||"").trim(); let m=c.marks||2; total+=m; let ok=user&&c.answer.toLowerCase().includes(user.toLowerCase().slice(0,3)); let got=ok?m:0; score+=got; html+=`<div class="border-2 border-black rounded-xl p-2 mt-2 text-[9px] font-black ${ok?'bg-[#dcfce7]':'bg-[#ffeaea]'}">${ok?'✅':'❌'} Q${i+1}: ${got}/${m} - Your:${user||'empty'} ✔ ${c.answer}</div>`; }); html+=`<p class="font-black mt-3 text-center">${score}/${total}</p>`; return {score,total,html}; }
-async function sendMsg(){ if(isThinking) return; let txt=msg.value.trim(); if(!txt &&!uploadedPhoto) return; chat.innerHTML+=`<div class="flex justify-end"><div class="bg-[#dcf8c6] border-2 border-black rounded-xl p-2 max-w-[80%]"><p class="text-[11px] font-bold">${txt}</p><p class="text-[7px] opacity-60">${grade} • ${currentLang}</p></div></div>`; msg.value=""; chat.scrollTop=chat.scrollHeight; isThinking=true; sendBtn.innerHTML='<i class="fa-solid fa-spinner fa-spin"></i>'; chat.innerHTML+=`<div id="thinking" class="bg-white border-2 border-black rounded-xl p-3 max-w-[85%]"><p class="text-[9px] font-black">🔊 Thinking... Loading cards...</p></div>`; chat.scrollTop=chat.scrollHeight; try{ let data=await askSuperAI(txt||"Homework 10 marks"); document.getElementById('thinking')?.remove(); let raw=data.answer||""; let jsonMatch=raw.match(/\[[\s\S]*\]/); if(jsonMatch){ try{ let parsed=JSON.parse(jsonMatch[0]); if(parsed.length>0 && parsed[0].q){ currentQs=parsed; let cards=renderHomeworkCards(parsed); let id='ans'+Date.now(); chat.innerHTML+=`<div class="bg-white border-[2.5px] border-black rounded-[1.2rem] p-3 max-w-[95%] shadow-[3px_3px_0_0_#000]"><p class="font-black text-[12px]">📚 ${grade} Homework - 10 Marks</p><div id="${id}">${cards}</div><button onclick="let r=checkHomework(); document.getElementById('res_${id}').innerHTML=r.html; document.getElementById('res_${id}').classList.remove('hidden'); speakText('You scored '+r.score+' out of '+r.total);" class="w-full mt-3 bg-[#2ac5a0] border-2 border-black rounded-full py-3 font-black text-[11px] fun-btn">✅ Check + 🔊 Score</button><div id="res_${id}" class="hidden mt-3 p-2 bg-white border-2 border-black rounded-xl"></div><div class="mt-3 flex gap-2"><button onclick="speakText(document.getElementById('${id}').innerText.slice(0,600))" class="bg-[#4a86ff] text-white px-3 py-1.5 rounded-full text-[8px] font-black border-2 border-black fun-btn">🔊 Listen All</button><a href="${data.youtubeFiltered||'#'}" target="_blank" class="bg-red-600 text-white px-3 py-1.5 rounded-full text-[8px] font-black border-2 border-black">▶️ YouTube</a></div></div>`; }else throw "not hw"; }catch{ let clean=raw.replace(/\*\*LEVEL LOCK[\s\S]*?\*\*/gi,'').replace(/\*\*SYSTEM[\s\S]*?\*\*/gi,'').replace(/\*\*SOURCE[\s\S]*?\*\*/gi,'').replace(/\*\*/g,'').trim(); let id='ans'+Date.now(); chat.innerHTML+=`<div class="bg-white border-2 border-black rounded-xl p-3 max-w-[90%]"><p class="text-[11px] leading-6" id="${id}" style="white-space:pre-wrap">${clean}</p><div class="mt-2 flex gap-2"><button onclick="speakText(document.getElementById('${id}').innerText)" class="bg-[#4a86ff] text-white px-3 py-1.5 rounded-full text-[8px] font-black border-2 border-black fun-btn">🔊 Listen</button><a href="${data.youtubeFiltered||'#'}" target="_blank" class="bg-red-600 text-white px-3 py-1.5 rounded-full text-[8px] font-black border-2 border-black">▶️ YouTube</a></div></div>`; } }else{ let clean=raw.replace(/\*\*LEVEL LOCK[\s\S]*?\*\*/gi,'').replace(/\*\*SYSTEM[\s\S]*?\*\*/gi,'').replace(/\*\*SOURCE[\s\S]*?\*\*/gi,'').replace(/\*\*/g,'').trim(); let id='ans'+Date.now(); chat.innerHTML+=`<div class="bg-white border-2 border-black rounded-xl p-3 max-w-[90%]"><p class="text-[11px] leading-6" id="${id}" style="white-space:pre-wrap">${clean}</p><div class="mt-2 flex gap-2"><button onclick="speakText(document.getElementById('${id}').innerText)" class="bg-[#4a86ff] text-white px-3 py-1.5 rounded-full text-[8px] font-black border-2 border-black fun-btn">🔊 Listen</button><a href="${data.youtubeFiltered||'#'}" target="_blank" class="bg-red-600 text-white px-3 py-1.5 rounded-full text-[8px] font-black border-2 border-black">▶️ YouTube</a></div></div>`; } }catch(e){ document.getElementById('thinking')?.remove(); chat.innerHTML+=`<div class="bg-[#ffeaea] border-2 border-black rounded-xl p-3 max-w-[85%]"><p class="text-[9px]">❌ ${e.message}</p></div>`; } chat.scrollTop=chat.scrollHeight; isThinking=false; sendBtn.innerHTML='<i class="fa-solid fa-paper-plane text-[13px]"></i>'; uploadedPhoto=''; }
-setTimeout(()=>{ loadAll(); let FB=window.FB; FB.onAuthStateChanged(FB.auth, async(u)=>{ if(u){ try{ let s=await FB.getDoc(FB.doc(FB.db,"users",u.uid)); if(s.exists()){ let d=s.data(); shke=d.indexNumber||"SHKE"; grade=d.grade||"Grade 7"; shkeBadge.innerText=shke; nameShow.innerText=d.firstName||"Learner"; loadAll(); } }catch(e){} } }); },600);
-msg.addEventListener('keypress',e=>{ if(e.key==='Enter') sendMsg(); });
+setTimeout(()=>{ let FB=window.FB; FB.onAuthStateChanged(FB.auth, async(u)=>{ if(u){ try{ let s=await FB.getDoc(FB.doc(FB.db,"users",u.uid)); if(s.exists()){ let d=s.data(); shke=d.indexNumber||"SHKE"; grade=d.grade||"Grade 6"; document.getElementById('shkeBadge').innerText=shke; } }catch(e){} } }); },600);
+document.getElementById('msg').addEventListener('keypress',e=>{ if(e.key==='Enter') sendMsg(); });
 </script>
 </body></html>
