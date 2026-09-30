@@ -28,8 +28,6 @@ window.FB={auth,db,doc,getDoc,collection,getDocs,query,where,orderBy,addDoc,serv
 </div>
 <div class="bg-black text-white overflow-hidden whitespace-nowrap border-y-2 border-black h-8 flex items-center"><div class="marquee flex gap-8 text-[10px] font-black"><span>🎉 Karibu Mwalimu!</span><span>🏠 Tuition Learners Below</span><span>📚 Daily Homework 10 Marks</span><span>📝 Exams + Schemes + Lesson Plan</span><span>📸 Written Work Marker</span><span>✍️ Composition Strict/Fair/Medium</span></div></div>
 </div>
-
-<!-- 1. MY TUITION - TEACHER ↔ LEARNER -->
 <div class="p-3">
 <div class="bg-[#dcfce7] border-2 border-black rounded-[1.3rem] p-4 shadow-[3px_3px_0_0_#000]">
 <div class="flex justify-between items-center"><p class="font-black text-[13px]">🏠 My Tuition - Teacher ↔ Learner</p><span id="tuitionCount" class="bg-black text-white px-2 py-1 rounded-full text-[9px] font-black">0 Assigned</span></div>
@@ -37,8 +35,6 @@ window.FB={auth,db,doc,getDoc,collection,getDocs,query,where,orderBy,addDoc,serv
 <div id="myTuitionList" class="mt-3 space-y-2">Loading tuition learners...</div>
 </div>
 </div>
-
-<!-- 2. REQUEST HOMESCHOOLING AS TEACHER - FROM YOUR VIDEO -->
 <div class="p-3">
 <div class="bg-[#ffcc1a] border-[2.5px] border-black rounded-[20px] p-4 shadow-[3px_3px_0_0_#000]">
 <p class="font-black text-[12px]">Request Homeschooling as Teacher</p>
@@ -58,8 +54,6 @@ window.FB={auth,db,doc,getDoc,collection,getDocs,query,where,orderBy,addDoc,serv
 </div>
 </div>
 </div>
-
-<!-- 3. HOW TO USE -->
 <div class="p-3"><div class="bg-white rounded-[1.3rem] p-4 border-2 border-black shadow-[3px_3px_0_0_#000]">
 <p class="font-black text-[13px]">📘 How to use</p>
 <div class="mt-3 space-y-2 text-[11px] font-bold">
@@ -71,8 +65,6 @@ window.FB={auth,db,doc,getDoc,collection,getDocs,query,where,orderBy,addDoc,serv
 </div>
 <div class="mt-3 bg-[#ffcc1a] border-2 border-black rounded-xl p-2"><p class="text-[9px] font-black">*Admin must approve homeschooling (teacher learner parent via SHKE)</p></div>
 </div></div>
-
-<!-- 4. STUDENT ACCESS MONITOR -->
 <div class="p-3">
 <div class="bg-black text-white rounded-[1.5rem] p-4 border-2 border-black">
 <p class="font-black text-[13px]">🔒 Student Access Monitor</p>
@@ -80,8 +72,6 @@ window.FB={auth,db,doc,getDoc,collection,getDocs,query,where,orderBy,addDoc,serv
 <div id="sPrev" class="hidden mt-3 bg-white text-black rounded-xl p-2 border-2 border-white"></div>
 </div>
 </div>
-
-<!-- 5. QUICK ACCESS - WITH NEW TOOLS -->
 <div class="px-3">
 <p class="font-black text-[14px] mb-2">🚀 Quick Access - Full Tools</p>
 <div class="grid grid-cols-2 gap-2">
@@ -96,7 +86,6 @@ window.FB={auth,db,doc,getDoc,collection,getDocs,query,where,orderBy,addDoc,serv
 </div>
 <div id="resList" class="mt-3"></div>
 </div>
-
 <div class="p-3 space-y-3">
 <div class="bg-white rounded-[1.3rem] p-3 border-2 border-black shadow-[3px_3px_0_0_#000]">
 <div class="flex justify-between"><p class="font-black text-[12px]">🎁 Referrals</p><span class="bg-black text-white px-2 py-1 rounded-full text-[9px] font-black">0 pts</span></div>
@@ -111,8 +100,6 @@ window.FB={auth,db,doc,getDoc,collection,getDocs,query,where,orderBy,addDoc,serv
 <button onclick="if(confirm('Log out?')){ FB.signOut(FB.auth).then(()=>location.href='index.html')}" class="bg-black text-white border-2 border-black rounded-full py-3 font-black text-[11px] shadow-[2px_2px_0_0_#000]">Log Out</button>
 </div>
 </div>
-
-<!-- APP ASSISTANT ADMIN AT END - WHATSAPP STYLE -->
 <div id="adminAssistBtn" onclick="toggleAdminAssist()" style="position:fixed;bottom:20px;right:20px;z-index:9999;width:56px;height:56px;background:#25d366;border-radius:50%;border:2.5px solid #000;box-shadow:3px 3px 0 0 #000;display:grid;place-items:center;font-size:24px;cursor:pointer">💬</div>
 <div id="adminAssistPanel" style="position:fixed;bottom:90px;right:16px;z-index:9998;width:360px;max-width:calc(100vw - 32px);height:520px;background:#e5ddd5;border:2.5px solid #000;border-radius:20px;box-shadow:4px 4px 0 0 #000;display:none;flex-direction:column;overflow:hidden">
 <div style="background:#075e54;color:white;padding:12px;display:flex;align-items:center;gap:10px;border-bottom:2px solid #000"><div style="width:36px;height:36px;background:white;border-radius:50%;display:grid;place-items:center;color:#075e54;font-weight:900">A</div><div style="flex:1"><p style="font-weight:900;font-size:12px">Admin Assistant</p><p style="font-size:8px;opacity:0.8">Schemes • Marker • SHKE • Teacher Requests</p></div><button onclick="toggleAdminAssist()" style="background:white;color:black;border:2px solid #000;border-radius:50%;width:28px;height:28px;font-weight:900">✕</button></div>
@@ -121,7 +108,6 @@ window.FB={auth,db,doc,getDoc,collection,getDocs,query,where,orderBy,addDoc,serv
 </div>
 <div style="background:#f0f0f0;padding:8px;border-top:2px solid #000"><div style="display:flex;gap:6px"><input id="adminMsg" placeholder="Type or 🎤" style="flex:1;background:white;border:2px solid #000;border-radius:9999px;padding:10px 14px;font-size:11px;font-weight:700;outline:none"><button onclick="sendAdminMsg()" style="width:40px;height:40px;background:#25d366;border:2px solid #000;border-radius:50%;display:grid;place-items:center;color:white"><i class="fa-solid fa-paper-plane"></i></button></div></div>
 </div>
-
 </div>
 <script>
 let currentTeacherId=null, userData=null;
@@ -159,15 +145,5 @@ async function sendTeacherRequest(){
   btn.innerText="✅ Sent to Admin"; loadMyTuitions(); setTimeout(()=>{btn.innerText="⚡ Send Teacher Request → Admin Approves"; btn.disabled=false;},3000);
  }catch(e){ status.innerText="❌ "+e.message; status.className="text-[9px] font-black text-center mt-2 p-2 rounded-full border-2 border-black bg-[#ffeaea]"; status.classList.remove('hidden'); btn.innerText="⚡ Send Teacher Request → Admin Approves"; btn.disabled=false; }
 }
-function toggleAdminAssist(){ let p=document.getElementById('adminAssistPanel'); p.style.display=p.style.display==='flex'?'none':'flex'; }
-function quickAdmin(t){ document.getElementById('adminMsg').value=t; sendAdminMsg(); }
-async function sendAdminMsg(){
- let txt=document.getElementById('adminMsg').value.trim(); if(!txt) return;
- let chat=document.getElementById('adminChat'); chat.innerHTML+=`<div style="align-self:flex-end;background:#dcf8c6;border:2px solid #000;border-radius:16px 4px 16px 16px;padding:8px 12px;max-width:80%;font-size:11px;font-weight:800;box-shadow:2px 2px 0 0 #000">${txt}</div>`;
- document.getElementById('adminMsg').value=""; chat.scrollTop=chat.scrollHeight;
- try{ let res=await fetch("/api/gemini",{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({question:"ADMIN TEACHER MODE: "+txt, grade:"Grade 7", shke:userData?.indexNumber||"SHKE", brainContext:"Teacher admin assistant", lang:"en"})}); let data=await res.json(); let ans=(data.answer||"").replace(/\*\*LEVEL LOCK[\s\S]*?\*\*/gi,'').replace(/\*\*/g,''); chat.innerHTML+=`<div style="align-self:flex-start;background:#fff;border:2px solid #000;border-radius:4px 16px 16px 16px;padding:8px 12px;max-width:85%;font-size:11px;box-shadow:2px 2px 0 0 #000;white-space:pre-wrap">${ans}</div>`; }catch(e){ chat.innerHTML+=`<div style="align-self:flex-start;background:#ffeaea;border:2px solid #000;border-radius:4px 16px 16px 16px;padding:8px 12px;max-width:85%;font-size:11px">❌ ${e.message}</div>`; } chat.scrollTop=chat.scrollHeight;
-}
-setTimeout(()=>{ let FB=window.FB; FB.onAuthStateChanged(FB.auth, async(u)=>{ if(!u) return; currentTeacherId=u.uid; let s=await FB.getDoc(FB.doc(FB.db,"users", u.uid)); if(s.exists()){ userData=s.data(); document.getElementById('teacherInfo').innerText=`${userData.firstName||userData.name||'Mwalimu'} • ${userData.grade||'Grade 7,8,9'}`; document.getElementById('teacherIdShow').innerText=userData.indexNumber||u.uid.slice(0,8); document.getElementById('refCode').innerText=userData.indexNumber||u.uid.slice(0,8); document.getElementById('t_shke_label').innerText=userData.indexNumber||"SHKE"; } loadMyTuitions(); }); },700);
-showNotes();
 </script>
 </body></html>
