@@ -7,7 +7,6 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <style>body{font-family:'Nunito',sans-serif;background:#f6f6f7}
 @keyframes m{0%{transform:translateX(100%)}100%{transform:translateX(-100%)}}.marquee{animation:m 22s linear infinite}
-.note-card{background:#fff;border:2px solid #000;border-radius:16px;padding:10px 12px;display:flex;justify-content:space-between;align-items:center;height:58px;box-shadow:2px 2px 0 0 #000;margin-bottom:6px}
 </style>
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
@@ -28,6 +27,7 @@ window.FB={auth,db,doc,getDoc,collection,getDocs,query,where,orderBy,addDoc,serv
 </div>
 <div class="bg-black text-white overflow-hidden whitespace-nowrap border-y-2 border-black h-8 flex items-center"><div class="marquee flex gap-8 text-[10px] font-black"><span>🎉 Karibu Mwalimu!</span><span>🏠 Tuition Learners Below</span><span>📚 Daily Homework 10 Marks</span><span>📝 Exams + Schemes + Lesson Plan</span><span>📸 Written Work Marker</span><span>✍️ Composition Strict/Fair/Medium</span></div></div>
 </div>
+
 <div class="p-3">
 <div class="bg-[#dcfce7] border-2 border-black rounded-[1.3rem] p-4 shadow-[3px_3px_0_0_#000]">
 <div class="flex justify-between items-center"><p class="font-black text-[13px]">🏠 My Tuition - Teacher ↔ Learner</p><span id="tuitionCount" class="bg-black text-white px-2 py-1 rounded-full text-[9px] font-black">0 Assigned</span></div>
@@ -35,6 +35,19 @@ window.FB={auth,db,doc,getDoc,collection,getDocs,query,where,orderBy,addDoc,serv
 <div id="myTuitionList" class="mt-3 space-y-2">Loading tuition learners...</div>
 </div>
 </div>
+
+<div class="p-3"><div class="bg-white rounded-[1.3rem] p-4 border-2 border-black shadow-[3px_3px_0_0_#000]">
+<p class="font-black text-[13px]">📘 How to use</p>
+<div class="mt-3 space-y-2 text-[11px] font-bold">
+<p>1. Tuition learners assigned by admin appear above - With SHKE + parent phone/location</p>
+<p>2. Use yellow form below to request a student — Admin sees TEACHER REQUEST tag + Approve/Reject</p>
+<p>3. AI Marker: Snap & Solve → Correction + Notes link (in Teacher Tools)</p>
+<p>4. Composition: bold (alternative) • Set Out Of • Strict/Fair/Medium</p>
+<p>5. Student does NOT see your phone/email - Only via Admin</p>
+</div>
+<div class="mt-3 bg-[#ffcc1a] border-2 border-black rounded-xl p-2"><p class="text-[9px] font-black">*Admin must approve homeschooling (teacher learner parent via SHKE)</p></div>
+</div></div>
+
 <div class="p-3">
 <div class="bg-[#ffcc1a] border-[2.5px] border-black rounded-[20px] p-4 shadow-[3px_3px_0_0_#000]">
 <p class="font-black text-[12px]">Request Homeschooling as Teacher</p>
@@ -54,17 +67,7 @@ window.FB={auth,db,doc,getDoc,collection,getDocs,query,where,orderBy,addDoc,serv
 </div>
 </div>
 </div>
-<div class="p-3"><div class="bg-white rounded-[1.3rem] p-4 border-2 border-black shadow-[3px_3px_0_0_#000]">
-<p class="font-black text-[13px]">📘 How to use</p>
-<div class="mt-3 space-y-2 text-[11px] font-bold">
-<p>1. Tuition learners assigned by admin appear above - With SHKE + parent phone/location</p>
-<p>2. Use yellow form to request a student — Admin sees TEACHER REQUEST tag + Approve/Reject</p>
-<p>3. AI Marker: Snap & Solve → Correction + Notes link (in Teacher Tools)</p>
-<p>4. Composition: bold (alternative) • Set Out Of • Strict/Fair/Medium</p>
-<p>5. Student does NOT see your phone/email - Only via Admin</p>
-</div>
-<div class="mt-3 bg-[#ffcc1a] border-2 border-black rounded-xl p-2"><p class="text-[9px] font-black">*Admin must approve homeschooling (teacher learner parent via SHKE)</p></div>
-</div></div>
+
 <div class="p-3">
 <div class="bg-black text-white rounded-[1.5rem] p-4 border-2 border-black">
 <p class="font-black text-[13px]">🔒 Student Access Monitor</p>
@@ -72,6 +75,7 @@ window.FB={auth,db,doc,getDoc,collection,getDocs,query,where,orderBy,addDoc,serv
 <div id="sPrev" class="hidden mt-3 bg-white text-black rounded-xl p-2 border-2 border-white"></div>
 </div>
 </div>
+
 <div class="px-3">
 <p class="font-black text-[14px] mb-2">🚀 Quick Access - Full Tools</p>
 <div class="grid grid-cols-2 gap-2">
@@ -84,11 +88,11 @@ window.FB={auth,db,doc,getDoc,collection,getDocs,query,where,orderBy,addDoc,serv
 <div onclick="location.href='teacher-tools.html#written'" class="bg-[#dcfce7] rounded-xl p-3 border-2 border-black shadow-[2px_2px_0_0_#000]"><p class="font-black text-[12px]">📸 Written Marker</p><p class="text-[9px] text-gray-500">Snap & Mark</p></div>
 <div onclick="location.href='teacher-tools.html#comp'" class="bg-[#ffe0f0] rounded-xl p-3 border-2 border-black shadow-[2px_2px_0_0_#000]"><p class="font-black text-[12px]">✍️ Composition</p><p class="text-[9px] text-gray-500">Strict/Fair/Med • Bold+()</p></div>
 </div>
-<div id="resList" class="mt-3"></div>
 </div>
+
 <div class="p-3 space-y-3">
 <div class="bg-white rounded-[1.3rem] p-3 border-2 border-black shadow-[3px_3px_0_0_#000]">
-<div class="flex justify-between"><p class="font-black text-[12px]">🎁 Referrals</p><span class="bg-black text-white px-2 py-1 rounded-full text-[9px] font-black">0 pts</span></div>
+<div class="flex justify-between"><p class="font-black text-[12px]">🎁 Referrals</p><span id="ptsBadge" class="bg-black text-white px-2 py-1 rounded-full text-[9px] font-black">0 pts</span></div>
 <div class="mt-2 grid grid-cols-2 gap-2"><div class="bg-[#fff7e0] border-2 border-black rounded-xl p-2"><p class="text-[7px] font-black">YOUR CODE</p><p class="font-black text-[11px]" id="refCode">SHKET...</p></div><div class="bg-[#e8f8ff] border-2 border-black rounded-xl p-2"><p class="text-[7px] font-black">BALANCE</p><p class="font-black text-[11px]">0 pts = 0 KES</p></div></div>
 </div>
 <div class="grid grid-cols-2 gap-2">
@@ -100,6 +104,7 @@ window.FB={auth,db,doc,getDoc,collection,getDocs,query,where,orderBy,addDoc,serv
 <button onclick="if(confirm('Log out?')){ FB.signOut(FB.auth).then(()=>location.href='index.html')}" class="bg-black text-white border-2 border-black rounded-full py-3 font-black text-[11px] shadow-[2px_2px_0_0_#000]">Log Out</button>
 </div>
 </div>
+
 <div id="adminAssistBtn" onclick="toggleAdminAssist()" style="position:fixed;bottom:20px;right:20px;z-index:9999;width:56px;height:56px;background:#25d366;border-radius:50%;border:2.5px solid #000;box-shadow:3px 3px 0 0 #000;display:grid;place-items:center;font-size:24px;cursor:pointer">💬</div>
 <div id="adminAssistPanel" style="position:fixed;bottom:90px;right:16px;z-index:9998;width:360px;max-width:calc(100vw - 32px);height:520px;background:#e5ddd5;border:2.5px solid #000;border-radius:20px;box-shadow:4px 4px 0 0 #000;display:none;flex-direction:column;overflow:hidden">
 <div style="background:#075e54;color:white;padding:12px;display:flex;align-items:center;gap:10px;border-bottom:2px solid #000"><div style="width:36px;height:36px;background:white;border-radius:50%;display:grid;place-items:center;color:#075e54;font-weight:900">A</div><div style="flex:1"><p style="font-weight:900;font-size:12px">Admin Assistant</p><p style="font-size:8px;opacity:0.8">Schemes • Marker • SHKE • Teacher Requests</p></div><button onclick="toggleAdminAssist()" style="background:white;color:black;border:2px solid #000;border-radius:50%;width:28px;height:28px;font-weight:900">✕</button></div>
@@ -111,17 +116,20 @@ window.FB={auth,db,doc,getDoc,collection,getDocs,query,where,orderBy,addDoc,serv
 </div>
 <script>
 let currentTeacherId=null, userData=null;
-function showNotes(){ document.getElementById('resList').innerHTML=`<div style="background:#fff;border:2px solid #000;border-radius:16px;padding:10px 12px;display:flex;justify-content:space-between;align-items:center;box-shadow:2px 2px 0 0 #000;margin-bottom:6px"><div><p style="font-weight:900;font-size:12px">Grade 7 Notes - Maths Fractions</p><p style="font-size:9px">Grade 7 • notes</p></div><button style="background:#000;color:#fff;border-radius:999px;padding:6px 16px;font-weight:900;font-size:10px">Open</button></div>`; }
+function toggleAdminAssist(){ let p=document.getElementById('adminAssistPanel'); p.style.display = (p.style.display==='none'||p.style.display==='')?'flex':'none'; }
+function quickAdmin(t){ document.getElementById('adminMsg').value=t; sendAdminMsg(); }
+function sendAdminMsg(){ let v=document.getElementById('adminMsg').value.trim(); if(!v) return; let chat=document.getElementById('adminChat'); chat.innerHTML+=`<div style="align-self:flex-end;background:#dcf8c6;border:2px solid #000;border-radius:16px 4px 16px 16px;padding:8px 12px;max-width:85%;font-size:11px;box-shadow:2px 2px 0 0 #000">${v}</div>`; document.getElementById('adminMsg').value=''; chat.scrollTop=chat.scrollHeight; }
 function accessStudent(){ let sid=document.getElementById('sid').value.trim().toUpperCase(); if(!sid) return alert("Enter SHKE"); let el=document.getElementById('sPrev'); el.classList.remove('hidden'); el.innerHTML=`<p class="font-black text-[10px]">Student ${sid} • Access granted • Teacher ↔ Learner via SHKE</p>`; setTimeout(()=>location.href=`student-monitor.html?shke=${sid}`,800); }
 async function loadMyTuitions(){
- let FB=window.FB; if(!currentTeacherId) return; let list=document.getElementById('myTuitionList'); list.innerHTML="Loading...";
+ let FB=window.FB; if(!currentTeacherId) return; let list=document.getElementById('myTuitionList'); list.innerHTML="Loading tuition learners...";
  try{
   let docs=[];
   try{ let q1=FB.query(FB.collection(FB.db,"homeschooling_requests"), FB.where("teacherId","==",currentTeacherId)); let snap1=await FB.getDocs(q1); snap1.forEach(d=>docs.push({id:d.id,...d.data()})); }catch(e){}
-  try{ let q2=FB.query(FB.collection(FB.db,"homeschool_requests"), FB.where("teacherUid","==",currentTeacherId)); let snap2=await FB.getDocs(q2); snap2.forEach(d=>docs.push({id:d.id, shke:d.data().studentShke, childName:d.data().studentName, grade:d.data().studentClass, subject:d.data().subject, parentPhone:d.data().parentPhone, location:d.data().location, reason:d.data().reason, status:d.data().status,...d.data()})); }catch(e){}
-  document.getElementById('tuitionCount').innerText=`${docs.length} Assigned`;
-  if(docs.length===0){ list.innerHTML=`<div class="bg-white border-2 border-black rounded-xl p-3 text-center"><p class="font-black text-[10px]">No tuition assigned yet</p><p class="text-[8px] opacity-60 mt-1">Use yellow form below to request a student. Admin will approve and parent phone + location shows here.</p></div>`; return; }
-  list.innerHTML=""; docs.forEach(r=>{
+  try{ let q2=FB.query(FB.collection(FB.db,"homeschool_requests"), FB.where("teacherUid","==",currentTeacherId)); let snap2=await FB.getDocs(q2); snap2.forEach(d=>docs.push({id:d.id, shke:d.data().studentShke||d.data().shke, childName:d.data().studentName||d.data().childName, grade:d.data().studentClass||d.data().grade, subject:d.data().subject, parentPhone:d.data().parentPhone, location:d.data().location, reason:d.data().reason, status:d.data().status,...d.data()})); }catch(e){}
+  let seen=new Set(); let uniq=[]; docs.forEach(r=>{ let k=(r.shke||r.studentShke||'')+(r.childName||''); if(k&&!seen.has(k)){ seen.add(k); uniq.push(r);} });
+  document.getElementById('tuitionCount').innerText=`${uniq.length} Assigned`;
+  if(uniq.length===0){ list.innerHTML=`<div class="bg-white border-2 border-black rounded-xl p-3 text-center"><p class="font-black text-[10px]">No tuition assigned yet</p><p class="text-[8px] opacity-60 mt-1">Use yellow form below to request a student. Admin will approve and parent phone + location shows here.</p></div>`; return; }
+  list.innerHTML=""; uniq.forEach(r=>{
    list.innerHTML+=`<div class="bg-white border-2 border-black rounded-xl p-3 shadow-[1px_1px_0_0_#000]"><div class="flex justify-between"><p class="font-black text-[11px]">🔗 ${r.shke||r.studentShke||''} • ${r.childName||r.studentName||''} • ${r.grade||r.studentClass||''}</p><span class="${(r.status||'').toLowerCase().includes('approv')?'bg-green-500':'bg-yellow-200 text-black'} text-white px-2 py-0.5 rounded-full text-[7px] font-black">${(r.status||'PENDING').toUpperCase()}</span></div><div class="mt-2 bg-[#f6f6f7] border border-black rounded-xl p-2"><p class="font-black text-[9px]">📚 ${r.subject||'All Subjects'}</p><p class="text-[8px] mt-1">Days: ${r.days||r.reason||''} • Loc: ${r.location||''}</p><p class="text-[8px] mt-1">Parent: ${r.parentPhone||''} • Reason: ${r.reason||''}</p></div><div class="mt-2 flex gap-2"><a href="https://wa.me/${(r.parentPhone||'').replace(/[^0-9]/g,'')}" target="_blank" class="flex-1 bg-[#25d366] text-white border-2 border-black rounded-full py-2 text-center text-[8px] font-black">📞 WhatsApp Parent</a><a href="notes.html" class="flex-1 bg-black text-white border-2 border-black rounded-full py-2 text-center text-[8px] font-black">📘 Notes</a></div></div>`;
   });
  }catch(e){ list.innerHTML=`<div class="bg-[#ffeaea] border-2 border-black rounded-xl p-3"><p class="text-[8px] font-bold">Error: ${e.message}</p></div>`; }
@@ -145,5 +153,23 @@ async function sendTeacherRequest(){
   btn.innerText="✅ Sent to Admin"; loadMyTuitions(); setTimeout(()=>{btn.innerText="⚡ Send Teacher Request → Admin Approves"; btn.disabled=false;},3000);
  }catch(e){ status.innerText="❌ "+e.message; status.className="text-[9px] font-black text-center mt-2 p-2 rounded-full border-2 border-black bg-[#ffeaea]"; status.classList.remove('hidden'); btn.innerText="⚡ Send Teacher Request → Admin Approves"; btn.disabled=false; }
 }
+setTimeout(()=>{
+ const FB=window.FB;
+ FB.onAuthStateChanged(FB.auth, async(u)=>{
+   if(!u){ location.href='registration.html'; return; }
+   currentTeacherId=u.uid;
+   try{
+     let s=await FB.getDoc(FB.doc(FB.db,"users",u.uid));
+     if(s.exists()){
+       userData=s.data();
+       document.getElementById('teacherIdShow').innerText=userData.indexNumber||"SHKET";
+       document.getElementById('t_shke_label').innerText=userData.indexNumber||"SHKE";
+       document.getElementById('refCode').innerText=userData.indexNumber||"SHKET";
+       document.getElementById('teacherInfo').innerText=(userData.subjects||"Junior School")+" • "+(userData.grade||"Grade 7,8,9");
+       loadMyTuitions();
+     }else{ loadMyTuitions(); }
+   }catch(e){ document.getElementById('myTuitionList').innerHTML=`<div class="bg-[#ffeaea] border-2 border-black rounded-xl p-2 text-[8px]">Error: ${e.message}</div>`; }
+ });
+},600);
 </script>
 </body></html>
