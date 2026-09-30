@@ -1,12 +1,21 @@
 <!DOCTYPE html>
 <html><head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Student - SomaHub</title>
+<title>Student - SomaHub - Composition Maker</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;800;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-<style>body{font-family:'Nunito',sans-serif;background:#f6f6f7}
+<style>
+body{font-family:'Nunito',sans-serif;background:#f6f6f7}
 @keyframes m{0%{transform:translateX(100%)}100%{transform:translateX(-100%)}}.marquee{animation:m 25s linear infinite}
+.bubble{padding:10px 12px;border-radius:14px;border:2.5px solid #000;margin:8px 0;font-size:11.5px;line-height:1.7;white-space:normal}
+.knec-green{background:#dcfce7;border-left:6px solid #22c55e}
+.knec-yellow{background:#fef08a;border-left:6px solid #ffcc1a}
+.knec-blue{background:#e0f2ff;border-left:6px solid #4a86ff}
+.knec-red{background:#fee2e2;border-left:6px solid #ef4444}
+.knec-teal{background:#ccfbf1;border-left:6px solid #2ac5a0}
+.knec-purple{background:#f3e8ff;border-left:6px solid #a855f7}
+.knec-gold{background:linear-gradient(135deg,#fff7e0,#ffcc1a);border:3px solid #000}
 </style>
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
@@ -16,138 +25,159 @@ const cfg={apiKey:"AIzaSyA93BNes3AmFyxIEgjSbvbIWqLyorLsuj8",authDomain:"somahubk
 const app=initializeApp(cfg); window.FB={auth:getAuth(app),db:getFirestore(app),doc,getDoc,updateDoc,increment,collection,getDocs,query,where,orderBy,onAuthStateChanged,signOut};
 </script>
 </head>
-<body class="flex justify-center"><div class="w-full max-w-[420px] bg-[#f6f6f7] min-h-screen pb-10">
+<body class="flex justify-center"><div class="w-full max-w-[460px] bg-[#f6f6f7] min-h-screen pb-12">
 <div class="h-2 flex"><div class="flex-1 bg-[#ff8a2a]"></div><div class="flex-1 bg-[#2ac5a0]"></div><div class="flex-1 bg-[#4a86ff]"></div><div class="flex-1 bg-[#ffcc1a]"></div></div>
 <div class="bg-white border-b-2 border-black sticky top-0 z-40">
 <div class="p-3 flex items-center gap-2">
 <div class="w-10 h-10 rounded-full border-2 border-black bg-[#4a86ff] flex items-center justify-center overflow-hidden"><img src="logo.png" class="w-full h-full object-cover" onerror="this.style.display='none'"></div>
-<div class="flex-1"><p class="font-black text-[14px] leading-none">Hi, <span id="firstName">Learner</span>! 🎒</p><p class="text-[10px] font-bold text-gray-600"><span id="gradeShow">Grade 6</span> • <span id="todayDate">Mon 28 Sept</span></p><p class="text-[8px] font-black opacity-60">SomaHub Homework</p></div>
+<div class="flex-1"><p class="font-black text-[14px] leading-none">Hi, <span id="firstName">Learner</span>! 🎒</p><p class="text-[10px] font-bold text-gray-600"><span id="gradeShow">Grade 6</span> • <span id="todayDate">Mon 28 Sept</span></p><p class="text-[8px] font-black opacity-60">Composition Maker + Clean Version</p></div>
 <div class="bg-black text-white border-2 border-black px-3 py-1 rounded-full"><p id="indexShow" class="font-black text-[10px]">SHKE...</p></div>
 </div>
-<div class="bg-black text-white overflow-hidden whitespace-nowrap border-y-2 border-black h-8 flex items-center"><div class="marquee flex gap-8 text-[10px] font-black"><span>⏰ TODAY: Mon-Fri 10 Marks Daily HW!</span><span>📋 SAT-SUN: Weekly 100 Marks Exam</span><span>🎮 NEW: Games - Play & Earn Points!</span><span>💡 KICD Aligned • CBC & CBE</span></div></div>
+<div class="bg-black text-white overflow-hidden whitespace-nowrap border-y-2 border-black h-8 flex items-center"><div class="marquee flex gap-8 text-[10px] font-black"><span>✨ NEW: Auto Clean Version - PP1 to Grade 9 - Full of Expressions!</span><span>📚 KNEC 20/20 Style</span></div></div>
 </div>
+
 <div class="p-3 space-y-3">
-<div id="tuitionPendingCard" class="hidden bg-[#fff7e0] border-2 border-black rounded-[1.3rem] p-4 shadow-[3px_3px_0_0_#000]"><p class="font-black text-[11px]">⏳ Tuition Request Pending</p><p id="tuitionPendingInfo" class="text-[9px] mt-2"></p></div>
-<div id="tuitionCard" class="hidden bg-[#dcfce7] border-2 border-black rounded-[1.3rem] p-4 shadow-[3px_3px_0_0_#000]">
-<div class="flex justify-between items-center"><p class="font-black text-[12px]">🏠 Home Tutor Assigned - Teacher ↔ Learner</p><span class="bg-black text-white px-2 py-0.5 rounded-full text-[8px] font-black">ADMIN ASSIGNED</span></div>
-<p id="tuitionInfo" class="text-[10px] font-bold mt-2 leading-4"></p>
-<div id="tuitionTeacher" class="mt-2 bg-white border-2 border-black rounded-xl p-2.5"></div>
-<p class="text-[8px] mt-2 opacity-60">Teacher ↔ Learner schooling - Contact managed by Admin - Student can only communicate via Admin/Care Chat</p>
-</div>
-<div class="bg-white rounded-[1.3rem] p-4 border-2 border-black shadow-[3px_3px_0_0_#000]">
-<div class="grid grid-cols-2 gap-2">
-<div class="bg-[#ffcc1a] border-2 border-black rounded-xl p-3 shadow-[2px_2px_0_0_#000]"><p class="font-black text-[11px]">📝 Daily HW</p><p class="text-[8px] font-bold">Mon-Fri • 10 Marks</p><a href="homework.html" class="mt-2 block text-center w-full bg-black text-white rounded-full py-2 font-black text-[10px]">Do Now →</a></div>
-<div class="bg-[#4a86ff] border-2 border-black rounded-xl p-3 shadow-[2px_2px_0_0_#000] text-white"><p class="font-black text-[11px]">📋 Weekly Exam</p><p class="text-[8px] font-bold">Sat-Sun • 100 Marks</p><a href="exam.html" class="mt-2 block text-center w-full bg-white text-black rounded-full py-2 font-black text-[10px]">Start →</a></div>
-</div>
-</div>
-<div class="bg-[#0a4a3a] rounded-[1.3rem] p-4 border-2 border-black shadow-[3px_3px_0_0_#000] text-white">
+
+<div class="bg-[#fffc8a] border-[2.5px] border-black rounded-[1.5rem] p-4 shadow-[4px_4px_0_0_#000]">
 <div class="flex justify-between items-center">
-<p class="font-black text-[12px]">📅 Timetable Mon-Fri</p>
-<span id="ttSummary" class="bg-[#ffcc1a] text-black px-2 py-1 rounded-full text-[8px] font-black">0/6 today</span>
+<p class="font-black text-[14px]">✍️ Composition & Insha - Maker PRO</p>
+<span id="levelBadge" class="bg-black text-white px-2 py-1 rounded-full text-[7px] font-black">AUTO 3-LEVELS</span>
 </div>
-<p id="ttNext" class="text-[9px] mt-1 opacity-80">Next: Loading...</p>
-<div id="ttMini" class="mt-3 grid grid-cols-3 gap-1.5"></div>
-<button onclick="openTimetable()" class="mt-3 w-full bg-white text-black border-2 border-black rounded-full py-2.5 font-black text-[10px] shadow-[2px_2px_0_0_#000]">View Full Timetable →</button>
-</div>
-<p class="font-black text-[14px]">🚀 Quick Access</p>
+<p class="text-[9px] font-bold mt-2">Write → Get <span class="bg-white border border-black px-1 rounded">Marks</span> + <span class="bg-[#a855f7] text-white px-1 rounded">Clean Descriptive Version</span> + Teacher Comment</p>
+
+<div class="mt-3 bg-white border-2 border-black rounded-xl p-2 space-y-2">
 <div class="grid grid-cols-2 gap-2">
-<a href="notes.html" class="bg-white rounded-xl p-3 border-2 border-black shadow-[2px_2px_0_0_#000]"><p class="font-black text-[12px]"><i class="fa-solid fa-book text-purple-600"></i> Notes</p><p class="text-[9px] text-gray-500">PP1-G9 • KICD</p></a>
-<a href="exam.html" class="bg-white rounded-xl p-3 border-2 border-black shadow-[2px_2px_0_0_#000]"><p class="font-black text-[12px]"><i class="fa-solid fa-file-lines text-blue-600"></i> Exams</p><p class="text-[9px] text-gray-500">Sat-Sun 100 Marks</p></a>
-<a href="homework.html" class="bg-white rounded-xl p-3 border-2 border-black shadow-[2px_2px_0_0_#000]"><p class="font-black text-[12px]"><i class="fa-solid fa-robot text-green-600"></i> AI Homework</p><p class="text-[9px] text-gray-500">Mon-Fri 10 Marks</p></a>
-<a href="games.html" class="bg-[#ffcc1a] rounded-xl p-3 border-2 border-black shadow-[2px_2px_0_0_#000]"><p class="font-black text-[12px]"><i class="fa-solid fa-gamepad text-black"></i> Learning Games</p><p class="text-[9px] text-gray-700">Play & Earn 10 pts 🎮</p></a>
-<a href="ict.html" class="bg-[#e0f2ff] rounded-xl p-3 border-2 border-black shadow-[2px_2px_0_0_#000]"><p class="font-black text-[12px]"><i class="fa-solid fa-computer text-blue-600"></i> ICT / Coding</p><p class="text-[9px] text-gray-500">Computer, Internet, Coding</p></a>
-<a href="foreign-language.html" class="bg-[#ffe8f0] rounded-xl p-3 border-2 border-black shadow-[2px_2px_0_0_#000]"><p class="font-black text-[12px]"><i class="fa-solid fa-language text-pink-600"></i> Foreign Language</p><p class="text-[9px] text-gray-500">French, German, Chinese</p></a>
-<a href="curriculum-designs.html" class="bg-white rounded-xl p-3 border-2 border-black shadow-[2px_2px_0_0_#000]"><p class="font-black text-[12px]"><i class="fa-solid fa-book-atlas text-teal-600"></i> Curriculum</p><p class="text-[9px] text-gray-500">KICD Designs</p></a>
-<a href="ai-assistance.html" class="bg-white rounded-xl p-3 border-2 border-black shadow-[2px_2px_0_0_#000]"><p class="font-black text-[12px]"><i class="fa-solid fa-circle-play text-red-600"></i> AI Tutor</p><p class="text-[9px] text-gray-500">Ask Anything</p></a>
+<select id="compType" class="border-2 border-black rounded-full px-3 py-2 font-black text-[11px] bg-[#e0f2ff]">
+<option>Story Composition</option><option>Letter / Barua</option><option>Insha - Kiswahili</option><option>Diary</option><option>Descriptive - My Family / My Mother / My School</option><option>The Day I Will Never Forget</option>
+</select>
+<select id="compGrade" class="border-2 border-black rounded-full px-3 py-2 font-black text-[11px] bg-[#ffcc1a]">
+<option>PP1</option><option>PP2</option><option>Grade 1</option><option>Grade 2</option><option>Grade 3</option><option>Grade 4</option><option>Grade 5</option><option selected>Grade 6</option><option>Grade 7</option><option>Grade 8</option><option>Grade 9</option>
+</select>
 </div>
-<div class="bg-white rounded-[1.5rem] p-4 border-2 border-black shadow-[3px_3px_0_0_#000]">
-<div class="flex justify-between"><p class="font-black text-[13px]">🎁 Referrals & Wallet</p><span id="ptsBadge" class="bg-black text-white px-3 py-1 rounded-full text-[10px] font-black">0 pts</span></div>
-<div class="mt-3 grid grid-cols-2 gap-2">
-<div class="bg-[#fff7e0] border-2 border-black rounded-xl p-2.5"><p class="text-[8px] font-black opacity-60">YOUR CODE</p><p id="refCode" class="font-black text-[13px]">SHKE...</p><p class="text-[8px] mt-1">Get 100 pts / invite</p></div>
-<div class="bg-[#e8fff4] border-2 border-black rounded-xl p-2.5"><p class="text-[8px] font-black opacity-60">BALANCE</p><p class="font-black text-[13px]"><span id="ptsBal">0</span> pts = <span id="kesBal">0</span> KES</p><p class="text-[8px] mt-1">1000 pts = 100 KES</p></div>
+<textarea id="compInput" placeholder="✍️ Andika hapa... Example: My mother is kind... / Siku ya shule... PP1: 5 lines, Grade 6: 150 words, Grade 9: 200 words" class="w-full border-2 border-black rounded-xl p-3 text-[12px] font-bold min-h-[130px]"></textarea>
+<div class="grid grid-cols-2 gap-2">
+<button onclick="document.getElementById('compPhoto').click()" class="bg-white border-2 border-black rounded-full py-3 font-black text-[10px] shadow-[2px_2px_0_0_#000]">📸 Photo</button>
+<button onclick="markComposition()" id="compBtn" class="bg-black text-white border-2 border-black rounded-full py-3 font-black text-[11px] shadow-[2px_2px_0_0_#000]">✨ Mark + Clean Version</button>
 </div>
-<div class="mt-3 flex gap-2"><input id="refLink" readonly class="flex-1 bg-[#f6f6f7] border-2 border-black rounded-full p-2.5 text-[9px] font-bold"><button onclick="copyRef()" class="bg-black text-white px-4 rounded-full font-black text-[10px]">Copy 📋</button></div>
-<div class="mt-3 grid grid-cols-2 gap-2">
-<button onclick="navigator.clipboard.writeText(refLink.value);convMsg.innerText='✓ Copied'" class="bg-[#2ac5a0] border-2 border-black rounded-full py-2.5 font-black text-[10px]">Copy Care Link 🔗</button>
-<button onclick="convertPoints()" class="bg-[#ffcc1a] border-2 border-black rounded-full py-2.5 font-black text-[10px]">Convert 1000→100 KES</button>
-</div>
-<p id="convMsg" class="text-[10px] font-bold text-center mt-2 text-green-600"></p>
-</div>
-<a href="care-chat.html" id="careLink" class="bg-black text-white rounded-[1.5rem] p-3 border-2 border-black flex gap-3 items-center">
-<img src="https://i.pravatar.cc/100?img=12" class="w-11 h-11 rounded-full border-2 border-white">
-<div class="flex-1"><p class="font-black text-[13px]">Customer Care - Chat</p><p class="text-[10px] opacity-60">WhatsApp Style • Ask Anything • Online</p><div class="mt-1 bg-[#25d366] text-black px-3 py-1 rounded-full inline-block text-[10px] font-black">💬 Tap to Chat →</div></div>
-<i class="fa-solid fa-chevron-right opacity-50"></i>
-</a>
-<div class="grid grid-cols-2 gap-2 pt-2">
-<button onclick="window.location.href='panel.html'" class="bg-white border-2 border-black rounded-full py-3.5 font-black text-[11px] shadow-[2px_2px_0_0_#000]">Edit Profile ⚙️</button>
-<button onclick="doLogout()" class="bg-black text-white border-2 border-black rounded-full py-3.5 font-black text-[11px] shadow-[2px_2px_0_0_#000]">Log Out + Reset</button>
+<input type="file" id="compPhoto" hidden accept="image/*" onchange="handleCompPhoto(this)">
+<div id="compPreview" class="hidden mt-2"><img id="compImg" class="rounded-lg max-h-[170px] mx-auto border-2 border-black"></div>
+<div id="compResult" class="hidden mt-3 bg-[#fffde7] border-2 border-black rounded-xl p-2"></div>
+<div id="compActions" class="hidden mt-2 grid grid-cols-2 gap-2">
+<button onclick="copyComp()" class="bg-white border-2 border-black rounded-full py-3 font-black text-[10px]">📋 COPY CLEAN</button>
+<button onclick="clearComp()" class="bg-black text-white border-2 border-black rounded-full py-3 font-black text-[10px]">✅ DONE</button>
 </div>
 </div>
 </div>
-<div id="ttModal" class="fixed inset-0 bg-black/60 hidden z-50 p-4 overflow-auto">
-<div class="bg-white rounded-[1.3rem] border-2 border-black max-w-[420px] mx-auto mt-10 p-4 shadow-[4px_4px_0_0_#000]">
-<div class="flex justify-between items-center"><p class="font-black text-[14px]">📅 Weekly Timetable</p><button onclick="closeTimetable()" class="bg-black text-white w-8 h-8 rounded-full font-black">X</button></div>
-<p class="text-[9px] font-bold opacity-60 mt-1">Mon-Fri • ✅ = Done after homework • ⏳ = Pending</p>
-<div id="ttFull" class="mt-3"></div>
-<button onclick="closeTimetable()" class="mt-4 w-full bg-[#ffcc1a] border-2 border-black rounded-full py-3 font-black text-[11px]">Close</button>
+
+<!-- EXAMPLES QUICK -->
+<div class="bg-white border-2 border-black rounded-xl p-3">
+<p class="font-black text-[11px]">📚 Example Clean Versions (Tap to Use):</p>
+<div class="grid grid-cols-3 gap-1.5 mt-2">
+<button onclick="loadExample('pp1')" class="bg-[#ff8a2a] text-white border-2 border-black rounded-full py-2 text-[8px] font-black">PP1 Simple</button>
+<button onclick="loadExample('g6')" class="bg-[#2ac5a0] text-white border-2 border-black rounded-full py-2 text-[8px] font-black">Grade 6 Medium</button>
+<button onclick="loadExample('g9')" class="bg-[#4a86ff] text-white border-2 border-black rounded-full py-2 text-[8px] font-black">Grade 9 Advanced</button>
 </div>
 </div>
+
+</div>
+</div>
+
+<div id="toast" class="hidden fixed bottom-6 left-1/2 -translate-x-1/2 bg-black text-white px-6 py-3 rounded-full border-2 border-black font-black text-[12px] z-[9999] shadow-[4px_4px_0_0_#000]">✅ Done</div>
+
 <script>
-function copyRef(){ navigator.clipboard.writeText(document.getElementById('refLink').value); document.getElementById('convMsg').innerText="✓ Link Copied!"; }
-async function convertPoints(){ let pts=parseInt(document.getElementById('ptsBal').innerText)||0; if(pts<1000) return convMsg.innerText="❌ Need 1000 pts"; if(!confirm("Convert 1000 → 100 KES?")) return; const FB=window.FB; let uid=localStorage.getItem('sh_uid')||FB.auth.currentUser?.uid; await FB.updateDoc(FB.doc(FB.db,"users",uid),{points:FB.increment(-1000),kesBalance:FB.increment(100)}); ptsBal.innerText=pts-1000; convMsg.innerText="✓ 100 KES Added - Admin will pay"; }
-function doLogout(){ if(!confirm('Log out and reset?')) return; FB.signOut(FB.auth).then(()=>{ localStorage.clear(); sessionStorage.clear(); location.href='registration.html'; }); }
-let todayName = new Date().toLocaleDateString('en-KE',{weekday:'long'});
-let weekKey = 'soma_tt_'+new Date().toISOString().slice(0,10);
-let timetable = JSON.parse(localStorage.getItem(weekKey)||'{}');
-const subjects = ["English","Kiswahili","Math","Science","SST","CRE"];
-const weekDays = ["Monday","Tuesday","Wednesday","Thursday","Friday"];
-document.getElementById('todayDate').innerText = new Date().toLocaleDateString('en-KE',{weekday:'short', day:'numeric', month:'short', year:'numeric'});
-function renderMini(){
- let doneToday = subjects.filter(s=>timetable[todayName+'_'+s]).length;
- document.getElementById('ttSummary').innerText = doneToday + "/6 today";
- let next = subjects.find(s=>!timetable[todayName+'_'+s]);
- document.getElementById('ttNext').innerText = next? "Next: "+next+" ⏳ Pending" : "🎉 All done today!";
- let mini = subjects.map(s=>{
-  let done = timetable[todayName+'_'+s];
-  return `<div class="bg-white border-2 border-black rounded-xl p-2 text-center ${done?'bg-[#dcfce7]':''}"><p class="font-black text-[8px]">${s.slice(0,3)}</p><p class="text-[12px]">${done?'✅':'⏳'}</p></div>`;
- }).join('');
- document.getElementById('ttMini').innerHTML = mini;
+function showToast(m){ let t=document.getElementById('toast'); t.innerText=m; t.classList.remove('hidden'); setTimeout(()=>t.classList.add('hidden'),2600); }
+let compPhotoData='';
+function handleCompPhoto(input){
+  let f=input.files[0]; if(!f) return;
+  let r=new FileReader(); r.onload=e=>{ compPhotoData=e.target.result; document.getElementById('compImg').src=compPhotoData; document.getElementById('compPreview').classList.remove('hidden'); showToast("📸 Loaded"); }; r.readAsDataURL(f);
 }
-function openTimetable(){
- let html=`<table class="w-full text-[10px] border-2 border-black rounded-xl overflow-hidden"><tr class="bg-black text-white"><th class="p-2 border border-black">Day</th><th class="p-2 border border-black">Subject</th><th class="p-2 border border-black">Status</th></tr>`;
- weekDays.forEach(day=>{
-  subjects.forEach((sub,i)=>{
-   let key=day+'_'+sub; let done=timetable[key];
-   let isToday = day===todayName;
-   let status = done? '✅ Done' : (isToday? '⏳ Pending' : '⬜');
-   html+=`<tr class="${isToday?'bg-[#fff7e0]':''}"><td class="p-2 border-2 border-black font-black">${i==0?day:''}</td><td class="p-2 border-2 border-black">${sub}</td><td class="p-2 border-2 border-black text-center font-black ${done?'text-green-600':''}">${status} ${isToday &&!done? `<a href="homework.html?subject=${sub}" class="ml-1 bg-black text-white px-2 py-0.5 rounded-full text-[8px]">Do</a>`:''}</td></tr>`;
-  });
- });
- html+=`</table>`;
- document.getElementById('ttFull').innerHTML=html;
- document.getElementById('ttModal').classList.remove('hidden');
+function loadExample(level){
+  if(level==='pp1'){ document.getElementById('compGrade').value='PP1'; document.getElementById('compType').value='Descriptive - My Family / My Mother / My School'; document.getElementById('compInput').value='My mother is kind. She cooks nice food. She loves me. She is good. I love my mother.'; }
+  if(level==='g6'){ document.getElementById('compGrade').value='Grade 6'; document.getElementById('compType').value='Descriptive - My Family / My Mother / My School'; document.getElementById('compInput').value='My mother is very important to me. She wakes up early and cooks for us. She helps me with homework. When I am sick she takes care of me. I love my mother very much.'; }
+  if(level==='g9'){ document.getElementById('compGrade').value='Grade 9'; document.getElementById('compType').value='The Day I Will Never Forget'; document.getElementById('compInput').value='Last year we went to Mombasa. It was a nice trip. We saw the beach. We had fun. It was the best day of my life and I will never forget it.'; }
+  showToast("📝 Example loaded - Tap Mark");
+  window.scrollTo({top:0,behavior:'smooth'});
 }
-function closeTimetable(){document.getElementById('ttModal').classList.add('hidden');}
-renderMini();
-async function checkTuition(userId, shke){
+function renderCompColored(text){
+  text=text.replace(/###+/g,"").replace(/```[\s\S]*?```/g,"");
+  let html=text
+ .replace(/\*\*Title[^\n]*\*\*/gi,m=>`<div class="bubble knec-blue font-black">${m.replace(/\*\*/g,'')}</div>`)
+ .replace(/\*\*⭐ Score[^\n]*\*\*/gi,m=>`<div class="bubble bg-black text-white font-black">${m.replace(/\*\*/g,'')}</div>`)
+ .replace(/\*\*✅ Strengths[^\n]*\*\*[\s\S]*?(?=\n\*\*|$)/gi,m=>`<div class="bubble knec-green font-bold">${m.replace(/\*\*/g,'')}</div>`)
+ .replace(/\*\*📝 Grammar[^\n]*\*\*[\s\S]*?(?=\n\*\*|$)/gi,m=>`<div class="bubble knec-yellow font-bold">${m.replace(/\*\*/g,'')}</div>`)
+ .replace(/\*\*⚠️ Corrections[^\n]*\*\*[\s\S]*?(?=\n\*\*|$)/gi,m=>`<div class="bubble knec-red font-bold">${m.replace(/\*\*/g,'')}</div>`)
+ .replace(/\*\*✨ CLEAN VERSION[\s\S]*?(?=\n\*\*💡|\n\*\*👨|$)/gi,m=>{
+     let clean=m.replace(/\*\*✨ CLEAN VERSION[^:]*:\*\*/gi,'').replace(/\*\*/g,'').trim();
+     return `<div class="bubble knec-purple font-bold" style="background:#f9f5ff"><p class="font-black text-[12px] mb-2 text-[#a855f7]">✨ CLEAN VERSION - Full of Description & Expressions (20/20 KNEC):</p>${clean.replace(/\n/g,'<br>')}</div>`;
+  })
+ .replace(/\*\*💡 Teacher Comment[\s\S]*?(?=\n\*\*👨|$)/gi,m=>`<div class="bubble knec-teal font-black" style="border-width:3px">${m.replace(/\*\*/g,'')}</div>`)
+ .replace(/\*\*👨‍🏫 Suggestions[\s\S]*/gi,m=>`<div class="bubble knec-gold font-black">${m.replace(/\*\*/g,'')}</div>`)
+ .replace(/\n/g,'<br>');
+  html=html.replace(/\*\*(.*?)\*\*/g,'<b style="background:#ffcc1a;padding:1px 4px;border:1px solid #000;border-radius:4px;">$1</b>');
+  return html;
+}
+async function markComposition(){
+  let txt=document.getElementById('compInput').value.trim();
+  let type=document.getElementById('compType').value;
+  let grade=document.getElementById('compGrade').value;
+  if(!txt &&!compPhotoData){ showToast("✍️ Write first"); return; }
+  let btn=document.getElementById('compBtn'), res=document.getElementById('compResult'), act=document.getElementById('compActions');
+  let isPP = grade.includes('PP')||['Grade 1','Grade 2','Grade 3'].includes(grade);
+  let isG9 = ['Grade 7','Grade 8','Grade 9'].includes(grade);
+  let levelGuide = isPP?
+  "PP1-PP2-Grade3 SIMPLE: Use very simple short sentences, big emojis, colors, 80-100 words, 3 paragraphs, words like big, happy, nice, good, love, fun, mention colors, mother cooking, father playing. Add 🌟 ❤️ 😊" :
+  isG9?
+  "Grade 7-9 ADVANCED: 220-250 words, 4-5 paragraphs, advanced vocabulary: exquisite, resilient, compassionate, nostalgic, myriad, Use metaphors, similes, personification, idioms: heart of gold, apple of my eye, light at end of tunnel, show don't tell, sensory details, emotional depth, KNEC 20/20, mature conclusion" :
+  "Grade 4-6 MEDIUM: 150-180 words, 4 paragraphs, good adjectives: kind-hearted, sparkling, delicious, brave, similes: as busy as bee, as bright as sun, as gentle as dove, simple idioms, 5 senses: I saw, heard, smelled, felt, tasted, clear flow";
+
+  btn.innerText="⏳ Marking..."; btn.disabled=true;
+  res.classList.remove('hidden'); res.innerHTML="<div class='p-4 text-center font-black'>⏳ Generating Clean Descriptive Version...<br><span class='text-[9px]'>"+levelGuide.slice(0,80)+"...</span></div>";
   try{
-   let FB=window.FB; let q2=FB.query(FB.collection(FB.db,"homeschooling_requests"), FB.where("userId","==",userId), FB.orderBy("timestamp","desc"));
-   let snap=await FB.getDocs(q2); if(snap.empty) return;
-   snap.forEach(d=>{
-    let r=d.data();
-    if(r.status==='pending'){
-      tuitionPendingCard.classList.remove('hidden');
-      tuitionPendingInfo.innerText=`📚 ${r.subject} • Days: ${r.days||''} • Location: ${r.location||''}\n⏳ Waiting Admin to assign teacher`;
-    }
-    if(r.status==='approved'){
-      tuitionCard.classList.remove('hidden'); tuitionPendingCard.classList.add('hidden');
-      tuitionInfo.innerText=`✅ Admin approved tuition for ${shke}\n📚 Subject: ${r.subject}\n📅 Days: ${r.days||''}\n📍 Area: ${r.location||''}`;
-      let teacherHtml=`<p class="font-black text-[10px]">👩‍🏫 Your Home Tutor</p><p class="text-[10px] mt-1 font-bold">Teacher: ${r.teacherName||'Assigned by Admin'}</p><p class="text-[8px] mt-1 opacity-70">Teacher ↔ Learner Schooling active via SHKE ${shke} - Contact managed by Admin - No direct phone/email for student</p><div class="mt-2 flex gap-2"><a href="care-chat.html?shke=${shke}&topic=tuition ${encodeURIComponent(r.subject||'')}" class="bg-black text-white px-4 py-2 rounded-full text-[9px] font-black">💬 Message Teacher via Admin</a><a href="notes.html?search=${encodeURIComponent(r.subject||'')}" class="bg-[#ffcc1a] text-black border-2 border-black px-4 py-2 rounded-full text-[9px] font-black">📘 Notes: ${r.subject}</a></div>`;
-      tuitionTeacher.innerHTML=teacherHtml;
-    }
-   });
-  }catch(e){ console.log(e.message); }
+    let payload={
+      question: `You are SomaHub KNEC Composition Marker & Rewriter. Grade: ${grade} Type: ${type} LevelGuide: ${levelGuide}
+      Mark the learner work and MUST provide CLEAN DESCRIPTIVE VERSION.
+
+      OUTPUT TEMPLATE - DO NOT SKIP ANY SECTION - USE BOLD HEADINGS:
+
+      **Title: [Create beautiful title]**
+
+      **⭐ Score: [Give /20 based on original but mention Clean Version is 20/20]**
+
+      **✅ Strengths:** List 3 strengths from original
+
+      **📝 Grammar & Vocabulary:** Show 2-3 grammar fixes
+
+      **⚠️ Corrections:** List errors
+
+      **✨ CLEAN VERSION - Full of Description & Expressions (Copy this for learning):**
+      Write full clean version here following LevelGuide strictly:
+      ${isPP? "PP1 example style: My Mother is nice. ❤️ She has a smile like sunshine ☀️. She cooks yummy chapati. I love her. She is my hero 🌟" : ""}
+      ${!isPP &&!isG9? "Grade6 example: My Mother, My Heroine. My mother is kind-hearted... as bright as morning sun... busy as bee... sweet aroma... heart of gold... etc 150 words" : ""}
+      ${isG9? "Grade9 example: The Day Etched in My Memory. Life is tapestry... exquisite... nostalgic... The azure waves of Indian Ocean whispered... resilient spirit... etc 230 words" : ""}
+
+      **💡 Teacher Comment (Well Explained):** Explain how Clean Version improves original with descriptive words, expressions, senses - 4 sentences, very encouraging, mention specific improvement
+
+      **👨‍🏫 Suggestions to Improve:** 4 practical steps with examples: e.g., Replace 'big' with 'enormous/huge', Use simile 'as brave as lion', Add senses, Read story books
+
+      Original learner text: ${txt||"See photo"}`,
+      grade: grade, mode:"mark" };
+    if(compPhotoData) payload.photo=compPhotoData.split(',')[1];
+    let r=await fetch("/api/gemini",{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
+    let d=await r.json();
+    let ans=d.answer||d.error||"No result";
+    res.innerHTML=renderCompColored(ans);
+    act.classList.remove('hidden');
+    res.scrollIntoView({behavior:'smooth'});
+    showToast("✅ Clean Version Ready!");
+  }catch(e){ res.innerHTML="❌ "+e.message; }
+  btn.innerText="✨ Mark + Clean Version"; btn.disabled=false;
 }
-setTimeout(()=>{ const FB=window.FB; FB.onAuthStateChanged(FB.auth, async(u)=>{ if(!u) return location.href='registration.html'; let s=await FB.getDoc(FB.doc(FB.db,"users",u.uid)); if(s.exists()){ let d=s.data(); firstName.innerText=d.firstName||"Learner"; gradeShow.innerText=d.grade||"Grade 6"; indexShow.innerText=d.indexNumber||"SHKE"; refCode.innerText=d.indexNumber||"SHKE"; ptsBal.innerText=d.points||0; ptsBadge.innerText=(d.points||0)+" pts"; kesBal.innerText=d.kesBalance||0; refLink.value="https://somahub-kenya.vercel.app/registration.html?ref="+(d.indexNumber||""); document.getElementById('careLink').href=`care-chat.html?shke=${d.indexNumber}&grade=${encodeURIComponent(d.grade||'Grade 6')}&name=${encodeURIComponent(d.firstName||'Learner')}`; localStorage.setItem('sh_index',d.indexNumber); localStorage.setItem('sh_uid',u.uid); checkTuition(u.uid, d.indexNumber); } }); },600);
+function copyComp(){ let t=document.getElementById('compResult').innerText; if(!t){showToast("No result"); return;} navigator.clipboard.writeText(t).then(()=>showToast("✅ CLEAN COPIED!")); }
+function clearComp(){ document.getElementById('compResult').classList.add('hidden'); document.getElementById('compActions').classList.add('hidden'); document.getElementById('compPreview').classList.add('hidden'); document.getElementById('compInput').value=''; compPhotoData=''; showToast("🔄 Cleared"); }
+setTimeout(()=>{ const FB=window.FB; FB.onAuthStateChanged(FB.auth, async(u)=>{ if(!u) return location.href='registration.html'; let s=await FB.getDoc(FB.doc(FB.db,"users",u.uid)); if(s.exists()){ let d=s.data(); firstName.innerText=d.firstName||"Learner"; gradeShow.innerText=d.grade||"Grade 6"; compGrade.value=d.grade||"Grade 6"; indexShow.innerText=d.indexNumber||"SHKE";
+  let isPP=(d.grade||'').includes('PP')||['Grade 1','Grade 2','Grade 3'].includes(d.grade||'');
+  let isG9=['Grade 7','Grade 8','Grade 9'].includes(d.grade||'');
+  document.getElementById('levelBadge').innerText= isPP? "PP1-G3 • SIMPLE 🌈" : isG9? "G7-G9 • ADVANCED 📚" : "G4-G6 • MEDIUM ✨";
+} }); document.getElementById('todayDate').innerText=new Date().toLocaleDateString('en-KE',{weekday:'short',day:'numeric',month:'short'}); },600);
 </script>
 </body></html>
