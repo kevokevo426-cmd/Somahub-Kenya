@@ -1,135 +1,125 @@
-export default async function handler(req, res) {
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
-  if (req.method === 'OPTIONS') return res.status(200).end();
+<!DOCTYPE html>
+<html><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Teachers - SomaHub - Copy Exit Buttons</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;800;900&display=swap" rel="stylesheet">
+<style>body{font-family:'Nunito',sans-serif;background:#f6f6f7}
+@keyframes m{0%{transform:translateX(100%)}100%{transform:translateX(-100%)}}.marquee{animation:m 22s linear infinite}
+</style>
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+import { getFirestore, doc, getDoc, collection, getDocs, query, where, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+const cfg={apiKey:"AIzaSyA93BNes3AmFyxIEgjSbvbIWqLyorLsuj8",authDomain:"somahubkenya-9e458.firebaseapp.com",projectId:"somahubkenya-9e458",storageBucket:"somahubkenya-9e458.firebasestorage.app",messagingSenderId:"615579085715",appId:"1:615579085715:web:28fca37ba498324bb49666"};
+const app=initializeApp(cfg); const auth=getAuth(app); const db=getFirestore(app);
+window.FB={auth,db,doc,getDoc,collection,getDocs,query,where,addDoc,serverTimestamp,onAuthStateChanged,signOut};
+</script>
+</head>
+<body class="flex justify-center"><div class="w-full max-w-[460px] bg-[#f6f6f7] min-h-screen pb-[120px]">
+<div class="h-2 flex"><div class="flex-1 bg-[#ff8a2a]"></div><div class="flex-1 bg-[#2ac5a0]"></div><div class="flex-1 bg-[#4a86ff]"></div><div class="flex-1 bg-[#ffcc1a]"></div></div>
+<div class="bg-white border-b-2 border-black sticky top-0 z-40">
+<div class="p-3 flex items-center gap-2">
+<div class="w-10 h-10 rounded-full border-2 border-black bg-[#ffcc1a] flex items-center justify-center">SH</div>
+<div class="flex-1"><p class="font-black text-[14px]">Welcome, Mwalimu! 👩‍🏫</p><p class="text-[10px] font-bold text-gray-600" id="teacherInfo">Junior School</p></div>
+<div class="bg-[#ffcc1a] border-2 border-black px-3 py-1 rounded-full shadow-[2px_2px_0_0_#000]"><p class="font-black text-[10px]" id="teacherIdShow">SHKET...</p></div>
+</div>
+<div class="bg-black text-white overflow-hidden whitespace-nowrap border-y-2 border-black h-8 flex items-center"><div class="marquee flex gap-8 text-[10px] font-black"><span>📸 Smart Marker PRO</span><span>📋 Copy Button</span><span>✅ Done Exit Button</span></div></div>
+</div>
 
-  try {
-    const { question, grade, shke, brainContext, photo, lang, mode } = req.body;
-    const apiKey = process.env.GEMINI_API_KEY;
-    if (!apiKey) throw new Error("Add GEMINI_API_KEY in Vercel Env → Redeploy");
+<div class="p-3">
+<div class="bg-[#fffc8a] border-[2.5px] border-black rounded-[20px] p-4 shadow-[3px_3px_0_0_#000]">
+<div class="flex justify-between items-center"><p class="font-black text-[13px]">📸 Smart Marker - PRO</p><span class="bg-black text-white px-2 py-1 rounded-full text-[7px] font-black">Copy + Exit at Bottom</span></div>
+<p class="text-[9px] mt-2 font-bold">Snap → Bold Answer + Bold Key Words + All Choices</p>
 
-    const qLower = (question||"").toLowerCase();
-    const isMarking =!!photo || mode==="mark" || qLower.includes('mark') || qLower.includes('q13') || qLower.includes('english') || qLower.length>20;
-    const isHW =!isMarking && (qLower.includes('homework') || qLower.includes('10 marks') || qLower.includes('exam json'));
-    const isForeign = /french|german|chinese|français|deutsch/i.test(question||"") || ["fr","de","zh"].includes(lang||"");
+<div class="mt-3 bg-white border-2 border-black rounded-xl p-2">
+<div id="smartPreview" class="hidden"><img id="smartImg" class="rounded-lg max-h-[180px] mx-auto border-2 border-black"></div>
+<p id="smartHint" class="text-[9px] text-center font-bold opacity-60 py-4">📸 Tap camera, snap exam paper</p>
+<div id="smartResult" class="mt-2 text-[11px] leading-6 whitespace-pre-wrap font-bold hidden bg-[#fffde7] border-2 border-black rounded-xl p-3"></div>
 
-    let langNote = lang==="fr"? "French Foreign - fr-FR + English in brackets"
-                 : lang==="de"? "German Foreign - de-DE + English"
-                 : lang==="zh"? "Chinese Foreign - zh-CN + Pinyin + English"
-                 : lang==="sw"? "Kiswahili - sw-KE"
-                 : "English - en-KE";
+<!-- COPY + EXIT BUTTONS AT BOTTOM - YOUR REQUEST -->
+<div id="smartActions" class="hidden mt-4">
+<div class="border-t-2 border-dashed border-black pt-3">
+<p class="text-[9px] font-black text-center mb-2">⬇️ ACTIONS ⬇️</p>
+<div class="grid grid-cols-2 gap-3">
+<button onclick="copySmartResult()" class="bg-white border-[2.5px] border-black rounded-full py-3.5 font-black text-[12px] shadow-[3px_3px_0_0_#000] active:translate-x-[1px] active:translate-y-[1px] active:shadow-[1px_1px_0_0_#000]">📋 COPY</button>
+<button onclick="doneSmart()" class="bg-black text-white border-[2.5px] border-black rounded-full py-3.5 font-black text-[12px] shadow-[3px_3px_0_0_#000] active:translate-x-[1px] active:translate-y-[1px] active:shadow-[1px_1px_0_0_#000]">✅ DONE / EXIT</button>
+</div>
+<p class="text-[7px] font-bold text-center mt-2 opacity-60">Copy to WhatsApp • Done clears screen</p>
+</div>
+</div>
+</div>
 
-    let prompt = "";
-    if(isMarking){
-      prompt = `You are SomaHub Smart Marker - Kenyan CBC Mwalimu marking Grade ${grade||"6"} English.
-SHKE=${shke||""} Lang=${langNote}
-FILES: ${(brainContext||"").slice(0,1200)}
+<div class="mt-3 grid grid-cols-2 gap-2">
+<button onclick="document.getElementById('smartPhoto').click()" class="bg-white border-2 border-black rounded-full py-3 font-black text-[11px] shadow-[2px_2px_0_0_#000]">📷 Snap Exam</button>
+<button onclick="markSmart()" id="smartBtn" class="bg-black text-white border-2 border-black rounded-full py-3 font-black text-[11px] shadow-[2px_2px_0_0_#000]">✨ Mark Smart</button>
+</div>
+<input type="file" id="smartPhoto" hidden accept="image/*" onchange="handleSmartPhoto(this)">
+</div>
+</div>
 
-MARKING STYLE - FOLLOW THIS EXACT FORMAT - NO NAME MENTION:
+<div class="px-3 mt-3">
+<p class="font-black text-[14px] mb-2">🚀 Quick Access - No 404</p>
+<div class="grid grid-cols-2 gap-2">
+<div onclick="location.href='notes.html'" class="bg-white rounded-xl p-3 border-2 border-black shadow-[2px_2px_0_0_#000] cursor-pointer"><p class="font-black text-[12px]">📚 Notes</p><p class="text-[9px]">notes.html ✅</p></div>
+<div onclick="location.href='exam.html'" class="bg-white rounded-xl p-3 border-2 border-black shadow-[2px_2px_0_0_#000] cursor-pointer"><p class="font-black text-[12px]">📝 Exams</p><p class="text-[9px]">exam.html ✅</p></div>
+<div onclick="location.href='homework.html'" class="bg-white rounded-xl p-3 border-2 border-black shadow-[2px_2px_0_0_#000] cursor-pointer"><p class="font-black text-[12px]">📝 Homework</p><p class="text-[9px]">homework.html ✅</p></div>
+<div onclick="location.href='lesson-plans.html'" class="bg-[#fff7e0] rounded-xl p-3 border-2 border-black shadow-[2px_2px_0_0_#000] cursor-pointer"><p class="font-black text-[12px]">📝 Lesson Plans</p><p class="text-[9px]">lesson-plans.html ✅</p></div>
+<div onclick="location.href='schemes.html'" class="bg-[#ffcc1a] rounded-xl p-3 border-2 border-black shadow-[2px_2px_0_0_#000] cursor-pointer"><p class="font-black text-[12px]">⚙️ Schemes</p><p class="text-[9px]">schemes.html ✅</p></div>
+<div onclick="location.href='curriculum-designs.html'" class="bg-[#dcfce7] rounded-xl p-3 border-2 border-black shadow-[2px_2px_0_0_#000] cursor-pointer"><p class="font-black text-[12px]">📘 Curriculum</p><p class="text-[9px]">curriculum-designs.html ✅</p></div>
+<div onclick="location.href='ai.assistant.html'" class="bg-[#fffc8a] rounded-xl p-3 border-[2.5px] border-black shadow-[2px_2px_0_0_#000] cursor-pointer"><p class="font-black text-[12px]">🤖 Smart Marker</p><p class="text-[9px]">ai.assistant.html ✅</p></div>
+<div onclick="location.href='games.html'" class="bg-[#e0f2ff] rounded-xl p-3 border-2 border-black shadow-[2px_2px_0_0_#000] cursor-pointer"><p class="font-black text-[12px]">🎮 Games</p><p class="text-[9px]">games.html ✅</p></div>
+</div>
+</div>
 
-For EACH question in photo, output like this:
-
-**Q13. Meaning of bi-annual competition**
-
-**Answer: B. Twice in a year**
-
-**Reason:** In standard English, **bi-annual means happening twice a year**. The prefix **bi- = two**. Annual = year. So twice a year.
-
-**All Choices:**
-**A. Every year** - Means once a year, once = annual, not bi-annual ❌
-**B. Twice in a year** - Correct, bi = 2 times in 12 months ✅
-**C. Thrice in a year** - Thrice = 3 times, not 2 ❌
-**D. Twice in a month** - That is bi-monthly, not bi-annual ❌
-
-**Learner:** Not visible - WRONG ❌ (Should tick B)
-**Score: 0/1**
-
----
-**Q14. People who watch football match vs drama...**
-
-**Answer: A. audience**
-
-**Reason:** People watching **drama play = audience**. People watching **football = spectators**. Key difference: **play = audience**, **game = spectators**.
-
-**All Choices:**
-**A. an audience** - People watching a play/drama ✅ Correct for play
-**B. a congregation** - People in church, religious gathering ❌
-**C. a crowd** - General many people, no specific watch ❌
-**D. spectators** - People watching football/game ❌ Opposite
-
-**Learner:** Ticked C - WRONG ❌ (Should tick A)
-**Score: 0/1**
-
----
-
-RULES:
-1. OCR all Q numbers, stems, A-D options from photo.
-2. For each: **Bold Answer, Reason, All Choices analysis, Learner, Score** like above.
-3. Explain WHY each wrong choice is wrong in simple Grade 6 English.
-4. Use **bold** for key terms: **bi-annual, audience, spectators, idioms, spelling**.
-5. Learner: if you can see tick/mark in photo, say "Ticked X - CORRECT ✅ / WRONG ❌", else "Not visible - WRONG ❌ (Should tick Y)".
-6. After all:
-**Score Page: 3/8 - Good try, revise idioms**
-**Overall: 3/8 = 37.5% - Keep revising! You can do better!**
-7. NO names like Abigail, Alexis, Niombi, Kasarani. Just Mwalimu.
-8. Playground friendly, emojis ✅ ❌ only.
-9. NEVER output LEVEL LOCK, SYSTEM, SOURCE.
-
-PHOTO TASK: ${question}
-Lang: ${langNote}`;
-    } else {
-      prompt = `You are SomaHub Kenya CBC tutor. Grade=${grade} SHKE=${shke} Lang=${langNote}.
-FILES: ${(brainContext||"").slice(0,2500)}
-RULES:
-- NEVER output LEVEL LOCK, SYSTEM, SOURCE, SHKE header, ##.
-- If homework: ONLY JSON: [{"q":"...","options":["A","B","C","D"],"answer":"A","marks":2,"strand":"...","color":"#e0f2ff"}] 5 questions.
-${isForeign? `- Foreign ${langNote}` : ""}
-Q: ${question}
-Lang: ${langNote}`;
-    }
-
-    let parts = [{text: prompt}];
-    if (photo) {
-      parts.push({inlineData:{mimeType:"image/jpeg", data: photo}});
-    }
-
-    const models = [
-      "gemini-1.5-flash-latest",
-      "gemini-1.5-flash",
-      "gemini-2.0-flash",
-      "gemini-3.5-flash-lite"
-    ];
-
-    let lastErr = "";
-    for (let m of models) {
-      for (let ver of ["v1beta","v1"]) {
-        try {
-          const url = `https://generativelanguage.googleapis.com/${ver}/models/${m}:generateContent?key=${apiKey}`;
-          const r = await fetch(url,{
-            method:'POST', headers:{'Content-Type':'application/json'},
-            body: JSON.stringify({contents:[{parts}], generationConfig:{temperature:0.3, maxOutputTokens: 4000}})
-          });
-          const data = await r.json();
-          let ans = data.candidates?.[0]?.content?.parts?.[0]?.text;
-          if (ans) {
-            ans = ans.replace(/\*\*LEVEL LOCK[\s\S]*?\*\*/gi,'').replace(/\*\*SYSTEM[\s\S]*?\*\*/gi,'').replace(/\*\*SOURCE[\s\S]*?\*\*/gi,'').replace(/LEVEL LOCK:.*$/gim,'').trim();
-            if(isHW){
-              let j = ans.match(/\[[\s\S]*\]/);
-              if(j) ans = j[0];
-            }
-            return res.json({
-              answer: ans,
-              youtubeFiltered: `https://www.youtube.com/results?search_query=${encodeURIComponent(question+" "+grade+" CBC")}&sp=EgIQAQ%3D%3D`,
-              model: m, lang: lang||"en", mode: isMarking? "marking" : "homework"
-            });
-          }
-          lastErr = JSON.stringify(data.error||data).slice(0,500);
-        } catch(e){ lastErr = e.message; }
-      }
-    }
-    throw new Error(lastErr || "Busy, try again");
-  } catch (e) {
-    res.status(500).json({ error: e.message });
-  }
+</div>
+<script>
+let smartPhotoData='', currentTeacherId=null, userData=null;
+const PROXY_URL="/api/gemini";
+function handleSmartPhoto(input){
+  let f=input.files[0]; if(!f) return;
+  let r=new FileReader();
+  r.onload=e=>{
+    smartPhotoData=e.target.result;
+    document.getElementById('smartImg').src=smartPhotoData;
+    document.getElementById('smartPreview').classList.remove('hidden');
+    document.getElementById('smartHint').classList.add('hidden');
+    document.getElementById('smartResult').classList.add('hidden');
+    document.getElementById('smartActions').classList.add('hidden');
+  };
+  r.readAsDataURL(f);
 }
+async function markSmart(){
+  if(!smartPhotoData) return alert("Snap exam first 📸");
+  let btn=document.getElementById('smartBtn'), resDiv=document.getElementById('smartResult'), actDiv=document.getElementById('smartActions');
+  btn.innerText="⏳ Marking..."; btn.disabled=true;
+  resDiv.classList.remove('hidden');
+  resDiv.innerText="Marking... Well organized, bold answer, bold key words, all choices...";
+  try{
+    let photo=smartPhotoData.split(',')[1];
+    let resp=await fetch(PROXY_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({question:"Mark this photo - well organized, detailed, bold Answer, bold Key Words, All Choices A-D analysed, Score per Q, Overall", grade:"Grade 7", shke:"SHKE", mode:"mark", photo: photo})});
+    let data=await resp.json();
+    resDiv.innerText=data.answer||JSON.stringify(data);
+    actDiv.classList.remove('hidden');
+    actDiv.scrollIntoView({behavior:'smooth'});
+  }catch(e){ resDiv.innerText="❌ Error: "+e.message; }
+  btn.innerText="✨ Mark Smart"; btn.disabled=false;
+}
+function copySmartResult(){
+  let t=document.getElementById('smartResult').innerText;
+  if(!t) return alert("No result to copy");
+  navigator.clipboard.writeText(t).then(()=>alert("✅ COPIED! Pasted to WhatsApp/Parent 📋")).catch(()=>{
+    let ta=document.createElement('textarea'); ta.value=t; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta); alert("✅ COPIED!");
+  });
+}
+function doneSmart(){
+  document.getElementById('smartResult').classList.add('hidden');
+  document.getElementById('smartActions').classList.add('hidden');
+  document.getElementById('smartPreview').classList.add('hidden');
+  document.getElementById('smartHint').classList.remove('hidden');
+  smartPhotoData=''; document.getElementById('smartPhoto').value='';
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+setTimeout(()=>{ const FB=window.FB; FB.onAuthStateChanged(FB.auth, async(u)=>{ if(!u) return; currentTeacherId=u.uid; try{ let s=await FB.getDoc(FB.doc(FB.db,"users",u.uid)); if(s.exists()){ userData=s.data(); document.getElementById('teacherIdShow').innerText=userData.indexNumber||"SHKET"; document.getElementById('teacherInfo').innerText=(userData.subjects||"Junior School"); } }catch(e){} }); },600);
+</script>
+</body></html>
