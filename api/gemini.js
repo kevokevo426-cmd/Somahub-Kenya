@@ -1,125 +1,129 @@
-<!DOCTYPE html>
-<html><head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Teachers - SomaHub - Copy Exit Buttons</title>
-<script src="https://cdn.tailwindcss.com"></script>
-<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;800;900&display=swap" rel="stylesheet">
-<style>body{font-family:'Nunito',sans-serif;background:#f6f6f7}
-@keyframes m{0%{transform:translateX(100%)}100%{transform:translateX(-100%)}}.marquee{animation:m 22s linear infinite}
-</style>
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-import { getFirestore, doc, getDoc, collection, getDocs, query, where, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-const cfg={apiKey:"AIzaSyA93BNes3AmFyxIEgjSbvbIWqLyorLsuj8",authDomain:"somahubkenya-9e458.firebaseapp.com",projectId:"somahubkenya-9e458",storageBucket:"somahubkenya-9e458.firebasestorage.app",messagingSenderId:"615579085715",appId:"1:615579085715:web:28fca37ba498324bb49666"};
-const app=initializeApp(cfg); const auth=getAuth(app); const db=getFirestore(app);
-window.FB={auth,db,doc,getDoc,collection,getDocs,query,where,addDoc,serverTimestamp,onAuthStateChanged,signOut};
-</script>
-</head>
-<body class="flex justify-center"><div class="w-full max-w-[460px] bg-[#f6f6f7] min-h-screen pb-[120px]">
-<div class="h-2 flex"><div class="flex-1 bg-[#ff8a2a]"></div><div class="flex-1 bg-[#2ac5a0]"></div><div class="flex-1 bg-[#4a86ff]"></div><div class="flex-1 bg-[#ffcc1a]"></div></div>
-<div class="bg-white border-b-2 border-black sticky top-0 z-40">
-<div class="p-3 flex items-center gap-2">
-<div class="w-10 h-10 rounded-full border-2 border-black bg-[#ffcc1a] flex items-center justify-center">SH</div>
-<div class="flex-1"><p class="font-black text-[14px]">Welcome, Mwalimu! 👩‍🏫</p><p class="text-[10px] font-bold text-gray-600" id="teacherInfo">Junior School</p></div>
-<div class="bg-[#ffcc1a] border-2 border-black px-3 py-1 rounded-full shadow-[2px_2px_0_0_#000]"><p class="font-black text-[10px]" id="teacherIdShow">SHKET...</p></div>
-</div>
-<div class="bg-black text-white overflow-hidden whitespace-nowrap border-y-2 border-black h-8 flex items-center"><div class="marquee flex gap-8 text-[10px] font-black"><span>📸 Smart Marker PRO</span><span>📋 Copy Button</span><span>✅ Done Exit Button</span></div></div>
-</div>
+export default async function handler(req, res) {
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+  if (req.method === 'OPTIONS') return res.status(200).end();
 
-<div class="p-3">
-<div class="bg-[#fffc8a] border-[2.5px] border-black rounded-[20px] p-4 shadow-[3px_3px_0_0_#000]">
-<div class="flex justify-between items-center"><p class="font-black text-[13px]">📸 Smart Marker - PRO</p><span class="bg-black text-white px-2 py-1 rounded-full text-[7px] font-black">Copy + Exit at Bottom</span></div>
-<p class="text-[9px] mt-2 font-bold">Snap → Bold Answer + Bold Key Words + All Choices</p>
+  try {
+    const { question, grade, shke, brainContext, photo, lang, mode } = req.body;
+    const apiKey = process.env.GEMINI_API_KEY;
+    if (!apiKey) throw new Error("Add GEMINI_API_KEY in Vercel → Redeploy");
 
-<div class="mt-3 bg-white border-2 border-black rounded-xl p-2">
-<div id="smartPreview" class="hidden"><img id="smartImg" class="rounded-lg max-h-[180px] mx-auto border-2 border-black"></div>
-<p id="smartHint" class="text-[9px] text-center font-bold opacity-60 py-4">📸 Tap camera, snap exam paper</p>
-<div id="smartResult" class="mt-2 text-[11px] leading-6 whitespace-pre-wrap font-bold hidden bg-[#fffde7] border-2 border-black rounded-xl p-3"></div>
+    const qLower = (question||"").toLowerCase();
+    const isMarking =!!photo || mode==="mark" || (qLower.includes('mark') && qLower.length>15);
+    const isDraw = /draw|diagram|illustrate|label|sketch|structure of|parts of/i.test(question||"");
+    const isHW =!isMarking && !isDraw && (qLower.includes('homework') || qLower.includes('10 marks') || qLower.includes('exam json'));
 
-<!-- COPY + EXIT BUTTONS AT BOTTOM - YOUR REQUEST -->
-<div id="smartActions" class="hidden mt-4">
-<div class="border-t-2 border-dashed border-black pt-3">
-<p class="text-[9px] font-black text-center mb-2">⬇️ ACTIONS ⬇️</p>
-<div class="grid grid-cols-2 gap-3">
-<button onclick="copySmartResult()" class="bg-white border-[2.5px] border-black rounded-full py-3.5 font-black text-[12px] shadow-[3px_3px_0_0_#000] active:translate-x-[1px] active:translate-y-[1px] active:shadow-[1px_1px_0_0_#000]">📋 COPY</button>
-<button onclick="doneSmart()" class="bg-black text-white border-[2.5px] border-black rounded-full py-3.5 font-black text-[12px] shadow-[3px_3px_0_0_#000] active:translate-x-[1px] active:translate-y-[1px] active:shadow-[1px_1px_0_0_#000]">✅ DONE / EXIT</button>
-</div>
-<p class="text-[7px] font-bold text-center mt-2 opacity-60">Copy to WhatsApp • Done clears screen</p>
-</div>
-</div>
-</div>
+    let langNote = lang==="fr"? "French - fr-FR + English" : lang==="de"? "German - de-DE + English" : lang==="zh"? "Chinese - zh-CN + English" : lang==="sw"? "Kiswahili" : "English - en-KE";
 
-<div class="mt-3 grid grid-cols-2 gap-2">
-<button onclick="document.getElementById('smartPhoto').click()" class="bg-white border-2 border-black rounded-full py-3 font-black text-[11px] shadow-[2px_2px_0_0_#000]">📷 Snap Exam</button>
-<button onclick="markSmart()" id="smartBtn" class="bg-black text-white border-2 border-black rounded-full py-3 font-black text-[11px] shadow-[2px_2px_0_0_#000]">✨ Mark Smart</button>
-</div>
-<input type="file" id="smartPhoto" hidden accept="image/*" onchange="handleSmartPhoto(this)">
-</div>
-</div>
+    let prompt = "";
+    if(isDraw){
+      prompt = `You are SomaHub PRO Diagram Drawer + CBC Tutor Grade ${grade||"7"} SHKE=${shke} Lang=${langNote}
+FILES: ${(brainContext||"").slice(0,1000)}
 
-<div class="px-3 mt-3">
-<p class="font-black text-[14px] mb-2">🚀 Quick Access - No 404</p>
-<div class="grid grid-cols-2 gap-2">
-<div onclick="location.href='notes.html'" class="bg-white rounded-xl p-3 border-2 border-black shadow-[2px_2px_0_0_#000] cursor-pointer"><p class="font-black text-[12px]">📚 Notes</p><p class="text-[9px]">notes.html ✅</p></div>
-<div onclick="location.href='exam.html'" class="bg-white rounded-xl p-3 border-2 border-black shadow-[2px_2px_0_0_#000] cursor-pointer"><p class="font-black text-[12px]">📝 Exams</p><p class="text-[9px]">exam.html ✅</p></div>
-<div onclick="location.href='homework.html'" class="bg-white rounded-xl p-3 border-2 border-black shadow-[2px_2px_0_0_#000] cursor-pointer"><p class="font-black text-[12px]">📝 Homework</p><p class="text-[9px]">homework.html ✅</p></div>
-<div onclick="location.href='lesson-plans.html'" class="bg-[#fff7e0] rounded-xl p-3 border-2 border-black shadow-[2px_2px_0_0_#000] cursor-pointer"><p class="font-black text-[12px]">📝 Lesson Plans</p><p class="text-[9px]">lesson-plans.html ✅</p></div>
-<div onclick="location.href='schemes.html'" class="bg-[#ffcc1a] rounded-xl p-3 border-2 border-black shadow-[2px_2px_0_0_#000] cursor-pointer"><p class="font-black text-[12px]">⚙️ Schemes</p><p class="text-[9px]">schemes.html ✅</p></div>
-<div onclick="location.href='curriculum-designs.html'" class="bg-[#dcfce7] rounded-xl p-3 border-2 border-black shadow-[2px_2px_0_0_#000] cursor-pointer"><p class="font-black text-[12px]">📘 Curriculum</p><p class="text-[9px]">curriculum-designs.html ✅</p></div>
-<div onclick="location.href='ai.assistant.html'" class="bg-[#fffc8a] rounded-xl p-3 border-[2.5px] border-black shadow-[2px_2px_0_0_#000] cursor-pointer"><p class="font-black text-[12px]">🤖 Smart Marker</p><p class="text-[9px]">ai.assistant.html ✅</p></div>
-<div onclick="location.href='games.html'" class="bg-[#e0f2ff] rounded-xl p-3 border-2 border-black shadow-[2px_2px_0_0_#000] cursor-pointer"><p class="font-black text-[12px]">🎮 Games</p><p class="text-[9px]">games.html ✅</p></div>
-</div>
-</div>
+TASK: Draw DIAGRAM for: ${question}
 
-</div>
-<script>
-let smartPhotoData='', currentTeacherId=null, userData=null;
-const PROXY_URL="/api/gemini";
-function handleSmartPhoto(input){
-  let f=input.files[0]; if(!f) return;
-  let r=new FileReader();
-  r.onload=e=>{
-    smartPhotoData=e.target.result;
-    document.getElementById('smartImg').src=smartPhotoData;
-    document.getElementById('smartPreview').classList.remove('hidden');
-    document.getElementById('smartHint').classList.add('hidden');
-    document.getElementById('smartResult').classList.add('hidden');
-    document.getElementById('smartActions').classList.add('hidden');
-  };
-  r.readAsDataURL(f);
+RULES - MUST FOLLOW:
+1. First give organized explanation with bold key words.
+2. Then give DIAGRAM as clean SVG code inside \`\`\`svg ... \`\`\` - simple, clear, CBC Grade 6-7 style.
+3. SVG must be 400x300 viewBox, white background, black stroke 2.5, bold labels, colorful fills.
+4. For photosynthesis: show sun, leaf, CO2 arrow, water arrow, oxygen out, chlorophyll label.
+5. For flower: show petals, sepal, stamen, pistil labeled.
+6. For water cycle: evaporation, condensation, precipitation arrows.
+7. For digestive system: mouth, esophagus, stomach, intestines labeled.
+8. Keep labels bold and readable.
+9. After SVG, give 3 key points with bold key words.
+
+OUTPUT FORMAT:
+**📚 Topic: Photosynthesis**
+
+**🔑 Key Words:** **sunlight**, **chlorophyll**, **carbon dioxide**, **water**, **oxygen**
+
+**📖 Explanation:** Plants make food using **sunlight**... etc 2-3 sentences bold key words.
+
+**📊 DIAGRAM:**
+\`\`\`svg
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300" width="100%" style="background:white;border:2.5px solid black;border-radius:12px">
+... your diagram here ...
+</svg>
+\`\`\`
+
+**✅ Key Points:**
+1. **Sunlight** needed...
+2. **Chlorophyll** traps...
+
+NO LEVEL LOCK. Playground friendly.`;
+    } else if(isMarking){
+      prompt = `You are SomaHub ULTRA PRO Marker - Kenyan CBC Expert, Grade ${grade||"7"}.
+SHKE=${shke||""} Lang=${langNote} FILES: ${(brainContext||"").slice(0,1000)}
+
+OUTPUT MUST BE ULTRA ORGANIZED, DETAILED, BOLD - FOLLOW THIS EXACT TEMPLATE FOR EVERY QUESTION:
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+**Q1. During a nature walk, Grade 6 learners observed a mushroom growing on a dead tree trunk. Nancy quickly told her classmates not to touch it. Why did she warn them?**
+
+**✅ Answer: B. Because it may be poisonous**
+
+**🔑 Key Words:** **mushroom**, **dead tree trunk**, **poisonous**, **wild fungi**, **toxic**, **safety**
+
+**📖 Detailed Reason:**
+Many **mushrooms** growing on **dead tree trunks** in the wild are **poisonous** and **toxic**. When **touched or eaten**, they can cause serious harm. Nancy warned her classmates for **safety during nature walks** because **wild fungi** are not safe like farm mushrooms.
+
+**🔍 All Choices Analysis:**
+**A. Because it is soft and smooth** → **Softness** does not mean safe. A **soft mushroom** can still be **poisonous** ❌ WRONG
+**B. Because it may be poisonous** → **Correct**. **Wild mushrooms** on **dead trunks** may contain **poison**, **toxic chemicals** ✅ CORRECT
+**C. Because it can be eaten as food** → **Wild mushrooms** are NOT safe for **food**. Only controlled farm **mushrooms** are edible ❌ WRONG
+**D. Because it has a sweet smell** → **Sweet smell** does not prove a **wild fungus** is safe to touch ❌ WRONG
+
+**👨‍🎓 Learner:** Ticked B - **CORRECT ✅**
+**⭐ Score: 1/1**
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+YOUR RULES:
+1. OCR Q numbers, stems, A-D options from photo 100% accurate.
+2. Use EXACT template above for EACH Q - with ━━━ lines.
+3. ALWAYS bold: **✅ Answer: X....**, **🔑 Key Words:** with **word** bold for each science term.
+4. Detailed Reason = 2-3 full sentences, simple Grade 6-7 English, bold key words inside.
+5. All Choices = One line per choice, bold key term, explain WHY wrong, with ❌ ✅ at end.
+6. Learner: If tick visible: "Ticked X - CORRECT ✅ / WRONG ❌ (Should be Y)", else "Not visible - WRONG ❌ (Should be Y)".
+7. After ALL Qs:
+---
+**📊 SCORE BREAKDOWN** Q1:1/1 | Q2:1/1 | Q3:0/1
+**📊 Score Page: 5/6**
+**💯 Overall: 5/6 = 83% - Very Good! Keep revising! 🌟**
+**📝 Teacher Feedback: Brilliant effort!**
+---
+8. NO names: Abigail, Alexis, Niombi, Kasarani. Only Mwalimu.
+9. NEVER output LEVEL LOCK, SYSTEM, SOURCE.
+
+TASK: ${question} Lang: ${langNote}
+If question also says draw/diagram, add after marking: 
+**📊 DIAGRAM:** with \`\`\`svg code as described in draw prompt.`;
+    } else {
+      prompt = `You are SomaHub tutor Grade=${grade} SHKE=${shke} Lang=${langNote} FILES: ${(brainContext||"").slice(0,2000)} NEVER output LEVEL LOCK. If homework: ONLY JSON [{"q":"...","options":["A","B","C","D"],"answer":"A","marks":2}] Q: ${question}`;
+    }
+
+    let parts = [{text: prompt}];
+    if (photo) parts.push({inlineData:{mimeType:"image/jpeg", data: photo}});
+
+    const models = ["gemini-1.5-flash-latest","gemini-1.5-flash","gemini-2.0-flash"];
+    let lastErr="";
+    for(let m of models){
+      for(let ver of ["v1beta","v1"]){
+        try{
+          const url=`https://generativelanguage.googleapis.com/${ver}/models/${m}:generateContent?key=${apiKey}`;
+          const r=await fetch(url,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({contents:[{parts}],generationConfig:{temperature:0.25,maxOutputTokens:6500}})});
+          const data=await r.json();
+          let ans=data.candidates?.[0]?.content?.parts?.[0]?.text;
+          if(ans){
+            ans=ans.replace(/\*\*LEVEL LOCK[\s\S]*?\*\*/gi,'').trim();
+            if(isHW){ let j=ans.match(/\[[\s\S]*\]/); if(j) ans=j[0]; }
+            return res.json({answer:ans,model:m,lang:lang||"en",mode:isDraw?"diagram":isMarking?"marking":"homework"});
+          }
+          lastErr=JSON.stringify(data.error||data).slice(0,400);
+        }catch(e){ lastErr=e.message; }
+      }
+    }
+    throw new Error(lastErr);
+  }catch(e){ res.status(500).json({error:e.message}); }
 }
-async function markSmart(){
-  if(!smartPhotoData) return alert("Snap exam first 📸");
-  let btn=document.getElementById('smartBtn'), resDiv=document.getElementById('smartResult'), actDiv=document.getElementById('smartActions');
-  btn.innerText="⏳ Marking..."; btn.disabled=true;
-  resDiv.classList.remove('hidden');
-  resDiv.innerText="Marking... Well organized, bold answer, bold key words, all choices...";
-  try{
-    let photo=smartPhotoData.split(',')[1];
-    let resp=await fetch(PROXY_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({question:"Mark this photo - well organized, detailed, bold Answer, bold Key Words, All Choices A-D analysed, Score per Q, Overall", grade:"Grade 7", shke:"SHKE", mode:"mark", photo: photo})});
-    let data=await resp.json();
-    resDiv.innerText=data.answer||JSON.stringify(data);
-    actDiv.classList.remove('hidden');
-    actDiv.scrollIntoView({behavior:'smooth'});
-  }catch(e){ resDiv.innerText="❌ Error: "+e.message; }
-  btn.innerText="✨ Mark Smart"; btn.disabled=false;
-}
-function copySmartResult(){
-  let t=document.getElementById('smartResult').innerText;
-  if(!t) return alert("No result to copy");
-  navigator.clipboard.writeText(t).then(()=>alert("✅ COPIED! Pasted to WhatsApp/Parent 📋")).catch(()=>{
-    let ta=document.createElement('textarea'); ta.value=t; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta); alert("✅ COPIED!");
-  });
-}
-function doneSmart(){
-  document.getElementById('smartResult').classList.add('hidden');
-  document.getElementById('smartActions').classList.add('hidden');
-  document.getElementById('smartPreview').classList.add('hidden');
-  document.getElementById('smartHint').classList.remove('hidden');
-  smartPhotoData=''; document.getElementById('smartPhoto').value='';
-  window.scrollTo({top:0,behavior:'smooth'});
-}
-setTimeout(()=>{ const FB=window.FB; FB.onAuthStateChanged(FB.auth, async(u)=>{ if(!u) return; currentTeacherId=u.uid; try{ let s=await FB.getDoc(FB.doc(FB.db,"users",u.uid)); if(s.exists()){ userData=s.data(); document.getElementById('teacherIdShow').innerText=userData.indexNumber||"SHKET"; document.getElementById('teacherInfo').innerText=(userData.subjects||"Junior School"); } }catch(e){} }); },600);
-</script>
-</body></html>
