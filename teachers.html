@@ -1,49 +1,55 @@
 <!DOCTYPE html>
 <html><head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Teachers - SomaHub - All Files Connected</title>
+<title>Teachers - SomaHub - Copy Exit Buttons</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;800;900&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <style>body{font-family:'Nunito',sans-serif;background:#f6f6f7}
 @keyframes m{0%{transform:translateX(100%)}100%{transform:translateX(-100%)}}.marquee{animation:m 22s linear infinite}
 </style>
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-import { getFirestore, doc, getDoc, collection, getDocs, query, where, orderBy, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+import { getFirestore, doc, getDoc, collection, getDocs, query, where, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 const cfg={apiKey:"AIzaSyA93BNes3AmFyxIEgjSbvbIWqLyorLsuj8",authDomain:"somahubkenya-9e458.firebaseapp.com",projectId:"somahubkenya-9e458",storageBucket:"somahubkenya-9e458.firebasestorage.app",messagingSenderId:"615579085715",appId:"1:615579085715:web:28fca37ba498324bb49666"};
 const app=initializeApp(cfg); const auth=getAuth(app); const db=getFirestore(app);
-window.FB={auth,db,doc,getDoc,collection,getDocs,query,where,orderBy,addDoc,serverTimestamp,onAuthStateChanged,signOut};
+window.FB={auth,db,doc,getDoc,collection,getDocs,query,where,addDoc,serverTimestamp,onAuthStateChanged,signOut};
 </script>
 </head>
-<body class="flex justify-center"><div class="w-full max-w-[460px] bg-[#f6f6f7] min-h-screen pb-[100px]">
+<body class="flex justify-center"><div class="w-full max-w-[460px] bg-[#f6f6f7] min-h-screen pb-[120px]">
 <div class="h-2 flex"><div class="flex-1 bg-[#ff8a2a]"></div><div class="flex-1 bg-[#2ac5a0]"></div><div class="flex-1 bg-[#4a86ff]"></div><div class="flex-1 bg-[#ffcc1a]"></div></div>
 <div class="bg-white border-b-2 border-black sticky top-0 z-40">
 <div class="p-3 flex items-center gap-2">
-<div class="w-10 h-10 rounded-full border-2 border-black bg-[#ffcc1a] flex items-center justify-center overflow-hidden shrink-0"><img src="logo.png?v=9" onerror="this.style.display='none';this.parentNode.innerHTML='SH'" class="w-full h-full object-cover"></div>
-<div class="flex-1"><p class="font-black text-[14px] leading-none">Welcome, Mwalimu! 👩‍🏫</p><p class="text-[10px] font-bold text-gray-600" id="teacherInfo">Junior School • Grade 7, 8, 9</p></div>
+<div class="w-10 h-10 rounded-full border-2 border-black bg-[#ffcc1a] flex items-center justify-center">SH</div>
+<div class="flex-1"><p class="font-black text-[14px]">Welcome, Mwalimu! 👩‍🏫</p><p class="text-[10px] font-bold text-gray-600" id="teacherInfo">Junior School</p></div>
 <div class="bg-[#ffcc1a] border-2 border-black px-3 py-1 rounded-full shadow-[2px_2px_0_0_#000]"><p class="font-black text-[10px]" id="teacherIdShow">SHKET...</p></div>
 </div>
-<div class="bg-black text-white overflow-hidden whitespace-nowrap border-y-2 border-black h-8 flex items-center"><div class="marquee flex gap-8 text-[10px] font-black"><span>🎉 Karibu Mwalimu!</span><span>📚 Notes PP1-G9</span><span>📝 Exams + Schemes</span><span>📸 Smart Marker Bold + All Choices</span><span>✍️ Lesson Plans</span></div></div>
-</div>
-
-<div class="p-3">
-<div class="bg-[#dcfce7] border-2 border-black rounded-[1.3rem] p-4 shadow-[3px_3px_0_0_#000]">
-<div class="flex justify-between items-center"><p class="font-black text-[13px]">🏠 My Tuition</p><span id="tuitionCount" class="bg-black text-white px-2 py-1 rounded-full text-[9px] font-black">0 Assigned</span></div>
-<div id="myTuitionList" class="mt-3 space-y-2 text-[10px] font-bold">Loading...</div>
-</div>
+<div class="bg-black text-white overflow-hidden whitespace-nowrap border-y-2 border-black h-8 flex items-center"><div class="marquee flex gap-8 text-[10px] font-black"><span>📸 Smart Marker PRO</span><span>📋 Copy Button</span><span>✅ Done Exit Button</span></div></div>
 </div>
 
 <div class="p-3">
 <div class="bg-[#fffc8a] border-[2.5px] border-black rounded-[20px] p-4 shadow-[3px_3px_0_0_#000]">
-<div class="flex justify-between items-center"><p class="font-black text-[13px]">📸 Smart Marker - NEW</p><span class="bg-black text-white px-2 py-1 rounded-full text-[7px] font-black">Bold + All Choices</span></div>
-<p class="text-[9px] mt-2 font-bold">Snap exam → <b>Answer bold</b> + <b>Reason bold</b> + <b>All Choices A-D analysed</b></p>
+<div class="flex justify-between items-center"><p class="font-black text-[13px]">📸 Smart Marker - PRO</p><span class="bg-black text-white px-2 py-1 rounded-full text-[7px] font-black">Copy + Exit at Bottom</span></div>
+<p class="text-[9px] mt-2 font-bold">Snap → Bold Answer + Bold Key Words + All Choices</p>
+
 <div class="mt-3 bg-white border-2 border-black rounded-xl p-2">
 <div id="smartPreview" class="hidden"><img id="smartImg" class="rounded-lg max-h-[180px] mx-auto border-2 border-black"></div>
-<p id="smartHint" class="text-[9px] text-center font-bold opacity-60 py-3">📸 Tap camera, snap exam paper</p>
+<p id="smartHint" class="text-[9px] text-center font-bold opacity-60 py-4">📸 Tap camera, snap exam paper</p>
 <div id="smartResult" class="mt-2 text-[11px] leading-6 whitespace-pre-wrap font-bold hidden bg-[#fffde7] border-2 border-black rounded-xl p-3"></div>
+
+<!-- COPY + EXIT BUTTONS AT BOTTOM - YOUR REQUEST -->
+<div id="smartActions" class="hidden mt-4">
+<div class="border-t-2 border-dashed border-black pt-3">
+<p class="text-[9px] font-black text-center mb-2">⬇️ ACTIONS ⬇️</p>
+<div class="grid grid-cols-2 gap-3">
+<button onclick="copySmartResult()" class="bg-white border-[2.5px] border-black rounded-full py-3.5 font-black text-[12px] shadow-[3px_3px_0_0_#000] active:translate-x-[1px] active:translate-y-[1px] active:shadow-[1px_1px_0_0_#000]">📋 COPY</button>
+<button onclick="doneSmart()" class="bg-black text-white border-[2.5px] border-black rounded-full py-3.5 font-black text-[12px] shadow-[3px_3px_0_0_#000] active:translate-x-[1px] active:translate-y-[1px] active:shadow-[1px_1px_0_0_#000]">✅ DONE / EXIT</button>
 </div>
+<p class="text-[7px] font-bold text-center mt-2 opacity-60">Copy to WhatsApp • Done clears screen</p>
+</div>
+</div>
+</div>
+
 <div class="mt-3 grid grid-cols-2 gap-2">
 <button onclick="document.getElementById('smartPhoto').click()" class="bg-white border-2 border-black rounded-full py-3 font-black text-[11px] shadow-[2px_2px_0_0_#000]">📷 Snap Exam</button>
 <button onclick="markSmart()" id="smartBtn" class="bg-black text-white border-2 border-black rounded-full py-3 font-black text-[11px] shadow-[2px_2px_0_0_#000]">✨ Mark Smart</button>
@@ -52,117 +58,68 @@ window.FB={auth,db,doc,getDoc,collection,getDocs,query,where,orderBy,addDoc,serv
 </div>
 </div>
 
-<div class="p-3">
-<div class="bg-[#ffcc1a] border-[2.5px] border-black rounded-[20px] p-4 shadow-[3px_3px_0_0_#000]">
-<p class="font-black text-[12px]">Request Homeschooling as Teacher</p>
-<div class="mt-3 space-y-2">
-<input id="t_shke" placeholder="SHKE00501 - Student SHKE" class="w-full bg-white border-2 border-black rounded-full px-4 py-3 text-[11px] font-bold outline-none">
-<input id="t_name" placeholder="Susan - Student Name" class="w-full bg-white border-2 border-black rounded-full px-4 py-3 text-[11px] font-bold outline-none">
+<div class="px-3 mt-3">
+<p class="font-black text-[14px] mb-2">🚀 Quick Access - No 404</p>
 <div class="grid grid-cols-2 gap-2">
-<input id="t_class" placeholder="7 - Class" class="bg-white border-2 border-black rounded-full px-4 py-3 text-[11px] font-bold outline-none">
-<select id="t_subject" class="bg-white border-2 border-black rounded-full px-4 py-3 text-[11px] font-bold outline-none"><option>All Subjects</option><option>Mathematics</option><option>English</option><option>Kiswahili</option><option>Science</option><option>Social</option><option>CRE</option></select>
-</div>
-<input id="t_parentPhone" placeholder="Parent Phone" class="w-full bg-white border-2 border-black rounded-full px-4 py-3 text-[11px] font-bold outline-none">
-<input id="t_location" placeholder="Nairobi - Location" class="w-full bg-white border-2 border-black rounded-full px-4 py-3 text-[11px] font-bold outline-none">
-<textarea id="t_reason" placeholder="Reason / Days e.g. Mon-Fri 4pm" class="w-full bg-white border-2 border-black rounded-2xl px-4 py-3 text-[11px] font-bold outline-none h-[60px]"></textarea>
-<button onclick="sendTeacherRequest()" id="sendBtn" class="w-full bg-black text-white rounded-full py-3 text-[11px] font-black border-2 border-black mt-2">⚡ Send Teacher Request</button>
-<p id="sendStatus" class="hidden text-[9px] font-black text-center mt-2 p-2 rounded-full border-2 border-black"></p>
-</div>
+<div onclick="location.href='notes.html'" class="bg-white rounded-xl p-3 border-2 border-black shadow-[2px_2px_0_0_#000] cursor-pointer"><p class="font-black text-[12px]">📚 Notes</p><p class="text-[9px]">notes.html ✅</p></div>
+<div onclick="location.href='exam.html'" class="bg-white rounded-xl p-3 border-2 border-black shadow-[2px_2px_0_0_#000] cursor-pointer"><p class="font-black text-[12px]">📝 Exams</p><p class="text-[9px]">exam.html ✅</p></div>
+<div onclick="location.href='homework.html'" class="bg-white rounded-xl p-3 border-2 border-black shadow-[2px_2px_0_0_#000] cursor-pointer"><p class="font-black text-[12px]">📝 Homework</p><p class="text-[9px]">homework.html ✅</p></div>
+<div onclick="location.href='lesson-plans.html'" class="bg-[#fff7e0] rounded-xl p-3 border-2 border-black shadow-[2px_2px_0_0_#000] cursor-pointer"><p class="font-black text-[12px]">📝 Lesson Plans</p><p class="text-[9px]">lesson-plans.html ✅</p></div>
+<div onclick="location.href='schemes.html'" class="bg-[#ffcc1a] rounded-xl p-3 border-2 border-black shadow-[2px_2px_0_0_#000] cursor-pointer"><p class="font-black text-[12px]">⚙️ Schemes</p><p class="text-[9px]">schemes.html ✅</p></div>
+<div onclick="location.href='curriculum-designs.html'" class="bg-[#dcfce7] rounded-xl p-3 border-2 border-black shadow-[2px_2px_0_0_#000] cursor-pointer"><p class="font-black text-[12px]">📘 Curriculum</p><p class="text-[9px]">curriculum-designs.html ✅</p></div>
+<div onclick="location.href='ai.assistant.html'" class="bg-[#fffc8a] rounded-xl p-3 border-[2.5px] border-black shadow-[2px_2px_0_0_#000] cursor-pointer"><p class="font-black text-[12px]">🤖 Smart Marker</p><p class="text-[9px]">ai.assistant.html ✅</p></div>
+<div onclick="location.href='games.html'" class="bg-[#e0f2ff] rounded-xl p-3 border-2 border-black shadow-[2px_2px_0_0_#000] cursor-pointer"><p class="font-black text-[12px]">🎮 Games</p><p class="text-[9px]">games.html ✅</p></div>
 </div>
 </div>
 
-<div class="p-3">
-<div class="bg-black text-white rounded-[1.5rem] p-4 border-2 border-black">
-<p class="font-black text-[13px]">🔒 Student Access Monitor</p>
-<div class="mt-3 flex gap-2"><input id="sid" placeholder="ENTER STUDENT ID SHKE" class="flex-1 bg-white text-black border-2 border-black rounded-full p-2.5 text-[10px] font-black uppercase"><button onclick="accessStudent()" class="bg-[#ffcc1a] text-black border-2 border-white px-5 rounded-full font-black text-[11px]">Access</button></div>
-<div id="sPrev" class="hidden mt-3 bg-white text-black rounded-xl p-2 border-2 border-white"></div>
-</div>
-</div>
-
-<!-- 4. QUICK ACCESS - ALL REAL FILES - NO 404 -->
-<div class="px-3">
-<p class="font-black text-[14px] mb-2">🚀 Quick Access - All Files Connected ✅</p>
-<div class="grid grid-cols-2 gap-2">
-<div onclick="location.href='notes.html'" class="bg-white rounded-xl p-3 border-2 border-black shadow-[2px_2px_0_0_#000] cursor-pointer active:scale-95"><p class="font-black text-[12px]">📚 Notes</p><p class="text-[9px] text-gray-500">notes.html ✅</p></div>
-<div onclick="location.href='exam.html'" class="bg-white rounded-xl p-3 border-2 border-black shadow-[2px_2px_0_0_#000] cursor-pointer active:scale-95"><p class="font-black text-[12px]">📝 Exams</p><p class="text-[9px] text-gray-500">exam.html ✅</p></div>
-<div onclick="location.href='homework.html'" class="bg-white rounded-xl p-3 border-2 border-black shadow-[2px_2px_0_0_#000] cursor-pointer active:scale-95"><p class="font-black text-[12px]">📝 Homework</p><p class="text-[9px] text-gray-500">homework.html ✅</p></div>
-<div onclick="location.href='schemes.html'" class="bg-[#ffcc1a] rounded-xl p-3 border-2 border-black shadow-[2px_2px_0_0_#000] cursor-pointer active:scale-95"><p class="font-black text-[12px]">⚙️ Schemes</p><p class="text-[9px] text-gray-500">schemes.html ✅</p></div>
-<div onclick="location.href='lesson-plans.html'" class="bg-[#fff7e0] rounded-xl p-3 border-2 border-black shadow-[2px_2px_0_0_#000] cursor-pointer active:scale-95"><p class="font-black text-[12px]">📝 Lesson Plans</p><p class="text-[9px] text-gray-500">lesson-plans.html ✅</p></div>
-<div onclick="location.href='curriculum-designs.html'" class="bg-[#dcfce7] rounded-xl p-3 border-2 border-black shadow-[2px_2px_0_0_#000] cursor-pointer active:scale-95"><p class="font-black text-[12px]">📘 Curriculum</p><p class="text-[9px] text-gray-500">curriculum-designs.html ✅</p></div>
-<div onclick="location.href='ai.assistant.html'" class="bg-[#fffc8a] rounded-xl p-3 border-[2.5px] border-black shadow-[2px_2px_0_0_#000] cursor-pointer active:scale-95"><p class="font-black text-[12px]">🤖 Smart Marker</p><p class="text-[9px] text-gray-500">ai.assistant.html ✅</p></div>
-<div onclick="location.href='games.html'" class="bg-[#e0f2ff] rounded-xl p-3 border-2 border-black shadow-[2px_2px_0_0_#000] cursor-pointer active:scale-95"><p class="font-black text-[12px]">🎮 Games</p><p class="text-[9px] text-gray-500">games.html ✅</p></div>
-<div onclick="location.href='foreign-language.html'" class="bg-[#ffe0f0] rounded-xl p-3 border-2 border-black shadow-[2px_2px_0_0_#000] cursor-pointer active:scale-95"><p class="font-black text-[12px]">🌍 Foreign Lang</p><p class="text-[9px] text-gray-500">foreign-language.html ✅</p></div>
-<div onclick="location.href='ict.html'" class="bg-[#f0e0ff] rounded-xl p-3 border-2 border-black shadow-[2px_2px_0_0_#000] cursor-pointer active:scale-95"><p class="font-black text-[12px]">💻 ICT</p><p class="text-[9px] text-gray-500">ict.html ✅</p></div>
-<div onclick="location.href='student.html'" class="bg-[#e8f8ff] rounded-xl p-3 border-2 border-black shadow-[2px_2px_0_0_#000] cursor-pointer active:scale-95"><p class="font-black text-[12px]">👨‍🎓 Student</p><p class="text-[9px] text-gray-500">student.html ✅</p></div>
-<div onclick="location.href='parent.html'" class="bg-[#fffde7] rounded-xl p-3 border-2 border-black shadow-[2px_2px_0_0_#000] cursor-pointer active:scale-95"><p class="font-black text-[12px]">👪 Parent</p><p class="text-[9px] text-gray-500">parent.html ✅</p></div>
-</div>
-</div>
-
-<div class="p-3 space-y-3">
-<div class="bg-white rounded-[1.3rem] p-3 border-2 border-black shadow-[3px_3px_0_0_#000]">
-<div class="flex justify-between"><p class="font-black text-[12px]">🎁 Referrals</p><span class="bg-black text-white px-2 py-1 rounded-full text-[9px] font-black">0 pts</span></div>
-<div class="mt-2 grid grid-cols-2 gap-2"><div class="bg-[#fff7e0] border-2 border-black rounded-xl p-2"><p class="text-[7px] font-black">YOUR CODE</p><p class="font-black text-[11px]" id="refCode">SHKET...</p></div><div class="bg-[#e8f8ff] border-2 border-black rounded-xl p-2"><p class="text-[7px] font-black">BALANCE</p><p class="font-black text-[11px]">0 pts = 0 KES</p></div></div>
-</div>
-<div class="grid grid-cols-2 gap-2">
-<button onclick="location.href='care-chat.html'" class="bg-[#25d366] text-white border-2 border-black rounded-full py-3 font-black text-[11px] shadow-[2px_2px_0_0_#000]">💬 Care Chat</button>
-<button onclick="location.href='ai.assistant.html'" class="bg-[#4a86ff] text-white border-2 border-black rounded-full py-3 font-black text-[11px] shadow-[2px_2px_0_0_#000]">🤖 AI Assistant</button>
-</div>
-<div class="grid grid-cols-2 gap-2 pt-2">
-<button onclick="location.href='registration.html'" class="bg-white border-2 border-black rounded-full py-3 font-black text-[11px] shadow-[2px_2px_0_0_#000]">Edit Profile</button>
-<button onclick="if(confirm('Log out?')){ FB.signOut(FB.auth).then(()=>location.href='index.html')}" class="bg-black text-white border-2 border-black rounded-full py-3 font-black text-[11px] shadow-[2px_2px_0_0_#000]">Log Out</button>
-</div>
-</div>
 </div>
 <script>
-let currentTeacherId=null, userData=null, smartPhotoData='';
+let smartPhotoData='', currentTeacherId=null, userData=null;
 const PROXY_URL="/api/gemini";
-function handleSmartPhoto(input){let f=input.files[0]; if(!f) return; let r=new FileReader(); r.onload=e=>{smartPhotoData=e.target.result; document.getElementById('smartImg').src=smartPhotoData; document.getElementById('smartPreview').classList.remove('hidden'); document.getElementById('smartHint').classList.add('hidden');}; r.readAsDataURL(f);}
-async function markSmart(){if(!smartPhotoData) return alert("Snap exam first 📸"); let btn=document.getElementById('smartBtn'), resDiv=document.getElementById('smartResult'); btn.innerText="⏳ Marking..."; btn.disabled=true; resDiv.classList.remove('hidden'); resDiv.innerText="Marking... Analysing all choices A-D with bold..."; try{ let photo=smartPhotoData.split(',')[1]; let resp=await fetch(PROXY_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({question:"Mark this photo - analyse ALL choices A,B,C,D, bold Answer + Reason + key points, Score per Q, Overall", grade:"Grade 7", shke:"SHKE", mode:"mark", photo: photo})}); let data=await resp.json(); resDiv.innerText=data.answer||data.reply||data.text||JSON.stringify(data); }catch(e){ resDiv.innerText="❌ Error: "+e.message; } btn.innerText="✨ Mark Smart"; btn.disabled=false; }
-function accessStudent(){ let sid=document.getElementById('sid').value.trim().toUpperCase(); if(!sid) return alert("Enter SHKE"); let el=document.getElementById('sPrev'); el.classList.remove('hidden'); el.innerHTML=`<p class="font-black text-[10px]">Student ${sid}</p>`; setTimeout(()=>location.href=`student-monitor.html?shke=${sid}`,800); }
-async function loadMyTuitions(){
- let FB=window.FB; if(!currentTeacherId) return; let list=document.getElementById('myTuitionList'); list.innerHTML="Loading...";
- try{
-  let docs=[];
-  try{ let q1=FB.query(FB.collection(FB.db,"homeschooling_requests"), FB.where("teacherId","==",currentTeacherId)); let snap1=await FB.getDocs(q1); snap1.forEach(d=>docs.push({id:d.id,...d.data()})); }catch(e){}
-  document.getElementById('tuitionCount').innerText=`${docs.length} Assigned`;
-  if(docs.length===0){ list.innerHTML=`<div class="bg-white border-2 border-black rounded-xl p-3 text-center"><p class="font-black text-[10px]">No tuition assigned yet</p></div>`; return; }
-  list.innerHTML=""; docs.forEach(r=>{ list.innerHTML+=`<div class="bg-white border-2 border-black rounded-xl p-3"><p class="font-black text-[11px]">🔗 ${r.shke||''} • ${r.childName||''}</p></div>`; });
- }catch(e){ list.innerHTML=`Error: ${e.message}`; }
+function handleSmartPhoto(input){
+  let f=input.files[0]; if(!f) return;
+  let r=new FileReader();
+  r.onload=e=>{
+    smartPhotoData=e.target.result;
+    document.getElementById('smartImg').src=smartPhotoData;
+    document.getElementById('smartPreview').classList.remove('hidden');
+    document.getElementById('smartHint').classList.add('hidden');
+    document.getElementById('smartResult').classList.add('hidden');
+    document.getElementById('smartActions').classList.add('hidden');
+  };
+  r.readAsDataURL(f);
 }
-async function sendTeacherRequest(){
- let FB=window.FB; let btn=document.getElementById('sendBtn'), status=document.getElementById('sendStatus');
- let studentShke=document.getElementById('t_shke').value.trim().toUpperCase();
- let studentName=document.getElementById('t_name').value.trim();
- let studentClass=document.getElementById('t_class').value.trim();
- let subject=document.getElementById('t_subject').value;
- let parentPhone=document.getElementById('t_parentPhone').value.trim();
- let location=document.getElementById('t_location').value.trim()||"Nairobi";
- let reason=document.getElementById('t_reason').value.trim();
- if(!studentShke||!studentName){ alert("Enter SHKE + Name"); return; }
- btn.innerText="⏳ Sending..."; btn.disabled=true;
- try{
-  let data={ teacherId: currentTeacherId, teacherShke: userData?.indexNumber||"SHKE", teacherName: userData?.firstName||"Teacher", teacherUid: currentTeacherId, shke: studentShke, studentShke, studentName, childName: studentName, studentClass, grade: studentClass, subject, parentPhone, location, reason, days: reason, type:"TEACHER_REQUEST", status:"PENDING", timestamp: FB.serverTimestamp(), createdAt: FB.serverTimestamp() };
-  await FB.addDoc(FB.collection(FB.db,"homeschooling_requests"), data);
-  status.innerText="✅ Sent!"; status.className="text-[9px] font-black text-center mt-2 p-2 rounded-full border-2 border-black bg-[#dcfce7]"; status.classList.remove('hidden');
-  btn.innerText="✅ Sent"; loadMyTuitions(); setTimeout(()=>{btn.innerText="⚡ Send Teacher Request"; btn.disabled=false;},3000);
- }catch(e){ status.innerText="❌ "+e.message; status.className="text-[9px] font-black text-center mt-2 p-2 rounded-full border-2 border-black bg-[#ffeaea]"; status.classList.remove('hidden'); btn.innerText="⚡ Send"; btn.disabled=false; }
+async function markSmart(){
+  if(!smartPhotoData) return alert("Snap exam first 📸");
+  let btn=document.getElementById('smartBtn'), resDiv=document.getElementById('smartResult'), actDiv=document.getElementById('smartActions');
+  btn.innerText="⏳ Marking..."; btn.disabled=true;
+  resDiv.classList.remove('hidden');
+  resDiv.innerText="Marking... Well organized, bold answer, bold key words, all choices...";
+  try{
+    let photo=smartPhotoData.split(',')[1];
+    let resp=await fetch(PROXY_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({question:"Mark this photo - well organized, detailed, bold Answer, bold Key Words, All Choices A-D analysed, Score per Q, Overall", grade:"Grade 7", shke:"SHKE", mode:"mark", photo: photo})});
+    let data=await resp.json();
+    resDiv.innerText=data.answer||JSON.stringify(data);
+    actDiv.classList.remove('hidden');
+    actDiv.scrollIntoView({behavior:'smooth'});
+  }catch(e){ resDiv.innerText="❌ Error: "+e.message; }
+  btn.innerText="✨ Mark Smart"; btn.disabled=false;
 }
-setTimeout(()=>{
- const FB=window.FB;
- FB.onAuthStateChanged(FB.auth, async(u)=>{
-   if(!u){ location.href='registration.html'; return; }
-   currentTeacherId=u.uid;
-   try{
-     let s=await FB.getDoc(FB.doc(FB.db,"users",u.uid));
-     if(s.exists()){
-       userData=s.data();
-       document.getElementById('teacherIdShow').innerText=userData.indexNumber||"SHKET";
-       document.getElementById('refCode').innerText=userData.indexNumber||"SHKET";
-       document.getElementById('teacherInfo').innerText=(userData.subjects||"Junior School")+" • "+(userData.grade||"Grade 7,8,9");
-       loadMyTuitions();
-     }else{ loadMyTuitions(); }
-   }catch(e){}
- });
-},600);
+function copySmartResult(){
+  let t=document.getElementById('smartResult').innerText;
+  if(!t) return alert("No result to copy");
+  navigator.clipboard.writeText(t).then(()=>alert("✅ COPIED! Pasted to WhatsApp/Parent 📋")).catch(()=>{
+    let ta=document.createElement('textarea'); ta.value=t; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta); alert("✅ COPIED!");
+  });
+}
+function doneSmart(){
+  document.getElementById('smartResult').classList.add('hidden');
+  document.getElementById('smartActions').classList.add('hidden');
+  document.getElementById('smartPreview').classList.add('hidden');
+  document.getElementById('smartHint').classList.remove('hidden');
+  smartPhotoData=''; document.getElementById('smartPhoto').value='';
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+setTimeout(()=>{ const FB=window.FB; FB.onAuthStateChanged(FB.auth, async(u)=>{ if(!u) return; currentTeacherId=u.uid; try{ let s=await FB.getDoc(FB.doc(FB.db,"users",u.uid)); if(s.exists()){ userData=s.data(); document.getElementById('teacherIdShow').innerText=userData.indexNumber||"SHKET"; document.getElementById('teacherInfo').innerText=(userData.subjects||"Junior School"); } }catch(e){} }); },600);
 </script>
 </body></html>
