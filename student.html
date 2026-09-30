@@ -40,8 +40,6 @@ const app=initializeApp(cfg); window.FB={auth:getAuth(app),db:getFirestore(app),
 <div class="bg-[#4a86ff] border-2 border-black rounded-xl p-3 shadow-[2px_2px_0_0_#000] text-white"><p class="font-black text-[11px]">📋 Weekly Exam</p><p class="text-[8px] font-bold">Sat-Sun • 100 Marks</p><a href="exam.html" class="mt-2 block text-center w-full bg-white text-black rounded-full py-2 font-black text-[10px]">Start →</a></div>
 </div>
 </div>
-
-<!-- NEW: TIMETABLE CARD - Mon to Fri ✅ ⏳ -->
 <div class="bg-[#0a4a3a] rounded-[1.3rem] p-4 border-2 border-black shadow-[3px_3px_0_0_#000] text-white">
 <div class="flex justify-between items-center">
 <p class="font-black text-[12px]">📅 Timetable Mon-Fri</p>
@@ -51,7 +49,6 @@ const app=initializeApp(cfg); window.FB={auth:getAuth(app),db:getFirestore(app),
 <div id="ttMini" class="mt-3 grid grid-cols-3 gap-1.5"></div>
 <button onclick="openTimetable()" class="mt-3 w-full bg-white text-black border-2 border-black rounded-full py-2.5 font-black text-[10px] shadow-[2px_2px_0_0_#000]">View Full Timetable →</button>
 </div>
-
 <p class="font-black text-[14px]">🚀 Quick Access</p>
 <div class="grid grid-cols-2 gap-2">
 <a href="notes.html" class="bg-white rounded-xl p-3 border-2 border-black shadow-[2px_2px_0_0_#000]"><p class="font-black text-[12px]"><i class="fa-solid fa-book text-purple-600"></i> Notes</p><p class="text-[9px] text-gray-500">PP1-G9 • KICD</p></a>
@@ -61,7 +58,7 @@ const app=initializeApp(cfg); window.FB={auth:getAuth(app),db:getFirestore(app),
 <a href="ict.html" class="bg-[#e0f2ff] rounded-xl p-3 border-2 border-black shadow-[2px_2px_0_0_#000]"><p class="font-black text-[12px]"><i class="fa-solid fa-computer text-blue-600"></i> ICT / Coding</p><p class="text-[9px] text-gray-500">Computer, Internet, Coding</p></a>
 <a href="foreign-language.html" class="bg-[#ffe8f0] rounded-xl p-3 border-2 border-black shadow-[2px_2px_0_0_#000]"><p class="font-black text-[12px]"><i class="fa-solid fa-language text-pink-600"></i> Foreign Language</p><p class="text-[9px] text-gray-500">French, German, Chinese</p></a>
 <a href="curriculum-designs.html" class="bg-white rounded-xl p-3 border-2 border-black shadow-[2px_2px_0_0_#000]"><p class="font-black text-[12px]"><i class="fa-solid fa-book-atlas text-teal-600"></i> Curriculum</p><p class="text-[9px] text-gray-500">KICD Designs</p></a>
-<a href="ai.assistant.html" class="bg-white rounded-xl p-3 border-2 border-black shadow-[2px_2px_0_0_#000]"><p class="font-black text-[12px]"><i class="fa-solid fa-circle-play text-red-600"></i> AI Tutor</p><p class="text-[9px] text-gray-500">Ask Anything</p></a>
+<a href="ai-assistance.html" class="bg-white rounded-xl p-3 border-2 border-black shadow-[2px_2px_0_0_#000]"><p class="font-black text-[12px]"><i class="fa-solid fa-circle-play text-red-600"></i> AI Tutor</p><p class="text-[9px] text-gray-500">Ask Anything</p></a>
 </div>
 <div class="bg-white rounded-[1.5rem] p-4 border-2 border-black shadow-[3px_3px_0_0_#000]">
 <div class="flex justify-between"><p class="font-black text-[13px]">🎁 Referrals & Wallet</p><span id="ptsBadge" class="bg-black text-white px-3 py-1 rounded-full text-[10px] font-black">0 pts</span></div>
@@ -87,8 +84,6 @@ const app=initializeApp(cfg); window.FB={auth:getAuth(app),db:getFirestore(app),
 </div>
 </div>
 </div>
-
-<!-- TIMETABLE MODAL -->
 <div id="ttModal" class="fixed inset-0 bg-black/60 hidden z-50 p-4 overflow-auto">
 <div class="bg-white rounded-[1.3rem] border-2 border-black max-w-[420px] mx-auto mt-10 p-4 shadow-[4px_4px_0_0_#000]">
 <div class="flex justify-between items-center"><p class="font-black text-[14px]">📅 Weekly Timetable</p><button onclick="closeTimetable()" class="bg-black text-white w-8 h-8 rounded-full font-black">X</button></div>
@@ -97,13 +92,10 @@ const app=initializeApp(cfg); window.FB={auth:getAuth(app),db:getFirestore(app),
 <button onclick="closeTimetable()" class="mt-4 w-full bg-[#ffcc1a] border-2 border-black rounded-full py-3 font-black text-[11px]">Close</button>
 </div>
 </div>
-
 <script>
 function copyRef(){ navigator.clipboard.writeText(document.getElementById('refLink').value); document.getElementById('convMsg').innerText="✓ Link Copied!"; }
 async function convertPoints(){ let pts=parseInt(document.getElementById('ptsBal').innerText)||0; if(pts<1000) return convMsg.innerText="❌ Need 1000 pts"; if(!confirm("Convert 1000 → 100 KES?")) return; const FB=window.FB; let uid=localStorage.getItem('sh_uid')||FB.auth.currentUser?.uid; await FB.updateDoc(FB.doc(FB.db,"users",uid),{points:FB.increment(-1000),kesBalance:FB.increment(100)}); ptsBal.innerText=pts-1000; convMsg.innerText="✓ 100 KES Added - Admin will pay"; }
 function doLogout(){ if(!confirm('Log out and reset?')) return; FB.signOut(FB.auth).then(()=>{ localStorage.clear(); sessionStorage.clear(); location.href='registration.html'; }); }
-
-// TIMETABLE LOGIC - Mon-Fri ✅ ⏳
 let todayName = new Date().toLocaleDateString('en-KE',{weekday:'long'});
 let weekKey = 'soma_tt_'+new Date().toISOString().slice(0,10);
 let timetable = JSON.parse(localStorage.getItem(weekKey)||'{}');
@@ -137,7 +129,6 @@ function openTimetable(){
 }
 function closeTimetable(){document.getElementById('ttModal').classList.add('hidden');}
 renderMini();
-
 async function checkTuition(userId, shke){
   try{
    let FB=window.FB; let q2=FB.query(FB.collection(FB.db,"homeschooling_requests"), FB.where("userId","==",userId), FB.orderBy("timestamp","desc"));
