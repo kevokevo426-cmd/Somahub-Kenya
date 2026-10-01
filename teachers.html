@@ -10,13 +10,7 @@ body{font-family:'Nunito',sans-serif;background:#f6f6f7}
 @keyframes m{0%{transform:translateX(100%)}100%{transform:translateX(-100%)}}.marquee{animation:m 22s linear infinite}
 .note-card{background:#fff;border:2px solid #000;border-radius:16px;padding:10px 12px;display:flex;justify-content:space-between;align-items:center;height:58px;box-shadow:2px 2px 0 0 #000;margin-bottom:6px}
 .bubble{padding:10px 12px;border-radius:14px;border:2.5px solid #000;margin:8px 0;font-size:11px;line-height:1.6}
-.knec-green{background:#dcfce7;border-left:6px solid #22c55e}
-.knec-yellow{background:#fef08a;border-left:6px solid #ffcc1a}
-.knec-blue{background:#e0f2ff;border-left:6px solid #4a86ff}
-.knec-red{background:#fee2e2;border-left:6px solid #ef4444}
-.knec-teal{background:#ccfbf1;border-left:6px solid #2ac5a0}
-.knec-purple{background:#f9f5ff;border-left:6px solid #a855f7}
-.knec-gold{background:linear-gradient(135deg,#fff7e0,#ffcc1a);border:3px solid #000}
+.knec-gold{background:linear-gradient(135deg,#fff7e0,#ffcc1a);border:3px solid #000}.knec-yellow{background:#fef08a;border-left:6px solid #ffcc1a}.knec-red{background:#fee2e2;border-left:6px solid #ef4444}.knec-teal{background:#ccfbf1;border-left:6px solid #2ac5a0}.knec-blue{background:#e0f2ff;border-left:6px solid #4a86ff}
 </style>
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
@@ -27,7 +21,7 @@ const app=initializeApp(cfg); const auth=getAuth(app); const db=getFirestore(app
 window.FB={auth,db,doc,getDoc,collection,getDocs,query,where,orderBy,addDoc,serverTimestamp,onAuthStateChanged,signOut};
 </script>
 </head>
-<body class="flex justify-center"><div class="w-full max-w-[460px] bg-[#f6f6f7] min-h-screen pb-[120px]">
+<body class="flex justify-center"><div class="w-full max-w-[460px] bg-[#f6f6f7] min-h-screen pb-[100px]">
 <div class="h-2 flex"><div class="flex-1 bg-[#ff8a2a]"></div><div class="flex-1 bg-[#2ac5a0]"></div><div class="flex-1 bg-[#4a86ff]"></div><div class="flex-1 bg-[#ffcc1a]"></div></div>
 <div class="bg-white border-b-2 border-black sticky top-0 z-40">
 <div class="p-3 flex items-center gap-2">
@@ -35,268 +29,135 @@ window.FB={auth,db,doc,getDoc,collection,getDocs,query,where,orderBy,addDoc,serv
 <div class="flex-1"><p class="font-black text-[14px] leading-none">Welcome, Mwalimu! 👩‍🏫</p><p class="text-[10px] font-bold text-gray-600" id="teacherInfo">Junior School • Grade 7, 8, 9</p></div>
 <div class="bg-[#ffcc1a] border-2 border-black px-3 py-1 rounded-full shadow-[2px_2px_0_0_#000]"><p class="font-black text-[10px]" id="teacherIdShow">SHKET...</p></div>
 </div>
-<div class="bg-black text-white overflow-hidden whitespace-nowrap border-y-2 border-black h-8 flex items-center"><div class="marquee flex gap-8 text-[10px] font-black"><span>🎉 Karibu Mwalimu!</span><span>📸 Smart Marker PRO Added!</span><span>🏠 Tuition Learners Below</span><span>✍️ Composition Strict/Fair/Medium</span><span>📚 Daily Homework 10 Marks</span></div></div>
+<div class="bg-black text-white overflow-hidden whitespace-nowrap border-y-2 border-black h-8 flex items-center"><div class="marquee flex gap-8 text-[10px] font-black"><span>🎉 Karibu Mwalimu!</span><span>🏠 Tuition Learners Below</span><span>📚 Daily Homework 10 Marks</span><span>📝 Exams + Schemes + Lesson Plan</span><span>📸 Written Work Marker</span><span>✍️ Composition Strict/Fair/Medium</span></div></div>
 </div>
 
-<!-- 0. SMART MARKER - KNEC PRO - NEW ADDED - NOT DELETING ANYTHING -->
+<!-- SMART MAKER - ADDED TO YOUR WORKING FILE - FIXES STORAGE ERROR -->
 <div class="p-3">
 <div class="bg-[#fffc8a] border-[2.5px] border-black rounded-[1.5rem] p-4 shadow-[4px_4px_0_0_#000]">
-<div class="flex justify-between items-center">
-<p class="font-black text-[14px]">📸 Smart Marker - KNEC PRO</p>
-<span class="bg-black text-white px-2 py-1 rounded-full text-[7px] font-black">PP1-G9 • COLORED</span>
-</div>
-<p class="text-[9px] font-bold mt-1">Snap exam → <span class="bg-white border border-black px-1 rounded">Bold Answer</span> + <span class="bg-[#ffcc1a] border border-black px-1 rounded">Key Words</span> + Teacher Help</p>
-
+<div class="flex justify-between items-center"><p class="font-black text-[13px]">📸 Smart Marker - KNEC PRO</p><span class="bg-black text-white px-2 py-1 rounded-full text-[7px] font-black">PP1-G9 • OLD GEMINI OK</span></div>
 <div class="mt-3 bg-white border-2 border-black rounded-xl p-2 space-y-2">
-<div class="grid grid-cols-2 gap-2">
-<select id="gradeSel" class="border-2 border-black rounded-full px-3 py-2 font-black text-[11px] bg-[#e0f2ff]">
-<option>PP1</option><option>PP2</option><option>Grade 1</option><option>Grade 2</option><option>Grade 3</option><option>Grade 4</option><option>Grade 5</option><option>Grade 6</option><option selected>Grade 7</option><option>Grade 8</option><option>Grade 9</option>
-</select>
-<select id="subjectSel" class="border-2 border-black rounded-full px-3 py-2 font-black text-[11px] bg-[#ffcc1a]">
-<option>Science</option><option>Math</option><option>English</option><option>Kiswahili</option><option>SST</option><option>CRE</option><option>Agriculture</option><option>All Subjects</option>
-</select>
-</div>
-
+<div class="grid grid-cols-2 gap-2"><select id="gradeSel" class="border-2 border-black rounded-full px-3 py-2 font-black text-[11px] bg-[#e0f2ff]"><option>PP1</option><option>PP2</option><option>Grade 1</option><option>Grade 2</option><option>Grade 3</option><option>Grade 4</option><option>Grade 5</option><option>Grade 6</option><option selected>Grade 7</option><option>Grade 8</option><option>Grade 9</option></select><select id="subjectSel" class="border-2 border-black rounded-full px-3 py-2 font-black text-[11px] bg-[#ffcc1a]"><option>Science</option><option>Math</option><option>English</option><option>Kiswahili</option><option>SST</option><option>CRE</option><option>Agriculture</option><option>All Subjects</option></select></div>
 <div id="smartPreview" class="hidden bg-[#fffde7] border-2 border-black rounded-xl p-2 text-center"></div>
-<div id="smartHint" class="bg-[#f6f6f7] border-2 border-dashed border-black rounded-xl p-3 text-center"><p class="font-black text-[10px]">📸 Snap clear photo of exam paper only<br><span class="text-[8px] opacity-60">Crop table - good light - use Gallery button if Photo says no storage</span></p></div>
-
+<div id="smartHint" class="bg-[#f6f6f7] border-2 border-dashed border-black rounded-xl p-3 text-center"><p class="font-black text-[10px]">📸 Snap paper only - Use Gallery if Photo says no enough storage</p></div>
 <div id="smartResult" class="hidden bg-[#fffde7] border-2 border-black rounded-xl p-2 max-h-[400px] overflow-auto"></div>
-
-<div id="smartActions" class="hidden grid grid-cols-2 gap-2">
-<button onclick="copySmart()" class="bg-white border-2 border-black rounded-full py-2.5 font-black text-[10px]">📋 COPY</button>
-<button onclick="clearSmart()" class="bg-black text-white border-2 border-black rounded-full py-2.5 font-black text-[10px]">✅ CLEAR</button>
-</div>
-
-<div class="grid grid-cols-3 gap-2">
-<button onclick="document.getElementById('smartPhoto').click()" class="bg-white border-2 border-black rounded-full py-3 font-black text-[10px] shadow-[2px_2px_0_0_#000]">📷 Photo</button>
-<button onclick="document.getElementById('smartGallery').click()" class="bg-[#ffcc1a] border-2 border-black rounded-full py-3 font-black text-[10px] shadow-[2px_2px_0_0_#000]">🖼️ Gallery</button>
-<button onclick="document.getElementById('smartVideo').click()" class="bg-[#2ac5a0] text-white border-2 border-black rounded-full py-3 font-black text-[10px] shadow-[2px_2px_0_0_#000]">🎥 Video</button>
-</div>
-<input type="file" id="smartPhoto" hidden accept="image/*" capture="environment" onchange="handleSmartPhoto(this)">
-<input type="file" id="smartGallery" hidden accept="image/*" onchange="handleSmartPhoto(this)">
-<input type="file" id="smartVideo" hidden accept="video/*" onchange="handleSmartVideo(this)">
-
+<div id="smartActions" class="hidden grid grid-cols-2 gap-2"><button onclick="copySmart()" class="bg-white border-2 border-black rounded-full py-2.5 font-black text-[10px]">📋 COPY</button><button onclick="clearSmart()" class="bg-black text-white border-2 border-black rounded-full py-2.5 font-black text-[10px]">✅ CLEAR</button></div>
+<div class="grid grid-cols-3 gap-2"><button onclick="document.getElementById('smartPhoto').click()" class="bg-white border-2 border-black rounded-full py-3 font-black text-[10px] shadow-[2px_2px_0_0_#000]">📷 Photo</button><button onclick="document.getElementById('smartGallery').click()" class="bg-[#ffcc1a] border-2 border-black rounded-full py-3 font-black text-[10px] shadow-[2px_2px_0_0_#000]">🖼️ Gallery</button><button onclick="document.getElementById('smartVideo').click()" class="bg-[#2ac5a0] text-white border-2 border-black rounded-full py-3 font-black text-[10px] shadow-[2px_2px_0_0_#000]">🎥 Video</button></div>
+<input type="file" id="smartPhoto" hidden accept="image/*" capture="environment" onchange="handleSmartPhoto(this)"><input type="file" id="smartGallery" hidden accept="image/*" onchange="handleSmartPhoto(this)"><input type="file" id="smartVideo" hidden accept="video/*" onchange="handleSmartVideo(this)">
 <button onclick="markSmart()" id="smartBtn" class="w-full bg-black text-white border-2 border-black rounded-full py-3 font-black text-[11px] shadow-[3px_3px_0_0_#000]">✨ Mark Smart - KNEC Teacher Mode</button>
-</div>
-</div>
-</div>
+</div></div></div>
 
-<!-- 1. MY TUITION - TEACHER ↔ LEARNER - KEPT -->
-<div class="p-3">
-<div class="bg-[#dcfce7] border-2 border-black rounded-[1.3rem] p-4 shadow-[3px_3px_0_0_#000]">
-<div class="flex justify-between items-center"><p class="font-black text-[13px]">🏠 My Tuition - Teacher ↔ Learner</p><span id="tuitionCount" class="bg-black text-white px-2 py-1 rounded-full text-[9px] font-black">0 Assigned</span></div>
-<p class="text-[9px] mt-1 opacity-70">Admin assigned you in Super Admin • Parent + Teacher connected via SHKE</p>
-<div id="myTuitionList" class="mt-3 space-y-2">Loading tuition learners...</div>
-</div>
-</div>
+<!-- 1. MY TUITION - YOUR WORKING CODE - KEPT 100% -->
+<div class="p-3"><div class="bg-[#dcfce7] border-2 border-black rounded-[1.3rem] p-4 shadow-[3px_3px_0_0_#000]"><div class="flex justify-between items-center"><p class="font-black text-[13px]">🏠 My Tuition - Teacher ↔ Learner</p><span id="tuitionCount" class="bg-black text-white px-2 py-1 rounded-full text-[9px] font-black">0 Assigned</span></div><p class="text-[9px] mt-1 opacity-70">Admin assigned you in Super Admin • Parent + Teacher connected via SHKE • You see parent phone + location + days</p><div id="myTuitionList" class="mt-3 space-y-2">Loading tuition learners...</div></div></div>
 
-<!-- 2. REQUEST HOMESCHOOLING AS TEACHER - KEPT -->
-<div class="p-3">
-<div class="bg-[#ffcc1a] border-[2.5px] border-black rounded-[20px] p-4 shadow-[3px_3px_0_0_#000]">
-<p class="font-black text-[12px]">Request Homeschooling as Teacher</p>
-<p class="text-[8px] mt-1 font-bold">Teacher <span id="t_shke_label">SHKE...</span> is requesting for student SHKE... Admin sees TEACHER REQUEST tag</p>
-<div class="mt-3 space-y-2">
-<input id="t_shke" placeholder="SHKE00501 - Student SHKE" class="w-full bg-white border-2 border-black rounded-full px-4 py-3 text-[11px] font-bold outline-none">
-<input id="t_name" placeholder="Susan - Student Name" class="w-full bg-white border-2 border-black rounded-full px-4 py-3 text-[11px] font-bold outline-none">
-<div class="grid grid-cols-2 gap-2">
-<input id="t_class" placeholder="7 - Class" class="bg-white border-2 border-black rounded-full px-4 py-3 text-[11px] font-bold outline-none">
-<select id="t_subject" class="bg-white border-2 border-black rounded-full px-4 py-3 text-[11px] font-bold outline-none"><option>All Subjects</option><option>Mathematics</option><option>English</option><option>Kiswahili</option><option>Science</option><option>Social</option><option>CRE</option><option>French - Foreign</option><option>German - Foreign</option><option>Chinese - Foreign</option></select>
-</div>
-<input id="t_parentPhone" placeholder="Parent Phone (If you have)" class="w-full bg-white border-2 border-black rounded-full px-4 py-3 text-[11px] font-bold outline-none">
-<input id="t_location" placeholder="Nairobi - Location" class="w-full bg-white border-2 border-black rounded-full px-4 py-3 text-[11px] font-bold outline-none">
-<textarea id="t_reason" placeholder="Reason / Days available e.g. Mon-Fri 4pm" class="w-full bg-white border-2 border-black rounded-2xl px-4 py-3 text-[11px] font-bold outline-none h-[60px]"></textarea>
-<button onclick="sendTeacherRequest()" id="sendBtn" class="w-full bg-black text-white rounded-full py-3 text-[11px] font-black border-2 border-black mt-2">⚡ Send Teacher Request → Admin Approves</button>
-<p id="sendStatus" class="hidden text-[9px] font-black text-center mt-2 p-2 rounded-full border-2 border-black"></p>
-</div>
-</div>
-</div>
+<!-- 2. REQUEST HOMESCHOOLING AS TEACHER - YOUR WORKING CODE - KEPT -->
+<div class="p-3"><div class="bg-[#ffcc1a] border-[2.5px] border-black rounded-[20px] p-4 shadow-[3px_3px_0_0_#000]"><p class="font-black text-[12px]">Request Homeschooling as Teacher</p><p class="text-[8px] mt-1 font-bold">Teacher <span id="t_shke_label">SHKE...</span> is requesting for student SHKE... Admin sees TEACHER REQUEST tag</p><div class="mt-3 space-y-2"><input id="t_shke" placeholder="SHKE00501 - Student SHKE" class="w-full bg-white border-2 border-black rounded-full px-4 py-3 text-[11px] font-bold outline-none"><input id="t_name" placeholder="Susan - Student Name" class="w-full bg-white border-2 border-black rounded-full px-4 py-3 text-[11px] font-bold outline-none"><div class="grid grid-cols-2 gap-2"><input id="t_class" placeholder="7 - Class" class="bg-white border-2 border-black rounded-full px-4 py-3 text-[11px] font-bold outline-none"><select id="t_subject" class="bg-white border-2 border-black rounded-full px-4 py-3 text-[11px] font-bold outline-none"><option>All Subjects</option><option>Mathematics</option><option>English</option><option>Kiswahili</option><option>Science</option><option>Social</option><option>CRE</option><option>French - Foreign</option><option>German - Foreign</option><option>Chinese - Foreign</option></select></div><input id="t_parentPhone" placeholder="Parent Phone (If you have)" class="w-full bg-white border-2 border-black rounded-full px-4 py-3 text-[11px] font-bold outline-none"><input id="t_location" placeholder="Nairobi - Location" class="w-full bg-white border-2 border-black rounded-full px-4 py-3 text-[11px] font-bold outline-none"><textarea id="t_reason" placeholder="Reason / Days available e.g. Mon-Fri 4pm" class="w-full bg-white border-2 border-black rounded-2xl px-4 py-3 text-[11px] font-bold outline-none h-[60px]"></textarea><button onclick="sendTeacherRequest()" id="sendBtn" class="w-full bg-black text-white rounded-full py-3 text-[11px] font-black border-2 border-black mt-2">⚡ Send Teacher Request → Admin Approves</button><p id="sendStatus" class="hidden text-[9px] font-black text-center mt-2 p-2 rounded-full border-2 border-black"></p></div></div></div>
 
-<!-- 3. HOW TO USE - KEPT -->
-<div class="p-3"><div class="bg-white rounded-[1.3rem] p-4 border-2 border-black shadow-[3px_3px_0_0_#000]">
-<p class="font-black text-[13px]">📘 How to use</p>
-<div class="mt-3 space-y-2 text-[11px] font-bold">
-<p>1. Tuition learners assigned by admin appear above - With SHKE + parent phone/location</p>
-<p>2. Use yellow form to request a student — Admin sees TEACHER REQUEST tag + Approve/Reject</p>
-<p>3. Smart Marker Above: Snap & Solve → Bold Answer + Key Words + Teacher Weakness</p>
-<p>4. Composition: bold (alternative) • Set Out Of • Strict/Fair/Medium</p>
-<p>5. Student does NOT see your phone/email - Only via Admin</p>
-</div>
-</div></div>
+<!-- 3. HOW TO USE - YOUR WORKING CODE - KEPT -->
+<div class="p-3"><div class="bg-white rounded-[1.3rem] p-4 border-2 border-black shadow-[3px_3px_0_0_#000]"><p class="font-black text-[13px]">📘 How to use</p><div class="mt-3 space-y-2 text-[11px] font-bold"><p>1. Tuition learners assigned by admin appear above - With SHKE + parent phone/location</p><p>2. Use yellow form to request a student — Admin sees TEACHER REQUEST tag + Approve/Reject</p><p>3. AI Marker: Snap & Solve → Correction + Notes link (in Teacher Tools)</p><p>4. Composition: bold (alternative) • Set Out Of • Strict/Fair/Medium</p><p>5. Student does NOT see your phone/email - Only via Admin</p></div><div class="mt-3 bg-[#ffcc1a] border-2 border-black rounded-xl p-2"><p class="text-[9px] font-black">*Admin must approve homeschooling (teacher learner parent via SHKE)</p></div></div></div>
 
-<!-- 4. STUDENT ACCESS MONITOR - KEPT -->
-<div class="p-3">
-<div class="bg-black text-white rounded-[1.5rem] p-4 border-2 border-black">
-<p class="font-black text-[13px]">🔒 Student Access Monitor</p>
-<div class="mt-3 flex gap-2"><input id="sid" placeholder="ENTER STUDENT ID SHKE" class="flex-1 bg-white text-black border-2 border-black rounded-full p-2.5 text-[10px] font-black uppercase"><button onclick="accessStudent()" class="bg-[#ffcc1a] text-black border-2 border-white px-5 rounded-full font-black text-[11px]">Access</button></div>
-<div id="sPrev" class="hidden mt-3 bg-white text-black rounded-xl p-2 border-2 border-white"></div>
-</div>
-</div>
+<!-- 4. STUDENT ACCESS MONITOR - YOUR WORKING CODE - KEPT -->
+<div class="p-3"><div class="bg-black text-white rounded-[1.5rem] p-4 border-2 border-black"><p class="font-black text-[13px]">🔒 Student Access Monitor</p><div class="mt-3 flex gap-2"><input id="sid" placeholder="ENTER STUDENT ID SHKE" class="flex-1 bg-white text-black border-2 border-black rounded-full p-2.5 text-[10px] font-black uppercase"><button onclick="accessStudent()" class="bg-[#ffcc1a] text-black border-2 border-white px-5 rounded-full font-black text-[11px]">Access</button></div><div id="sPrev" class="hidden mt-3 bg-white text-black rounded-xl p-2 border-2 border-white"></div></div></div>
 
-<!-- 5. QUICK ACCESS - KEPT + CONNECTED -->
-<div class="px-3">
-<p class="font-black text-[14px] mb-2">🚀 Quick Access - Full Tools</p>
-<div class="grid grid-cols-2 gap-2">
-<div onclick="location.href='notes.html'" class="bg-white rounded-xl p-3 border-2 border-black shadow-[2px_2px_0_0_#000]"><p class="font-black text-[12px]">📚 Notes</p><p class="text-[9px] text-gray-500">PP1-G9 • KICD</p></div>
+<!-- 5. QUICK ACCESS - YOUR WORKING CODE + ADDED SCHEMES/LESSON/DESIGNS LINKS -->
+<div class="px-3"><p class="font-black text-[14px] mb-2">🚀 Quick Access - Full Tools</p><div class="grid grid-cols-2 gap-2">
+<div onclick="location.href='notes.html'" class="bg-white rounded-xl p-3 border-2 border-black shadow-[2px_2px_0_0_#000]"><p class="font-black text-[12px]">📚 Notes</p><p class="text-[9px] text-gray-500">PP1-G9</p></div>
 <div onclick="location.href='weekly-exams.html'" class="bg-white rounded-xl p-3 border-2 border-black shadow-[2px_2px_0_0_#000]"><p class="font-black text-[12px]">📝 Exams</p><p class="text-[9px] text-gray-500">Weekly/Monthly</p></div>
 <div onclick="location.href='homework.html'" class="bg-white rounded-xl p-3 border-2 border-black shadow-[2px_2px_0_0_#000]"><p class="font-black text-[12px]">📝 Homework</p><p class="text-[9px] text-gray-500">Daily 10 Marks</p></div>
 <div onclick="location.href='teacher-tools.html'" class="bg-[#ffcc1a] rounded-xl p-3 border-2 border-black shadow-[2px_2px_0_0_#000]"><p class="font-black text-[12px]">⚙️ Teacher Tools</p><p class="text-[9px] text-gray-500">Schemes • Lesson • 📸 Marker • ✍️ Comp</p></div>
-<div onclick="location.href='dashboard.html'" class="bg-black text-white rounded-xl p-3 border-2 border-black shadow-[2px_2px_0_0_#000]"><p class="font-black text-[12px]">📊 Dashboard</p><p class="text-[9px] opacity-70">My Earnings • Points</p></div>
-<div onclick="location.href='student.html'" class="bg-[#e0f2ff] rounded-xl p-3 border-2 border-black shadow-[2px_2px_0_0_#000]"><p class="font-black text-[12px]">🎒 Student View</p><p class="text-[9px] text-gray-500">See learner panel</p></div>
-</div>
-<div id="resList" class="mt-3"></div>
-</div>
+<div onclick="location.href='schemes.html'" class="bg-[#e0f2ff] rounded-xl p-3 border-2 border-black shadow-[2px_2px_0_0_#000]"><p class="font-black text-[12px]">📘 Schemes</p><p class="text-[9px] text-gray-500">KICD Aligned</p></div>
+<div onclick="location.href='lesson-plans.html'" class="bg-[#fff7e0] rounded-xl p-3 border-2 border-black shadow-[2px_2px_0_0_#000]"><p class="font-black text-[12px]">📝 Lesson Plan</p><p class="text-[9px] text-gray-500">CBC Ready</p></div>
+<div onclick="location.href='curriculum-designs.html'" class="bg-[#ffe0f0] rounded-xl p-3 border-2 border-black shadow-[2px_2px_0_0_#000]"><p class="font-black text-[12px]">📖 Designs</p><p class="text-[9px] text-gray-500">Curriculum</p></div>
+<div onclick="location.href='ai.assistant.html'" class="bg-[#dcfce7] rounded-xl p-3 border-2 border-black shadow-[2px_2px_0_0_#000]"><p class="font-black text-[12px]">🤖 AI Assistant</p><p class="text-[9px] text-gray-500">Ask Anything</p></div>
+</div><div id="resList" class="mt-3"></div></div>
 
-<!-- 6. REFERRALS & WALLET - KEPT + LINKED TO DASHBOARD -->
+<!-- 6. REFERRALS + DASHBOARD - YOUR WORKING CODE + DASHBOARD BUTTON ADDED -->
 <div class="p-3 space-y-3">
-<div class="bg-white rounded-[1.3rem] p-4 border-2 border-black shadow-[3px_3px_0_0_#000]">
-<div class="flex justify-between items-center"><p class="font-black text-[12px]">🎁 Referrals & Dashboard</p><span id="ptsBadge" class="bg-black text-white px-2 py-1 rounded-full text-[9px] font-black">0 pts</span></div>
-<div class="mt-2 grid grid-cols-2 gap-2">
-<div class="bg-[#fff7e0] border-2 border-black rounded-xl p-2.5"><p class="text-[7px] font-black">YOUR CODE</p><p class="font-black text-[11px]" id="refCode">SHKET...</p><p class="text-[7px] mt-1">100 pts / invite</p></div>
-<div class="bg-[#e8f8ff] border-2 border-black rounded-xl p-2.5"><p class="text-[7px] font-black">BALANCE</p><p class="font-black text-[11px]"><span id="ptsBal">0</span> pts = <span id="kesBal">0</span> KES</p><p class="text-[7px] mt-1">1000 pts = 100 KES</p></div>
-</div>
+<div class="bg-white rounded-[1.3rem] p-3 border-2 border-black shadow-[3px_3px_0_0_#000]">
+<div class="flex justify-between"><p class="font-black text-[12px]">🎁 Referrals</p><span id="ptsBadge" class="bg-black text-white px-2 py-1 rounded-full text-[9px] font-black">0 pts</span></div>
+<div class="mt-2 grid grid-cols-2 gap-2"><div class="bg-[#fff7e0] border-2 border-black rounded-xl p-2"><p class="text-[7px] font-black">YOUR CODE</p><p class="font-black text-[11px]" id="refCode">SHKET...</p></div><div class="bg-[#e8f8ff] border-2 border-black rounded-xl p-2"><p class="text-[7px] font-black">BALANCE</p><p class="font-black text-[11px]"><span id="ptsBal">0</span> pts = <span id="kesBal">0</span> KES</p></div></div>
 <div class="mt-3 flex gap-2"><input id="refLink" readonly class="flex-1 bg-[#f6f6f7] border-2 border-black rounded-full p-2.5 text-[9px] font-bold"><button onclick="copyRef()" class="bg-black text-white px-4 rounded-full font-black text-[10px]">Copy 📋</button></div>
-<div class="mt-3 grid grid-cols-2 gap-2">
-<button onclick="location.href='dashboard.html'" class="bg-black text-white border-2 border-black rounded-full py-2.5 font-black text-[10px]">📊 Dashboard →</button>
-<button onclick="copyCareLink()" class="bg-[#25d366] text-white border-2 border-black rounded-full py-2.5 font-black text-[10px]">🔗 Care Link</button>
-</div>
+<div class="mt-3 grid grid-cols-2 gap-2"><button onclick="location.href='wallet.html'" class="bg-black text-white border-2 border-black rounded-full py-2.5 font-black text-[10px]">📊 Dashboard / Wallet →</button><button onclick="copyCareLink()" class="bg-[#25d366] text-white border-2 border-black rounded-full py-2.5 font-black text-[10px]">🔗 Care Link</button></div>
 <p id="convMsg" class="text-[10px] font-bold text-center mt-2 text-green-600"></p>
 </div>
-<div class="grid grid-cols-2 gap-2">
-<button onclick="location.href='care-chat.html'" class="bg-[#25d366] text-white border-2 border-black rounded-full py-3 font-black text-[11px] shadow-[2px_2px_0_0_#000]">💬 Care Chat</button>
-<button onclick="location.href='ai-assistance.html'" class="bg-[#4a86ff] text-white border-2 border-black rounded-full py-3 font-black text-[11px] shadow-[2px_2px_0_0_#000]">🤖 AI Assistant</button>
-</div>
-<div class="grid grid-cols-2 gap-2 pt-2">
-<button onclick="window.location.href='registration.html'" class="bg-white border-2 border-black rounded-full py-3 font-black text-[11px] shadow-[2px_2px_0_0_#000]">Edit Profile</button>
-<button onclick="if(confirm('Log out?')){ FB.signOut(FB.auth).then(()=>location.href='index.html')}" class="bg-black text-white border-2 border-black rounded-full py-3 font-black text-[11px] shadow-[2px_2px_0_0_#000]">Log Out</button>
-</div>
+<div class="grid grid-cols-2 gap-2"><button onclick="location.href='care-chat.html'" class="bg-[#25d366] text-white border-2 border-black rounded-full py-3 font-black text-[11px] shadow-[2px_2px_0_0_#000]">💬 Care Chat - Whatsapp</button><button onclick="location.href='ai.assistant.html'" class="bg-[#4a86ff] text-white border-2 border-black rounded-full py-3 font-black text-[11px] shadow-[2px_2px_0_0_#000]">🤖 AI Assistant</button></div>
+<div class="grid grid-cols-2 gap-2 pt-2"><button onclick="window.location.href='panel.html'" class="bg-white border-2 border-black rounded-full py-3 font-black text-[11px] shadow-[2px_2px_0_0_#000]">Edit Profile</button><button onclick="if(confirm('Log out?')){ FB.signOut(FB.auth).then(()=>location.href='index.html')}" class="bg-black text-white border-2 border-black rounded-full py-3 font-black text-[11px] shadow-[2px_2px_0_0_#000]">Log Out</button></div>
 </div>
 
-<!-- ADMIN ASSISTANT - WHATSAPP STYLE - KEPT -->
+<!-- ADMIN ASSISTANT - YOUR WORKING CODE - KEPT -->
 <div id="adminAssistBtn" onclick="toggleAdminAssist()" style="position:fixed;bottom:20px;right:20px;z-index:9999;width:56px;height:56px;background:#25d366;border-radius:50%;border:2.5px solid #000;box-shadow:3px 3px 0 0 #000;display:grid;place-items:center;font-size:24px;cursor:pointer">💬</div>
-<div id="adminAssistPanel" style="position:fixed;bottom:90px;right:16px;z-index:9998;width:360px;max-width:calc(100vw - 32px);height:520px;background:#e5ddd5;border:2.5px solid #000;border-radius:20px;box-shadow:4px 4px 0 0 #000;display:none;flex-direction:column;overflow:hidden">
-<div style="background:#075e54;color:white;padding:12px;display:flex;align-items:center;gap:10px;border-bottom:2px solid #000"><div style="width:36px;height:36px;background:white;border-radius:50%;display:grid;place-items:center;color:#075e54;font-weight:900">A</div><div style="flex:1"><p style="font-weight:900;font-size:12px">Admin Assistant</p><p style="font-size:8px;opacity:0.8">Schemes • Marker • SHKE • Teacher Requests</p></div><button onclick="toggleAdminAssist()" style="background:white;color:black;border:2px solid #000;border-radius:50%;width:28px;height:28px;font-weight:900">✕</button></div>
-<div id="adminChat" style="flex:1;overflow-y:auto;padding:12px;display:flex;flex-direction:column;gap:10px">
-<div style="align-self:flex-start;background:#fff;border:2px solid #000;border-radius:4px 16px 16px 16px;padding:8px 12px;max-width:85%;font-size:11px;box-shadow:2px 2px 0 0 #000"><b>👋 Hi Mwalimu!</b><br>Smart Marker + Tuition + Referral all active<br><div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:8px"><button onclick="quickAdmin('Show pending TEACHER REQUEST')" style="background:#ffcc1a;border:2px solid #000;border-radius:9999px;padding:8px;font-size:8px;font-weight:900">🏠 Pending</button><button onclick="quickAdmin('Generate schemes Grade 7 Math Term 1')" style="background:#e0f2ff;border:2px solid #000;border-radius:9999px;padding:8px;font-size:8px;font-weight:900">📘 Schemes</button><button onclick="quickAdmin('Mark written work')" style="background:#dcfce7;border:2px solid #000;border-radius:9999px;padding:8px;font-size:8px;font-weight:900">📸 Mark</button><button onclick="quickAdmin('Mark composition strict out of 40 bold errors')" style="background:#ffe0f0;border:2px solid #000;border-radius:9999px;padding:8px;font-size:8px;font-weight:900">✍️ Comp</button></div></div>
+<div id="adminAssistPanel" style="position:fixed;bottom:90px;right:16px;z-index:9998;width:360px;max-width:calc(100vw - 32px);height:520px;background:#e5ddd5;border:2.5px solid #000;border-radius:20px;box-shadow:4px 4px 0 0 #000;display:none;flex-direction:column;overflow:hidden"><div style="background:#075e54;color:white;padding:12px;display:flex;align-items:center;gap:10px;border-bottom:2px solid #000"><div style="width:36px;height:36px;background:white;border-radius:50%;display:grid;place-items:center;color:#075e54;font-weight:900">A</div><div style="flex:1"><p style="font-weight:900;font-size:12px">Admin Assistant</p><p style="font-size:8px;opacity:0.8">Schemes • Marker • SHKE • Teacher Requests</p></div><button onclick="toggleAdminAssist()" style="background:white;color:black;border:2px solid #000;border-radius:50%;width:28px;height:28px;font-weight:900">✕</button></div><div id="adminChat" style="flex:1;overflow-y:auto;padding:12px;display:flex;flex-direction:column;gap:10px"><div style="align-self:flex-start;background:#fff;border:2px solid #000;border-radius:4px 16px 16px 16px;padding:8px 12px;max-width:85%;font-size:11px;box-shadow:2px 2px 0 0 #000"><b>👋 Hi Mwalimu!</b><br>Tap pending, schemes, marking<br><div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:8px"><button onclick="quickAdmin('Show pending TEACHER REQUEST')" style="background:#ffcc1a;border:2px solid #000;border-radius:9999px;padding:8px;font-size:8px;font-weight:900">🏠 Pending</button><button onclick="quickAdmin('Generate schemes Grade 7 Math Term 1')" style="background:#e0f2ff;border:2px solid #000;border-radius:9999px;padding:8px;font-size:8px;font-weight:900">📘 Schemes</button><button onclick="quickAdmin('Mark written work')" style="background:#dcfce7;border:2px solid #000;border-radius:9999px;padding:8px;font-size:8px;font-weight:900">📸 Mark</button><button onclick="quickAdmin('Mark composition strict out of 40 bold errors')" style="background:#ffe0f0;border:2px solid #000;border-radius:9999px;padding:8px;font-size:8px;font-weight:900">✍️ Comp Marker</button></div></div></div><div style="background:#f0f0f0;padding:8px;border-top:2px solid #000"><div style="display:flex;gap:6px"><input id="adminMsg" placeholder="Type or 🎤" style="flex:1;background:white;border:2px solid #000;border-radius:9999px;padding:10px 14px;font-size:11px;font-weight:700;outline:none"><button onclick="sendAdminMsg()" style="width:40px;height:40px;background:#25d366;border:2px solid #000;border-radius:50%;display:grid;place-items:center;color:white"><i class="fa-solid fa-paper-plane"></i></button></div></div></div>
 </div>
-<div style="background:#f0f0f0;padding:8px;border-top:2px solid #000"><div style="display:flex;gap:6px"><input id="adminMsg" placeholder="Type or 🎤" style="flex:1;background:white;border:2px solid #000;border-radius:9999px;padding:10px 14px;font-size:11px;font-weight:700;outline:none"><button onclick="sendAdminMsg()" style="width:40px;height:40px;background:#25d366;border:2px solid #000;border-radius:50%;display:grid;place-items:center;color:white"><i class="fa-solid fa-paper-plane"></i></button></div></div>
-</div>
-
-</div>
-
 <div id="toast" class="hidden fixed bottom-24 left-1/2 -translate-x-1/2 bg-black text-white px-6 py-3 rounded-full border-2 border-black font-black text-[11px] z-[9999]">✅ Done</div>
-
 <script>
 let currentTeacherId=null, userData=null, smartPhotoData='';
 const PROXY_URL="/api/gemini";
 function showToast(m){ let t=document.getElementById('toast'); t.innerText=m; t.classList.remove('hidden'); setTimeout(()=>t.classList.add('hidden'),2500); }
-function copyRef(){ navigator.clipboard.writeText(document.getElementById('refLink').value); document.getElementById('convMsg').innerText="✓ Referral Link Copied!"; showToast("✓ Referral Copied"); }
-function copyCareLink(){ let link=document.getElementById('refLink').value.replace('registration.html?ref=','care-chat.html?shke='); navigator.clipboard.writeText(link); document.getElementById('convMsg').innerText="✓ Care Link Copied!"; }
-
-// --- SMART MARKER WITH LOW MEMORY COMPRESS ---
+function copyRef(){ navigator.clipboard.writeText(document.getElementById('refLink').value); document.getElementById('convMsg').innerText="✓ Referral Link Copied!"; showToast("✓ Copied"); }
+function copyCareLink(){ navigator.clipboard.writeText(document.getElementById('refLink').value); document.getElementById('convMsg').innerText="✓ Care Link Copied!"; }
 function handleSmartPhoto(input){
   let f=input.files[0]; if(!f) return;
-  if(f.size > 8*1024*1024){ showToast("Photo too big - use closer shot"); return; }
+  if(f.size > 8*1024*1024){ showToast("Too big"); return; }
   let url = URL.createObjectURL(f);
   let img = new Image();
   img.onload = ()=>{
-    let canvas=document.createElement('canvas');
-    let max=800;
-    let w=img.width, h=img.height;
+    let canvas=document.createElement('canvas'); let max=700; let w=img.width, h=img.height;
     if(w>h){ if(w>max){ h*=max/w; w=max; } } else { if(h>max){ w*=max/h; h=max; } }
-    canvas.width=w; canvas.height=h;
-    canvas.getContext('2d').drawImage(img,0,0,w,h);
-    smartPhotoData=canvas.toDataURL('image/jpeg',0.55);
+    canvas.width=w; canvas.height=h; canvas.getContext('2d').drawImage(img,0,0,w,h);
+    smartPhotoData=canvas.toDataURL('image/jpeg',0.50);
     document.getElementById('smartPreview').innerHTML='<img src="'+smartPhotoData+'" class="rounded-lg max-h-[200px] mx-auto border-2 border-black">';
-    document.getElementById('smartPreview').classList.remove('hidden');
-    document.getElementById('smartHint').classList.add('hidden');
-    document.getElementById('smartResult').classList.add('hidden');
-    document.getElementById('smartActions').classList.add('hidden');
-    showToast("📸 Ready "+Math.round(smartPhotoData.length/1024)+"KB");
-    URL.revokeObjectURL(url);
+    document.getElementById('smartPreview').classList.remove('hidden'); document.getElementById('smartHint').classList.add('hidden');
+    document.getElementById('smartResult').classList.add('hidden'); document.getElementById('smartActions').classList.add('hidden');
+    showToast("📸 Ready "+Math.round(smartPhotoData.length/1024)+"KB"); URL.revokeObjectURL(url);
   };
-  img.onerror=()=>{ showToast("Use Gallery button"); URL.revokeObjectURL(url); };
   img.src=url;
 }
-function handleSmartVideo(input){ let f=input.files[0]; if(!f) return; showToast("🎥 Video selected - Send to Admin Chat for marking"); }
-
+function handleSmartVideo(input){ showToast("🎥 Video - Use Admin Chat"); }
 function renderColoredKNEC(text){
   text=text.replace(/###+/g,"").replace(/```[\s\S]*?```/g,"");
-  let html=text
- .replace(/\*\*Title[^\n]*\*\*/gi,m=>`<div class="bubble knec-blue font-black">${m.replace(/\*\*/g,'')}</div>`)
- .replace(/\*\*⭐ Score[^\n]*\*\*/gi,m=>`<div class="bubble bg-black text-white font-black">${m.replace(/\*\*/g,'')}</div>`)
- .replace(/\*\*✅ Strengths[\s\S]*?(?=\n\*\*|$)/gi,m=>`<div class="bubble knec-green font-bold">${m.replace(/\*\*/g,'')}</div>`)
- .replace(/\*\*📖 Bold Answer[\s\S]*?(?=\n\*\*|$)/gi,m=>`<div class="bubble knec-gold font-black">${m.replace(/\*\*/g,'')}</div>`)
- .replace(/\*\*🔑 Key Words[\s\S]*?(?=\n\*\*|$)/gi,m=>`<div class="bubble knec-yellow font-bold">${m.replace(/\*\*/g,'')}</div>`)
- .replace(/\*\*⚠️ Learner Weakness[\s\S]*?(?=\n\*\*|$)/gi,m=>`<div class="bubble knec-red font-bold">${m.replace(/\*\*/g,'')}</div>`)
- .replace(/\*\*👩‍🏫 Teacher Help[\s\S]*?(?=\n\*\*|$)/gi,m=>`<div class="bubble knec-teal font-black">${m.replace(/\*\*/g,'')}</div>`)
- .replace(/\*\*📊 Performance[\s\S]*?(?=\n\*\*|$)/gi,m=>`<div class="bubble bg-white font-bold">${m.replace(/\*\*/g,'')}</div>`)
- .replace(/\*\*💡 Teacher Comment[\s\S]*?(?=\n\*\*|$)/gi,m=>`<div class="bubble knec-teal font-black" style="border-width:3px">${m.replace(/\*\*/g,'')}</div>`)
- .replace(/\*\*👨‍🏫 Suggestions[\s\S]*/gi,m=>`<div class="bubble knec-gold font-black">${m.replace(/\*\*/g,'')}</div>`)
- .replace(/\n/g,'<br>');
+  let html=text.replace(/\*\*Title[^\n]*\*\*/gi,m=>`<div class="bubble knec-blue font-black">${m.replace(/\*\*/g,'')}</div>`).replace(/\*\*⭐ Score[^\n]*\*\*/gi,m=>`<div class="bubble bg-black text-white font-black">${m.replace(/\*\*/g,'')}</div>`).replace(/\*\*📖 Bold Answer[\s\S]*?(?=\n\*\*|$)/gi,m=>`<div class="bubble knec-gold font-black">${m.replace(/\*\*/g,'')}</div>`).replace(/\*\*🔑 Key Words[\s\S]*?(?=\n\*\*|$)/gi,m=>`<div class="bubble knec-yellow font-bold">${m.replace(/\*\*/g,'')}</div>`).replace(/\*\*⚠️ Learner Weakness[\s\S]*?(?=\n\*\*|$)/gi,m=>`<div class="bubble knec-red font-bold">${m.replace(/\*\*/g,'')}</div>`).replace(/\*\*👩‍🏫 Teacher Help[\s\S]*?(?=\n\*\*|$)/gi,m=>`<div class="bubble knec-teal font-black">${m.replace(/\*\*/g,'')}</div>`).replace(/\*\*💡 Teacher Comment[\s\S]*?(?=\n\*\*|$)/gi,m=>`<div class="bubble knec-teal font-black" style="border-width:3px">${m.replace(/\*\*/g,'')}</div>`).replace(/\n/g,'<br>');
   html=html.replace(/\*\*(.*?)\*\*/g,'<b style="background:#ffcc1a;padding:1px 4px;border:1px solid #000;border-radius:4px;">$1</b>');
   return html;
 }
 async function markSmart(){
-  if(!smartPhotoData){ showToast("📸 Snap exam first"); return; }
+  if(!smartPhotoData){ showToast("📸 Snap first"); return; }
   let btn=document.getElementById('smartBtn'), resDiv=document.getElementById('smartResult'), actDiv=document.getElementById('smartActions');
   let grade=document.getElementById('gradeSel').value, subject=document.getElementById('subjectSel').value;
-  btn.innerText="⏳ Marking KNEC..."; btn.disabled=true;
-  resDiv.classList.remove('hidden');
-  resDiv.innerHTML='<div class="text-center py-4 font-black">⏳ Marking '+grade+' '+subject+'...<br><span class="text-[9px]">Bold + Key Words + Teacher Help</span></div>';
+  btn.innerText="⏳ Marking..."; btn.disabled=true; resDiv.classList.remove('hidden'); resDiv.innerHTML='<div class="text-center py-4 font-black">⏳ Marking '+grade+' '+subject+' with OLD Gemini...</div>';
   try{
     let photo=smartPhotoData.split(',')[1];
-    if(photo.length > 900000){ resDiv.innerHTML='<div class="bubble knec-red">Photo still large - Retake closer, paper only</div>'; btn.innerText="✨ Mark Smart - KNEC Teacher Mode"; btn.disabled=false; return; }
-    let resp=await fetch(PROXY_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({ question:`You are KNEC Teacher Marker for ${grade} ${subject}. Mark this exam paper image. Template MUST: **Title:** **⭐ Score:** **📖 Bold Answer:** give correct bold answer **🔑 Key Words:** **⚠️ Learner Weakness:** **👩‍🏫 Teacher Help:** how teacher helps learner improve **📊 Performance:** **✅ Strengths:** **💡 Teacher Comment:** **👨‍🏫 Suggestions:** Use bold colored sections.`, grade: grade, photo: photo })});
-    let txt=await resp.text(); let data;
-    try{ data=JSON.parse(txt); }catch{
-      if(txt.includes("Request Entity")) throw new Error("Photo too large - Retake closer, crop paper only");
-      if(txt.includes("Unexpected token")) throw new Error("Server busy - Add GEMINI_API_KEY in Vercel Env and redeploy");
-      throw new Error(txt.slice(0,200));
-    }
-    let ans=data.answer||data.error||"No result";
-    resDiv.innerHTML=renderColoredKNEC(ans);
-    actDiv.classList.remove('hidden');
-    resDiv.scrollIntoView({behavior:'smooth'});
-    showToast("✅ Marked");
-  }catch(e){
-    resDiv.innerHTML=`<div class="bubble knec-red"><b>❌ ${e.message}</b><br><br>Fix: 1. Use Gallery button not Photo<br>2. Snap paper only, good light<br>3. Check GEMINI_API_KEY in Vercel</div>`;
-  }
+    if(photo.length > 900000){ resDiv.innerHTML='<div class="bubble knec-red">Photo large - Retake closer</div>'; btn.innerText="✨ Mark Smart"; btn.disabled=false; return; }
+    let resp=await fetch(PROXY_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({question:`KNEC Teacher Marker for ${grade} ${subject}. Template: **Title:** **⭐ Score:** **📖 Bold Answer:** **🔑 Key Words:** **⚠️ Learner Weakness:** **👩‍🏫 Teacher Help:** **💡 Teacher Comment:** **👨‍🏫 Suggestions:**`, grade: grade, photo: photo})});
+    let txt=await resp.text(); let data; try{ data=JSON.parse(txt); }catch{ data={answer: txt}; }
+    resDiv.innerHTML=renderColoredKNEC(data.answer||txt); actDiv.classList.remove('hidden'); showToast("✅ Marked");
+  }catch(e){ resDiv.innerHTML=`<div class="bubble knec-red">❌ ${e.message}</div>`; }
   btn.innerText="✨ Mark Smart - KNEC Teacher Mode"; btn.disabled=false;
 }
-function copySmart(){ let t=document.getElementById('smartResult').innerText; if(!t){showToast("No result"); return;} navigator.clipboard.writeText(t).then(()=>showToast("✅ COPIED!")); }
-function clearSmart(){ document.getElementById('smartResult').classList.add('hidden'); document.getElementById('smartActions').classList.add('hidden'); document.getElementById('smartPreview').classList.add('hidden'); document.getElementById('smartHint').classList.remove('hidden'); smartPhotoData=''; showToast("🔄 Cleared"); }
+function copySmart(){ let t=document.getElementById('smartResult').innerText; navigator.clipboard.writeText(t).then(()=>showToast("✅ COPIED!")); }
+function clearSmart(){ document.getElementById('smartResult').classList.add('hidden'); document.getElementById('smartActions').classList.add('hidden'); document.getElementById('smartPreview').classList.add('hidden'); document.getElementById('smartHint').classList.remove('hidden'); smartPhotoData=''; }
 
-// --- YOUR ORIGINAL FUNCTIONS KEPT 100% ---
-function showNotes(){ document.getElementById('resList').innerHTML=`<div style="background:#fff;border:2px solid #000;border-radius:16px;padding:10px 12px;display:flex;justify-content:space-between;align-items:center;box-shadow:2px 2px 0 0 #000;margin-bottom:6px"><div><p style="font-weight:900;font-size:12px">Grade 7 Notes - Maths Fractions</p><p style="font-size:9px">Grade 7 • notes</p></div><button onclick="location.href='notes.html'" style="background:#000;color:#fff;border-radius:999px;padding:6px 16px;font-weight:900;font-size:10px">Open</button></div>`; }
+function showNotes(){ document.getElementById('resList').innerHTML=`<div style="background:#fff;border:2px solid #000;border-radius:16px;padding:10px 12px;display:flex;justify-content:space-between;align-items:center;box-shadow:2px 2px 0 0 #000;margin-bottom:6px"><div><p style="font-weight:900;font-size:12px">Grade 7 Notes - Maths Fractions</p><p style="font-size:9px">Grade 7 • notes</p></div><button style="background:#000;color:#fff;border-radius:999px;padding:6px 16px;font-weight:900;font-size:10px">Open</button></div>`; }
 function accessStudent(){ let sid=document.getElementById('sid').value.trim().toUpperCase(); if(!sid) return alert("Enter SHKE"); let el=document.getElementById('sPrev'); el.classList.remove('hidden'); el.innerHTML=`<p class="font-black text-[10px]">Student ${sid} • Access granted • Teacher ↔ Learner via SHKE</p>`; setTimeout(()=>location.href=`student-monitor.html?shke=${sid}`,800); }
 async function loadMyTuitions(){
  let FB=window.FB; if(!currentTeacherId) return; let list=document.getElementById('myTuitionList'); list.innerHTML="Loading...";
  try{
-  let docs=[];
-  try{ let q1=FB.query(FB.collection(FB.db,"homeschooling_requests"), FB.where("teacherId","==",currentTeacherId)); let snap1=await FB.getDocs(q1); snap1.forEach(d=>docs.push({id:d.id,...d.data()})); }catch(e){}
+  let docs=[]; try{ let q1=FB.query(FB.collection(FB.db,"homeschooling_requests"), FB.where("teacherId","==",currentTeacherId)); let snap1=await FB.getDocs(q1); snap1.forEach(d=>docs.push({id:d.id,...d.data()})); }catch(e){}
   try{ let q2=FB.query(FB.collection(FB.db,"homeschool_requests"), FB.where("teacherUid","==",currentTeacherId)); let snap2=await FB.getDocs(q2); snap2.forEach(d=>docs.push({id:d.id, shke:d.data().studentShke, childName:d.data().studentName, grade:d.data().studentClass, subject:d.data().subject, parentPhone:d.data().parentPhone, location:d.data().location, reason:d.data().reason, status:d.data().status,...d.data()})); }catch(e){}
   document.getElementById('tuitionCount').innerText=`${docs.length} Assigned`;
-  if(docs.length===0){ list.innerHTML=`<div class="bg-white border-2 border-black rounded-xl p-3 text-center"><p class="font-black text-[10px]">No tuition assigned yet</p><p class="text-[8px] opacity-60 mt-1">Use yellow form below to request a student. Admin will approve.</p></div>`; return; }
-  list.innerHTML=""; docs.forEach(r=>{
-   list.innerHTML+=`<div class="bg-white border-2 border-black rounded-xl p-3 shadow-[1px_1px_0_0_#000]"><div class="flex justify-between"><p class="font-black text-[11px]">🔗 ${r.shke||r.studentShke||''} • ${r.childName||r.studentName||''} • ${r.grade||r.studentClass||''}</p><span class="${(r.status||'').toLowerCase().includes('approv')?'bg-green-500':'bg-yellow-200 text-black'} text-white px-2 py-0.5 rounded-full text-[7px] font-black">${(r.status||'PENDING').toUpperCase()}</span></div><div class="mt-2 bg-[#f6f6f7] border border-black rounded-xl p-2"><p class="font-black text-[9px]">📚 ${r.subject||'All Subjects'}</p><p class="text-[8px] mt-1">Days: ${r.days||r.reason||''} • Loc: ${r.location||''}</p><p class="text-[8px] mt-1">Parent: ${r.parentPhone||''}</p></div><div class="mt-2 flex gap-2"><a href="https://wa.me/${(r.parentPhone||'').replace(/[^0-9]/g,'')}" target="_blank" class="flex-1 bg-[#25d366] text-white border-2 border-black rounded-full py-2 text-center text-[8px] font-black">📞 WhatsApp</a><a href="notes.html" class="flex-1 bg-black text-white border-2 border-black rounded-full py-2 text-center text-[8px] font-black">📘 Notes</a></div></div>`;
-  });
+  if(docs.length===0){ list.innerHTML=`<div class="bg-white border-2 border-black rounded-xl p-3 text-center"><p class="font-black text-[10px]">No tuition assigned yet</p><p class="text-[8px] opacity-60 mt-1">Use yellow form below to request a student. Admin will approve and parent phone + location shows here.</p></div>`; return; }
+  list.innerHTML=""; docs.forEach(r=>{ list.innerHTML+=`<div class="bg-white border-2 border-black rounded-xl p-3 shadow-[1px_1px_0_0_#000]"><div class="flex justify-between"><p class="font-black text-[11px]">🔗 ${r.shke||r.studentShke||''} • ${r.childName||r.studentName||''} • ${r.grade||r.studentClass||''}</p><span class="${(r.status||'').toLowerCase().includes('approv')?'bg-green-500':'bg-yellow-200 text-black'} text-white px-2 py-0.5 rounded-full text-[7px] font-black">${(r.status||'PENDING').toUpperCase()}</span></div><div class="mt-2 bg-[#f6f6f7] border border-black rounded-xl p-2"><p class="font-black text-[9px]">📚 ${r.subject||'All Subjects'}</p><p class="text-[8px] mt-1">Days: ${r.days||r.reason||''} • Loc: ${r.location||''}</p><p class="text-[8px] mt-1">Parent: ${r.parentPhone||''} • Reason: ${r.reason||''}</p></div><div class="mt-2 flex gap-2"><a href="https://wa.me/${(r.parentPhone||'').replace(/[^0-9]/g,'')}" target="_blank" class="flex-1 bg-[#25d366] text-white border-2 border-black rounded-full py-2 text-center text-[8px] font-black">📞 WhatsApp Parent</a><a href="notes.html" class="flex-1 bg-black text-white border-2 border-black rounded-full py-2 text-center text-[8px] font-black">📘 Notes</a></div></div>`; });
  }catch(e){ list.innerHTML=`<div class="bg-[#ffeaea] border-2 border-black rounded-xl p-3"><p class="text-[8px] font-bold">Error: ${e.message}</p></div>`; }
 }
 async function sendTeacherRequest(){
  let FB=window.FB; let btn=document.getElementById('sendBtn'), status=document.getElementById('sendStatus');
- let studentShke=document.getElementById('t_shke').value.trim().toUpperCase();
- let studentName=document.getElementById('t_name').value.trim();
- let studentClass=document.getElementById('t_class').value.trim();
- let subject=document.getElementById('t_subject').value;
- let parentPhone=document.getElementById('t_parentPhone').value.trim();
- let location=document.getElementById('t_location').value.trim()||"Nairobi";
- let reason=document.getElementById('t_reason').value.trim();
- if(!studentShke||!studentName){ alert("Enter SHKE + Name"); return; }
+ let studentShke=document.getElementById('t_shke').value.trim().toUpperCase(); let studentName=document.getElementById('t_name').value.trim();
+ let studentClass=document.getElementById('t_class').value.trim(); let subject=document.getElementById('t_subject').value;
+ let parentPhone=document.getElementById('t_parentPhone').value.trim(); let location=document.getElementById('t_location').value.trim()||"Nairobi"; let reason=document.getElementById('t_reason').value.trim();
+ if(!studentShke||!studentName){ alert("Enter SHKE00501 + Susan"); return; }
  btn.innerText="⏳ Sending..."; btn.disabled=true;
  try{
   let data={ teacherId: currentTeacherId, teacherShke: userData?.indexNumber||"SHKE", teacherName: userData?.firstName||"Teacher", teacherUid: currentTeacherId, shke: studentShke, studentShke, studentName, childName: studentName, studentClass, grade: studentClass, subject, parentPhone, location, reason, days: reason, type:"TEACHER_REQUEST", status:"PENDING", timestamp: FB.serverTimestamp(), createdAt: FB.serverTimestamp() };
-  await FB.addDoc(FB.collection(FB.db,"homeschooling_requests"), data);
-  await FB.addDoc(FB.collection(FB.db,"homeschool_requests"), data);
+  await FB.addDoc(FB.collection(FB.db,"homeschooling_requests"), data); await FB.addDoc(FB.collection(FB.db,"homeschool_requests"), data);
   status.innerText="✅ Sent! Admin sees TEACHER REQUEST tag"; status.className="text-[9px] font-black text-center mt-2 p-2 rounded-full border-2 border-black bg-[#dcfce7]"; status.classList.remove('hidden');
   btn.innerText="✅ Sent to Admin"; loadMyTuitions(); setTimeout(()=>{btn.innerText="⚡ Send Teacher Request → Admin Approves"; btn.disabled=false;},3000);
  }catch(e){ status.innerText="❌ "+e.message; status.className="text-[9px] font-black text-center mt-2 p-2 rounded-full border-2 border-black bg-[#ffeaea]"; status.classList.remove('hidden'); btn.innerText="⚡ Send Teacher Request → Admin Approves"; btn.disabled=false; }
@@ -307,15 +168,9 @@ async function sendAdminMsg(){
  let txt=document.getElementById('adminMsg').value.trim(); if(!txt) return;
  let chat=document.getElementById('adminChat'); chat.innerHTML+=`<div style="align-self:flex-end;background:#dcf8c6;border:2px solid #000;border-radius:16px 4px 16px 16px;padding:8px 12px;max-width:80%;font-size:11px;font-weight:800;box-shadow:2px 2px 0 0 #000">${txt}</div>`;
  document.getElementById('adminMsg').value=""; chat.scrollTop=chat.scrollHeight;
- try{
-  let res=await fetch("/api/gemini",{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({question:"ADMIN TEACHER MODE: "+txt, grade:"Grade 7", shke:userData?.indexNumber||"SHKE"})});
-  let text=await res.text(); let data; try{ data=JSON.parse(text); }catch{ data={answer:text}; }
-  let ans=(data.answer||"").replace(/\*\*/g,'');
-  chat.innerHTML+=`<div style="align-self:flex-start;background:#fff;border:2px solid #000;border-radius:4px 16px 16px 16px;padding:8px 12px;max-width:85%;font-size:11px;box-shadow:2px 2px 0 0 #000;white-space:pre-wrap">${ans}</div>`;
- }catch(e){ chat.innerHTML+=`<div style="align-self:flex-start;background:#ffeaea;border:2px solid #000;border-radius:4px 16px 16px 16px;padding:8px 12px;max-width:85%;font-size:11px">❌ ${e.message}</div>`; }
- chat.scrollTop=chat.scrollHeight;
+ try{ let res=await fetch("/api/gemini",{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({question:"ADMIN TEACHER MODE: "+txt, grade:"Grade 7", shke:userData?.indexNumber||"SHKE"})}); let text=await res.text(); let data; try{ data=JSON.parse(text); }catch{ data={answer:text}; } let ans=(data.answer||"").replace(/\*\*/g,''); chat.innerHTML+=`<div style="align-self:flex-start;background:#fff;border:2px solid #000;border-radius:4px 16px 16px 16px;padding:8px 12px;max-width:85%;font-size:11px;box-shadow:2px 2px 0 0 #000;white-space:pre-wrap">${ans}</div>`; }catch(e){ chat.innerHTML+=`<div style="align-self:flex-start;background:#ffeaea;border:2px solid #000;border-radius:4px 16px 16px 16px;padding:8px 12px;max-width:85%;font-size:11px">❌ ${e.message}</div>`; } chat.scrollTop=chat.scrollHeight;
 }
-setTimeout(()=>{ let FB=window.FB; FB.onAuthStateChanged(FB.auth, async(u)=>{ if(!u) return; currentTeacherId=u.uid; let s=await FB.getDoc(FB.doc(FB.db,"users", u.uid)); if(s.exists()){ userData=s.data(); document.getElementById('teacherInfo').innerText=`${userData.firstName||userData.name||'Mwalimu'} • ${userData.grade||'Grade 7,8,9'}`; document.getElementById('teacherIdShow').innerText=userData.indexNumber||u.uid.slice(0,8); document.getElementById('refCode').innerText=userData.indexNumber||u.uid.slice(0,8); document.getElementById('t_shke_label').innerText=userData.indexNumber||"SHKE"; document.getElementById('ptsBadge').innerText=(userData.points||0)+" pts"; document.getElementById('ptsBal').innerText=userData.points||0; document.getElementById('kesBal').innerText=userData.kesBalance||0; document.getElementById('refLink').value=`https://ykevo254.vercel.app/registration.html?ref=${userData.indexNumber||u.uid.slice(0,8)}`; } loadMyTuitions(); }); },700);
+setTimeout(()=>{ let FB=window.FB; FB.onAuthStateChanged(FB.auth, async(u)=>{ if(!u) return; currentTeacherId=u.uid; let s=await FB.getDoc(FB.doc(FB.db,"users", u.uid)); if(s.exists()){ userData=s.data(); document.getElementById('teacherInfo').innerText=`${userData.firstName||userData.name||'Mwalimu'} • ${userData.grade||'Grade 7,8,9'}`; document.getElementById('teacherIdShow').innerText=userData.indexNumber||u.uid.slice(0,8); document.getElementById('refCode').innerText=userData.indexNumber||u.uid.slice(0,8); document.getElementById('t_shke_label').innerText=userData.indexNumber||"SHKE"; document.getElementById('ptsBadge').innerText=(userData.points||0)+" pts"; document.getElementById('ptsBal').innerText=userData.points||0; document.getElementById('kesBal').innerText=userData.kesBalance||0; document.getElementById('refLink').value=`https://somahub-kenya.vercel.app/registration.html?ref=${userData.indexNumber||u.uid.slice(0,8)}`; } loadMyTuitions(); }); },700);
 showNotes();
 </script>
 </body></html>
