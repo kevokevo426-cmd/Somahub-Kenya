@@ -1,134 +1,1430 @@
 <!DOCTYPE html>
-<html><head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SomaHub AI - Smart Marker</title>
-<script src="https://cdn.tailwindcss.com"></script>
-<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;800;900&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-<style>body{font-family:'Nunito',sans-serif;background:#f8f6f1}.fun-btn:active{transform:scale(0.96)}</style>
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-import { getFirestore, doc, getDoc, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-const cfg={apiKey:"AIzaSyA93BNes3AmFyxIEgjSbvbIWqLyorLsuj8",authDomain:"somahubkenya-9e458.firebaseapp.com",projectId:"somahubkenya-9e458",storageBucket:"somahubkenya-9e458.firebasestorage.app",messagingSenderId:"615579085715",appId:"1:615579085715:web:28fca37ba498324bb49666"};
-const app=initializeApp(cfg); window.FB={auth:getAuth(app),db:getFirestore(app),doc,getDoc,collection,getDocs,onAuthStateChanged};
-</script>
-</head>
-<body class="flex justify-center"><div class="w-full max-w-[460px] bg-[#f8f6f1] min-h-screen flex flex-col">
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 
-<div class="bg-white border-b-2 border-black p-3 flex items-center gap-3 sticky top-0 z-50">
-<button onclick="location.href='teachers.html'" class="w-8 h-8 bg-[#f6f6f7] rounded-full grid place-items-center border-2 border-black"><i class="fa-solid fa-arrow-left"></i></button>
-<div class="w-10 h-10 rounded-full border-2 border-black bg-[#ffcc1a] overflow-hidden flex items-center justify-center shrink-0">
-<img src="logo.png" alt="SomaHub" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" class="w-full h-full object-cover">
-<span style="display:none;width:100%;height:100%;align-items:center;justify-content:center;font-weight:900;font-size:10px">SH</span>
-</div>
-<div class="flex-1"><p class="font-black text-[13px] leading-none">SomaHub AI</p><p class="text-[10px] font-bold opacity-60" id="subHeader">Welcome Mwalimu • Ready</p></div>
-<span id="shkeBadge" class="bg-black text-white px-3 py-1 rounded-full text-[9px] font-black border-2 border-black">SHKE</span>
-</div>
+  <title>SomaHub AI Teacher</title>
 
-<div id="chat" class="flex-1 p-3 space-y-3 overflow-y-auto pb-[150px]">
-<div class="bg-white rounded-[1.2rem] p-4 border-[2.5px] border-black shadow-[3px_3px_0_0_#000] max-w-[92%]">
-<p class="font-black text-[13px]">👋 Hi <span id="nameShow">Mwalimu</span>! SomaHub Ready ✅</p>
-<p class="text-[11px] mt-2 leading-5 font-bold opacity-80">Snap exam - Bold Answer • Key Points • How to improve</p>
-<div class="mt-4 grid grid-cols-2 gap-2">
-<button onclick="quick('Mark this exam')" class="bg-[#ffcc1a] border-2 border-black rounded-full py-3.5 font-black text-[11px] shadow-[2px_2px_0_0_#000] fun-btn">📸 Mark Exam</button>
-<button onclick="quick('Homework 10 marks')" class="bg-white border-2 border-black rounded-full py-3.5 font-black text-[11px] shadow-[2px_2px_0_0_#000] fun-btn">📝 Homework</button>
-<button onclick="quick('Mark composition 40 marks')" class="bg-black text-white border-2 border-black rounded-full py-3.5 font-black text-[11px] shadow-[2px_2px_0_0_#000] fun-btn col-span-2">✍️ Composition - 40 Marks</button>
-</div>
-<p class="text-[8px] text-gray-400 mt-3 font-bold" id="currentInfo">Loading SomaHub...</p>
-</div>
-</div>
+  <script src="https://cdn.tailwindcss.com"></script>
 
-<div id="photoBox" class="hidden bg-[#fffde7] border-t-2 border-black p-3">
-<div id="photoPreview" class="text-center"></div>
-<p class="text-[11px] font-black text-center mt-2">📸 Ready - Tap Mark Exam</p>
-</div>
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+  >
 
-<div class="bg-white border-t-[2.5px] border-black p-3 fixed bottom-0 w-full max-w-[460px] z-40">
-<div id="errorBox" class="hidden bg-[#ffeaea] border-2 border-black rounded-xl p-2 text-[10px] font-black text-center mb-2"></div>
-<div class="flex items-center gap-2">
-<button onclick="document.getElementById('fileIn').click()" class="w-11 h-11 bg-[#f6f6f7] rounded-full grid place-items-center border-2 border-black fun-btn"><i class="fa-solid fa-camera"></i></button>
-<input id="msg" placeholder="Type your question or snap exam..." class="flex-1 bg-[#f6f6f7] rounded-full px-4 py-3.5 text-[12px] font-bold border-2 border-black outline-none">
-<button onclick="sendMsg()" id="sendBtn" class="w-11 h-11 bg-black text-white rounded-full grid place-items-center border-2 border-black fun-btn"><i class="fa-solid fa-paper-plane"></i></button>
-</div>
-</div>
-<input type="file" id="fileIn" hidden accept="image/*" onchange="handlePhoto(this)">
-
-</div>
-<script>
-const PROXY="/api/gemini";
-let shke="SHKE", grade="Grade 7", uploadedPhoto='', isThinking=false;
-function quick(t){ msg.value=t; sendMsg(); }
-function showError(m){ let e=document.getElementById('errorBox'); e.innerText=m; e.classList.remove('hidden'); setTimeout(()=>e.classList.add('hidden'),5000); }
-function handlePhoto(input){
- let f=input.files[0]; if(!f) return;
- let url=URL.createObjectURL(f);
- let img=new Image();
- img.onload=()=>{
-  let c=document.createElement('canvas'); let max=700; let w=img.width,h=img.height;
-  if(w>h){ if(w>max){ h*=max/w; w=max; } } else { if(h>max){ w*=max/h; h=max; } }
-  c.width=w;c.height=h; c.getContext('2d').drawImage(img,0,0,w,h);
-  uploadedPhoto=c.toDataURL('image/jpeg',0.50);
-  document.getElementById('photoPreview').innerHTML='<img src="'+uploadedPhoto+'" class="rounded-xl max-h-[200px] mx-auto border-2 border-black"><p class="text-[8px] font-black mt-1">'+Math.round(uploadedPhoto.length/1024)+'KB</p>';
-  document.getElementById('photoBox').classList.remove('hidden');
-  URL.revokeObjectURL(url);
-  chat.scrollTop=chat.scrollHeight;
- };
- img.onerror=()=>{ showError("Use Gallery - Camera storage blocked"); };
- img.src=url;
-}
-async function sendMsg(){
- if(isThinking) return;
- let txt=msg.value.trim(); if(!txt &&!uploadedPhoto) return;
- chat.innerHTML+=`<div class="flex justify-end"><div class="bg-black text-white rounded-[16px] rounded-br-[4px] p-3 max-w-[80%] border-2 border-black"><p class="text-[12px] font-bold">${txt||'📸 Mark this exam'}</p></div></div>`;
- msg.value=""; chat.scrollTop=chat.scrollHeight; isThinking=true; sendBtn.innerHTML='<i class="fa-solid fa-spinner fa-spin"></i>';
- chat.innerHTML+=`<div id="thinking" class="bg-white rounded-[16px] rounded-bl-[4px] p-3 max-w-[80%] border-2 border-black"><p class="text-[10px] font-black">⏳ Marking ${grade}...</p></div>`;
- chat.scrollTop=chat.scrollHeight;
- try{
-  let photo=uploadedPhoto? uploadedPhoto.split(',')[1] : "";
-  if(photo && photo.length>900000){ throw new Error("Photo too large - retake closer, paper only, use Gallery"); }
-  let q = txt || "Mark this exam - bold answer, key points, score";
-  let res=await fetch(PROXY,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({question:q, grade, shke, photo})});
-  let raw=await res.text(); let data; try{ data=JSON.parse(raw); }catch{ data={answer:raw}; }
-  document.getElementById('thinking')?.remove();
-  let clean = (data.answer||"No result").replace(/###+/g,"").trim();
-  // Hide ugly 503 code
-  if(clean.includes("503")||clean.includes("high demand")||clean.includes("UNAVAILABLE")){
-    clean = "⏳ **SomaHub busy - Google full**\n\nWait 30 seconds then tap Mark Exam again.\nGoogle Gemini high demand. Try smaller photo, crop paper only.\n\nPole Mwalimu 🙏";
-  }
-  chat.innerHTML+=`<div class="bg-white rounded-[16px] rounded-bl-[4px] p-4 border-[2.5px] border-black shadow-[2px_2px_0_0_#000] max-w-[92%]"><p class="text-[12px] leading-6 whitespace-pre-wrap font-bold">${clean.slice(0,4000)}</p><div class="mt-3 flex gap-2"><button onclick="navigator.clipboard.writeText(this.parentElement.previousElementSibling.innerText);this.innerText='✅ Copied!';setTimeout(()=>this.innerText='📋 Copy',2000)" class="bg-[#ffcc1a] border-2 border-black rounded-full px-4 py-2 text-[10px] font-black">📋 Copy</button></div></div>`;
-  uploadedPhoto=""; document.getElementById('photoBox').classList.add('hidden');
- }catch(e){
-  document.getElementById('thinking')?.remove();
-  showError(e.message);
-  chat.innerHTML+=`<div class="bg-[#ffeaea] border-2 border-black rounded-xl p-3 max-w-[90%]"><p class="text-[11px] font-bold">❌ ${e.message}</p><p class="text-[9px] mt-1">Tip: Retake closer, paper only, Gallery button</p></div>`;
- }
- chat.scrollTop=chat.scrollHeight; isThinking=false; sendBtn.innerHTML='<i class="fa-solid fa-paper-plane"></i>';
-}
-window.FB.onAuthStateChanged(window.FB.auth, async(u)=>{
-  if(!u) { nameShow.innerText="Mwalimu"; return; }
-  try{
-    let s=await window.FB.getDoc(window.FB.doc(window.FB.db,"users",u.uid));
-    if(s.exists()){
-      let d=s.data();
-      let firstName = d.firstName || d.name || "Mwalimu";
-      // If teacher, greet Mwalimu, not Learner
-      if(d.role==="teacher" || d.subjects || d.indexNumber){
-        nameShow.innerText = firstName;
-        subHeader.innerText = "Welcome Mwalimu • Ready";
-        grade = d.grade || d.class || "Grade 7";
-      } else {
-        nameShow.innerText = firstName;
-        subHeader.innerText = "Smart Marker - PP1 to Grade 9";
-      }
-      shke = d.indexNumber||u.uid.slice(0,8);
-      grade = d.grade||grade;
-      shkeBadge.innerText=shke;
-      currentInfo.innerText = `${grade} • ${shke} • SomaHub PRO`;
-    } else {
-      nameShow.innerText="Mwalimu";
+  <style>
+    * {
+      box-sizing: border-box;
     }
-  }catch(e){ nameShow.innerText="Mwalimu"; }
-});
+
+    html,
+    body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      font-family:
+        Inter,
+        ui-sans-serif,
+        system-ui,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        sans-serif;
+      background: #f7f7f8;
+    }
+
+    body {
+      overflow: hidden;
+    }
+
+    #app {
+      height: 100dvh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    #chat {
+      scroll-behavior: smooth;
+    }
+
+    #chat::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    #chat::-webkit-scrollbar-thumb {
+      background: #c7c7c7;
+      border-radius: 20px;
+    }
+
+    .message-in {
+      animation: messageIn 0.2s ease-out;
+    }
+
+    @keyframes messageIn {
+      from {
+        opacity: 0;
+        transform: translateY(6px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .typing-dot {
+      width: 6px;
+      height: 6px;
+      background: #555;
+      border-radius: 50%;
+      animation: typing 1.2s infinite ease-in-out;
+    }
+
+    .typing-dot:nth-child(2) {
+      animation-delay: 0.15s;
+    }
+
+    .typing-dot:nth-child(3) {
+      animation-delay: 0.3s;
+    }
+
+    @keyframes typing {
+      0%,
+      60%,
+      100% {
+        transform: translateY(0);
+        opacity: 0.35;
+      }
+
+      30% {
+        transform: translateY(-4px);
+        opacity: 1;
+      }
+    }
+
+    textarea {
+      resize: none;
+    }
+
+    .photo-message {
+      max-width: min(380px, 78vw);
+      max-height: 430px;
+      object-fit: contain;
+    }
+
+    .safe-bottom {
+      padding-bottom: max(10px, env(safe-area-inset-bottom));
+    }
+
+    /* AI response formatting */
+
+    .ai-response {
+      font-size: 14px;
+      line-height: 1.75;
+      color: #171717;
+    }
+
+    .ai-response strong {
+      font-weight: 800;
+    }
+
+    .ai-response .highlight {
+      background: #fff1a8;
+      padding: 1px 5px;
+      border-radius: 5px;
+      font-weight: 800;
+      box-decoration-break: clone;
+      -webkit-box-decoration-break: clone;
+    }
+
+    .ai-response .answer-box {
+      background: #ecfdf3;
+      border: 1px solid #a7f3d0;
+      border-radius: 14px;
+      padding: 12px 14px;
+      margin: 12px 0;
+    }
+
+    .ai-response .key-box {
+      background: #fffbea;
+      border: 1px solid #fde68a;
+      border-radius: 14px;
+      padding: 12px 14px;
+      margin: 12px 0;
+    }
+
+    .ai-response .wrong-box {
+      background: #fff5f5;
+      border: 1px solid #fecaca;
+      border-radius: 12px;
+      padding: 10px 12px;
+      margin: 7px 0;
+    }
+
+    .ai-response .choice-box {
+      border: 1px solid #e5e7eb;
+      background: #fafafa;
+      border-radius: 12px;
+      padding: 10px 12px;
+      margin: 7px 0;
+    }
+
+    .ai-response .section-title {
+      font-weight: 800;
+      font-size: 15px;
+      margin-top: 15px;
+      margin-bottom: 5px;
+    }
+
+    .ai-response ul {
+      padding-left: 20px;
+      margin: 8px 0;
+    }
+
+    .ai-response li {
+      margin: 4px 0;
+    }
+
+    .ai-response .numbered {
+      margin: 6px 0;
+      padding-left: 4px;
+    }
+
+    .ai-response .numbered div {
+      margin: 4px 0;
+    }
+
+    .ai-response .step {
+      display: flex;
+      gap: 9px;
+      margin: 8px 0;
+      align-items: flex-start;
+    }
+
+    .ai-response .step-number {
+      width: 23px;
+      height: 23px;
+      border-radius: 50%;
+      background: #111;
+      color: white;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      font-weight: 800;
+      flex-shrink: 0;
+    }
+
+    @media (max-width: 500px) {
+      .ai-response {
+        font-size: 13.5px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+<div id="app">
+
+  <!-- HEADER -->
+  <header class="bg-white border-b border-[#e5e5e5] shrink-0">
+
+    <div class="max-w-4xl mx-auto px-4 py-3 flex items-center justify-between">
+
+      <div class="flex items-center gap-3">
+
+        <div
+          class="w-10 h-10 rounded-full bg-black text-white flex items-center justify-center shadow-sm"
+        >
+          <i class="fa-solid fa-graduation-cap text-[17px]"></i>
+        </div>
+
+        <div>
+          <h1 class="font-bold text-[15px] leading-tight">
+            SomaHub AI Teacher
+          </h1>
+
+          <div class="flex items-center gap-1.5 mt-0.5">
+            <span class="w-2 h-2 bg-green-500 rounded-full"></span>
+
+            <span class="text-[11px] text-gray-500">
+              AI learning assistant
+            </span>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="hidden sm:flex items-center gap-1.5 bg-gray-100 rounded-full px-3 py-1.5">
+
+        <i class="fa-solid fa-book-open text-[10px]"></i>
+
+        <span
+          id="gradeLabel"
+          class="text-[10px] font-semibold"
+        >
+          Grade 7
+        </span>
+
+      </div>
+
+    </div>
+
+  </header>
+
+
+  <!-- CHAT -->
+  <main
+    id="chat"
+    class="flex-1 overflow-y-auto"
+  >
+
+    <div
+      id="chatInner"
+      class="max-w-4xl mx-auto px-4 py-6 pb-32"
+    >
+
+      <!-- WELCOME -->
+      <div
+        id="welcome"
+        class="flex flex-col items-center text-center py-10"
+      >
+
+        <div
+          class="w-16 h-16 rounded-full bg-black text-white flex items-center justify-center mb-5 shadow-lg"
+        >
+          <i class="fa-solid fa-graduation-cap text-2xl"></i>
+        </div>
+
+        <h2 class="text-2xl sm:text-3xl font-bold tracking-tight">
+          How can I help you learn?
+        </h2>
+
+        <p
+          class="text-gray-500 text-sm mt-2 max-w-md leading-6"
+        >
+          Send a question, type a question, or take a photo of your work.
+          I'll explain the concept and guide you through the answer.
+        </p>
+
+        <div
+          class="grid grid-cols-2 sm:grid-cols-4 gap-2 mt-7 w-full max-w-xl"
+        >
+
+          <button
+            onclick="quickPrompt('Explain this question step by step.')"
+            class="quick-btn bg-white border border-[#e5e5e5] rounded-2xl p-3 text-left hover:bg-gray-50 transition shadow-sm"
+          >
+            <i class="fa-solid fa-lightbulb text-gray-600 text-sm mb-2"></i>
+            <span class="block text-[11px] font-semibold">
+              Explain
+            </span>
+          </button>
+
+          <button
+            onclick="quickPrompt('Solve this question and explain the method.')"
+            class="quick-btn bg-white border border-[#e5e5e5] rounded-2xl p-3 text-left hover:bg-gray-50 transition shadow-sm"
+          >
+            <i class="fa-solid fa-calculator text-gray-600 text-sm mb-2"></i>
+            <span class="block text-[11px] font-semibold">
+              Solve
+            </span>
+          </button>
+
+          <button
+            onclick="quickPrompt('Teach me the concept in this question with an example.')"
+            class="quick-btn bg-white border border-[#e5e5e5] rounded-2xl p-3 text-left hover:bg-gray-50 transition shadow-sm"
+          >
+            <i class="fa-solid fa-chalkboard-user text-gray-600 text-sm mb-2"></i>
+            <span class="block text-[11px] font-semibold">
+              Teach me
+            </span>
+          </button>
+
+          <button
+            onclick="document.getElementById('photoInput').click()"
+            class="quick-btn bg-white border border-[#e5e5e5] rounded-2xl p-3 text-left hover:bg-gray-50 transition shadow-sm"
+          >
+            <i class="fa-solid fa-camera text-gray-600 text-sm mb-2"></i>
+            <span class="block text-[11px] font-semibold">
+              Photo
+            </span>
+          </button>
+
+        </div>
+
+      </div>
+
+
+      <!-- MESSAGES -->
+      <div id="messages"></div>
+
+    </div>
+
+  </main>
+
+
+  <!-- INPUT -->
+  <footer
+    class="fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur border-t border-[#e5e5e5] safe-bottom"
+  >
+
+    <div class="max-w-4xl mx-auto px-3 sm:px-4 pt-3 pb-2">
+
+      <div
+        id="errorBox"
+        class="hidden mb-2 bg-red-50 border border-red-200 text-red-700 rounded-xl px-3 py-2 text-xs"
+      ></div>
+
+
+      <!-- TEMPORARY PHOTO PREVIEW -->
+      <div
+        id="photoPreviewBox"
+        class="hidden mb-2"
+      >
+
+        <div
+          class="relative inline-block rounded-2xl border border-gray-200 bg-gray-50 p-1"
+        >
+
+          <img
+            id="photoPreview"
+            class="w-24 h-24 object-cover rounded-xl"
+            alt="Selected photo"
+          >
+
+          <button
+            onclick="removeSelectedPhoto()"
+            class="absolute -top-2 -right-2 w-6 h-6 rounded-full bg-black text-white flex items-center justify-center text-[10px]"
+          >
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+
+        </div>
+
+      </div>
+
+
+      <!-- COMPOSER -->
+      <div
+        class="bg-[#f7f7f8] border border-[#d9d9e3] rounded-3xl shadow-sm"
+      >
+
+        <div class="flex items-end gap-2 p-2">
+
+          <button
+            onclick="document.getElementById('photoInput').click()"
+            class="shrink-0 w-10 h-10 rounded-full hover:bg-gray-200 flex items-center justify-center text-gray-600 transition"
+            title="Add photo"
+          >
+            <i class="fa-solid fa-paperclip"></i>
+          </button>
+
+          <input
+            id="photoInput"
+            type="file"
+            accept="image/*"
+            capture="environment"
+            class="hidden"
+            onchange="handlePhoto(this)"
+          >
+
+          <textarea
+            id="msg"
+            rows="1"
+            maxlength="8000"
+            placeholder="Message SomaHub AI..."
+            class="flex-1 bg-transparent border-0 outline-none focus:ring-0 text-[14px] leading-6 py-2 px-1 min-h-[40px] max-h-[140px]"
+          ></textarea>
+
+          <button
+            id="sendBtn"
+            onclick="sendMsg()"
+            class="shrink-0 w-10 h-10 rounded-full bg-black text-white flex items-center justify-center hover:opacity-80 transition disabled:opacity-40"
+          >
+            <i class="fa-solid fa-arrow-up"></i>
+          </button>
+
+        </div>
+
+        <div class="px-4 pb-2 flex items-center justify-between">
+
+          <p class="text-[9px] text-gray-400">
+            SomaHub AI can make mistakes. Check important answers.
+          </p>
+
+          <p
+            id="photoStatus"
+            class="text-[9px] text-gray-400 hidden"
+          >
+            Photo attached
+          </p>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </footer>
+
+</div>
+
+
+<script>
+
+const PROXY = "/api/gemini";
+
+let shke = "SHKE";
+let grade = "Grade 7";
+
+let uploadedPhoto = "";
+let uploadedMimeType = "image/jpeg";
+
+let isThinking = false;
+
+const chat = document.getElementById("chat");
+const messages = document.getElementById("messages");
+const msg = document.getElementById("msg");
+const sendBtn = document.getElementById("sendBtn");
+const welcome = document.getElementById("welcome");
+
+
+/* ================================
+   QUICK PROMPT
+================================ */
+
+function quickPrompt(text) {
+
+  msg.value = text;
+
+  autoResize();
+
+  msg.focus();
+
+}
+
+
+/* ================================
+   ERROR
+================================ */
+
+function showError(message) {
+
+  const box =
+    document.getElementById("errorBox");
+
+  box.textContent = message;
+
+  box.classList.remove("hidden");
+
+  setTimeout(() => {
+
+    box.classList.add("hidden");
+
+  }, 7000);
+
+}
+
+
+/* ================================
+   PHOTO
+================================ */
+
+function handlePhoto(input) {
+
+  const file =
+    input.files && input.files[0];
+
+  if (!file) return;
+
+
+  if (!file.type.startsWith("image/")) {
+
+    showError(
+      "Please select an image."
+    );
+
+    return;
+  }
+
+
+  const url =
+    URL.createObjectURL(file);
+
+  const img =
+    new Image();
+
+
+  img.onload = () => {
+
+    try {
+
+      let width = img.width;
+      let height = img.height;
+
+      const max = 1200;
+
+
+      if (
+        width > max ||
+        height > max
+      ) {
+
+        const ratio =
+          Math.min(
+            max / width,
+            max / height
+          );
+
+        width =
+          Math.round(
+            width * ratio
+          );
+
+        height =
+          Math.round(
+            height * ratio
+          );
+
+      }
+
+
+      const canvas =
+        document.createElement("canvas");
+
+      canvas.width = width;
+      canvas.height = height;
+
+
+      const ctx =
+        canvas.getContext("2d");
+
+      ctx.drawImage(
+        img,
+        0,
+        0,
+        width,
+        height
+      );
+
+
+      uploadedMimeType =
+        "image/jpeg";
+
+
+      uploadedPhoto =
+        canvas.toDataURL(
+          "image/jpeg",
+          0.70
+        );
+
+
+      document
+        .getElementById("photoPreview")
+        .src =
+        uploadedPhoto;
+
+
+      document
+        .getElementById("photoPreviewBox")
+        .classList
+        .remove("hidden");
+
+
+      document
+        .getElementById("photoStatus")
+        .classList
+        .remove("hidden");
+
+
+      URL.revokeObjectURL(url);
+
+      scrollToBottom();
+
+    } catch (error) {
+
+      URL.revokeObjectURL(url);
+
+      showError(
+        "Could not prepare the photo."
+      );
+
+    }
+
+  };
+
+
+  img.onerror = () => {
+
+    URL.revokeObjectURL(url);
+
+    showError(
+      "The photo could not be opened."
+    );
+
+  };
+
+
+  img.src = url;
+
+  input.value = "";
+
+}
+
+
+/* ================================
+   REMOVE COMPOSER PHOTO
+================================ */
+
+function removeSelectedPhoto() {
+
+  uploadedPhoto = "";
+
+  uploadedMimeType =
+    "image/jpeg";
+
+
+  document
+    .getElementById("photoPreviewBox")
+    .classList
+    .add("hidden");
+
+
+  document
+    .getElementById("photoStatus")
+    .classList
+    .add("hidden");
+
+}
+
+
+/* ================================
+   USER TEXT
+================================ */
+
+function addUserText(text) {
+
+  const wrapper =
+    document.createElement("div");
+
+  wrapper.className =
+    "flex justify-end mb-5 message-in";
+
+
+  const bubble =
+    document.createElement("div");
+
+  bubble.className =
+    "max-w-[85%] sm:max-w-[75%] bg-black text-white rounded-3xl rounded-br-lg px-4 py-3";
+
+
+  const p =
+    document.createElement("p");
+
+  p.className =
+    "text-[14px] leading-6 whitespace-pre-wrap";
+
+  p.textContent =
+    text;
+
+
+  bubble.appendChild(p);
+
+  wrapper.appendChild(bubble);
+
+  messages.appendChild(wrapper);
+
+}
+
+
+/* ================================
+   USER PHOTO
+
+   PHOTO REMAINS IN CHAT
+================================ */
+
+function addUserPhoto(photo) {
+
+  const wrapper =
+    document.createElement("div");
+
+  wrapper.className =
+    "flex justify-end mb-5 message-in";
+
+
+  const bubble =
+    document.createElement("div");
+
+  bubble.className =
+    "bg-black rounded-3xl rounded-br-lg p-2 max-w-[88%] sm:max-w-[70%]";
+
+
+  const image =
+    document.createElement("img");
+
+  image.src =
+    photo;
+
+  image.alt =
+    "Question uploaded by learner";
+
+  image.className =
+    "photo-message rounded-2xl block";
+
+
+  bubble.appendChild(image);
+
+  wrapper.appendChild(bubble);
+
+  messages.appendChild(wrapper);
+
+}
+
+
+/* ================================
+   THINKING
+================================ */
+
+function addThinking() {
+
+  const wrapper =
+    document.createElement("div");
+
+  wrapper.id =
+    "thinking";
+
+  wrapper.className =
+    "flex justify-start mb-5 message-in";
+
+
+  wrapper.innerHTML = `
+    <div class="flex items-start gap-3 max-w-[90%]">
+
+      <div class="w-8 h-8 rounded-full bg-black text-white flex items-center justify-center shrink-0">
+        <i class="fa-solid fa-graduation-cap text-[12px]"></i>
+      </div>
+
+      <div class="bg-white border border-[#e5e5e5] rounded-3xl rounded-tl-lg px-4 py-3 shadow-sm">
+
+        <div class="flex items-center gap-1.5">
+          <span class="typing-dot"></span>
+          <span class="typing-dot"></span>
+          <span class="typing-dot"></span>
+        </div>
+
+      </div>
+
+    </div>
+  `;
+
+
+  messages.appendChild(wrapper);
+
+  scrollToBottom();
+
+}
+
+
+/* ================================
+   ESCAPE HTML
+================================ */
+
+function escapeHTML(text) {
+
+  return String(text)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+
+}
+
+
+/* ================================
+   FORMAT AI RESPONSE
+
+   Supports:
+   **bold**
+   ==highlight==
+   headings
+   bullets
+   numbered steps
+================================ */
+
+function formatAIResponse(raw) {
+
+  let text =
+    escapeHTML(raw);
+
+
+  /* Highlight ==text== */
+
+  text =
+    text.replace(
+      /==(.*?)==/g,
+      '<span class="highlight">$1</span>'
+    );
+
+
+  /* Bold **text** */
+
+  text =
+    text.replace(
+      /\*\*(.*?)\*\*/g,
+      "<strong>$1</strong>"
+    );
+
+
+  /* Headings */
+
+  text =
+    text.replace(
+      /^### (.*?)$/gm,
+      '<div class="section-title">$1</div>'
+    );
+
+  text =
+    text.replace(
+      /^## (.*?)$/gm,
+      '<div class="section-title">$1</div>'
+    );
+
+  text =
+    text.replace(
+      /^# (.*?)$/gm,
+      '<div class="section-title">$1</div>'
+    );
+
+
+  /* Final answer box */
+
+  text =
+    text.replace(
+      /FINAL ANSWER:\s*(.*)/gi,
+      '<div class="answer-box"><strong>🟨 Final Answer</strong><br>$1</div>'
+    );
+
+
+  /* Key point box */
+
+  text =
+    text.replace(
+      /KEY POINT:\s*(.*)/gi,
+      '<div class="key-box"><strong>⭐ Key Point</strong><br>$1</div>'
+    );
+
+
+  /* Correct choice */
+
+  text =
+    text.replace(
+      /CORRECT CHOICE:\s*(.*)/gi,
+      '<div class="answer-box"><strong>✅ Correct Choice</strong><br>$1</div>'
+    );
+
+
+  /* Wrong choice */
+
+  text =
+    text.replace(
+      /WRONG CHOICE:\s*(.*)/gi,
+      '<div class="wrong-box"><strong>❌</strong> $1</div>'
+    );
+
+
+  /* Choice lines */
+
+  text =
+    text.replace(
+      /^(A\)|B\)|C\)|D\))\s*(.*)$/gm,
+      '<div class="choice-box"><strong>$1</strong> $2</div>'
+    );
+
+
+  /* Bullet lists */
+
+  text =
+    text.replace(
+      /^[-•]\s+(.*)$/gm,
+      '<li>$1</li>'
+    );
+
+
+  /* Numbered lines */
+
+  text =
+    text.replace(
+      /^(\d+)\.\s+(.*)$/gm,
+      '<div class="numbered"><strong>$1.</strong> $2</div>'
+    );
+
+
+  /* Line breaks */
+
+  text =
+    text.replace(
+      /\n/g,
+      "<br>"
+    );
+
+
+  return text;
+
+}
+
+
+/* ================================
+   AI MESSAGE
+================================ */
+
+function addAIMessage(text) {
+
+  const wrapper =
+    document.createElement("div");
+
+  wrapper.className =
+    "flex justify-start mb-7 message-in";
+
+
+  const row =
+    document.createElement("div");
+
+  row.className =
+    "flex items-start gap-3 max-w-[94%]";
+
+
+  const icon =
+    document.createElement("div");
+
+  icon.className =
+    "w-8 h-8 rounded-full bg-black text-white flex items-center justify-center shrink-0 mt-1";
+
+
+  icon.innerHTML =
+    '<i class="fa-solid fa-graduation-cap text-[12px]"></i>';
+
+
+  const area =
+    document.createElement("div");
+
+  area.className =
+    "min-w-0";
+
+
+  const bubble =
+    document.createElement("div");
+
+  bubble.className =
+    "bg-white border border-[#e5e5e5] rounded-3xl rounded-tl-lg px-4 py-3 shadow-sm";
+
+
+  const content =
+    document.createElement("div");
+
+  content.className =
+    "ai-response";
+
+
+  content.innerHTML =
+    formatAIResponse(text);
+
+
+  bubble.appendChild(content);
+
+
+  /* Copy */
+
+  const actions =
+    document.createElement("div");
+
+  actions.className =
+    "mt-2 flex items-center gap-2";
+
+
+  const copyBtn =
+    document.createElement("button");
+
+  copyBtn.className =
+    "text-[10px] text-gray-500 hover:text-black px-2 py-1";
+
+
+  copyBtn.innerHTML =
+    '<i class="fa-regular fa-copy mr-1"></i>Copy';
+
+
+  copyBtn.onclick =
+    async () => {
+
+      try {
+
+        await navigator.clipboard
+          .writeText(text);
+
+
+        copyBtn.innerHTML =
+          '<i class="fa-solid fa-check mr-1"></i>Copied';
+
+
+        setTimeout(() => {
+
+          copyBtn.innerHTML =
+            '<i class="fa-regular fa-copy mr-1"></i>Copy';
+
+        }, 2000);
+
+
+      } catch {
+
+        showError(
+          "Copy is not available."
+        );
+
+      }
+
+    };
+
+
+  actions.appendChild(copyBtn);
+
+
+  area.appendChild(bubble);
+
+  area.appendChild(actions);
+
+
+  row.appendChild(icon);
+
+  row.appendChild(area);
+
+  wrapper.appendChild(row);
+
+  messages.appendChild(wrapper);
+
+}
+
+
+/* ================================
+   SEND
+================================ */
+
+async function sendMsg() {
+
+  if (isThinking) return;
+
+
+  const text =
+    msg.value.trim();
+
+
+  const hasPhoto =
+    Boolean(uploadedPhoto);
+
+
+  if (!text && !hasPhoto) return;
+
+
+  welcome.classList.add("hidden");
+
+
+  const photoToSend =
+    uploadedPhoto;
+
+
+  const mimeToSend =
+    uploadedMimeType;
+
+
+  if (text) {
+
+    addUserText(text);
+
+  }
+
+
+  /*
+   * PHOTO IS ADDED TO CHAT AND
+   * WILL NOT DISAPPEAR.
+   */
+
+  if (photoToSend) {
+
+    addUserPhoto(
+      photoToSend
+    );
+
+  }
+
+
+  msg.value = "";
+
+  autoResize();
+
+
+  /*
+   * Remove only temporary
+   * composer preview.
+   */
+
+  removeSelectedPhoto();
+
+
+  scrollToBottom();
+
+
+  isThinking = true;
+
+  sendBtn.disabled = true;
+
+  sendBtn.innerHTML =
+    '<i class="fa-solid fa-spinner fa-spin"></i>';
+
+
+  addThinking();
+
+
+  try {
+
+    let base64 = "";
+
+
+    if (photoToSend) {
+
+      if (
+        photoToSend.includes(",")
+      ) {
+
+        base64 =
+          photoToSend.split(",")[1];
+
+      } else {
+
+        base64 =
+          photoToSend;
+
+      }
+
+    }
+
+
+    if (
+      base64.length >
+      2500000
+    ) {
+
+      throw new Error(
+        "Photo is too large. Please take a clearer photo closer to the paper."
+      );
+
+    }
+
+
+    const question =
+      text ||
+      "Read the question in the photo, identify the subject and topic, explain the concept, solve it step by step, and explain all answer choices if they are provided.";
+
+
+    const response =
+      await fetch(
+        PROXY,
+        {
+
+          method: "POST",
+
+          headers: {
+            "Content-Type":
+              "application/json"
+          },
+
+          body:
+            JSON.stringify({
+
+              question:
+                question,
+
+              grade:
+                grade,
+
+              shke:
+                shke,
+
+              photo:
+                base64,
+
+              mimeType:
+                mimeToSend
+
+            })
+
+        }
+      );
+
+
+    const raw =
+      await response.text();
+
+
+    let data;
+
+
+    try {
+
+      data =
+        JSON.parse(raw);
+
+    } catch {
+
+      data = {
+        answer: raw
+      };
+
+    }
+
+
+    document
+      .getElementById("thinking")
+      ?.remove();
+
+
+    if (!response.ok) {
+
+      throw new Error(
+        data?.answer ||
+        data?.error ||
+        `Server error (${response.status})`
+      );
+
+    }
+
+
+    let answer =
+      String(
+        data?.answer ||
+        "I couldn't generate an answer."
+      )
+      .trim();
+
+
+    if (!answer) {
+
+      answer =
+        "I couldn't generate an answer. Please try again.";
+
+    }
+
+
+    addAIMessage(
+      answer.slice(
+        0,
+        10000
+      )
+    );
+
+
+  } catch (error) {
+
+    document
+      .getElementById("thinking")
+      ?.remove();
+
+
+    addAIMessage(
+      "I couldn't complete the request.\n\n" +
+      "**Error:** " +
+      error.message
+    );
+
+
+    showError(
+      error.message
+    );
+
+  }
+
+
+  isThinking = false;
+
+  sendBtn.disabled = false;
+
+  sendBtn.innerHTML =
+    '<i class="fa-solid fa-arrow-up"></i>';
+
+
+  scrollToBottom();
+
+}
+
+
+/* ================================
+   ENTER TO SEND
+================================ */
+
+msg.addEventListener(
+  "keydown",
+  function(event) {
+
+    if (
+      event.key === "Enter" &&
+      !event.shiftKey
+    ) {
+
+      event.preventDefault();
+
+      sendMsg();
+
+    }
+
+  }
+);
+
+
+/* ================================
+   AUTO RESIZE
+================================ */
+
+msg.addEventListener(
+  "input",
+  autoResize
+);
+
+
+function autoResize() {
+
+  msg.style.height =
+    "auto";
+
+  msg.style.height =
+    Math.min(
+      msg.scrollHeight,
+      140
+    ) + "px";
+
+}
+
+
+/* ================================
+   SCROLL
+================================ */
+
+function scrollToBottom() {
+
+  setTimeout(() => {
+
+    chat.scrollTo({
+      top:
+        chat.scrollHeight,
+      behavior:
+        "smooth"
+    });
+
+  }, 50);
+
+}
+
 </script>
-</body></html>
+
+</body>
+</html>
