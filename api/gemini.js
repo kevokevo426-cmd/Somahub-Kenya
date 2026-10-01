@@ -14,55 +14,35 @@ export default async function handler(req, res) {
     const photo = body.photo||"";
     const KEY = process.env.GEMINI_API_KEY;
 
-    if (!KEY) return res.status(200).json({answer: "Demo mode - Add GEMINI_API_KEY in Vercel Settings"});
-
+    if (!KEY) return res.status(200).json({answer: "Demo - Add GEMINI_API_KEY in Vercel"});
     if (photo && photo.length > 900000) {
-      return res.status(200).json({answer: "📸 Photo too large - Retake closer, crop paper only, use Gallery. Max 800KB"});
+      return res.status(200).json({answer: "📸 Photo too large - retake closer, paper only"});
     }
 
-    const prompt = `You are SomaHub PRO Marker Grade ${grade}. Mark photo - bold Answer, Key Words, All A-D analysed, Score per Q, Overall. If has diagram, describe it. TASK: ${question}`;
-
-    let parts = [{text: prompt}];
+    let parts = [{text: `You are SomaHub PRO Marker ${grade}. Mark: ${question}`}];
     if (photo) parts.push({inlineData:{mimeType:"image/jpeg", data: photo}});
 
-    // FIX: Use only 1 stable model + retry 3 times for 503
-    const models = ["gemini-1.5-flash","gemini-1.5-flash-8b"];
-
+    // Retry 3x for 503 busy
     for (let attempt=0; attempt<3; attempt++) {
-      for (let m of models) {
+      for (let m of ["gemini-1.5-flash","gemini-1.5-flash-8b"]) {
         try {
           const url = `https://generativelanguage.googleapis.com/v1beta/models/${m}:generateContent?key=${KEY}`;
           const r = await fetch(url,{
-            method:'POST',
-            headers:{'Content-Type':'application/json'},
+            method:'POST', headers:{'Content-Type':'application/json'},
             body:JSON.stringify({contents:[{parts}],generationConfig:{temperature:0.2,maxOutputTokens:5000}})
           });
-          if (r.status===503) { // busy - wait and retry
-            await new Promise(r=>setTimeout(r, 1500 * (attempt+1)));
-            continue;
-          }
+          if (r.status===503) { await new Promise(x=>setTimeout(x,1500)); continue; }
           const txt = await r.text();
-          let data; try{ data=JSON.parse(txt); }catch{ data={}; }
-          let ans = data.candidates?.[0]?.content?.parts?.[0]?.text;
+          let j; try{ j=JSON.parse(txt); }catch{ j={}; }
+          let ans = j.candidates?.[0]?.content?.parts?.[0]?.text;
           if (ans) return res.status(200).json({answer: ans});
         } catch(e){ continue; }
       }
-      await new Promise(r=>setTimeout(r, 1000));
     }
 
-    // After retries - friendly message, not code
-    return res.status(200).json({answer: `⏳ **SomaHub is busy - Google is full**
-
-Google Gemini says: High demand, try again later.
-
-**What to do:**
-1. Wait 30 seconds then tap Mark Exam again
-2. Or try smaller photo - crop paper only
-3. Use Gallery not Camera
-
-SomaHub will work - Google just busy now. Pole Mwalimu! 🙏`});
+    return res.status(200).json({answer: "⏳ **SomaHub busy - Google full, wait 30 sec then tap Mark again**\n\nGoogle Gemini high demand. Pole Mwalimu 🙏 - Try smaller photo, crop paper only."});
 
   } catch(e){
-    return res.status(200).json({answer: `❌ SomaHub error: ${e.message} - Retake photo closer`});
+    return res.status(200).json({answer: "Error: "+e.message});
   }
 }
