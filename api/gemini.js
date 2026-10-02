@@ -1,67 +1,71 @@
 export default async function handler(req, res) {
 
-  /* =====================================
+  /* =========================================================
      CORS
-  ====================================== */
+  ========================================================= */
 
-  res.setHeader(
-    "Access-Control-Allow-Origin",
-    "*"
-  );
-
+  res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader(
     "Access-Control-Allow-Methods",
     "POST, OPTIONS, GET"
   );
-
   res.setHeader(
     "Access-Control-Allow-Headers",
     "Content-Type"
   );
 
-
-  /* =====================================
+  /* =========================================================
      OPTIONS
-  ====================================== */
+  ========================================================= */
 
   if (req.method === "OPTIONS") {
     return res.status(200).end();
   }
 
-
-  /* =====================================
+  /* =========================================================
      GET
-  ====================================== */
+  ========================================================= */
 
   if (req.method === "GET") {
 
     return res.status(200).json({
-      answer:
-        "SomaHub AI Teacher is ready."
+      answer: "SomaHub AI Teacher is ready.",
+      providers: {
+        gemini: Boolean(process.env.GEMINI_API_KEY),
+        openai: Boolean(process.env.OPENAI_API_KEY)
+      },
+      models: {
+        gemini: [
+          "gemini-3.8-flash",
+          "gemini-3.7-flash",
+          "gemini-3.6-flash",
+          "gemini-3.5-flash",
+          "gemini-3.5-flash-lite",
+          "gemini-3.1-flash-lite",
+          "gemini-3.1-pro-preview"
+        ]
+      }
     });
 
   }
 
-
-  /* =====================================
+  /* =========================================================
      METHOD
-  ====================================== */
+  ========================================================= */
 
   if (req.method !== "POST") {
 
     return res.status(405).json({
-      answer:
-        "POST request required."
+      answer: "POST request required."
     });
 
   }
 
-
   try {
 
-    /* =====================================
+    /* =======================================================
        REQUEST BODY
-    ====================================== */
+    ======================================================= */
 
     const body =
       typeof req.body === "string"
@@ -73,21 +77,77 @@ export default async function handler(req, res) {
       String(
         body.question ||
         "Explain the concept in this question."
-      ).slice(0, 8000);
+      ).slice(0, 30000);
 
 
     const grade =
       String(
         body.grade ||
         "Grade 7"
-      );
+      ).slice(0, 100);
 
 
     const shke =
       String(
         body.shke ||
-        "SHKE"
-      );
+        "SomaHub Kenya"
+      ).slice(0, 1000);
+
+
+    const role =
+      String(
+        body.role ||
+        "Student"
+      ).slice(0, 50);
+
+
+    const task =
+      String(
+        body.task ||
+        "Explain / Solve"
+      ).slice(0, 100);
+
+
+    const subject =
+      String(
+        body.subject ||
+        ""
+      ).slice(0, 200);
+
+
+    const strand =
+      String(
+        body.strand ||
+        ""
+      ).slice(0, 300);
+
+
+    const spread =
+      String(
+        body.spread ||
+        "Balanced"
+      ).slice(0, 50);
+
+
+    const questionCount =
+      String(
+        body.questionCount ||
+        ""
+      ).slice(0, 20);
+
+
+    const totalMarks =
+      String(
+        body.totalMarks ||
+        ""
+      ).slice(0, 20);
+
+
+    const provider =
+      String(
+        body.provider ||
+        "auto"
+      ).toLowerCase();
 
 
     let photo =
@@ -104,177 +164,189 @@ export default async function handler(req, res) {
       );
 
 
-    /* =====================================
-       API KEY
-    ====================================== */
+    /* =======================================================
+       SOMAHUB KNOWLEDGE
+    ======================================================= */
 
-    const KEY =
-      process.env.GEMINI_API_KEY;
+    let knowledge = "";
 
+    if (Array.isArray(body.knowledge)) {
 
-    if (!KEY) {
+      knowledge =
+        body.knowledge
+          .slice(0, 20)
+          .map((item, index) => {
 
-      return res.status(500).json({
+            const path =
+              String(
+                item?.path ||
+                `SomaHub source ${index + 1}`
+              ).slice(0, 300);
 
-        answer:
-          "GEMINI_API_KEY is missing in Vercel Environment Variables."
+            const content =
+              String(
+                item?.content ||
+                ""
+              ).slice(0, 8000);
 
-      });
+            return `
+SOURCE ${index + 1}: ${path}
+
+${content}
+`;
+
+          })
+          .join("\n");
 
     }
 
 
-    /* =====================================
-       AI TEACHER PROMPT
-    ====================================== */
+    if (
+      !knowledge &&
+      typeof body.knowledge === "string"
+    ) {
 
-    const prompt = `You are SomaHub AI Teacher for Kenyan learners.
+      knowledge =
+        body.knowledge.slice(0, 45000);
 
-Curriculum/context:
-${shke}
-
-Learner level:
-${grade}
-
-Your job is to act like a patient, clear and professional teacher.
-
-IMPORTANT:
-Do not simply give the final answer.
-Teach the learner how to understand the question and solve similar questions.
-
-When a photograph is provided:
-
-1. Carefully read the photograph.
-2. Identify the subject.
-3. Identify the topic.
-4. Rewrite the question briefly if necessary.
-5. Explain the concept in simple language suitable for ${grade}.
-6. Solve the question step by step.
-7. Explain WHY the answer is correct.
-8. Highlight the most important facts.
-9. Give a simple example when useful.
-10. End with a clearly marked final answer.
-
-MULTIPLE CHOICE QUESTIONS:
-
-If the question contains options such as A, B, C and D:
-
-You MUST discuss the choices.
-
-Use this structure:
-
-**Question:** Briefly state what is being asked.
-
-**Concept:** Explain the relevant concept.
-
-**Option A:** Explain what A means and whether it is correct or incorrect.
-
-**Option B:** Explain what B means and whether it is correct or incorrect.
-
-**Option C:** Explain what C means and whether it is correct or incorrect.
-
-**Option D:** Explain what D means and whether it is correct or incorrect.
-
-**Correct Choice:** State the correct letter and answer.
-
-**Why:** Explain clearly why the correct choice is right.
-
-Do not just say:
-"A is wrong."
-Explain the reason.
-
-If an option is obviously unrelated, briefly explain why.
-
-FORMATTING:
-
-Use **bold text** for important words and key facts.
-
-Use ==highlighted text== for the most important answer, rule, definition or conclusion.
-
-Use:
-**KEY POINT:** for important things the learner must remember.
-
-Use:
-**CORRECT CHOICE:** for multiple-choice answers.
-
-Use:
-**FINAL ANSWER:** for the final answer.
-
-For example:
-
-**KEY POINT:** A noun is a naming word.
-
-**CORRECT CHOICE:** B) Nairobi
-
-==FINAL ANSWER: B) Nairobi==
-
-MATHEMATICS:
-
-Show all important working.
-
-Explain each step.
-
-Do not skip calculations.
-
-SCIENCE:
-
-Explain the process, principle, cause and effect.
-
-ENGLISH:
-
-Explain the grammar rule and why the selected answer follows the rule.
-
-SST:
-
-Explain historical, geographical, social or civic concepts clearly.
-
-AGRICULTURE:
-
-Explain processes, practices, reasons and examples.
-
-COMPUTER / ICT:
-
-Explain the concept and give a practical example.
-
-OTHER SUBJECTS:
-
-Give a clear age-appropriate explanation.
-
-If the image is unclear:
-
-Say which part cannot be read.
-
-Do not invent information.
-
-If there are several questions:
-
-Answer them one at a time and number them.
-
-Always be accurate, encouraging and educational.
-
-Learner's request:
-${question}`;
+    }
 
 
-    /* =====================================
-       GEMINI PARTS
-    ====================================== */
+    /* =======================================================
+       SOURCE LIST
+    ======================================================= */
 
-    const parts = [
-      {
-        text: prompt
-      }
+    let sources = [];
+
+    if (Array.isArray(body.sources)) {
+
+      sources =
+        body.sources
+          .map(
+            item =>
+              String(item).slice(0, 300)
+          )
+          .slice(0, 30);
+
+    }
+
+
+    /* =======================================================
+       CONVERSATION HISTORY
+    ======================================================= */
+
+    let history = "";
+
+    if (Array.isArray(body.history)) {
+
+      history =
+        body.history
+          .slice(-8)
+          .map(item => {
+
+            const speaker =
+              String(
+                item?.role ||
+                "user"
+              );
+
+            const content =
+              String(
+                item?.content ||
+                ""
+              ).slice(0, 1500);
+
+            return `${speaker}: ${content}`;
+
+          })
+          .join("\n");
+
+    }
+
+
+    /* =======================================================
+       API KEYS
+    ======================================================= */
+
+    const GEMINI_KEY =
+      process.env.GEMINI_API_KEY || "";
+
+
+    const OPENAI_KEY =
+      process.env.OPENAI_API_KEY || "";
+
+
+    /* =======================================================
+       GEMINI MODELS
+       
+       Ordered from newest/general purpose to
+       lighter backup models.
+    ======================================================= */
+
+    const GEMINI_MODELS = [
+
+      "gemini-3.8-flash",
+
+      "gemini-3.7-flash",
+
+      "gemini-3.6-flash",
+
+      "gemini-3.5-flash",
+
+      "gemini-3.5-flash-lite",
+
+      "gemini-3.1-flash-lite",
+
+      "gemini-3.1-pro-preview"
+
     ];
 
 
-    /* =====================================
-       IMAGE
-    ====================================== */
+    /*
+     * Optional custom model:
+     *
+     * Add GEMINI_MODEL in Vercel if you want to
+     * change the first model without editing code.
+     */
+
+    const customGeminiModel =
+      String(
+        process.env.GEMINI_MODEL ||
+        ""
+      ).trim();
+
+
+    if (
+      customGeminiModel &&
+      !GEMINI_MODELS.includes(
+        customGeminiModel
+      )
+    ) {
+
+      GEMINI_MODELS.unshift(
+        customGeminiModel
+      );
+
+    }
+
+
+    /* =======================================================
+       OPENAI MODEL
+    ======================================================= */
+
+    const OPENAI_MODEL =
+      process.env.OPENAI_MODEL ||
+      "gpt-5";
+
+
+    /* =======================================================
+       IMAGE PROCESSING
+    ======================================================= */
 
     if (photo) {
 
       /*
-       * Accept a complete data URL too.
+       * Accept a complete data URL.
        */
 
       if (
@@ -309,12 +381,14 @@ ${question}`;
 
 
       const allowedTypes = [
+
         "image/jpeg",
         "image/jpg",
         "image/png",
         "image/webp",
         "image/heic",
         "image/heif"
+
       ];
 
 
@@ -336,7 +410,7 @@ ${question}`;
 
       if (
         photo.length >
-        3000000
+        5000000
       ) {
 
         return res.status(413).json({
@@ -348,246 +422,541 @@ ${question}`;
 
       }
 
-
-      parts.push({
-
-        inlineData: {
-
-          mimeType:
-            mimeType,
-
-          data:
-            photo
-
-        }
-
-      });
-
     }
 
 
-    /* =====================================
-       GEMINI API
-    ====================================== */
+    /* =======================================================
+       AI TEACHER PROMPT
+    ======================================================= */
 
-    const endpoint =
-      "https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent";
+    const prompt = `
 
+You are SomaHub AI Teacher for Kenyan learners and teachers.
 
-    let response;
-    let data;
+You are an educational assistant designed to support
+learning, revision, homework, examinations and marking.
 
+============================================================
+LEARNER INFORMATION
+============================================================
 
-    /*
-     * Retry temporary Google errors.
-     */
+Role:
+${role}
 
-    for (
-      let attempt = 1;
-      attempt <= 3;
-      attempt++
-    ) {
+Grade:
+${grade}
 
-      response =
-        await fetch(
-          endpoint,
-          {
+Subject:
+${subject || "Determine from the question"}
 
-            method: "POST",
+Strand / Topic:
+${strand || "Determine from the question"}
 
-            headers: {
+Task:
+${task}
 
-              "Content-Type":
-                "application/json",
+Question Spread:
+${spread}
 
-              "x-goog-api-key":
-                KEY
+Number of Questions:
+${questionCount || "Not specified"}
 
-            },
+Total Marks:
+${totalMarks || "Not specified"}
 
-            body:
-              JSON.stringify({
+Platform:
+${shke}
 
-                contents: [
 
-                  {
+============================================================
+SOMAHUB KNOWLEDGE
+============================================================
 
-                    role: "user",
+The following information may come from SomaHub files.
 
-                    parts:
-                      parts
+Use relevant SomaHub information as the primary context.
 
-                  }
+Do not invent information that is not present.
 
-                ],
+If the SomaHub files do not contain the required answer,
+use your general educational knowledge.
 
-                generationConfig: {
+If general knowledge is used, you may state:
 
-                  temperature:
-                    0.25,
+"General knowledge used."
 
-                  maxOutputTokens:
-                    5000
+Do not refuse to answer simply because SomaHub has no
+matching information.
 
-                }
+${knowledge || "No relevant SomaHub file content was supplied."}
 
-              })
 
-          }
-        );
+============================================================
+RECENT CONVERSATION
+============================================================
 
+${history || "No previous conversation."}
 
-      data =
-        await response.json();
 
+============================================================
+GENERAL TEACHING RULES
+============================================================
 
-      /*
-       * Retry 503 or 429.
-       */
+1. Identify the subject.
 
-      if (
-        response.status !== 503 &&
-        response.status !== 429
-      ) {
+2. Identify the topic or strand.
 
-        break;
+3. Explain the concept clearly.
 
-      }
+4. Keep the explanation appropriate for ${grade}.
 
+5. Do not simply provide an unexplained answer.
 
-      if (
-        attempt < 3
-      ) {
+6. Show important working in Mathematics.
 
-        await new Promise(
-          resolve =>
-            setTimeout(
-              resolve,
-              attempt * 2000
-            )
-        );
+7. Explain causes, effects and processes in Science.
 
-      }
+8. Explain grammar rules in English.
 
-    }
+9. Explain historical, geographical, social and civic
+   concepts in SST.
 
+10. Explain agricultural practices and reasons in
+    Agriculture.
 
-    /* =====================================
-       ERROR
-    ====================================== */
+11. Explain ICT concepts with practical examples.
 
-    if (!response.ok) {
+12. If an image is unclear, say so instead of guessing.
 
-      console.error(
-        "Gemini API error:",
-        JSON.stringify(
-          data,
-          null,
-          2
-        )
-      );
+13. If several questions are supplied, number them.
 
+14. Keep paragraphs reasonably short.
 
-      const googleMessage =
-        data?.error?.message ||
-        "Unknown Gemini API error.";
+15. Be accurate and educational.
 
 
-      return res.status(
-        response.status
-      ).json({
+============================================================
+MULTIPLE CHOICE
+============================================================
 
-        answer:
-          `Gemini API error: ${googleMessage}`
+If the learner provides choices A, B, C and D:
 
-      });
+Explain EVERY choice.
 
-    }
+Use:
 
+**Option A:** Explain what A means and why it is correct
+or incorrect.
 
-    /* =====================================
-       GET RESPONSE
-    ====================================== */
+**Option B:** Explain what B means and why it is correct
+or incorrect.
 
-    let answer = "";
+**Option C:** Explain what C means and why it is correct
+or incorrect.
 
+**Option D:** Explain what D means and why it is correct
+or incorrect.
 
-    const candidates =
-      data?.candidates || [];
+Do not simply say "wrong".
 
+Give the reason.
 
-    for (
-      const candidate
-      of candidates
-    ) {
 
-      const candidateParts =
-        candidate?.content?.parts ||
-        [];
+============================================================
+NORMAL ANSWER FORMAT
+============================================================
 
+### Topic (Strand)
 
-      for (
-        const part
-        of candidateParts
-      ) {
+### Explanation
 
-        if (
-          typeof part?.text ===
-          "string"
-        ) {
+### Brief Question
 
-          answer +=
-            part.text;
+### Working / Reasoning
 
-        }
+### Choices and Reasons
 
-      }
+### Correct Choice
 
-    }
+### Why
 
+### Marking (KNEC-style)
 
-    /* =====================================
-       EMPTY RESPONSE
-    ====================================== */
+Total marks:
+Award:
+Reason:
+
+### KEY POINT
+
+### FINAL ANSWER
+
+Use **bold** for important terms.
+
+Use ==highlighted text== for the most important
+answer or conclusion.
+
+
+============================================================
+HOMEWORK
+============================================================
+
+If the task is to set homework:
+
+Create ORIGINAL questions based on the relevant
+SomaHub curriculum information.
+
+Include:
+
+### Homework
+
+Grade:
+Subject:
+Topic:
+Difficulty:
+Total Questions:
+Total Marks:
+
+### Instructions
+
+### Questions
+
+### Marking Guide
+
+Use the requested question spread.
+
+Focused = mainly one skill.
+
+Balanced = selected skill plus closely related skills.
+
+Wide = wider coverage of related subtopics and skills.
+
+Do not copy long passages from source material.
+
+
+============================================================
+EXAM
+============================================================
+
+If the task is to set an examination:
+
+Create an ORIGINAL examination appropriate for
+the selected grade.
+
+Include:
+
+### Examination
+
+Grade:
+Subject:
+Topic / Strand:
+Total Questions:
+Total Marks:
+
+### Instructions
+
+### Section A
+
+### Section B
+
+### Section C
+
+when appropriate.
+
+Then provide:
+
+### Marking Scheme
+
+### Answer Key
+
+Do not claim that a generated paper is an official
+KNEC examination.
+
+
+============================================================
+MARKING
+============================================================
+
+If marking learner work:
+
+Read the question.
+
+Read the learner's answer.
+
+Compare it with the supplied marking guide or
+SomaHub material.
+
+Award marks fairly.
+
+Accept valid equivalent answers.
+
+Use:
+
+### Marking
+
+Question 1 — X/Y marks
+
+Awarded:
+Reason:
+Correction:
+
+Continue for all questions.
+
+Then:
+
+### Total
+
+Awarded: X/Y
+
+
+============================================================
+WIDER SPREAD
+============================================================
+
+If spread is Wide, cover more related skills.
+
+Where appropriate, vary question types:
+
+- recall
+- understanding
+- application
+- analysis
+- practical examples
+
+Do not make questions unnecessarily difficult
+for the selected grade.
+
+
+============================================================
+CURRENT REQUEST
+============================================================
+
+${question}
+
+`;
+
+
+    /* =======================================================
+       PROVIDER ORDER
+    ======================================================= */
+
+    let providers = [];
+
 
     if (
-      !answer.trim()
+      provider === "openai"
     ) {
 
-      console.error(
-        "Unexpected Gemini response:",
-        JSON.stringify(
-          data,
-          null,
-          2
-        )
-      );
+      if (OPENAI_KEY) {
+        providers.push("openai");
+      }
+
+      if (GEMINI_KEY) {
+        providers.push("gemini");
+      }
+
+    } else {
+
+      if (GEMINI_KEY) {
+        providers.push("gemini");
+      }
+
+      if (OPENAI_KEY) {
+        providers.push("openai");
+      }
+
+    }
 
 
-      return res.status(502).json({
+    if (
+      providers.length === 0
+    ) {
+
+      return res.status(500).json({
 
         answer:
-          "Gemini returned no readable answer. Please try again."
+          "No AI provider is configured. Add GEMINI_API_KEY in Vercel Environment Variables."
 
       });
 
     }
 
 
-    /* =====================================
+    /* =======================================================
+       TRY AI PROVIDERS
+    ======================================================= */
+
+    let finalAnswer = "";
+
+    let usedProvider = "";
+
+    let usedModel = "";
+
+    let lastError = "";
+
+
+    for (
+      const currentProvider
+      of providers
+    ) {
+
+      /* =====================================================
+         GEMINI
+      ===================================================== */
+
+      if (
+        currentProvider === "gemini"
+      ) {
+
+        const result =
+          await tryGeminiModels({
+
+            apiKey:
+              GEMINI_KEY,
+
+            models:
+              GEMINI_MODELS,
+
+            prompt,
+            photo,
+            mimeType
+
+          });
+
+
+        if (
+          result.ok
+        ) {
+
+          finalAnswer =
+            result.answer;
+
+          usedProvider =
+            "Gemini";
+
+          usedModel =
+            result.model;
+
+          break;
+
+        }
+
+
+        lastError =
+          result.error || "";
+
+
+        /*
+         * Try the next provider if Gemini is unavailable.
+         */
+
+        continue;
+
+      }
+
+
+      /* =====================================================
+         OPENAI
+      ===================================================== */
+
+      if (
+        currentProvider === "openai"
+      ) {
+
+        const result =
+          await callOpenAI({
+
+            apiKey:
+              OPENAI_KEY,
+
+            model:
+              OPENAI_MODEL,
+
+            prompt,
+            photo,
+            mimeType
+
+          });
+
+
+        if (
+          result.ok
+        ) {
+
+          finalAnswer =
+            result.answer;
+
+          usedProvider =
+            "OpenAI";
+
+          usedModel =
+            OPENAI_MODEL;
+
+          break;
+
+        }
+
+
+        lastError =
+          result.error || "";
+
+      }
+
+    }
+
+
+    /* =======================================================
+       ALL PROVIDERS FAILED
+    ======================================================= */
+
+    if (
+      !finalAnswer.trim()
+    ) {
+
+      console.error(
+        "All AI providers failed:",
+        lastError
+      );
+
+
+      return res.status(503).json({
+
+        answer:
+          "SomaHub AI is temporarily unavailable. Please try again later."
+
+      });
+
+    }
+
+
+    /* =======================================================
        SUCCESS
-    ====================================== */
+    ======================================================= */
 
     return res.status(200).json({
 
       answer:
-        answer.trim(),
+        finalAnswer.trim(),
+
+      provider:
+        usedProvider,
 
       model:
-        "gemini-3.8-flash",
+        usedModel,
 
       hasImage:
-        Boolean(photo)
+        Boolean(photo),
+
+      somaHubSources:
+        sources,
+
+      somaHubKnowledgeUsed:
+        Boolean(knowledge),
+
+      task:
+        task,
+
+      grade:
+        grade
 
     });
 
@@ -603,11 +972,585 @@ ${question}`;
     return res.status(500).json({
 
       answer:
-        "SomaHub AI server error: " +
-        error.message
+        "SomaHub AI server error. Please try again."
 
     });
 
   }
 
 }
+
+
+/* ===========================================================
+   TRY MULTIPLE GEMINI MODELS
+=========================================================== */
+
+async function tryGeminiModels({
+  apiKey,
+  models,
+  prompt,
+  photo,
+  mimeType
+}) {
+
+  let lastError =
+    "Gemini models unavailable.";
+
+
+  for (
+    const model
+    of models
+  ) {
+
+    try {
+
+      const result =
+        await callGemini({
+
+          apiKey,
+          model,
+          prompt,
+          photo,
+          mimeType
+
+        });
+
+
+      if (
+        result.ok
+      ) {
+
+        return {
+
+          ok:
+            true,
+
+          answer:
+            result.answer,
+
+          model:
+            model
+
+        };
+
+      }
+
+
+      lastError =
+        result.error ||
+        lastError;
+
+
+      /*
+       * Move immediately to another Gemini model.
+       *
+       * This is especially useful if a particular
+       * model is unavailable or rate-limited.
+       */
+
+      console.warn(
+        `Gemini model ${model} failed:`,
+        result.error
+      );
+
+
+    } catch (error) {
+
+      lastError =
+        error?.message ||
+        String(error);
+
+    }
+
+  }
+
+
+  return {
+
+    ok:
+      false,
+
+    error:
+      lastError
+
+  };
+
+}
+
+
+/* ===========================================================
+   GEMINI API
+=========================================================== */
+
+async function callGemini({
+  apiKey,
+  model,
+  prompt,
+  photo,
+  mimeType
+}) {
+
+  const endpoint =
+    `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:generateContent`;
+
+
+  const parts = [
+
+    {
+      text:
+        prompt
+    }
+
+  ];
+
+
+  /* ---------------------------------------------------------
+     IMAGE
+  --------------------------------------------------------- */
+
+  if (
+    photo
+  ) {
+
+    parts.push({
+
+      inlineData: {
+
+        mimeType:
+          mimeType,
+
+        data:
+          photo
+
+      }
+
+    });
+
+  }
+
+
+  const response =
+    await fetch(
+      endpoint,
+      {
+
+        method:
+          "POST",
+
+        headers: {
+
+          "Content-Type":
+            "application/json",
+
+          "x-goog-api-key":
+            apiKey
+
+        },
+
+        body:
+          JSON.stringify({
+
+            contents: [
+
+              {
+
+                role:
+                  "user",
+
+                parts:
+                  parts
+
+              }
+
+            ],
+
+            generationConfig: {
+
+              maxOutputTokens:
+                5000
+
+            }
+
+          })
+
+      }
+    );
+
+
+  const data =
+    await safeJson(
+      response
+    );
+
+
+  /* ---------------------------------------------------------
+     ERROR
+  --------------------------------------------------------- */
+
+  if (
+    !response.ok
+  ) {
+
+    const message =
+      data?.error?.message ||
+      `Gemini HTTP ${response.status}`;
+
+
+    console.error(
+      `Gemini ${model} error:`,
+      JSON.stringify(
+        data,
+        null,
+        2
+      )
+    );
+
+
+    return {
+
+      ok:
+        false,
+
+      error:
+        message
+
+    };
+
+  }
+
+
+  /* ---------------------------------------------------------
+     EXTRACT ANSWER
+  --------------------------------------------------------- */
+
+  let answer = "";
+
+
+  const candidates =
+    data?.candidates ||
+    [];
+
+
+  for (
+    const candidate
+    of candidates
+  ) {
+
+    const candidateParts =
+      candidate?.content?.parts ||
+      [];
+
+
+    for (
+      const part
+      of candidateParts
+    ) {
+
+      if (
+        typeof part?.text ===
+        "string"
+      ) {
+
+        answer +=
+          part.text;
+
+      }
+
+    }
+
+  }
+
+
+  if (
+    !answer.trim()
+  ) {
+
+    return {
+
+      ok:
+        false,
+
+      error:
+        "Gemini returned no readable answer."
+
+    };
+
+  }
+
+
+  return {
+
+    ok:
+      true,
+
+    answer:
+      answer.trim()
+
+  };
+
+}
+
+
+/* ===========================================================
+   OPENAI FALLBACK
+=========================================================== */
+
+async function callOpenAI({
+  apiKey,
+  model,
+  prompt,
+  photo,
+  mimeType
+}) {
+
+  const content = [
+
+    {
+
+      type:
+        "input_text",
+
+      text:
+        prompt
+
+    }
+
+  ];
+
+
+  if (
+    photo
+  ) {
+
+    content.push({
+
+      type:
+        "input_image",
+
+      image_url:
+        `data:${mimeType};base64,${photo}`,
+
+      detail:
+        "auto"
+
+    });
+
+  }
+
+
+  const response =
+    await fetch(
+      "https://api.openai.com/v1/responses",
+      {
+
+        method:
+          "POST",
+
+        headers: {
+
+          "Content-Type":
+            "application/json",
+
+          "Authorization":
+            `Bearer ${apiKey}`
+
+        },
+
+        body:
+          JSON.stringify({
+
+            model:
+              model,
+
+            input: [
+
+              {
+
+                role:
+                  "user",
+
+                content:
+                  content
+
+              }
+
+            ],
+
+            max_output_tokens:
+              5000
+
+          })
+
+      }
+    );
+
+
+  const data =
+    await safeJson(
+      response
+    );
+
+
+  if (
+    !response.ok
+  ) {
+
+    const message =
+      data?.error?.message ||
+      `OpenAI HTTP ${response.status}`;
+
+
+    console.error(
+      "OpenAI error:",
+      JSON.stringify(
+        data,
+        null,
+        2
+      )
+    );
+
+
+    return {
+
+      ok:
+        false,
+
+      error:
+        message
+
+    };
+
+  }
+
+
+  let answer = "";
+
+
+  if (
+    typeof data?.output_text ===
+    "string"
+  ) {
+
+    answer =
+      data.output_text;
+
+  }
+
+
+  if (
+    !answer.trim() &&
+    Array.isArray(data?.output)
+  ) {
+
+    for (
+      const item
+      of data.output
+    ) {
+
+      if (
+        Array.isArray(
+          item?.content
+        )
+      ) {
+
+        for (
+          const part
+          of item.content
+        ) {
+
+          if (
+            typeof part?.text ===
+            "string"
+          ) {
+
+            answer +=
+              part.text;
+
+          }
+
+        }
+
+      }
+
+    }
+
+  }
+
+
+  if (
+    !answer.trim()
+  ) {
+
+    return {
+
+      ok:
+        false,
+
+      error:
+        "OpenAI returned no readable answer."
+
+    };
+
+  }
+
+
+  return {
+
+    ok:
+      true,
+
+    answer:
+      answer.trim()
+
+  };
+
+}
+
+
+/* ===========================================================
+   SAFE JSON
+=========================================================== */
+
+async function safeJson(response) {
+
+  try {
+
+    return await response.json();
+
+  } catch {
+
+    return {};
+
+  }
+
+}
+
+Vercel variables
+
+For the Gemini multi-model system, you only need:
+
+GEMINI_API_KEY=your_key_here
+
+The code automatically tries:
+
+1. gemini-3.8-flash
+2. gemini-3.7-flash
+3. gemini-3.6-flash
+4. gemini-3.5-flash
+5. gemini-3.5-flash-lite
+6. gemini-3.1-flash-lite
+7. gemini-3.1-pro-preview
+
+These model IDs are based on Google's current API model list.
+
+If you also add:
+
+OPENAI_API_KEY=your_key_here
+
+then the final fallback becomes OpenAI after the Gemini models fail.
+
+One important limitation: multiple model names do not mean one Gemini quota becomes seven separate quotas. If your project/account has exhausted its applicable quota, switching models may still produce quota errors depending on the model and quota involved. The value of this setup is resilience when a particular model is unavailable, rate-limited, or otherwise fails—not magically multiplying your billing quota.
+
+Also, I deliberately removed the old "temperature" setting from the Gemini request because Google's current Gemini 3.8 migration guidance says to remove deprecated sampling parameters such as "temperature", "top_p", and "top_k" for that model.
+
+After replacing the file, redeploy on Vercel. Then your existing "ai.assistant.html" can continue calling "/api/gemini"; you don't have to rename the endpoint yet.
