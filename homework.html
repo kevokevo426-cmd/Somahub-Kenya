@@ -1,210 +1,2502 @@
 <!DOCTYPE html>
-<html><head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SomaHub - Playground Fixed ♿ 🔊 Oxford</title>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SomaHub - AI Homework</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;800;900&display=swap" rel="stylesheet">
-<style>body{font-family:'Nunito',sans-serif;background:#f6f6f7}.pulse{animation:pulse 1s infinite}@keyframes pulse{0%,100%{opacity:1}50%{opacity:.6}}.qCard:active{transform:scale(0.98)}.fun-btn:active{transform:scale(0.95)}</style>
+<style>
+body{font-family:'Nunito',sans-serif;background:#f6f6f7}
+.pulse{animation:pulse 1s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.55}}
+.qCard:active,.fun-btn:active{transform:scale(.98)}
+button:disabled{opacity:.6;cursor:not-allowed}
+</style>
+
 <script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-const cfg={apiKey:"AIzaSyA93BNes3AmFyxIEgjSbvbIWqLyorLsuj8",authDomain:"somahubkenya-9e458.firebaseapp.com",projectId:"somahubkenya-9e458",storageBucket:"somahubkenya-9e458.firebasestorage.app",messagingSenderId:"615579085715",appId:"1:615579085715:web:28fca37ba498324bb49666"};
-const app=initializeApp(cfg); window.FB={auth:getAuth(app),db:getFirestore(app),doc,getDoc,onAuthStateChanged};
+import {initializeApp} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import {getAuth,onAuthStateChanged} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+import {getFirestore,doc,getDoc} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+const cfg={
+ apiKey:"AIzaSyA93BNes3AmFyxIEgjSbvbIWqLyorLsuj8",
+ authDomain:"somahubkenya-9e458.firebaseapp.com",
+ projectId:"somahubkenya-9e458",
+ storageBucket:"somahubkenya-9e458.firebasestorage.app",
+ messagingSenderId:"615579085715",
+ appId:"1:615579085715:web:28fca37ba498324bb49666"
+};
+
+const app=initializeApp(cfg);
+
+window.FB={
+ auth:getAuth(app),
+ db:getFirestore(app),
+ doc,
+ getDoc,
+ onAuthStateChanged
+};
 </script>
 </head>
+
 <body class="flex justify-center">
-<div class="w-full max-w-[460px] bg-[#f6f6f7] min-h-screen pb-12">
-<div class="h-2.5 flex sticky top-0 z-50"><div class="flex-1 bg-[#ff8a2a]"></div><div class="flex-1 bg-[#2ac5a0]"></div><div class="flex-1 bg-[#4a86ff]"></div><div class="flex-1 bg-[#ffcc1a]"></div></div>
-<div class="bg-white border-b-2 border-black p-3 flex justify-between items-center sticky top-2.5 z-40">
-<a href="student.html" class="bg-black text-white px-4 py-2 rounded-full font-black text-[11px] fun-btn">← Back</a>
-<p class="font-black text-[13px]">🎨 My Homework</p>
-<span id="indexB" class="bg-[#4a86ff] text-white px-2 py-1 rounded-full text-[9px] border-2 border-black">SHKE</span>
+
+<div class="w-full max-w-5xl bg-[#f6f6f7] min-h-screen pb-12">
+
+<div class="h-2.5 flex sticky top-0 z-50">
+ <div class="flex-1 bg-[#ff8a2a]"></div>
+ <div class="flex-1 bg-[#2ac5a0]"></div>
+ <div class="flex-1 bg-[#4a86ff]"></div>
+ <div class="flex-1 bg-[#ffcc1a]"></div>
 </div>
-<div class="p-3 space-y-3">
-<div class="bg-gradient-to-br from-[#ff8a2a] via-[#ffcc1a] to-[#2ac5a0] text-black rounded-[1.8rem] p-4 border-[3px] border-black shadow-[4px_4px_0_0_#000]">
-<div class="flex justify-between items-center"><p class="font-black text-[15px]" id="headerTitle">🌈 My Homework - 10 Marks!</p><span id="offlineBadge" class="bg-white text-black px-2 py-1 rounded-full text-[8px] border-2 border-black">● Online</span></div>
-<p class="font-bold text-[11px] mt-1">Oxford 🔊 Listen • 🎤 Speak + Edit • A B C D</p>
-<button id="blindBtn" onclick="toggleBlindMode()" class="mt-3 w-full bg-white text-black border-[2.5px] border-black rounded-full py-3 font-black text-[11px] shadow-[2px_2px_0_0_#000] fun-btn">♿ Visual Mode OFF - BIG + Voice</button>
+
+<header class="bg-white border-b-2 border-black p-3 flex justify-between items-center sticky top-2.5 z-40">
+ <a href="student.html"
+    class="bg-black text-white px-4 py-2 rounded-full font-black text-[11px] fun-btn">
+    ← Back
+ </a>
+
+ <div class="text-center">
+  <p class="font-black text-[14px]">📚 SomaHub AI Homework</p>
+  <p class="text-[8px] text-gray-500 font-bold">
+   Grade-level • AI-generated • Practice
+  </p>
+ </div>
+
+ <span id="indexB"
+       class="bg-[#4a86ff] text-white px-2 py-1 rounded-full text-[9px] border-2 border-black">
+   SHKE
+ </span>
+</header>
+
+<main class="p-3 md:p-5 space-y-4">
+
+<section class="bg-gradient-to-br from-[#ff8a2a] via-[#ffcc1a] to-[#2ac5a0]
+rounded-[1.8rem] p-4 md:p-6 border-[3px] border-black
+shadow-[4px_4px_0_0_#000]">
+
+ <div class="flex flex-col md:flex-row md:justify-between md:items-center gap-2">
+
+  <div>
+   <p class="font-black text-[18px]" id="headerTitle">
+    🌈 My Homework
+   </p>
+
+   <p class="font-bold text-[11px] mt-1">
+    SomaHub AI creates questions for your grade and learning area.
+   </p>
+  </div>
+
+  <span id="offlineBadge"
+        class="bg-white text-black px-3 py-1 rounded-full text-[8px]
+        border-2 border-black w-fit">
+    ● Online
+  </span>
+
+ </div>
+
+ <button id="blindBtn"
+         onclick="toggleBlindMode()"
+         class="mt-3 w-full bg-white text-black border-[2.5px]
+         border-black rounded-full py-3 font-black text-[11px]
+         shadow-[2px_2px_0_0_#000] fun-btn">
+  ♿ Visual Mode OFF - BIG + Voice
+ </button>
+
+</section>
+
+<section class="bg-white rounded-[1.3rem] p-3 md:p-5
+border-[2.5px] border-black shadow-[3px_3px_0_0_#000]">
+
+ <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
+
+  <select id="gradeSel"
+          class="bg-[#e0f2ff] border-[2.5px] border-black
+          rounded-full p-3 font-black text-[12px]">
+
+   <option>Grade 4</option>
+   <option>Grade 5</option>
+   <option>Grade 6</option>
+   <option>Grade 7</option>
+   <option>Grade 8</option>
+   <option>Grade 9</option>
+   <option>Grade 10</option>
+
+  </select>
+
+  <select id="subSel"
+          onchange="updateSub()"
+          class="bg-[#fff7e0] border-[2.5px] border-black
+          rounded-full p-3 font-black text-[12px]">
+
+   <option>SST 🌍</option>
+   <option>Science 🌸</option>
+   <option>Mathematics 🔢</option>
+   <option>English 📖</option>
+   <option>Kiswahili 🌾</option>
+   <option>CRE 🙏</option>
+
+  </select>
+
+  <select id="strandSel"
+          class="bg-[#dcfce7] border-[2.5px] border-black
+          rounded-full p-3 font-black text-[11px]">
+  </select>
+
+ </div>
+
+ <button id="myHwBtn"
+         onclick="generateMyHomework()"
+         class="mt-3 w-full bg-black text-white
+         border-[2.5px] border-black rounded-full py-5
+         font-black text-[15px] shadow-[3px_3px_0_0_#000] fun-btn">
+
+  📚 GENERATE MY HOMEWORK 🚀
+
+ </button>
+
+ <p id="aiStatus"
+    class="text-[9px] text-center font-black mt-2 text-gray-500">
+ </p>
+
+</section>
+
+<div id="dayInfo"
+     class="bg-[#ffcc1a] border-[2.5px] border-black
+     rounded-xl p-3 text-center font-black text-[11px]
+     shadow-[2px_2px_0_0_#000]">
 </div>
-<div class="bg-white rounded-[1.3rem] p-3 border-[2.5px] border-black shadow-[3px_3px_0_0_#000] space-y-3">
-<div class="grid grid-cols-2 gap-2">
-<select id="gradeSel" class="bg-[#e0f2ff] border-[2.5px] border-black rounded-full p-3 font-black text-[12px]"><option>Grade 4</option><option>Grade 5</option><option>Grade 6</option><option>Grade 7</option><option>Grade 8</option><option>Grade 9</option></select>
-<select id="subSel" onchange="updateSub()" class="bg-[#fff7e0] border-[2.5px] border-black rounded-full p-3 font-black text-[12px]"><option>SST 🌍</option><option>Science 🌸</option><option>Mathematics 🔢</option><option>English 📖</option><option>Kiswahili 🌾</option><option>CRE 🙏</option></select>
+
+<section class="bg-white rounded-xl p-3 border-[2.5px]
+border-black shadow-[2px_2px_0_0_#000]">
+
+ <p class="font-black text-[12px]">📅 My Past Work</p>
+
+ <div class="grid grid-cols-3 gap-2 mt-3">
+
+  <button onclick="showHistory('yesterday')"
+          class="bg-[#ffcc1a] border-2 border-black
+          rounded-full py-3 font-black text-[10px]">
+   Yesterday
+  </button>
+
+  <button onclick="showHistory('week')"
+          class="bg-[#4a86ff] text-white border-2 border-black
+          rounded-full py-3 font-black text-[10px]">
+   Week
+  </button>
+
+  <button onclick="showHistory('all')"
+          class="bg-black text-white border-2 border-black
+          rounded-full py-3 font-black text-[10px]">
+   All + 🗑️
+  </button>
+
+ </div>
+
+ <div id="historyList"
+      class="mt-3 space-y-2 hidden">
+ </div>
+
+</section>
+
+<section id="workArea"
+         class="hidden bg-white rounded-[1.5rem] p-4 md:p-6
+         border-[3px] border-black
+         shadow-[4px_4px_0_0_#000]">
+
+ <div class="flex justify-between items-center gap-2">
+
+  <p id="workTitle"
+     class="font-black text-[13px]">
+   Homework
+  </p>
+
+  <span id="scoreBadge"
+        class="bg-black text-white px-3 py-1 rounded-full
+        text-[11px] border-2 border-black">
+   0/10
+  </span>
+
+ </div>
+
+ <div class="grid grid-cols-3 gap-2 mt-3">
+
+  <button onclick="document.getElementById('photoInput').click()"
+          class="bg-[#ffcc1a] border-2 border-black
+          rounded-full py-3 font-black text-[10px]">
+   📷 Photo
+  </button>
+
+  <button onclick="speakAll()"
+          class="bg-[#4a86ff] text-white border-2 border-black
+          rounded-full py-3 font-black text-[10px]">
+   🔊 All
+  </button>
+
+  <button onclick="printPDF()"
+          class="bg-white border-2 border-black
+          rounded-full py-3 font-black text-[10px]">
+   🖨️ PDF
+  </button>
+
+ </div>
+
+ <input type="file"
+        id="photoInput"
+        accept="image/*"
+        hidden>
+
+ <img id="photoPreview"
+      class="hidden mt-3 w-full max-h-72 object-contain
+      rounded-xl border-2 border-black">
+
+ <div id="questions"
+      class="mt-5 space-y-5">
+ </div>
+
+ <button onclick="checkAnswers()"
+         class="w-full mt-6 bg-[#2ac5a0] text-black
+         border-[3px] border-black rounded-full py-5
+         font-black text-[15px]
+         shadow-[3px_3px_0_0_#000] fun-btn">
+
+  ✅ Check Now! 🔊 Hear Score!
+
+ </button>
+
+ <div id="result"
+      class="hidden mt-4 p-4 border-[3px] border-black
+      rounded-[1.2rem] bg-white">
+ </div>
+
+ <button id="corrBtn"
+         onclick="showCorrection()"
+         class="hidden w-full mt-3 bg-[#4a86ff] text-white
+         border-[2.5px] border-black rounded-full py-3
+         font-black text-[11px]">
+
+  👁️ See Correction + 🔊
+
+ </button>
+
+ <button id="nextBtn"
+         onclick="nextHomework()"
+         class="hidden w-full mt-3 bg-[#ffcc1a] text-black
+         border-[2.5px] border-black rounded-full py-4
+         font-black text-[13px]
+         shadow-[2px_2px_0_0_#000]">
+
+  NEXT → 🚀
+
+ </button>
+
+</section>
+
+</main>
+
+<div id="printArea"
+     class="hidden bg-white p-6">
+
+ <div id="printQs"></div>
+
 </div>
-<select id="strandSel" class="w-full bg-[#dcfce7] border-[2.5px] border-black rounded-full p-3 font-black text-[11px]"></select>
-<button id="myHwBtn" onclick="generateMyHomework()" class="w-full bg-black text-white border-[2.5px] border-black rounded-full py-5 font-black text-[15px] shadow-[3px_3px_0_0_#000] fun-btn">📚 TAP HERE - My Homework! 🚀</button>
+
 </div>
-<div id="dayInfo" class="bg-[#ffcc1a] border-[2.5px] border-black rounded-xl p-3 text-center font-black text-[11px] shadow-[2px_2px_0_0_#000]"></div>
-<div class="bg-white rounded-xl p-3 border-[2.5px] border-black shadow-[2px_2px_0_0_#000]">
-<p class="font-black text-[12px]">📅 My Past Work</p>
-<div class="grid grid-cols-3 gap-2 mt-3">
-<button onclick="showHistory('yesterday')" class="bg-[#ffcc1a] border-2 border-black rounded-full py-3 font-black text-[10px]">Yesterday</button>
-<button onclick="showHistory('week')" class="bg-[#4a86ff] text-white border-2 border-black rounded-full py-3 font-black text-[10px]">Week</button>
-<button onclick="showHistory('all')" class="bg-black text-white border-2 border-black rounded-full py-3 font-black text-[10px]">All + 🗑️</button>
-</div>
-<div id="historyList" class="mt-3 space-y-2 hidden"></div>
-</div>
-<div id="workArea" class="hidden bg-white rounded-[1.5rem] p-4 border-[3px] border-black shadow-[4px_4px_0_0_#000]">
-<div class="flex justify-between items-center"><p id="workTitle" class="font-black text-[13px]">Homework</p><span id="scoreBadge" class="bg-black text-white px-3 py-1 rounded-full text-[11px] border-2 border-black">0/10</span></div>
-<div class="flex gap-2 mt-3">
-<button onclick="document.getElementById('photoInput').click()" class="flex-1 bg-[#ffcc1a] border-2 border-black rounded-full py-3 font-black text-[10px]">📷 Photo</button>
-<button onclick="speakAll()" class="flex-1 bg-[#4a86ff] text-white border-2 border-black rounded-full py-3 font-black text-[10px]">🔊 All</button>
-<button onclick="printPDF()" class="flex-1 bg-white border-2 border-black rounded-full py-3 font-black text-[10px]">🖨️ PDF</button>
-</div>
-<input type="file" id="photoInput" accept="image/*" hidden>
-<img id="photoPreview" class="hidden mt-3 w-full rounded-xl border-2 border-black">
-<div id="questions" class="mt-5 space-y-5"></div>
-<button onclick="checkAnswers()" class="w-full mt-6 bg-[#2ac5a0] text-black border-[3px] border-black rounded-full py-5 font-black text-[15px] shadow-[3px_3px_0_0_#000] fun-btn">✅ Check Now! 🔊 Hear Score!</button>
-<div id="result" class="hidden mt-4 p-4 border-[3px] border-black rounded-[1.2rem] bg-white"></div>
-<button id="corrBtn" onclick="showCorrection()" class="hidden w-full mt-3 bg-[#4a86ff] text-white border-[2.5px] border-black rounded-full py-3 font-black text-[11px]">👁️ See Correction + 🔊</button>
-<button id="nextBtn" onclick="nextHomework()" class="hidden w-full mt-3 bg-[#ffcc1a] text-black border-[2.5px] border-black rounded-full py-4 font-black text-[13px] shadow-[2px_2px_0_0_#000]">NEXT → 🚀</button>
-</div>
-</div>
-<div id="printArea" class="hidden bg-white p-6"><div id="printQs"></div></div>
-</div>
+
 <script>
-let currentSHKE="SHKE00502", currentQs=[], blindMode=false, recognition=null, isRecording=false;
-let todayName=new Date().toLocaleDateString('en-KE',{weekday:'long'});
+
+const PROXY="/api/gemini";
+
+let currentSHKE="SHKE";
+let currentQs=[];
+let blindMode=false;
+let recognition=null;
+let isRecording=false;
+
+let todayName=new Date().toLocaleDateString(
+ 'en-KE',
+ {weekday:'long'}
+);
+
 let currentSubject="SST";
-const STRANDS={"English 📖":["Grammar - Tenses 📝","Comprehension 📚","Vocabulary 🌈","Punctuation ✏️","Nouns & Verbs 🎯"],"Mathematics 🔢":["Fractions 🍕","Percentages %","Geometry - Area 📐","Algebra x+y","Number Patterns 🔢"],"Science 🌸":["Flower Parts 🌸","Photosynthesis ☀️","States of Matter 💧","Human Body 🧍","Water Cycle 🌧️"],"SST 🌍":["Map Work - Kenya 🗺️","Rift Valley Lakes 🌊","Compass Direction 🧭","Physical Features ⛰️","People & Population 👨‍👩‍👧"],"Kiswahili 🌾":["Sarufi - Nomino 📝","Wingi & Umoja 🔢","Sentensi 📖","Kinyume ↔️","Methali 🎭"],"CRE 🙏":["Creation 🌍","Commandments 📜","Fruit of Spirit 🍎","Life of Jesus ✝️","Old Testament 📖"]};
-function cleanSub(s){return s.split(' ')[0];}
-function updateSub(){let raw=subSel.value; currentSubject=cleanSub(raw); let key=Object.keys(STRANDS).find(k=>k.startsWith(currentSubject))||"SST 🌍"; strandSel.innerHTML=(STRANDS[key]||["General"]).map(s=>`<option>${s}</option>`).join(''); updDay();}
-function updDay(){let strand=strandSel.value? strandSel.value.split(' ')[0] : ''; dayInfo.innerHTML=`✅ Today ${todayName} • ${currentSubject} ${strand} • 10 Marks`; offlineBadge.innerText=navigator.onLine?'● Online':'● Offline';}
 
-// OXFORD VOICE - FIXED
+const STRANDS={
+
+ English:[
+  "Grammar - Tenses 📝",
+  "Comprehension 📚",
+  "Vocabulary 🌈",
+  "Punctuation ✏️",
+  "Nouns & Verbs 🎯"
+ ],
+
+ Mathematics:[
+  "Fractions 🍕",
+  "Percentages %",
+  "Geometry - Area 📐",
+  "Algebra x+y",
+  "Number Patterns 🔢"
+ ],
+
+ Science:[
+  "Flower Parts 🌸",
+  "Photosynthesis ☀️",
+  "States of Matter 💧",
+  "Human Body 🧍",
+  "Water Cycle 🌧️"
+ ],
+
+ SST:[
+  "Map Work - Kenya 🗺️",
+  "Rift Valley Lakes 🌊",
+  "Compass Direction 🧭",
+  "Physical Features ⛰️",
+  "People & Population 👨‍👩‍👧"
+ ],
+
+ Kiswahili:[
+  "Sarufi - Nomino 📝",
+  "Wingi & Umoja 🔢",
+  "Sentensi 📖",
+  "Kinyume ↔️",
+  "Methali 🎭"
+ ],
+
+ CRE:[
+  "Creation 🌍",
+  "Commandments 📜",
+  "Fruit of Spirit 🍎",
+  "Life of Jesus ✝️",
+  "Old Testament 📖"
+ ]
+
+};
+
+function cleanSub(s){
+ return (s||"").split(" ")[0];
+}
+
+function escapeHTML(v){
+
+ return String(v??"")
+  .replace(/&/g,"&amp;")
+  .replace(/</g,"&lt;")
+  .replace(/>/g,"&gt;")
+  .replace(/"/g,"&quot;")
+  .replace(/'/g,"&#039;");
+
+}
+
+function updateSub(){
+
+ currentSubject=cleanSub(
+  document.getElementById("subSel").value
+ );
+
+ const strand=document.getElementById("strandSel");
+
+ strand.innerHTML=
+  (STRANDS[currentSubject]||["General"])
+  .map(s=>`<option>${escapeHTML(s)}</option>`)
+  .join("");
+
+ updDay();
+
+}
+
+function updDay(){
+
+ const strand=
+  document.getElementById("strandSel").value||"";
+
+ document.getElementById("dayInfo").innerHTML=
+ `✅ Today ${todayName} •
+ ${escapeHTML(currentSubject)} •
+ ${escapeHTML(strand)} • AI Homework`;
+
+ document.getElementById("offlineBadge").innerText=
+ navigator.onLine?"● Online":"● Offline";
+
+}
+
 let oxVoices=[];
-function loadVoices(){oxVoices=speechSynthesis.getVoices();}
-if('speechSynthesis' in window){loadVoices(); speechSynthesis.onvoiceschanged=loadVoices;}
-function speakText(t){
- if(!('speechSynthesis' in window)) return;
- speechSynthesis.cancel();
- let clean=t.replace(/[*_`]/g,'').replace(/\n/g,'. ').slice(0,600);
- let utt=new SpeechSynthesisUtterance(clean);
- let isSw=/Nomino|Wingi|Sarufi|Hongera|Chagua|Kinyume|Kiswahili|Mtoto|Anaenda/i.test(clean)||currentSubject==="Kiswahili";
- let vs=speechSynthesis.getVoices();
- if(vs.length===0){setTimeout(()=>speakText(t),300); return;}
- let eng = vs.find(v=>v.name.includes('Google UK English Female')) || vs.find(v=>v.lang==='en-GB') || vs.find(v=>v.lang.startsWith('en')) || vs[0];
- let sw = vs.find(v=>v.lang.includes('sw'));
- utt.voice = isSw && sw? sw : eng;
- utt.lang = isSw? 'sw-KE' : 'en-GB';
- utt.rate = blindMode? 0.75 : 0.82;
- utt.pitch=1; utt.volume=1;
- speechSynthesis.speak(utt);
-}
-function speakQuestion(i){
- let c=currentQs[i]; if(!c) return;
- let txt=`Question ${i+1}. ${c.q}. `;
- if(c.options&&c.options.length) txt+=`Options. ${c.options.map((o,idx)=>`Option ${String.fromCharCode(65+idx)}: ${o}`).join('. ')}. `;
- speakText(txt);
-}
-function speakAll(){if(!currentQs.length) return speakText("Tap My Homework first"); speakText(currentQs.map((c,i)=>`Question ${i+1}. ${c.q}.`).join(' '));}
-function toggleBlindMode(){blindMode=!blindMode; blindBtn.innerText=blindMode?"♿ BIG Mode ON":"♿ Visual Mode OFF"; document.documentElement.style.fontSize=blindMode?"120%":"100%"; if(blindMode) speakText("Big mode ON. Tap Listen Oxford to hear."); updDay();}
 
-// MIC EDITABLE
+function loadVoices(){
+
+ if("speechSynthesis" in window)
+  oxVoices=speechSynthesis.getVoices();
+
+}
+
+if("speechSynthesis" in window){
+
+ loadVoices();
+
+ speechSynthesis.onvoiceschanged=loadVoices;
+
+}
+
+function speakText(t){
+
+ if(!("speechSynthesis" in window))return;
+
+ speechSynthesis.cancel();
+
+ let clean=String(t||"")
+  .replace(/[*_`#]/g,"")
+  .replace(/\n+/g,". ")
+  .slice(0,900);
+
+ let utt=new SpeechSynthesisUtterance(clean);
+
+ let isSw=
+  /Nomino|Wingi|Sarufi|Hongera|Chagua|Kinyume|Kiswahili|Mtoto|Anaenda/i
+  .test(clean)
+  ||currentSubject==="Kiswahili";
+
+ let vs=speechSynthesis.getVoices();
+
+ if(!vs.length){
+
+  setTimeout(()=>speakText(t),300);
+
+  return;
+ }
+
+ let eng=
+  vs.find(v=>v.name.includes("Google UK English Female"))
+  ||vs.find(v=>v.lang==="en-GB")
+  ||vs.find(v=>v.lang.startsWith("en"))
+  ||vs[0];
+
+ let sw=
+  vs.find(v=>v.lang.toLowerCase().startsWith("sw"));
+
+ utt.voice=isSw&&sw?sw:eng;
+
+ utt.lang=isSw?"sw-KE":"en-GB";
+
+ utt.rate=blindMode?.75:.82;
+ utt.pitch=1;
+ utt.volume=1;
+
+ speechSynthesis.speak(utt);
+
+}
+
+function speakQuestion(i){
+
+ const c=currentQs[i];
+
+ if(!c)return;
+
+ let txt=`Question ${i+1}. ${c.q}. `;
+
+ if(c.options?.length){
+
+  txt+=
+   `Options. ${
+    c.options.map((o,idx)=>
+     `Option ${String.fromCharCode(65+idx)}: ${o}`
+    ).join(". ")
+   }.`;
+
+ }
+
+ speakText(txt);
+
+}
+
+function speakAll(){
+
+ if(!currentQs.length){
+
+  speakText(
+   "Tap Generate My Homework first."
+  );
+
+  return;
+ }
+
+ speakText(
+  currentQs
+  .map((c,i)=>`Question ${i+1}. ${c.q}.`)
+  .join(" ")
+ );
+
+}
+
+function toggleBlindMode(){
+
+ blindMode=!blindMode;
+
+ document.getElementById("blindBtn").innerText=
+  blindMode
+   ?"♿ BIG Mode ON"
+   :"♿ Visual Mode OFF - BIG + Voice";
+
+ document.documentElement.style.fontSize=
+  blindMode?"120%":"100%";
+
+ if(blindMode)
+  speakText(
+   "Big mode is on. Tap Oxford Listen to hear the questions."
+  );
+
+ updDay();
+
+}
+
 function startVoiceAnswer(i){
- const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
- if(!SR){alert("Use Chrome"); return;}
- if(isRecording&&recognition){recognition.stop(); return;}
- recognition=new SR(); recognition.lang=currentSubject==="Kiswahili"?'sw-KE':'en-KE'; recognition.interimResults=false;
- let btn=document.getElementById('mic'+i), txtInput=document.getElementById('ansText'+i), hidden=document.getElementById('ans'+i), stat=document.getElementById('micStatus'+i);
- btn.classList.add('pulse','bg-red-500'); btn.innerText="🔴"; stat.innerText="🎤 Listening..."; stat.classList.remove('hidden'); isRecording=true;
+
+ const SR=
+  window.SpeechRecognition||
+  window.webkitSpeechRecognition;
+
+ if(!SR){
+
+  alert(
+   "Voice typing is not supported here. Please use Chrome."
+  );
+
+  return;
+ }
+
+ if(isRecording&&recognition){
+
+  recognition.stop();
+
+  return;
+
+ }
+
+ recognition=new SR();
+
+ recognition.lang=
+  currentSubject==="Kiswahili"
+   ?"sw-KE"
+   :"en-KE";
+
+ recognition.interimResults=false;
+ recognition.continuous=false;
+
+ const btn=
+  document.getElementById("mic"+i);
+
+ const txtInput=
+  document.getElementById("ansText"+i);
+
+ const hidden=
+  document.getElementById("ans"+i);
+
+ const stat=
+  document.getElementById("micStatus"+i);
+
+ if(!btn||!txtInput||!hidden||!stat)return;
+
+ btn.classList.add(
+  "pulse",
+  "bg-red-500"
+ );
+
+ btn.innerText="🔴";
+
+ stat.innerText=
+  "🎤 Listening... speak your answer.";
+
+ stat.classList.remove("hidden");
+
+ isRecording=true;
+
  recognition.onresult=e=>{
-   let tr=e.results[0][0].transcript.trim();
-   let q=currentQs[i];
-   if(q.options){
-     let match=q.options.find(o=> o.toLowerCase().includes(tr.toLowerCase()) || tr.toLowerCase().includes(o.toLowerCase().slice(0,3)));
-     if(match){ tr=match; document.querySelectorAll(`input[name="ans${i}"]`).forEach(r=>{if(r.value.toLowerCase()===match.toLowerCase()) r.checked=true;}); }
+
+  let tr=
+   e.results[0][0]
+   .transcript
+   .trim();
+
+  const q=currentQs[i];
+
+  if(q.options?.length){
+
+   const lower=tr.toLowerCase();
+
+   const match=q.options.find(o=>
+
+    o.toLowerCase()===lower
+    ||
+    o.toLowerCase().includes(lower)
+    ||
+    lower.includes(
+     o.toLowerCase().slice(0,3)
+    )
+
+   );
+
+   if(match){
+
+    tr=match;
+
+    document
+     .querySelectorAll(
+      `input[name="ans${i}"]`
+     )
+     .forEach(r=>{
+
+      r.checked=
+       r.value.toLowerCase()
+       ===match.toLowerCase();
+
+     });
+
    }
-   if(txtInput){ txtInput.value=tr; }
-   if(hidden){ hidden.value=tr; }
-   stat.innerHTML=`✅ Heard: <b>${tr}</b> - EDIT below if needed`;
-   stat.className="mt-2 text-[10px] font-black text-center bg-[#dcfce7] border-2 border-black rounded-full py-2";
+
+  }
+
+  txtInput.value=tr;
+  hidden.value=tr;
+
+  stat.innerHTML=
+   `✅ Heard:
+   <b>${escapeHTML(tr)}</b>
+   — edit your answer if needed.`;
+
+  stat.className=
+   "mt-2 text-[10px] font-black text-center " +
+   "bg-[#dcfce7] border-2 border-black " +
+   "rounded-full py-2";
+
  };
- recognition.onend=()=>{btn.classList.remove('pulse','bg-red-500'); btn.innerText="🎤"; isRecording=false; if(navigator.vibrate) navigator.vibrate(40);};
- recognition.onerror=()=>{stat.innerText="❌ Try again"; btn.classList.remove('pulse','bg-red-500'); btn.innerText="🎤"; isRecording=false;};
- recognition.start();
+
+ recognition.onend=()=>{
+
+  btn.classList.remove(
+   "pulse",
+   "bg-red-500"
+  );
+
+  btn.innerText="🎤";
+
+  isRecording=false;
+
+  if(navigator.vibrate)
+   navigator.vibrate(40);
+
+ };
+
+ recognition.onerror=()=>{
+
+  stat.innerText=
+   "❌ Voice not heard. Tap the microphone and try again.";
+
+  btn.classList.remove(
+   "pulse",
+   "bg-red-500"
+  );
+
+  btn.innerText="🎤";
+
+  isRecording=false;
+
+ };
+
+ try{
+
+  recognition.start();
+
+ }catch(e){}
+
 }
 
 const FALLBACK={
- "English": [{q:"She ___ to school every day.", opts:["go","goes","going","gone"], a:"goes", m:2, s:"Tenses", color:"#e0f2ff"},{q:"Find noun: The beautiful flower is blooming", opts:["beautiful","flower","is","blooming"], a:"flower", m:2, s:"Nouns", color:"#ffe0f0"},{q:"Past tense of write?", opts:["writed","wrote","written","writing"], a:"wrote", m:2, s:"Tenses", color:"#fff7e0"},{q:"Synonym for happy?", opts:["sad","joyful","angry","tired"], a:"joyful", m:2, s:"Vocab", color:"#dcfce7"},{q:"I ___ my homework yesterday", opts:[], a:"did", m:2, s:"Grammar", color:"#fff"}],
- "Mathematics": [{q:"Solve: 3/4 + 1/4 =?", opts:["1/2","1","2","3/4"], a:"1", m:2, s:"Fractions", color:"#fff7e0"},{q:"25% of 200?", opts:["25","50","75","100"], a:"50", m:2, s:"Percentages", color:"#e0f2ff"},{q:"Area triangle base 10 height 6?", opts:["30","60","15","30cm²"], a:"30", m:2, s:"Geometry", color:"#ffe0f0"},{q:"x+5=12, x=?", opts:["5","7","12","17"], a:"7", m:2, s:"Algebra", color:"#dcfce7"},{q:"Next: 2,4,6,8,?", opts:["10","12","9","11"], a:"10", m:2, s:"Patterns", color:"#fff"}],
- "Science": [{q:"Which part makes pollen?", opts:["Petal","Stamen","Sepal","Root"], a:"Stamen", m:2, s:"Flower", color:"#ffe0f0"},{q:"Name 2 parts of flower", opts:["Petal Sepal","Root Leaf","Stem Bark","Soil Water"], a:"Petal Sepal", m:2, s:"Flower", color:"#ffe0f0"},{q:"What is photosynthesis?", opts:["Plant makes food","Plant drinks","Plant sleeps","Plant walks"], a:"Plant makes food", m:2, s:"Photo", color:"#dcfce7"},{q:"States of matter?", opts:["Solid liquid gas","Hot cold","Big small","Red blue"], a:"Solid liquid gas", m:2, s:"Matter", color:"#e0f2ff"},{q:"Which part holds ovary?", opts:[], a:"Pistil", m:2, s:"Flower", color:"#fff"}],
- "SST": [{q:"Define map and give 2 uses", opts:[], a:"Map representation", m:2, s:"Map Work", color:"#d0e8ff"},{q:"Capital of Kenya on map?", opts:["Nairobi","Mombasa","Kisumu","Nakuru"], a:"Nairobi", m:2, s:"Map Work", color:"#d0e8ff"},{q:"Name 2 lakes in Rift Valley", opts:["Turkana Baringo","Victoria","Naivasha only","Tanganyika"], a:"Turkana Baringo", m:2, s:"Rift", color:"#d0e8ff"},{q:"What shows direction on map?", opts:["Compass","Ruler","Pencil","Eraser"], a:"Compass", m:2, s:"Compass", color:"#d0e8ff"},{q:"2 physical features of Kenya?", opts:[], a:"Mountains Rift", m:2, s:"Features", color:"#fff"}],
- "Kiswahili": [{q:"Chagua: Mtoto ___ shuleni", opts:["anaenda","wanaenda","tunaenda","ninaenda"], a:"anaenda", m:2, s:"Sarufi", color:"#dcfce7"},{q:"Kinyume cha kubwa ni?", opts:["ndogo","kubwa","dogo","kubwa sana"], a:"ndogo", m:2, s:"Kinyume", color:"#fff7e0"},{q:"Nomino ni nini?", opts:["jina la kitu","tendo","kielezi","kiwakilishi"], a:"jina la kitu", m:2, s:"Nomino", color:"#e0f2ff"},{q:"Wingi wa kitabu?", opts:["vitabu","kitabu","mavitabu","ma-"], a:"vitabu", m:2, s:"Wingi", color:"#ffe0f0"},{q:"Andika sentensi na mwalimu", opts:[], a:"Mwalimu anafundisha", m:2, s:"Sentensi", color:"#fff"}],
- "CRE": [{q:"Who created world?", opts:["God","Man","Angel","Devil"], a:"God", m:2, s:"Creation", color:"#fff7e0"},{q:"2 fruits of Holy Spirit", opts:["Love joy","Hate anger","Fear worry","Sadness"], a:"Love joy", m:2, s:"Spirit", color:"#dcfce7"},{q:"First man?", opts:["Adam","Moses","Jesus","Noah"], a:"Adam", m:2, s:"Old", color:"#e0f2ff"},{q:"How many commandments?", opts:["5","10","12","7"], a:"10", m:2, s:"Commandments", color:"#fff"},{q:"Jesus born in?", opts:["Bethlehem","Nazareth","Jerusalem","Cairo"], a:"Bethlehem", m:2, s:"Jesus", color:"#fff7e0"}]
+
+ English:[
+
+  {
+   q:"She ___ to school every day.",
+   opts:["go","goes","going","gone"],
+   a:"goes",
+   m:2,
+   s:"Tenses",
+   color:"#e0f2ff"
+  },
+
+  {
+   q:"Find the noun: The beautiful flower is blooming.",
+   opts:["beautiful","flower","is","blooming"],
+   a:"flower",
+   m:2,
+   s:"Nouns",
+   color:"#ffe0f0"
+  },
+
+  {
+   q:"What is the past tense of write?",
+   opts:["writed","wrote","written","writing"],
+   a:"wrote",
+   m:2,
+   s:"Tenses",
+   color:"#fff7e0"
+  },
+
+  {
+   q:"Choose the synonym of happy.",
+   opts:["sad","joyful","angry","tired"],
+   a:"joyful",
+   m:2,
+   s:"Vocabulary",
+   color:"#dcfce7"
+  },
+
+  {
+   q:"Complete: I ___ my homework yesterday.",
+   opts:[],
+   a:"did",
+   m:2,
+   s:"Grammar",
+   color:"#fff"
+  }
+
+ ],
+
+ Mathematics:[
+
+  {
+   q:"Solve: 3/4 + 1/4 = ?",
+   opts:["1/2","1","2","3/4"],
+   a:"1",
+   m:2,
+   s:"Fractions",
+   color:"#fff7e0"
+  },
+
+  {
+   q:"What is 25% of 200?",
+   opts:["25","50","75","100"],
+   a:"50",
+   m:2,
+   s:"Percentages",
+   color:"#e0f2ff"
+  },
+
+  {
+   q:"Find the area of a triangle with base 10 cm and height 6 cm.",
+   opts:["30 cm²","60 cm²","15 cm²","20 cm²"],
+   a:"30 cm²",
+   m:2,
+   s:"Geometry",
+   color:"#ffe0f0"
+  },
+
+  {
+   q:"If x + 5 = 12, find x.",
+   opts:["5","7","12","17"],
+   a:"7",
+   m:2,
+   s:"Algebra",
+   color:"#dcfce7"
+  },
+
+  {
+   q:"What comes next: 2, 4, 6, 8, ___?",
+   opts:["10","12","9","11"],
+   a:"10",
+   m:2,
+   s:"Patterns",
+   color:"#fff"
+  }
+
+ ],
+
+ Science:[
+
+  {
+   q:"Which part of a flower produces pollen?",
+   opts:["Petal","Stamen","Sepal","Root"],
+   a:"Stamen",
+   m:2,
+   s:"Flower Parts",
+   color:"#ffe0f0"
+  },
+
+  {
+   q:"Which pair contains two parts of a flower?",
+   opts:[
+    "Petal and sepal",
+    "Root and leaf",
+    "Stem and bark",
+    "Soil and water"
+   ],
+   a:"Petal and sepal",
+   m:2,
+   s:"Flower Parts",
+   color:"#ffe0f0"
+  },
+
+  {
+   q:"What is photosynthesis?",
+   opts:[
+    "The process by which plants make food",
+    "The process by which plants drink water",
+    "A way plants sleep",
+    "Movement of plants"
+   ],
+   a:"The process by which plants make food",
+   m:2,
+   s:"Photosynthesis",
+   color:"#dcfce7"
+  },
+
+  {
+   q:"Which are the three common states of matter?",
+   opts:[
+    "Solid, liquid and gas",
+    "Hot and cold",
+    "Big and small",
+    "Red and blue"
+   ],
+   a:"Solid, liquid and gas",
+   m:2,
+   s:"Matter",
+   color:"#e0f2ff"
+  },
+
+  {
+   q:"Which part of a flower contains the ovary?",
+   opts:[],
+   a:"Pistil",
+   m:2,
+   s:"Flower Parts",
+   color:"#fff"
+  }
+
+ ],
+
+ SST:[
+
+  {
+   q:"Define a map and give two uses of maps.",
+   opts:[],
+   a:"A map is a representation of an area or part of the earth's surface.",
+   m:2,
+   s:"Map Work",
+   color:"#d0e8ff"
+  },
+
+  {
+   q:"What is the capital city of Kenya?",
+   opts:[
+    "Nairobi",
+    "Mombasa",
+    "Kisumu",
+    "Nakuru"
+   ],
+   a:"Nairobi",
+   m:2,
+   s:"Map Work",
+   color:"#d0e8ff"
+  },
+
+  {
+   q:"Name two lakes found in the Rift Valley region of Kenya.",
+   opts:[
+    "Turkana and Baringo",
+    "Victoria and Tanganyika",
+    "Naivasha only",
+    "Victoria and Turkana"
+   ],
+   a:"Turkana and Baringo",
+   m:2,
+   s:"Rift Valley",
+   color:"#d0e8ff"
+  },
+
+  {
+   q:"Which instrument shows direction on a map?",
+   opts:[
+    "Compass",
+    "Ruler",
+    "Pencil",
+    "Eraser"
+   ],
+   a:"Compass",
+   m:2,
+   s:"Compass Direction",
+   color:"#d0e8ff"
+  },
+
+  {
+   q:"Name two physical features found in Kenya.",
+   opts:[],
+   a:"Mountains and the Rift Valley",
+   m:2,
+   s:"Physical Features",
+   color:"#fff"
+  }
+
+ ],
+
+ Kiswahili:[
+
+  {
+   q:"Chagua jibu sahihi: Mtoto ___ shuleni.",
+   opts:[
+    "anaenda",
+    "wanaenda",
+    "tunaenda",
+    "ninaenda"
+   ],
+   a:"anaenda",
+   m:2,
+   s:"Sarufi",
+   color:"#dcfce7"
+  },
+
+  {
+   q:"Kinyume cha 'kubwa' ni nini?",
+   opts:[
+    "ndogo",
+    "kubwa",
+    "dogo",
+    "kubwa sana"
+   ],
+   a:"ndogo",
+   m:2,
+   s:"Kinyume",
+   color:"#fff7e0"
+  },
+
+  {
+   q:"Nomino ni nini?",
+   opts:[
+    "Jina la mtu, kitu, mahali au mnyama",
+    "Tendo",
+    "Kielezi",
+    "Kiwakilishi"
+   ],
+   a:"Jina la mtu, kitu, mahali au mnyama",
+   m:2,
+   s:"Nomino",
+   color:"#e0f2ff"
+  },
+
+  {
+   q:"Wingi wa neno 'kitabu' ni upi?",
+   opts:[
+    "vitabu",
+    "kitabu",
+    "mavitabu",
+    "ma-"
+   ],
+   a:"vitabu",
+   m:2,
+   s:"Wingi na Umoja",
+   color:"#ffe0f0"
+  },
+
+  {
+   q:"Andika sentensi ukitumia neno 'mwalimu'.",
+   opts:[],
+   a:"Mwalimu anafundisha.",
+   m:2,
+   s:"Sentensi",
+   color:"#fff"
+  }
+
+ ],
+
+ CRE:[
+
+  {
+   q:"Who created the world according to the Bible?",
+   opts:[
+    "God",
+    "Man",
+    "Angel",
+    "Devil"
+   ],
+   a:"God",
+   m:2,
+   s:"Creation",
+   color:"#fff7e0"
+  },
+
+  {
+   q:"Which pair contains two fruits of the Holy Spirit?",
+   opts:[
+    "Love and joy",
+    "Hate and anger",
+    "Fear and worry",
+    "Sadness"
+   ],
+   a:"Love and joy",
+   m:2,
+   s:"Fruit of the Spirit",
+   color:"#dcfce7"
+  },
+
+  {
+   q:"Who was the first man according to the Bible?",
+   opts:[
+    "Adam",
+    "Moses",
+    "Jesus",
+    "Noah"
+   ],
+   a:"Adam",
+   m:2,
+   s:"Old Testament",
+   color:"#e0f2ff"
+  },
+
+  {
+   q:"How many commandments were given to Moses?",
+   opts:[
+    "5",
+    "10",
+    "12",
+    "7"
+   ],
+   a:"10",
+   m:2,
+   s:"Commandments",
+   color:"#fff"
+  },
+
+  {
+   q:"Where was Jesus born?",
+   opts:[
+    "Bethlehem",
+    "Nazareth",
+    "Jerusalem",
+    "Cairo"
+   ],
+   a:"Bethlehem",
+   m:2,
+   s:"Life of Jesus",
+   color:"#fff7e0"
+  }
+
+ ]
+
 };
 
-function generateMyHomework(){
- currentSubject=cleanSub(subSel.value); updateSub();
- myHwBtn.innerText="⏳ Loading..."; myHwBtn.disabled=true;
- workArea.classList.remove('hidden');
- questions.innerHTML=`<p class='text-center py-8 font-black'>⏳ Loading ${currentSubject}...</p>`;
- setTimeout(()=>{
-  let base=FALLBACK[currentSubject]||FALLBACK["Kiswahili"];
-  currentQs=base.map(x=>({q:x.q, options:x.opts, answer:x.a, marks:x.m, strand:x.s, color:x.color}));
-  renderQs();
- },300);
+function normalizeQuestions(data){
+
+ let raw=
+  data?.questions||
+  data?.homework||
+  data?.items||
+  data?.result;
+
+ if(typeof raw==="string"){
+
+  try{
+   raw=JSON.parse(raw);
+  }catch(e){
+   raw=null;
+  }
+
+ }
+
+ if(!Array.isArray(raw))
+  return [];
+
+ return raw.map((x,i)=>({
+
+  q:String(
+   x.question||
+   x.q||
+   x.text||
+   ""
+  ).trim(),
+
+  options:
+   Array.isArray(x.options)
+    ?x.options.map(String)
+    :Array.isArray(x.opts)
+     ?x.opts.map(String)
+     :[],
+
+  answer:String(
+   x.answer||
+   x.a||
+   x.correctAnswer||
+   ""
+  ).trim(),
+
+  marks:Number(
+   x.marks||
+   x.mark||
+   2
+  ),
+
+  strand:String(
+   x.strand||
+   x.topic||
+   x.s||
+   document.getElementById("strandSel").value||
+   ""
+  ).trim(),
+
+  color:
+   x.color||
+   [
+    "#e0f2ff",
+    "#fff7e0",
+    "#dcfce7",
+    "#ffe0f0",
+    "#fff"
+   ][i%5]
+
+ })).filter(x=>x.q&&x.answer);
+
+}
+
+async function requestAIHomework(){
+
+ const grade=
+  document.getElementById("gradeSel").value;
+
+ const subject=currentSubject;
+
+ const strand=
+  document.getElementById("strandSel").value;
+
+ const prompt=
+
+`Create a fresh original homework exercise for SomaHub Kenya.
+
+Learner grade: ${grade}
+Learning area: ${subject}
+Strand/topic: ${strand}
+
+Requirements:
+
+- Match the learner's grade level exactly.
+- Create 5 questions worth 2 marks each, total 10 marks.
+- Mix multiple-choice and short-answer questions where suitable.
+- Make the questions original; do not copy textbook or exam questions.
+- Cover the selected strand.
+- Use clear Kenyan English, or Kiswahili when the subject is Kiswahili.
+- Give one correct answer for each question.
+- For MCQs give exactly 4 options.
+- For written questions, options should be an empty array.
+- Return ONLY valid JSON in this exact shape:
+
+{"questions":[
+ {
+  "question":"...",
+  "options":["A","B","C","D"],
+  "answer":"...",
+  "marks":2,
+  "strand":"..."
+ }
+]}`;
+
+ const body={
+
+  question:prompt,
+
+  originalQuestion:prompt,
+
+  grade,
+
+  role:"learner",
+
+  task:"homework_generation",
+
+  mode:"homework_generation",
+
+  subject,
+
+  topic:strand,
+
+  strand,
+
+  source:"SomaHub Homework",
+
+  useSomaHubFiles:true,
+
+  provider:"auto"
+
+ };
+
+ const res=await fetch(
+  PROXY,
+  {
+   method:"POST",
+   headers:{
+    "Content-Type":"application/json"
+   },
+   body:JSON.stringify(body)
+  }
+ );
+
+ const text=await res.text();
+
+ let data={};
+
+ try{
+  data=JSON.parse(text);
+ }catch(e){
+  throw new Error(
+   "AI returned an invalid response."
+  );
+ }
+
+ if(!res.ok||data.ok===false){
+
+  throw new Error(
+   data.error||
+   "AI homework generation failed."
+  );
+
+ }
+
+ const qs=normalizeQuestions(data);
+
+ if(qs.length<1)
+  throw new Error(
+   "AI did not return usable questions."
+  );
+
+ return qs.slice(0,10);
+
+}
+
+async function generateMyHomework(){
+
+ const btn=
+  document.getElementById("myHwBtn");
+
+ const status=
+  document.getElementById("aiStatus");
+
+ const work=
+  document.getElementById("workArea");
+
+ const qBox=
+  document.getElementById("questions");
+
+ currentSubject=
+  cleanSub(
+   document.getElementById("subSel").value
+  );
+
+ updateSub();
+
+ btn.innerText=
+  "⏳ AI IS CREATING...";
+
+ btn.disabled=true;
+
+ status.innerText=
+  `Creating ${
+   document.getElementById("gradeSel").value
+  } ${currentSubject} homework...`;
+
+ work.classList.remove("hidden");
+
+ qBox.innerHTML=
+  `<p class="text-center py-10 font-black">
+   🤖 SomaHub AI is preparing grade-level questions...
+  </p>`;
+
+ try{
+
+  currentQs=
+   await requestAIHomework();
+
+  status.innerText=
+   "✅ Fresh SomaHub AI homework generated.";
+
+ }catch(err){
+
+  console.warn(
+   "AI unavailable:",
+   err
+  );
+
+  const base=
+   FALLBACK[currentSubject]||
+   FALLBACK.English;
+
+  currentQs=
+   base.map(x=>({
+    q:x.q,
+    options:x.opts,
+    answer:x.a,
+    marks:x.m,
+    strand:x.s,
+    color:x.color
+   }));
+
+  status.innerText=
+   "ℹ️ AI unavailable — using built-in grade practice questions.";
+
+ }
+
+ renderQs();
+
 }
 
 function renderQs(){
- myHwBtn.innerText="📚 TAP HERE - My Homework! 🚀"; myHwBtn.disabled=false;
- workTitle.innerText=`${currentSubject} - ${strandSel.value||''}`; headerTitle.innerText=`🌈 ${currentSubject}`;
+
+ const grade=
+  document.getElementById("gradeSel").value;
+
+ const strand=
+  document.getElementById("strandSel").value;
+
+ document.getElementById("myHwBtn").innerText=
+  "📚 GENERATE MY HOMEWORK 🚀";
+
+ document.getElementById("myHwBtn").disabled=false;
+
+ document.getElementById("workTitle").innerText=
+  `${grade} • ${currentSubject} • ${strand}`;
+
+ document.getElementById("headerTitle").innerText=
+  `🌈 ${grade} ${currentSubject}`;
+
+ document.getElementById("scoreBadge").innerText=
+  `0/${currentQs.reduce(
+   (a,c)=>a+(Number(c.marks)||2),
+   0
+  )}`;
+
  updDay();
- questions.innerHTML=currentQs.map((c,i)=>{
-   let isMCQ=c.options&&c.options.length>0;
-   let bg=c.color||"#fff";
-   let optsHTML=isMCQ? `
-     <div class="mt-4 space-y-3">
-       ${c.options.map((opt,oi)=>`
-         <label class="flex items-center gap-3 bg-white border-[2.5px] border-black rounded-full px-4 py-4 cursor-pointer shadow-[2px_2px_0_0_#000] hover:bg-[#ffcc1a]">
-           <input type="radio" name="ans${i}" value="${opt}" onchange="document.getElementById('ans${i}').value=this.value; document.getElementById('ansText${i}').value=this.value; speakText('${opt.replace(/'/g,'')}')" class="w-6 h-6 accent-black shrink-0">
-           <span class="font-black text-[13px]">${String.fromCharCode(65+oi)}. ${opt}</span>
-         </label>`).join('')}
-     </div>
-     <div class="mt-3">
-       <p class="text-[9px] font-black opacity-60">✏️ EDIT answer (after 🎤 or A B C D):</p>
-       <div class="flex gap-2 mt-1">
-         <input id="ansText${i}" type="text" placeholder="Your answer appears here - EDITABLE" class="flex-1 border-[2.5px] border-black rounded-full p-3 text-[13px] font-bold bg-[#fff7e0] shadow-[1px_1px_0_0_#000]" oninput="document.getElementById('ans${i}').value=this.value">
-         <button id="mic${i}" onclick="startVoiceAnswer(${i})" class="bg-black text-white border-2 border-black rounded-full w-12 h-12 flex items-center justify-center text-[18px]">🎤</button>
-       </div>
-       <input id="ans${i}" type="hidden">
-     </div>` : `
-     <div class="mt-3 flex gap-2">
-       <input id="ansText${i}" type="text" placeholder="Type or tap 🎤 - EDITABLE" class="flex-1 border-[2.5px] border-black rounded-full p-4 text-[13px] font-bold bg-white shadow-[1px_1px_0_0_#000]" oninput="document.getElementById('ans${i}').value=this.value">
-       <button id="mic${i}" onclick="startVoiceAnswer(${i})" class="bg-black text-white border-2 border-black rounded-full w-12 h-12 flex items-center justify-center">🎤</button>
-     </div>
-     <input id="ans${i}" type="hidden">`;
 
-   return `<div class="border-[3px] border-black rounded-[1.3rem] p-4 shadow-[4px_4px_0_0_#000]" style="background:${bg}">
-     <div class="flex justify-between items-center"><span class="bg-black text-white px-3 py-1 rounded-full text-[10px] font-black">Q${i+1} • ${c.strand||''}</span><button onclick="speakQuestion(${i})" class="bg-[#4a86ff] text-white border-2 border-black rounded-full px-4 py-2 text-[11px] font-black shadow-[1px_1px_0_0_#000]">🔊 Oxford Listen</button></div>
-     <p class="font-black text-[15px] mt-3">${c.q}</p>
-     ${optsHTML}
-     <p id="micStatus${i}" class="hidden mt-2 text-[10px] font-black text-center border-2 border-black rounded-full py-2 bg-[#ffcc1a]"></p>
+ document.getElementById("questions").innerHTML=
+ currentQs.map((c,i)=>{
+
+  const isMCQ=
+   Array.isArray(c.options)&&
+   c.options.length>0;
+
+  const bg=c.color||"#fff";
+
+  const optsHTML=isMCQ?
+
+   `
+   <div class="mt-4 space-y-3">
+
+    ${c.options.map((opt,oi)=>`
+
+     <label class="flex items-center gap-3
+     bg-white border-[2.5px] border-black
+     rounded-full px-4 py-4 cursor-pointer
+     shadow-[2px_2px_0_0_#000]
+     hover:bg-[#ffcc1a]">
+
+      <input
+       type="radio"
+       name="ans${i}"
+       value="${escapeHTML(opt)}"
+       onchange="selectOption(${i},this.value)"
+       class="w-6 h-6 accent-black shrink-0">
+
+      <span class="font-black text-[13px]">
+       ${String.fromCharCode(65+oi)}.
+       ${escapeHTML(opt)}
+      </span>
+
+     </label>
+
+    `).join("")}
+
+   </div>
+
+   <div class="mt-3">
+
+    <p class="text-[9px] font-black opacity-60">
+     ✏️ Edit your answer after 🎤 or A B C D:
+    </p>
+
+    <div class="flex gap-2 mt-1">
+
+     <input
+      id="ansText${i}"
+      type="text"
+      placeholder="Your answer — editable"
+      class="flex-1 border-[2.5px] border-black
+      rounded-full p-3 text-[13px] font-bold
+      bg-[#fff7e0]
+      shadow-[1px_1px_0_0_#000]"
+      oninput="syncAnswer(${i},this.value)">
+
+     <button
+      id="mic${i}"
+      onclick="startVoiceAnswer(${i})"
+      class="bg-black text-white border-2
+      border-black rounded-full w-12 h-12
+      flex items-center justify-center text-[18px]">
+
+      🎤
+
+     </button>
+
+    </div>
+
+    <input id="ans${i}" type="hidden">
+
+   </div>
+
+   `
+
+   :
+
+   `
+
+   <div class="mt-3 flex gap-2">
+
+    <input
+     id="ansText${i}"
+     type="text"
+     placeholder="Type or tap 🎤 — editable"
+     class="flex-1 border-[2.5px] border-black
+     rounded-full p-4 text-[13px] font-bold
+     bg-white
+     shadow-[1px_1px_0_0_#000]"
+     oninput="syncAnswer(${i},this.value)">
+
+    <button
+     id="mic${i}"
+     onclick="startVoiceAnswer(${i})"
+     class="bg-black text-white border-2
+     border-black rounded-full w-12 h-12
+     flex items-center justify-center">
+
+     🎤
+
+    </button>
+
+   </div>
+
+   <input id="ans${i}" type="hidden">
+
+   `;
+
+  return `
+
+  <div
+   class="qCard border-[3px] border-black
+   rounded-[1.3rem] p-4
+   shadow-[4px_4px_0_0_#000]"
+   style="background:${escapeHTML(bg)}">
+
+   <div class="flex flex-wrap
+   justify-between items-center gap-2">
+
+    <span
+     class="bg-black text-white px-3 py-1
+     rounded-full text-[10px] font-black">
+
+     Q${i+1} •
+     ${escapeHTML(c.strand||"")}
+
+    </span>
+
+    <button
+     onclick="speakQuestion(${i})"
+     class="bg-[#4a86ff] text-white
+     border-2 border-black rounded-full
+     px-4 py-2 text-[11px] font-black
+     shadow-[1px_1px_0_0_#000]">
+
+     🔊 Oxford Listen
+
+    </button>
+
+   </div>
+
+   <p class="font-black text-[15px] mt-3">
+    ${escapeHTML(c.q)}
+   </p>
+
+   ${optsHTML}
+
+   <p
+    id="micStatus${i}"
+    class="hidden mt-2 text-[10px] font-black
+    text-center border-2 border-black
+    rounded-full py-2 bg-[#ffcc1a]">
+   </p>
+
+  </div>`;
+
+ }).join("");
+
+ document.getElementById("result")
+  .classList.add("hidden");
+
+ document.getElementById("corrBtn")
+  .classList.add("hidden");
+
+ document.getElementById("nextBtn")
+  .classList.add("hidden");
+
+ window.scrollTo({
+  top:280,
+  behavior:"smooth"
+ });
+
+}
+
+function selectOption(i,value){
+
+ const text=
+  document.getElementById("ansText"+i);
+
+ const hidden=
+  document.getElementById("ans"+i);
+
+ if(text)text.value=value;
+
+ if(hidden)hidden.value=value;
+
+ speakText(value);
+
+}
+
+function syncAnswer(i,value){
+
+ const hidden=
+  document.getElementById("ans"+i);
+
+ if(hidden)
+  hidden.value=value;
+
+}
+
+function saveToHistory(score,total){
+
+ let h=
+  JSON.parse(
+   localStorage.getItem(
+    "soma_hw_history"
+   )||"[]"
+  );
+
+ h.push({
+
+  date:new Date().toISOString(),
+
+  dateStr:new Date().toLocaleDateString(
+   "en-KE",
+   {
+    weekday:"short",
+    day:"numeric",
+    month:"short",
+    hour:"2-digit",
+    minute:"2-digit"
+   }
+  ),
+
+  grade:
+   document.getElementById(
+    "gradeSel"
+   ).value,
+
+  subject:currentSubject,
+
+  strand:
+   document.getElementById(
+    "strandSel"
+   ).value,
+
+  score,
+  total,
+
+  questions:currentQs,
+
+  answers:
+   currentQs.map((_,i)=>
+    document.getElementById("ans"+i)?.value||
+    document.getElementById("ansText"+i)?.value||
+    ""
+   ),
+
+  shke:currentSHKE
+
+ });
+
+ if(h.length>100)
+  h=h.slice(-100);
+
+ localStorage.setItem(
+  "soma_hw_history",
+  JSON.stringify(h)
+ );
+
+}
+
+function showHistory(type){
+
+ let h=
+  JSON.parse(
+   localStorage.getItem(
+    "soma_hw_history"
+   )||"[]"
+  );
+
+ const list=
+  document.getElementById(
+   "historyList"
+  );
+
+ list.classList.remove("hidden");
+
+ if(!h.length){
+
+  list.innerHTML=
+   "<p class='text-[11px] text-center py-3'>No history yet.</p>";
+
+  return;
+
+ }
+
+ let f=[...h];
+
+ if(type==="yesterday"){
+
+  let y=new Date();
+
+  y.setDate(
+   y.getDate()-1
+  );
+
+  f=h.filter(
+   x=>
+    new Date(x.date)
+     .toDateString()
+    ===
+    y.toDateString()
+  );
+
+ }else if(type==="week"){
+
+  let w=new Date();
+
+  w.setDate(
+   w.getDate()-7
+  );
+
+  f=h.filter(
+   x=>
+    new Date(x.date)>=w
+  );
+
+ }
+
+ if(!f.length){
+
+  list.innerHTML=
+   `<p class="text-[10px] text-center">
+    No work for ${escapeHTML(type)}.
+   </p>`;
+
+  return;
+
+ }
+
+ list.innerHTML=
+  f.reverse().map(x=>{
+
+   const idx=h.indexOf(x);
+
+   return `
+
+   <div
+    class="border-[2.5px] border-black
+    rounded-xl p-3 bg-[#f9f9f9]">
+
+    <div class="flex justify-between gap-2">
+
+     <p class="font-black text-[11px]">
+
+      ${escapeHTML(x.dateStr)}
+      -
+      ${escapeHTML(x.grade||"")}
+      ${escapeHTML(x.subject)}
+
+     </p>
+
+     <span
+      class="bg-black text-white px-2
+      py-0.5 rounded-full text-[9px]">
+
+      ${x.score}/${x.total}
+
+     </span>
+
+    </div>
+
+    <p class="text-[9px] text-gray-500 mt-1">
+     ${escapeHTML(x.strand||"")}
+    </p>
+
+    <div class="grid grid-cols-2 gap-2 mt-2">
+
+     <button
+      onclick="viewOldWork(${idx})"
+      class="bg-white border-2 border-black
+      rounded-full py-2 text-[10px] font-black">
+
+      View
+
+     </button>
+
+     <button
+      onclick="deleteWork(${idx})"
+      class="bg-red-500 text-white
+      border-2 border-black
+      rounded-full py-2 text-[10px] font-black">
+
+      Delete
+
+     </button>
+
+    </div>
+
    </div>`;
- }).join('');
- result.classList.add('hidden'); corrBtn.classList.add('hidden'); nextBtn.classList.add('hidden');
- window.scrollTo(0,280);
+
+  }).join("");
+
 }
 
-function saveToHistory(s,t){let h=JSON.parse(localStorage.getItem('soma_hw_history')||'[]'); h.push({date:new Date().toISOString(), dateStr:new Date().toLocaleDateString('en-KE',{weekday:'short',day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'}), subject:currentSubject, strand:strandSel.value, score:s, total:t, questions:currentQs, answers:currentQs.map((_,i)=>document.getElementById('ans'+i)?.value||document.getElementById('ansText'+i)?.value||""), shke:currentSHKE}); if(h.length>100)h=h.slice(-100); localStorage.setItem('soma_hw_history',JSON.stringify(h));}
-function showHistory(type){let h=JSON.parse(localStorage.getItem('soma_hw_history')||'[]'), list=historyList; list.classList.remove('hidden'); if(!h.length){list.innerHTML="<p class='text-[11px] text-center py-3'>No history yet</p>"; return;} let f=h; if(type==='yesterday'){let y=new Date(); y.setDate(y.getDate()-1); f=h.filter(x=>new Date(x.date).toDateString()===y.toDateString());} else if(type==='week'){let w=new Date(); w.setDate(w.getDate()-7); f=h.filter(x=>new Date(x.date)>=w);} if(!f.length){list.innerHTML=`<p class='text-[10px] text-center'>No work for ${type}</p>`; return;} list.innerHTML=f.reverse().map((x)=>{let idx=h.indexOf(x); return `<div class="border-[2.5px] border-black rounded-xl p-3 bg-[#f9f9f9]"><div class="flex justify-between"><p class="font-black text-[11px]">${x.dateStr} - ${x.subject}</p><span class="bg-black text-white px-2 py-0.5 rounded-full text-[9px]">${x.score}/${x.total}</span></div><div class="grid grid-cols-2 gap-2 mt-2"><button onclick="viewOldWork(${idx})" class="bg-white border-2 border-black rounded-full py-2 text-[10px] font-black">View</button><button onclick="deleteWork(${idx})" class="bg-red-500 text-white border-2 border-black rounded-full py-2 text-[10px] font-black">Delete</button></div></div>`;}).join('');}
-function viewOldWork(i){let h=JSON.parse(localStorage.getItem('soma_hw_history')||'[]')[i]; if(!h)return; currentQs=h.questions; workArea.classList.remove('hidden'); workTitle.innerText=`Past ${h.dateStr} ${h.score}/${h.total}`; scoreBadge.innerText=h.score+"/"+h.total; questions.innerHTML=h.questions.map((c,j)=>`<div class="border-[2.5px] border-black rounded-xl p-3 bg-white"><p class="font-black text-[11px]">Q${j+1}</p><p class="font-bold text-[12px]">${c.q}</p><p class="text-[10px] mt-1">Your: <b>${h.answers[j]||''}</b></p><p class="text-[10px] text-green-700 font-black">✔ ${c.answer}</p></div>`).join('');}
-function deleteWork(i){if(!confirm("Delete?"))return; let h=JSON.parse(localStorage.getItem('soma_hw_history')||'[]'); h.splice(i,1); localStorage.setItem('soma_hw_history',JSON.stringify(h)); showHistory('all');}
-function checkAnswers(){
- let empty=0; currentQs.forEach((_,i)=>{let v=document.getElementById('ans'+i)?.value||document.getElementById('ansText'+i)?.value; if(!v?.trim()) empty++;});
- if(empty===currentQs.length){speakText("Please answer. Tap A B C D or microphone."); return alert("Tap A B C D or 🎤"); }
- let score=0,total=0; let html=`<p class="font-black text-[13px]">🎉 Result - ${currentSubject}</p>`;
- currentQs.forEach((c,i)=>{let user=(document.getElementById('ans'+i)?.value||document.getElementById('ansText'+i)?.value||"").trim(); let m=c.marks||2; total+=m; let ok=user&&c.answer.toLowerCase().includes(user.toLowerCase().slice(0,4)); let got=ok?m:0; score+=got; html+=`<div class="border-[2.5px] border-black rounded-xl p-3 mt-2 text-[11px] font-black ${ok?'bg-[#dcfce7]':'bg-[#ffeaea]'}">${ok?'✅':'❌'} Q${i+1} ${got}/${m}</div>`;});
- html+=`<p class="font-black mt-4 text-[18px] text-center">${score>=8?'🌟':score>=5?'👏':'💪'} Score ${score}/${total}</p>`; result.innerHTML=html; result.classList.remove('hidden'); result.className="mt-4 p-4 border-[3px] border-black rounded-[1.2rem] bg-white shadow-[3px_3px_0_0_#000]"; corrBtn.classList.remove('hidden'); nextBtn.classList.remove('hidden'); scoreBadge.innerText=score+"/"+total; saveToHistory(score,total);
- let msg=score>=8?`Congratulations! Excellent! You completed ${currentSubject} ${strandSel.value}. You scored ${score} out of ${total}. You are a star!`:score>=5?`Good job! You completed ${currentSubject} ${strandSel.value}. You scored ${score} out of ${total}. Keep it up!`:`You completed ${currentSubject} ${strandSel.value}. You scored ${score} out of ${total}. Don't worry, we will practice tomorrow!`;
- speakText(msg); if(navigator.vibrate) navigator.vibrate([100,50,100]);
+function viewOldWork(i){
+
+ const h=
+  JSON.parse(
+   localStorage.getItem(
+    "soma_hw_history"
+   )||"[]"
+  )[i];
+
+ if(!h)return;
+
+ currentQs=h.questions||[];
+
+ document.getElementById(
+  "workArea"
+ ).classList.remove("hidden");
+
+ document.getElementById(
+  "workTitle"
+ ).innerText=
+  `Past Work • ${h.dateStr} • ${h.score}/${h.total}`;
+
+ document.getElementById(
+  "scoreBadge"
+ ).innerText=
+  `${h.score}/${h.total}`;
+
+ document.getElementById(
+  "questions"
+ ).innerHTML=
+
+ currentQs.map((c,j)=>`
+
+  <div
+   class="border-[2.5px] border-black
+   rounded-xl p-3 bg-white">
+
+   <p class="font-black text-[11px]">
+    Q${j+1}
+   </p>
+
+   <p class="font-bold text-[12px] mt-1">
+    ${escapeHTML(c.q)}
+   </p>
+
+   <p class="text-[10px] mt-2">
+    Your answer:
+    <b>${escapeHTML(h.answers?.[j]||"")}</b>
+   </p>
+
+   <p
+    class="text-[10px] mt-1
+    text-green-700 font-black">
+
+    ✔ Correct:
+    ${escapeHTML(c.answer)}
+
+   </p>
+
+  </div>
+
+ `).join("");
+
+ window.scrollTo({
+  top:250,
+  behavior:"smooth"
+ });
+
 }
-function showCorrection(){let html=`<p class="font-black text-[12px]">📖 Correction</p>`; currentQs.forEach((c,i)=>{let user=document.getElementById('ansText'+i)?.value||document.getElementById('ans'+i)?.value||"empty"; html+=`<div class="border-[2.5px] border-black rounded-xl p-3 mt-3 bg-white"><p class="font-black text-[11px]">Q${i+1}: ${c.q}</p><p class="text-[11px] mt-1">Your: <b>${user}</b></p><p class="text-[11px] text-green-700 font-black">✔ ${c.answer}</p><button onclick="speakText('${c.answer.replace(/'/g,'')}')" class="mt-2 bg-black text-white px-3 py-1 rounded-full text-[9px] font-black">🔊 Hear Answer</button></div>`;}); result.innerHTML=html;}
-function nextHomework(){let subs=["SST","Science","Mathematics","English","Kiswahili","CRE"], idx=subs.indexOf(currentSubject), nxt=subs[(idx+1)%subs.length]; subSel.value=nxt+" 🌍"; updateSub(); generateMyHomework(); window.scrollTo(0,0);}
-function printPDF(){let area=document.getElementById('printArea'); printQs.innerHTML=currentQs.map((c,i)=>`<div class="border-2 border-black rounded-xl p-3 mt-2"><p class="font-black">Q${i+1} ${c.q}</p><div class="h-10 border border-dashed mt-2"></div></div>`).join(''); area.classList.remove('hidden'); html2canvas(area,{scale:2}).then(can=>{let img=can.toDataURL('image/png'); let {jsPDF}=window.jspdf; let pdf=new jsPDF('p','mm','a4'); let w=pdf.internal.pageSize.getWidth(); let h=can.height*w/can.width; pdf.addImage(img,'PNG',0,0,w,h); pdf.save(`Homework-${currentSubject}.pdf`); setTimeout(()=>area.classList.add('hidden'),1000);});}
-setTimeout(()=>{let FB=window.FB; FB.onAuthStateChanged(FB.auth,async u=>{if(u){let s=await FB.getDoc(FB.doc(FB.db,"users",u.uid)); if(s.exists()){currentSHKE=s.data().indexNumber||"SHKE"; indexB.innerText=currentSHKE; gradeSel.value=s.data().grade||"Grade 7";} updateSub();}}); updateSub();},600); updateSub();
+
+function deleteWork(i){
+
+ if(!confirm(
+  "Delete this homework record?"
+ ))return;
+
+ let h=
+  JSON.parse(
+   localStorage.getItem(
+    "soma_hw_history"
+   )||"[]"
+  );
+
+ h.splice(i,1);
+
+ localStorage.setItem(
+  "soma_hw_history",
+  JSON.stringify(h)
+ );
+
+ showHistory("all");
+
+}
+
+function normalizeAnswer(v){
+
+ return String(v||"")
+  .toLowerCase()
+  .replace(/[.,!?;:'"()]/g," ")
+  .replace(/\s+/g," ")
+  .trim();
+
+}
+
+function answerMatches(user,correct){
+
+ const u=normalizeAnswer(user);
+ const a=normalizeAnswer(correct);
+
+ if(!u||!a)return false;
+
+ if(u===a)return true;
+
+ if(a.includes(u)&&u.length>=3)
+  return true;
+
+ if(u.includes(a)&&a.length>=3)
+  return true;
+
+ const un=u.split(" ");
+ const an=a.split(" ");
+
+ const overlap=
+  un.filter(
+   w=>an.includes(w)&&w.length>2
+  ).length;
+
+ return overlap>=
+  Math.max(
+   1,
+   Math.ceil(
+    Math.min(
+     un.length,
+     an.length
+    )*.6
+   )
+  );
+
+}
+
+function checkAnswers(){
+
+ let empty=0;
+
+ currentQs.forEach((_,i)=>{
+
+  const v=
+   document.getElementById(
+    "ans"+i
+   )?.value||
+   document.getElementById(
+    "ansText"+i
+   )?.value||
+   "";
+
+  if(!v.trim())
+   empty++;
+
+ });
+
+ if(empty===currentQs.length){
+
+  speakText(
+   "Please answer the questions first. You can choose an option, type, or use the microphone."
+  );
+
+  alert(
+   "Please answer the questions first."
+  );
+
+  return;
+
+ }
+
+ let score=0;
+ let total=0;
+
+ let html=
+  `<p class="font-black text-[13px]">
+   🎉 Result - ${escapeHTML(currentSubject)}
+   </p>`;
+
+ currentQs.forEach((c,i)=>{
+
+  const user=
+   (
+    document.getElementById(
+     "ans"+i
+    )?.value||
+    document.getElementById(
+     "ansText"+i
+    )?.value||
+    ""
+   ).trim();
+
+  const m=
+   Number(c.marks)||2;
+
+  total+=m;
+
+  const ok=
+   answerMatches(
+    user,
+    c.answer
+   );
+
+  const got=
+   ok?m:0;
+
+  score+=got;
+
+  html+=`
+
+   <div
+    class="border-[2.5px] border-black
+    rounded-xl p-3 mt-2
+    text-[11px] font-black
+    ${ok
+      ?"bg-[#dcfce7]"
+      :"bg-[#ffeaea]"}">
+
+    ${ok?"✅":"❌"}
+    Q${i+1}
+    ${got}/${m}
+
+   </div>`;
+
+ });
+
+ html+=`
+
+  <p
+   class="font-black mt-4 text-[18px]
+   text-center">
+
+   ${score>=8
+     ?"🌟"
+     :score>=5
+      ?"👏"
+      :"💪"}
+
+   Score
+   ${score}/${total}
+
+  </p>`;
+
+ const result=
+  document.getElementById(
+   "result"
+  );
+
+ result.innerHTML=html;
+
+ result.classList.remove(
+  "hidden"
+ );
+
+ result.className=
+  "mt-4 p-4 border-[3px] border-black " +
+  "rounded-[1.2rem] bg-white " +
+  "shadow-[3px_3px_0_0_#000]";
+
+ document.getElementById(
+  "corrBtn"
+ ).classList.remove("hidden");
+
+ document.getElementById(
+  "nextBtn"
+ ).classList.remove("hidden");
+
+ document.getElementById(
+  "scoreBadge"
+ ).innerText=
+  `${score}/${total}`;
+
+ saveToHistory(
+  score,
+  total
+ );
+
+ let msg=
+  score>=8
+   ?`Congratulations! Excellent work. You scored ${score} out of ${total}.`
+   :score>=5
+    ?`Good job! You scored ${score} out of ${total}. Keep practising.`
+    :`You scored ${score} out of ${total}. Do not give up. Review the corrections and try again.`;
+
+ speakText(msg);
+
+ if(navigator.vibrate)
+  navigator.vibrate(
+   [100,50,100]
+  );
+
+}
+
+function showCorrection(){
+
+ let html=
+  `<p class="font-black text-[12px]">
+   📖 Correction and Learning
+   </p>`;
+
+ currentQs.forEach((c,i)=>{
+
+  const user=
+   document.getElementById(
+    "ansText"+i
+   )?.value||
+   document.getElementById(
+    "ans"+i
+   )?.value||
+   "Not answered";
+
+  const ok=
+   answerMatches(
+    user,
+    c.answer
+   );
+
+  html+=`
+
+   <div
+    class="border-[2.5px] border-black
+    rounded-xl p-3 mt-3 bg-white">
+
+    <p class="font-black text-[11px]">
+     Q${i+1}:
+     ${escapeHTML(c.q)}
+    </p>
+
+    <p class="text-[11px] mt-1">
+     Your answer:
+     <b>${escapeHTML(user)}</b>
+    </p>
+
+    <p
+     class="text-[11px] mt-1
+     ${ok
+       ?"text-green-700"
+       :"text-red-600"}
+     font-black">
+
+     ${ok
+       ?"✔ Correct"
+       :"✘ Correct answer"}:
+
+     ${escapeHTML(c.answer)}
+
+    </p>
+
+    <button
+     onclick="speakText(${JSON.stringify(
+      String(c.answer)
+     )})"
+     class="mt-2 bg-black text-white
+     px-3 py-1 rounded-full
+     text-[9px] font-black">
+
+     🔊 Hear Answer
+
+    </button>
+
+   </div>`;
+
+ });
+
+ const result=
+  document.getElementById(
+   "result"
+  );
+
+ result.innerHTML=html;
+
+ result.classList.remove(
+  "hidden"
+ );
+
+}
+
+function nextHomework(){
+
+ const subs=[
+  "SST",
+  "Science",
+  "Mathematics",
+  "English",
+  "Kiswahili",
+  "CRE"
+ ];
+
+ const idx=
+  subs.indexOf(
+   currentSubject
+  );
+
+ const nxt=
+  subs[
+   (idx+1)%subs.length
+  ];
+
+ document.getElementById(
+  "subSel"
+ ).value=
+  nxt+
+  " "+
+  (
+   nxt==="SST"
+    ?"🌍"
+    :nxt==="Science"
+     ?"🌸"
+     :nxt==="Mathematics"
+      ?"🔢"
+      :nxt==="English"
+       ?"📖"
+       :nxt==="Kiswahili"
+        ?"🌾"
+        :"🙏"
+  );
+
+ updateSub();
+
+ generateMyHomework();
+
+ window.scrollTo({
+  top:0,
+  behavior:"smooth"
+ });
+
+}
+
+function printPDF(){
+
+ if(!currentQs.length)return;
+
+ const area=
+  document.getElementById(
+   "printArea"
+  );
+
+ const printQs=
+  document.getElementById(
+   "printQs"
+  );
+
+ printQs.innerHTML=
+
+ `
+ <h1
+  style="font-size:20px;font-weight:900">
+
+  SomaHub Kenya - Homework
+
+ </h1>
+
+ <p
+  style="font-size:12px;font-weight:700">
+
+  ${escapeHTML(
+   document.getElementById(
+    "gradeSel"
+   ).value
+  )}
+
+  •
+
+  ${escapeHTML(currentSubject)}
+
+  •
+
+  ${escapeHTML(
+   document.getElementById(
+    "strandSel"
+   ).value
+  )}
+
+ </p>
+
+ `+
+
+ currentQs.map((c,i)=>`
+
+  <div
+   style="
+   border:2px solid #000;
+   border-radius:12px;
+   padding:12px;
+   margin-top:10px">
+
+   <p style="font-weight:900">
+
+    Q${i+1}.
+    ${escapeHTML(c.q)}
+
+   </p>
+
+   ${
+    c.options?.length
+     ?`<p>
+       ${c.options.map(
+        (o,j)=>
+         `${String.fromCharCode(65+j)}.
+          ${escapeHTML(o)}`
+       ).join(" &nbsp; ")}
+      </p>`
+     :""
+   }
+
+   <div
+    style="
+    height:45px;
+    border-bottom:1px dashed #777;
+    margin-top:8px">
+   </div>
+
+  </div>
+
+ `).join("");
+
+ area.classList.remove(
+  "hidden"
+ );
+
+ html2canvas(
+  area,
+  {
+   scale:2,
+   backgroundColor:"#fff"
+  }
+ ).then(can=>{
+
+  const img=
+   can.toDataURL("image/png");
+
+  const {jsPDF}=
+   window.jspdf;
+
+  const pdf=
+   new jsPDF(
+    "p",
+    "mm",
+    "a4"
+   );
+
+  const pageW=
+   pdf.internal.pageSize
+   .getWidth();
+
+  const pageH=
+   pdf.internal.pageSize
+   .getHeight();
+
+  const imgH=
+   can.height*
+   pageW/
+   can.width;
+
+  let y=0;
+  let remaining=imgH;
+
+  while(remaining>0){
+
+   pdf.addImage(
+    img,
+    "PNG",
+    0,
+    y,
+    pageW,
+    imgH
+   );
+
+   remaining-=pageH;
+
+   if(remaining>0){
+
+    y-=pageH;
+
+    pdf.addPage();
+
+   }
+
+  }
+
+  pdf.save(
+   `SomaHub-${currentSubject}-Homework.pdf`
+  );
+
+  setTimeout(
+   ()=>area.classList.add("hidden"),
+   500
+  );
+
+ }).catch(()=>{
+
+  area.classList.add(
+   "hidden"
+  );
+
+  alert(
+   "PDF could not be created. Please try again."
+  );
+
+ });
+
+}
+
+document
+ .getElementById("photoInput")
+ .addEventListener(
+  "change",
+  e=>{
+
+   const file=
+    e.target.files?.[0];
+
+   if(!file)return;
+
+   const img=
+    document.getElementById(
+     "photoPreview"
+    );
+
+   img.src=
+    URL.createObjectURL(
+     file
+    );
+
+   img.classList.remove(
+    "hidden"
+   );
+
+  }
+ );
+
+setTimeout(()=>{
+
+ const FB=window.FB;
+
+ FB.onAuthStateChanged(
+  FB.auth,
+  async u=>{
+
+   if(u){
+
+    try{
+
+     const s=
+      await FB.getDoc(
+       FB.doc(
+        FB.db,
+        "users",
+        u.uid
+       )
+      );
+
+     if(s.exists()){
+
+      const d=s.data();
+
+      currentSHKE=
+       d.indexNumber||
+       "SHKE";
+
+      document.getElementById(
+       "indexB"
+      ).innerText=
+       currentSHKE;
+
+      if(d.grade){
+
+       const allowed=[
+        "Grade 4",
+        "Grade 5",
+        "Grade 6",
+        "Grade 7",
+        "Grade 8",
+        "Grade 9",
+        "Grade 10"
+       ];
+
+       if(
+        allowed.includes(
+         d.grade
+        )
+       ){
+
+        document.getElementById(
+         "gradeSel"
+        ).value=
+         d.grade;
+
+       }
+
+      }
+
+     }
+
+    }catch(e){
+
+     console.warn(
+      "User profile could not be loaded.",
+      e
+     );
+
+    }
+
+   }
+
+   updateSub();
+
+  }
+ );
+
+ updateSub();
+
+},600);
+
+window.addEventListener(
+ "online",
+ updDay
+);
+
+window.addEventListener(
+ "offline",
+ updDay
+);
+
 </script>
-</body></html>
+</body>
+</html>
