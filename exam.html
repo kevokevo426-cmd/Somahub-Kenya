@@ -1,230 +1,3838 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Weekly Exams - 100 Marks Playground 🔊🎤</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>SomaHub - Weekly Exams 100 Marks</title>
+
 <script src="https://cdn.tailwindcss.com"></script>
+
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;800;900&display=swap" rel="stylesheet">
-<style>body{font-family:'Nunito',sans-serif;background:#f6f6f7}.pulse{animation:pulse 1s infinite}@keyframes pulse{0%,100%{opacity:1}50%{opacity:.6}}.fun-btn:active{transform:scale(0.96)}</style>
+
+<style>
+body{
+  font-family:'Nunito',sans-serif;
+  background:#f6f6f7
+}
+
+.pulse{
+  animation:pulse 1s infinite
+}
+
+@keyframes pulse{
+  0%,100%{opacity:1}
+  50%{opacity:.6}
+}
+
+.fun-btn:active{
+  transform:scale(.96)
+}
+
+.exam-card:active{
+  transform:scale(.99)
+}
+
+@media(min-width:768px){
+  .app-shell{
+    max-width:1100px!important
+  }
+
+  #questions{
+    display:grid;
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:18px
+  }
+}
+</style>
+
+
+<!-- =========================================================
+     FIREBASE
+========================================================= -->
+
 <script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-import { getFirestore, doc, getDoc, collection, getDocs, query, where } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-const cfg={apiKey:"AIzaSyA93BNes3AmFyxIEgjSbvbIWqLyorLsuj8",authDomain:"somahubkenya-9e458.firebaseapp.com",projectId:"somahubkenya-9e458",storageBucket:"somahubkenya-9e458.firebasestorage.app",messagingSenderId:"615579085715",appId:"1:615579085715:web:28fca37ba498324bb49666"};
-const app=initializeApp(cfg); window.FB={auth:getAuth(app),db:getFirestore(app),doc,getDoc,collection,getDocs,query,where,onAuthStateChanged};
-</script>
-</head>
-<body class="flex justify-center"><div class="w-full max-w-[460px] bg-[#f6f6f7] min-h-screen pb-12">
-<div class="h-2.5 flex sticky top-0 z-50"><div class="flex-1 bg-[#ff8a2a]"></div><div class="flex-1 bg-[#2ac5a0]"></div><div class="flex-1 bg-[#4a86ff]"></div><div class="flex-1 bg-[#ffcc1a]"></div></div>
-<div class="bg-white border-b-2 border-black p-3 flex justify-between items-center sticky top-2.5 z-40">
-<a href="student.html" class="bg-black text-white px-4 py-2 rounded-full font-black text-[11px] fun-btn">← Back</a>
-<p class="font-black text-[13px]">📝 Weekly 100 Marks</p>
-<span id="indexB" class="bg-blue-600 text-white px-2 py-1 rounded-full text-[9px] border-2 border-black">SHKE...</span>
-</div>
-<div class="p-3 space-y-3">
-<div class="bg-gradient-to-br from-black via-[#2a2a2a] to-[#4a86ff] text-white rounded-[1.5rem] p-4 border-[3px] border-black shadow-[4px_4px_0_0_#000]">
-<p class="font-black text-[15px]">🌈 Weekly Exam - Sat & Sun ONLY • 100 Marks</p>
-<p class="text-[10px] mt-2 leading-5 opacity-90">Oxford 🔊 Listen • 🎤 Speak + Edit • A B C D • 🌸 Diagrams optional • Playground friendly</p>
-<button id="blindBtn" onclick="toggleBlindMode()" class="mt-3 w-full bg-white text-black border-2 border-black rounded-full py-2.5 font-black text-[10px]">♿ Visual Mode OFF - BIG + Voice</button>
-</div>
-<div class="bg-white rounded-xl p-3 border-[2.5px] border-black shadow-[3px_3px_0_0_#000] space-y-2">
-<div class="grid grid-cols-2 gap-2">
-<select id="gradeSel" class="bg-[#e0f2ff] border-2 border-black rounded-full p-3 font-black text-[11px]"><option>Grade 6</option><option>Grade 4</option><option>Grade 5</option><option>Grade 7</option><option>Grade 8</option><option>Grade 9</option></select>
-<select id="subSel" class="bg-[#fff7e0] border-2 border-black rounded-full p-3 font-black text-[11px]"><option>All Subjects</option><option>Mathematics</option><option>English</option><option>Kiswahili</option><option>Science</option><option>SST</option><option>CRE</option></select>
-</div>
-<button onclick="loadExams()" class="w-full bg-[#4a86ff] text-white border-2 border-black rounded-full py-3 font-black text-[11px] fun-btn">🔍 Show Exam 100 Marks</button>
-</div>
-<div id="weeklyInfo" class="bg-[#ffcc1a] border-[2.5px] border-black rounded-xl p-3 text-[10px] font-black shadow-[2px_2px_0_0_#000]"></div>
-<div id="pendingBanner"></div>
-<div id="examsList" class="space-y-3"></div>
 
-<div id="workArea" class="hidden bg-white rounded-[1.5rem] p-4 border-[3px] border-black shadow-[4px_4px_0_0_#000]">
-<div class="flex justify-between items-center"><p id="workTitle" class="font-black text-[13px]">Exam 100 Marks</p><span id="scoreBadge" class="bg-black text-white px-3 py-1 rounded-full text-[11px] border-2 border-black">0/100</span></div>
-<div class="flex gap-2 mt-3">
-<button onclick="document.getElementById('photoInput').click()" class="flex-1 bg-[#ffcc1a] border-2 border-black rounded-full py-3 font-black text-[9px] fun-btn">📷 Photo</button>
-<button onclick="speakAll()" class="flex-1 bg-[#4a86ff] text-white border-2 border-black rounded-full py-3 font-black text-[9px] fun-btn">🔊 All</button>
-<button onclick="generateAIExam()" class="flex-1 bg-black text-white border-2 border-black rounded-full py-3 font-black text-[9px] fun-btn">🤖 AI 100</button>
-</div>
-<input type="file" id="photoInput" accept="image/*" hidden><img id="photoPreview" class="hidden mt-3 w-full rounded-xl border-2 border-black"><p id="photoStatus" class="hidden text-[10px] font-bold mt-2 text-center"></p>
-<div id="questions" class="mt-5 space-y-6"></div>
-<button onclick="checkExam()" class="w-full mt-6 bg-[#2ac5a0] text-black border-[3px] border-black rounded-full py-5 font-black text-[14px] shadow-[3px_3px_0_0_#000] fun-btn">✅ Submit & Check + 🔊 Score</button>
-<div id="result" class="hidden mt-4 p-4 border-[3px] border-black rounded-[1.2rem] bg-white shadow-[3px_3px_0_0_#000]"></div>
-<button id="corrBtn" onclick="showCorrection()" class="hidden w-full mt-3 bg-[#4a86ff] text-white border-[2.5px] border-black rounded-full py-3 font-black text-[11px] fun-btn">👁️ Correction + Diagrams + 🔊</button>
-<button id="saveWrongBtn" onclick="saveWrong()" class="hidden w-full mt-3 bg-[#ffcc1a] text-black border-[2.5px] border-black rounded-full py-3 font-black text-[11px] fun-btn">Save Wrong → Twist Next Week 🔁</button>
-</div>
-</div>
-</div>
+import {
+  initializeApp
+} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 
-<script>
-let currentUser=null,currentSHKE="SHKE",currentQs=[],currentWrong=[],wrongBank=JSON.parse(localStorage.getItem('soma_wrong_exam')||'[]'), blindMode=false, recognition=null, isRecording=false;
+import {
+  getAuth,
+  onAuthStateChanged
+} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
-// OXFORD VOICE - FIXED
-function loadVoices(){}
-if('speechSynthesis' in window){speechSynthesis.onvoiceschanged=()=>speechSynthesis.getVoices(); speechSynthesis.getVoices();}
-function speakText(t){
- if(!('speechSynthesis' in window)) return;
- speechSynthesis.cancel();
- let clean=t.replace(/[*_`]/g,'').slice(0,650);
- let utt=new SpeechSynthesisUtterance(clean);
- let isSw=/Kiswahili|Nomino|Wingi|Sarufi/i.test(clean);
- let vs=speechSynthesis.getVoices();
- if(vs.length===0){setTimeout(()=>speakText(t),300); return;}
- let eng=vs.find(v=>v.name.includes('Google UK English Female'))||vs.find(v=>v.lang==='en-GB')||vs.find(v=>v.lang.startsWith('en'))||vs[0];
- let sw=vs.find(v=>v.lang.includes('sw'));
- utt.voice=isSw&&sw?sw:eng; utt.lang=isSw?'sw-KE':'en-GB'; utt.rate=blindMode?0.75:0.82;
- speechSynthesis.speak(utt);
-}
-function speakQuestion(i){
- let c=currentQs[i]; if(!c) return;
- let txt=`Question ${i+1}, ${c.marks} marks. ${c.q}. `;
- if(c.options&&c.options.length) txt+=`Options. ${c.options.map((o,idx)=>`Option ${String.fromCharCode(65+idx)}: ${o}`).join('. ')}. `;
- speakText(txt);
-}
-function speakAll(){if(!currentQs.length) return speakText("Load exam first"); speakText(currentQs.map((c,i)=>`Question ${i+1}. ${c.q}`).join(' '));}
-function toggleBlindMode(){blindMode=!blindMode; blindBtn.innerText=blindMode?"♿ BIG ON":"♿ Visual OFF"; document.documentElement.style.fontSize=blindMode?"120%":"100%"; if(blindMode) speakText("Big mode ON. Tap Oxford Listen to hear.");}
+import {
+  getFirestore,
+  doc,
+  getDoc,
+  collection,
+  getDocs,
+  query,
+  where,
+  addDoc,
+  serverTimestamp
+} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-// OPTIONAL DIAGRAMS - NOT ALL MUST HAVE
-function getDiagramHTML(q){
- let l=(q||"").toLowerCase();
- let show = l.includes('flower')||l.includes('petal')||l.includes('map')||l.includes('kenya')||l.includes('compass')||l.includes('water cycle')||l.includes('rift');
- if(!show) return ""; // Playground - light, not all need diagram
- if(l.includes('flower')||l.includes('petal')) return `<div class="bg-[#ffe0f0] border-[2.5px] border-black rounded-xl p-2 mt-3 text-center shadow-[2px_2px_0_0_#000]"><p class="font-black text-[9px]">🌸 Flower - Colored (Optional)</p><svg viewBox="0 0 200 80" class="w-full h-14"><ellipse cx="100" cy="35" rx="22" ry="12" fill="#ffcc1a" stroke="black" stroke-width="2"/></svg></div>`;
- if(l.includes('map')||l.includes('kenya')||l.includes('rift')||l.includes('compass')) return `<div class="bg-[#d0e8ff] border-[2.5px] border-black rounded-xl p-2 mt-3 text-center shadow-[2px_2px_0_0_#000]"><p class="font-black text-[9px]">🗺️ Map - Colored (Optional)</p><svg viewBox="0 0 200 50" class="w-full h-10"><rect x="70" y="5" width="60" height="30" fill="#a3d977" stroke="black" stroke-width="2" rx="6"/></svg></div>`;
- if(l.includes('water cycle')) return `<div class="bg-[#e0f7ff] border-[2.5px] border-black rounded-xl p-2 mt-3 text-center"><p class="font-black text-[9px]">💧 Water Cycle (Optional)</p></div>`;
- return "";
-}
 
-function getSatSun(){let t=new Date(),d=t.getDay(),sat=new Date(t);sat.setDate(t.getDate()+(6-d));sat.setHours(0,0,0,0);let sun=new Date(sat);sun.setDate(sat.getDate()+1);sun.setHours(23,59,59,0);return{sat,sun,isIn:sat<=t&&t<=sun};}
-function updInfo(){let{sat,sun,isIn}=getSatSun(),now=new Date(),diff=sun-now,h=Math.floor(diff/3600000); weeklyInfo.innerHTML=`📅 ${sat.toDateString()} Sat → ${sun.toDateString()} Sun • ${isIn?`✅ OPEN NOW ${h}h left`:`⏰ Opens Sat`} • SHKE ${currentSHKE} • 🎨 Diagrams optional • 🔊🎤 Ready`;}
-
-// MIC EDITABLE
-function startVoiceAnswer(i){
- const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
- if(!SR){alert("Use Chrome"); return;}
- if(isRecording&&recognition){recognition.stop(); return;}
- recognition=new SR(); recognition.lang='en-KE'; recognition.interimResults=false;
- let btn=document.getElementById('mic'+i), txt=document.getElementById('ansText'+i), hidden=document.getElementById('ans'+i), stat=document.getElementById('micStatus'+i);
- btn.classList.add('pulse','bg-red-500'); btn.innerText="🔴"; stat.innerText="🎤 Listening..."; stat.classList.remove('hidden'); isRecording=true;
- recognition.onresult=e=>{
-   let tr=e.results[0][0].transcript.trim();
-   let q=currentQs[i];
-   if(q.options){
-     let match=q.options.find(o=> o.toLowerCase().includes(tr.toLowerCase()) || tr.toLowerCase().includes(o.toLowerCase().slice(0,3)));
-     if(match){ tr=match; document.querySelectorAll(`input[name="ans${i}"]`).forEach(r=>{if(r.value.toLowerCase()===match.toLowerCase()) r.checked=true;}); }
-   }
-   if(txt) txt.value=tr;
-   if(hidden) hidden.value=tr;
-   stat.innerHTML=`✅ Heard: <b>${tr}</b> - EDIT if needed`;
-   stat.className="mt-2 text-[10px] font-black text-center bg-[#dcfce7] border-2 border-black rounded-full py-2";
- };
- recognition.onend=()=>{btn.classList.remove('pulse','bg-red-500'); btn.innerText="🎤"; isRecording=false; if(navigator.vibrate) navigator.vibrate(40);};
- recognition.start();
-}
-
-async function loadExams(){let FB=window.FB,grade=gradeSel.value,sub=subSel.value,list=document.getElementById('examsList'),banner=document.getElementById('pendingBanner'),{sat,sun,isIn}=getSatSun(); list.innerHTML="<p class='text-center py-4 font-black text-[11px]'>Loading 100 Marks...</p>"; banner.innerHTML=""; let done=false; if(currentUser){try{let q=FB.query(FB.collection(FB.db,"exam_submissions"),FB.where("userId","==",currentUser.uid));let s=await FB.getDocs(q);s.forEach(d=>{let dd=new Date(d.data().date); if(dd>=sat&&dd<=sun) done=true;});}catch(e){}} if(!isIn) banner.innerHTML=`<div class="bg-orange-100 border-[2.5px] border-black rounded-xl p-3 text-center font-black text-[11px]">⏰ Opens Saturday - Mon-Fri do Daily HW</div>`; else if(!done) banner.innerHTML=`<div class="bg-red-600 text-white border-[2.5px] border-black rounded-xl p-3 font-black text-[11px] shadow-[2px_2px_0_0_#000]">⚠️ PENDING WEEKLY EXAM - ${currentSHKE} - 0/100 • 🔊🎤 Ready</div>`; else banner.innerHTML=`<div class="bg-green-600 text-white border-[2.5px] border-black rounded-xl p-3 text-center font-black text-[11px]">✅ DONE This Week</div>`; try{let q; if(sub==="All Subjects") q=FB.query(FB.collection(FB.db,"resources"),FB.where("grade","==",grade),FB.where("type","==","Exam")); else q=FB.query(FB.collection(FB.db,"resources"),FB.where("grade","==",grade),FB.where("subject","==",sub),FB.where("type","==","Exam")); let snap=await FB.getDocs(q); list.innerHTML=""; if(snap.empty){list.innerHTML=`<div class="bg-white border-[2.5px] border-dashed border-black rounded-xl p-4 text-center"><p class="font-black text-[11px]">No Exam Yet for ${grade} ${sub}</p><p class="text-[9px] mt-2">Tap AI to generate 100 Marks with optional diagrams</p><button onclick="generateAIExam()" class="mt-3 bg-black text-white px-6 py-3 rounded-full text-[11px] font-black border-2 border-black shadow-[2px_2px_0_0_#000] fun-btn">🤖 Generate AI 100 Marks + 🔊🎤</button></div>`;return;} snap.forEach(d=>{let ex=d.data(); list.innerHTML+=`<div class="bg-white border-[2.5px] border-black rounded-xl p-3 shadow-[2px_2px_0_0_#000]"><p class="font-black text-[12px]">${ex.subject||sub} - ${grade}</p><p class="text-[9px] text-gray-500">100 Marks • Sec A B C • Diagrams optional</p><button onclick="startExam('${ex.subject||sub}')" class="mt-3 w-full bg-[#4a86ff] text-white rounded-full py-3 font-black text-[11px] border-2 border-black shadow-[1px_1px_0_0_#000] fun-btn">${isIn&&!done?'Start 100 Marks → 🔊🎤':'View + Type/Photo + 🔊'}</button></div>`;});}catch(e){list.innerHTML="<p class='text-center text-[10px] text-red-500'>Error - check connection</p>";}}
-function startExam(sub){workArea.classList.remove('hidden'); workTitle.innerText=sub+" - 100 Marks"; window.scrollTo(0,300); generateAIExam();}
-
-// FALLBACK 100 Marks with MCQ + Editable
-const FALLBACK_100 = {
- "Science": [
-  {q:"Which part makes pollen?", opts:["Petal","Stamen","Sepal","Root"], a:"Stamen", m:5, s:"Flower"},
-  {q:"What is photosynthesis?", opts:["Plant makes food","Plant drinks","Plant sleeps","Plant walks"], a:"Plant makes food", m:5, s:"Photo"},
-  {q:"Name 2 parts of flower", opts:[], a:"Petal Sepal", m:10, s:"Flower"},
-  {q:"Explain water cycle with diagram", opts:[], a:"Evaporation condensation", m:10, s:"Water"},
-  {q:"States of matter?", opts:["Solid liquid gas","Hot cold","Big small","Red blue"], a:"Solid liquid gas", m:5, s:"Matter"},
-  {q:"Which part holds ovary?", opts:["Petal","Pistil","Stamen","Sepal"], a:"Pistil", m:5, s:"Flower"},
-  {q:"Define pollination", opts:[], a:"Transfer of pollen", m:10, s:"Flower"},
-  {q:"Draw and label flower (optional diagram)", opts:[], a:"Petal Stamen Pistil Sepal", m:10, s:"Flower"},
-  {q:"Why do plants need sunlight?", opts:["Make food","Drink","Sleep","Walk"], a:"Make food", m:5, s:"Photo"},
-  {q:"List 4 uses of water", opts:[], a:"Drinking washing cooking farming", m:10, s:"Water"},
-  {q:"What is germination?", opts:[], a:"Seed grows to plant", m:10, s:"Plant"},
-  {q:"Name 3 types of soil", opts:["Clay sand loam","Red blue green","Hot cold warm","Big small"], a:"Clay sand loam", m:5, s:"Soil"},
-  {q:"Explain importance of map work", opts:[], a:"Navigation location", m:10, s:"Map"}
- ],
- "SST": [
-  {q:"Capital of Kenya on map?", opts:["Nairobi","Mombasa","Kisumu","Nakuru"], a:"Nairobi", m:5, s:"Map"},
-  {q:"What shows direction on map?", opts:["Compass","Ruler","Pencil","Eraser"], a:"Compass", m:5, s:"Compass"},
-  {q:"Define map and give 2 uses", opts:[], a:"Map representation navigation", m:10, s:"Map"},
-  {q:"Name 2 lakes in Rift Valley", opts:["Turkana Baringo","Victoria only","Tanganyika","Naivasha only"], a:"Turkana Baringo", m:10, s:"Rift"},
-  {q:"2 physical features of Kenya?", opts:[], a:"Mountains Rift Valley", m:10, s:"Features"}
- ]
+const cfg={
+  apiKey:"AIzaSyA93BNes3AmFyxIEgjSbvbIWqLyorLsuj8",
+  authDomain:"somahubkenya-9e458.firebaseapp.com",
+  projectId:"somahubkenya-9e458",
+  storageBucket:"somahubkenya-9e458.firebasestorage.app",
+  messagingSenderId:"615579085715",
+  appId:"1:615579085715:web:28fca37ba498324bb49666"
 };
 
-async function generateAIExam(){
- let sub=subSel.value; if(sub==="All Subjects") sub="Science";
- questions.innerHTML=`<p class='text-center py-8 font-black'>⏳ Loading 100 Marks ${sub}...<br><span class='text-[10px] opacity-60'>A B C D + 🔊 Oxford + 🎤 Editable</span></p>`;
- workArea.classList.remove('hidden');
- setTimeout(()=>{
-  let base=FALLBACK_100[sub]||FALLBACK_100["Science"];
-  currentQs=base.map(x=>({q:x.q, options:x.opts, answer:x.a, marks:x.m, strand:x.s, diagram:""}));
-  renderExamQs();
- },400);
- // Try API background
- try{
-  let twist=wrongBank.length? `Twist: ${wrongBank.slice(-2).map(w=>w.q).join(' | ')}` : "";
-  const r=await fetch('/api/gemini',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({question:`Generate Weekly Exam 100 marks ${sub} Grade ${gradeSel.value} Sec A 10 Qs 2mks, Sec B 5 Qs 6mks, Sec C 5 Qs 10mks. Include MCQ with options. ${twist}. Return JSON [{"q":"...","marks":10,"answer":"...","options":["A","B","C","D"],"diagram":"flower or map"}]`,grade:gradeSel.value, shke:currentSHKE})});
-  const d=await r.json(); let m=(d.answer||"").match(/\[[\s\S]*\]/); if(m){ let p=JSON.parse(m[0]); if(p.length>=5){ /* keep fallback to avoid empty */ } }
- }catch(e){}
+
+const app=initializeApp(cfg);
+
+window.FB={
+  auth:getAuth(app),
+  db:getFirestore(app),
+  doc,
+  getDoc,
+  collection,
+  getDocs,
+  query,
+  where,
+  addDoc,
+  serverTimestamp,
+  onAuthStateChanged
+};
+
+</script>
+</head>
+
+
+<body class="flex justify-center">
+
+<div class="app-shell w-full max-w-[460px] bg-[#f6f6f7] min-h-screen pb-12">
+
+
+<!-- =========================================================
+     TOP BAR
+========================================================= -->
+
+<div class="h-2.5 flex sticky top-0 z-50">
+  <div class="flex-1 bg-[#ff8a2a]"></div>
+  <div class="flex-1 bg-[#2ac5a0]"></div>
+  <div class="flex-1 bg-[#4a86ff]"></div>
+  <div class="flex-1 bg-[#ffcc1a]"></div>
+</div>
+
+
+<!-- =========================================================
+     HEADER
+========================================================= -->
+
+<div class="bg-white border-b-2 border-black p-3 flex justify-between items-center sticky top-2.5 z-40">
+
+  <a
+    href="student.html"
+    class="bg-black text-white px-4 py-2 rounded-full font-black text-[11px] fun-btn"
+  >
+    ← Back
+  </a>
+
+  <p class="font-black text-[13px]">
+    📝 Weekly 100 Marks
+  </p>
+
+  <span
+    id="indexB"
+    class="bg-blue-600 text-white px-2 py-1 rounded-full text-[9px] border-2 border-black"
+  >
+    SHKE...
+  </span>
+
+</div>
+
+
+<div class="p-3 space-y-3">
+
+
+<!-- =========================================================
+     HERO
+========================================================= -->
+
+<div class="bg-gradient-to-br from-black via-[#2a2a2a] to-[#4a86ff] text-white rounded-[1.5rem] p-4 border-[3px] border-black shadow-[4px_4px_0_0_#000]">
+
+  <div class="flex justify-between gap-2">
+
+    <div>
+      <p class="font-black text-[15px]">
+        🌈 Weekly Exam
+      </p>
+
+      <p class="font-black text-[12px] mt-1">
+        Saturday & Sunday • 100 Marks
+      </p>
+    </div>
+
+    <span
+      id="aiBadge"
+      class="bg-white text-black px-2 py-1 rounded-full text-[8px] border-2 border-black h-fit"
+    >
+      🤖 AI READY
+    </span>
+
+  </div>
+
+
+  <p class="text-[10px] mt-2 leading-5 opacity-90">
+    Oxford 🔊 Listen • 🎤 Speak + Edit • A B C D •
+    🌸 Diagrams optional
+  </p>
+
+
+  <button
+    id="blindBtn"
+    onclick="toggleBlindMode()"
+    class="mt-3 w-full bg-white text-black border-2 border-black rounded-full py-2.5 font-black text-[10px]"
+  >
+    ♿ Visual Mode OFF - BIG + Voice
+  </button>
+
+</div>
+
+
+<!-- =========================================================
+     SELECTORS
+========================================================= -->
+
+<div class="bg-white rounded-xl p-3 border-[2.5px] border-black shadow-[3px_3px_0_0_#000] space-y-2">
+
+  <div class="grid grid-cols-2 gap-2">
+
+    <select
+      id="gradeSel"
+      class="bg-[#e0f2ff] border-2 border-black rounded-full p-3 font-black text-[11px]"
+    >
+      <option>Grade 4</option>
+      <option>Grade 5</option>
+      <option selected>Grade 6</option>
+      <option>Grade 7</option>
+      <option>Grade 8</option>
+      <option>Grade 9</option>
+    </select>
+
+
+    <select
+      id="subSel"
+      class="bg-[#fff7e0] border-2 border-black rounded-full p-3 font-black text-[11px]"
+    >
+      <option>All Subjects</option>
+      <option>Mathematics</option>
+      <option>English</option>
+      <option>Kiswahili</option>
+      <option>Science</option>
+      <option>SST</option>
+      <option>CRE</option>
+    </select>
+
+  </div>
+
+
+  <button
+    onclick="loadExams()"
+    class="w-full bg-[#4a86ff] text-white border-2 border-black rounded-full py-3 font-black text-[11px] fun-btn"
+  >
+    🔍 Show Weekly Exam
+  </button>
+
+
+  <button
+    onclick="generateAIExam()"
+    class="w-full bg-black text-white border-2 border-black rounded-full py-3 font-black text-[11px] shadow-[2px_2px_0_0_#000] fun-btn"
+  >
+    🤖 Generate Fresh AI 100 Marks
+  </button>
+
+</div>
+
+
+<!-- =========================================================
+     WEEKLY INFO
+========================================================= -->
+
+<div
+  id="weeklyInfo"
+  class="bg-[#ffcc1a] border-[2.5px] border-black rounded-xl p-3 text-[10px] font-black shadow-[2px_2px_0_0_#000]"
+></div>
+
+
+<div id="pendingBanner"></div>
+
+
+<!-- =========================================================
+     EXAMS LIST
+========================================================= -->
+
+<div
+  id="examsList"
+  class="space-y-3"
+></div>
+
+
+<!-- =========================================================
+     WORK AREA
+========================================================= -->
+
+<div
+  id="workArea"
+  class="hidden bg-white rounded-[1.5rem] p-4 border-[3px] border-black shadow-[4px_4px_0_0_#000]"
+>
+
+
+  <div class="flex justify-between items-center">
+
+    <div>
+
+      <p
+        id="workTitle"
+        class="font-black text-[13px]"
+      >
+        Weekly Exam
+      </p>
+
+      <p
+        id="examSource"
+        class="text-[8px] font-black opacity-60 mt-1"
+      >
+        AI Generated
+      </p>
+
+    </div>
+
+
+    <span
+      id="scoreBadge"
+      class="bg-black text-white px-3 py-1 rounded-full text-[11px] border-2 border-black"
+    >
+      0/100
+    </span>
+
+  </div>
+
+
+  <!-- TOOL BUTTONS -->
+
+  <div class="grid grid-cols-3 gap-2 mt-3">
+
+    <button
+      onclick="document.getElementById('photoInput').click()"
+      class="bg-[#ffcc1a] border-2 border-black rounded-full py-3 font-black text-[9px] fun-btn"
+    >
+      📷 Photo
+    </button>
+
+    <button
+      onclick="speakAll()"
+      class="bg-[#4a86ff] text-white border-2 border-black rounded-full py-3 font-black text-[9px] fun-btn"
+    >
+      🔊 All
+    </button>
+
+    <button
+      onclick="generateAIExam()"
+      class="bg-black text-white border-2 border-black rounded-full py-3 font-black text-[9px] fun-btn"
+    >
+      🤖 New AI
+    </button>
+
+  </div>
+
+
+  <input
+    type="file"
+    id="photoInput"
+    accept="image/*"
+    hidden
+  >
+
+
+  <img
+    id="photoPreview"
+    class="hidden mt-3 w-full rounded-xl border-2 border-black"
+  >
+
+
+  <p
+    id="photoStatus"
+    class="hidden text-[10px] font-bold mt-2 text-center"
+  ></p>
+
+
+  <div
+    id="questions"
+    class="mt-5 space-y-6"
+  ></div>
+
+
+  <!-- SUBMIT -->
+
+  <button
+    onclick="checkExam()"
+    class="w-full mt-6 bg-[#2ac5a0] text-black border-[3px] border-black rounded-full py-5 font-black text-[14px] shadow-[3px_3px_0_0_#000] fun-btn"
+  >
+    ✅ Submit & Check + 🔊 Score
+  </button>
+
+
+  <div
+    id="result"
+    class="hidden mt-4 p-4 border-[3px] border-black rounded-[1.2rem] bg-white shadow-[3px_3px_0_0_#000]"
+  ></div>
+
+
+  <button
+    id="corrBtn"
+    onclick="showCorrection()"
+    class="hidden w-full mt-3 bg-[#4a86ff] text-white border-[2.5px] border-black rounded-full py-3 font-black text-[11px] fun-btn"
+  >
+    👁️ Correction + 🔊
+  </button>
+
+
+  <button
+    id="saveWrongBtn"
+    onclick="saveWrong()"
+    class="hidden w-full mt-3 bg-[#ffcc1a] text-black border-[2.5px] border-black rounded-full py-3 font-black text-[11px] fun-btn"
+  >
+    Save Wrong → Twist Next Week 🔁
+  </button>
+
+</div>
+
+
+</div>
+</div>
+
+
+<script>
+
+
+// ============================================================
+// GLOBAL STATE
+// ============================================================
+
+let currentUser=null;
+
+let currentSHKE="SHKE";
+
+let currentQs=[];
+
+let currentWrong=[];
+
+let blindMode=false;
+
+let recognition=null;
+
+let isRecording=false;
+
+let currentExamSubject="";
+
+let currentExamGrade="";
+
+let examSubmitted=false;
+
+
+// ============================================================
+// WRONG QUESTION BANK
+// ============================================================
+
+let wrongBank=[];
+
+try{
+
+  wrongBank=
+    JSON.parse(
+      localStorage.getItem(
+        "soma_wrong_exam"
+      ) || "[]"
+    );
+
+}catch(e){
+
+  wrongBank=[];
+
 }
+
+
+// ============================================================
+// SAFE HTML
+// ============================================================
+
+function esc(value){
+
+  return String(value ?? "")
+    .replace(/&/g,"&amp;")
+    .replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;")
+    .replace(/"/g,"&quot;")
+    .replace(/'/g,"&#039;");
+}
+
+
+// ============================================================
+// NORMALIZE ANSWER
+// ============================================================
+
+function normalizeAnswer(value){
+
+  return String(value || "")
+    .toLowerCase()
+    .trim()
+    .replace(/[.,!?;:()[\]{}]/g," ")
+    .replace(/\s+/g," ");
+}
+
+
+// ============================================================
+// CHECK ANSWER
+// ============================================================
+
+function answerIsCorrect(question,userAnswer){
+
+  if(!userAnswer) return false;
+
+  const user=
+    normalizeAnswer(userAnswer);
+
+
+  // MCQ
+  if(
+    question.options &&
+    question.options.length
+  ){
+
+    return normalizeAnswer(
+      question.answer
+    ) === user;
+  }
+
+
+  const accepted=[
+    question.answer,
+    ...(Array.isArray(question.acceptedAnswers)
+      ? question.acceptedAnswers
+      : [])
+  ]
+  .filter(Boolean)
+  .map(normalizeAnswer);
+
+
+  if(!accepted.length)
+    return false;
+
+
+  // Exact match
+  if(
+    accepted.some(
+      a=>a===user
+    )
+  ){
+    return true;
+  }
+
+
+  // Short-answer flexible matching
+  return accepted.some(a=>{
+
+    if(
+      user.length >= 4 &&
+      a.includes(user)
+    ){
+      return true;
+    }
+
+    if(
+      a.length >= 4 &&
+      user.includes(a)
+    ){
+      return true;
+    }
+
+    return false;
+  });
+}
+
+
+// ============================================================
+// OXFORD VOICE
+// ============================================================
+
+if(
+  "speechSynthesis" in window
+){
+
+  speechSynthesis.onvoiceschanged=
+    ()=>speechSynthesis.getVoices();
+
+  speechSynthesis.getVoices();
+}
+
+
+function speakText(text){
+
+  if(
+    !("speechSynthesis" in window)
+  ){
+    return;
+  }
+
+
+  speechSynthesis.cancel();
+
+
+  let clean=
+    String(text || "")
+      .replace(/[*_`]/g,"")
+      .slice(0,900);
+
+
+  let utter=
+    new SpeechSynthesisUtterance(
+      clean
+    );
+
+
+  const isSw=
+    /Kiswahili|Nomino|Wingi|Sarufi|Methali|sentensi|kitenzi|kiwakilishi/i
+      .test(clean);
+
+
+  const voices=
+    speechSynthesis.getVoices();
+
+
+  if(!voices.length){
+
+    setTimeout(
+      ()=>speakText(text),
+      300
+    );
+
+    return;
+  }
+
+
+  const eng=
+    voices.find(
+      v=>v.name.includes(
+        "Google UK English Female"
+      )
+    ) ||
+
+    voices.find(
+      v=>v.lang==="en-GB"
+    ) ||
+
+    voices.find(
+      v=>v.lang.startsWith("en")
+    ) ||
+
+    voices[0];
+
+
+  const sw=
+    voices.find(
+      v=>v.lang.toLowerCase().includes("sw")
+    );
+
+
+  utter.voice=
+    isSw && sw
+      ? sw
+      : eng;
+
+
+  utter.lang=
+    isSw
+      ? "sw-KE"
+      : "en-GB";
+
+
+  utter.rate=
+    blindMode
+      ? 0.75
+      : 0.82;
+
+
+  utter.pitch=1;
+
+  utter.volume=1;
+
+
+  speechSynthesis.speak(
+    utter
+  );
+}
+
+
+function speakQuestion(i){
+
+  const q=
+    currentQs[i];
+
+  if(!q) return;
+
+
+  let text=
+    `Question ${i+1}, ${q.marks} marks. ${q.q}.`;
+
+
+  if(
+    q.options &&
+    q.options.length
+  ){
+
+    text+=
+      " Options. " +
+
+      q.options
+        .map(
+          (o,index)=>
+            `Option ${
+              String.fromCharCode(65+index)
+            }: ${o}`
+        )
+        .join(". ") +
+
+      ".";
+  }
+
+
+  speakText(text);
+}
+
+
+function speakAll(){
+
+  if(!currentQs.length){
+
+    speakText(
+      "Generate or load the weekly exam first."
+    );
+
+    return;
+  }
+
+
+  let text=
+    currentQs
+      .map(
+        (q,i)=>
+          `Question ${i+1}. ${q.q}.`
+      )
+      .join(" ");
+
+
+  speakText(text);
+}
+
+
+// ============================================================
+// BLIND / BIG MODE
+// ============================================================
+
+function toggleBlindMode(){
+
+  blindMode=
+    !blindMode;
+
+
+  blindBtn.innerText=
+    blindMode
+      ? "♿ BIG Mode ON"
+      : "♿ Visual Mode OFF - BIG + Voice";
+
+
+  document.documentElement.style.fontSize=
+    blindMode
+      ? "120%"
+      : "100%";
+
+
+  if(blindMode){
+
+    speakText(
+      "Big mode is on. Tap Oxford Listen to hear questions."
+    );
+  }
+}
+
+
+// ============================================================
+// SATURDAY / SUNDAY
+// ============================================================
+
+function getSatSun(){
+
+  const now=
+    new Date();
+
+  const day=
+    now.getDay();
+
+
+  const sat=
+    new Date(now);
+
+
+  sat.setDate(
+    now.getDate()+
+    (6-day)
+  );
+
+
+  sat.setHours(
+    0,0,0,0
+  );
+
+
+  const sun=
+    new Date(sat);
+
+
+  sun.setDate(
+    sat.getDate()+1
+  );
+
+
+  sun.setHours(
+    23,59,59,999
+  );
+
+
+  return{
+    sat,
+    sun,
+    isIn:
+      sat<=now &&
+      now<=sun
+  };
+}
+
+
+function updInfo(){
+
+  const {
+    sat,
+    sun,
+    isIn
+  }=
+    getSatSun();
+
+
+  const now=
+    new Date();
+
+
+  const diff=
+    sun-now;
+
+
+  const h=
+    Math.max(
+      0,
+      Math.floor(
+        diff/3600000
+      )
+    );
+
+
+  weeklyInfo.innerHTML=
+    `📅 ${sat.toDateString()} Sat → ${sun.toDateString()} Sun • ` +
+
+    `${
+      isIn
+        ? `✅ OPEN NOW • ${h}h left`
+        : `⏰ Opens Saturday`
+    } • ` +
+
+    `SHKE ${esc(currentSHKE)} • ` +
+
+    `🌸 Diagrams optional • 🔊🎤 Ready`;
+}
+
+
+// ============================================================
+// PHOTO
+// ============================================================
+
+photoInput.addEventListener(
+  "change",
+  function(){
+
+    const file=
+      this.files?.[0];
+
+
+    if(!file)
+      return;
+
+
+    const reader=
+      new FileReader();
+
+
+    reader.onload=
+      function(e){
+
+        photoPreview.src=
+          e.target.result;
+
+        photoPreview.classList.remove(
+          "hidden"
+        );
+
+
+        photoStatus.innerText=
+          "📷 Photo selected. It can be used as learning support.";
+
+        photoStatus.className=
+          "mt-2 text-[10px] font-black text-center bg-[#dcfce7] border-2 border-black rounded-full py-2";
+
+      };
+
+
+    reader.readAsDataURL(
+      file
+    );
+  }
+);
+
+
+// ============================================================
+// MICROPHONE
+// ============================================================
+
+function startVoiceAnswer(i){
+
+  const SR=
+    window.SpeechRecognition ||
+    window.webkitSpeechRecognition;
+
+
+  if(!SR){
+
+    alert(
+      "Voice input is not supported here. Try Google Chrome."
+    );
+
+    return;
+  }
+
+
+  if(
+    isRecording &&
+    recognition
+  ){
+
+    recognition.stop();
+
+    return;
+  }
+
+
+  recognition=
+    new SR();
+
+
+  const subject=
+    currentExamSubject;
+
+
+  recognition.lang=
+    subject==="Kiswahili"
+      ? "sw-KE"
+      : "en-KE";
+
+
+  recognition.interimResults=
+    false;
+
+
+  const btn=
+    document.getElementById(
+      "mic"+i
+    );
+
+
+  const txt=
+    document.getElementById(
+      "ansText"+i
+    );
+
+
+  const hidden=
+    document.getElementById(
+      "ans"+i
+    );
+
+
+  const stat=
+    document.getElementById(
+      "micStatus"+i
+    );
+
+
+  btn.classList.add(
+    "pulse",
+    "bg-red-500"
+  );
+
+
+  btn.innerText="🔴";
+
+
+  stat.innerText=
+    "🎤 Listening...";
+
+
+  stat.classList.remove(
+    "hidden"
+  );
+
+
+  isRecording=true;
+
+
+  recognition.onresult=
+    function(e){
+
+      let transcript=
+        e.results[0][0]
+          .transcript
+          .trim();
+
+
+      const q=
+        currentQs[i];
+
+
+      if(
+        q &&
+        q.options &&
+        q.options.length
+      ){
+
+        const spoken=
+          transcript.toLowerCase();
+
+
+        const match=
+          q.options.find(
+            option=>{
+
+              const o=
+                option.toLowerCase();
+
+              return(
+                o.includes(spoken) ||
+                spoken.includes(
+                  o.slice(
+                    0,
+                    Math.min(
+                      4,
+                      o.length
+                    )
+                  )
+                )
+              );
+            }
+          );
+
+
+        if(match){
+
+          transcript=
+            match;
+
+
+          document
+            .querySelectorAll(
+              `input[name="ans${i}"]`
+            )
+            .forEach(
+              radio=>{
+
+                radio.checked=
+                  radio.value.toLowerCase()===
+                  match.toLowerCase();
+
+              }
+            );
+        }
+      }
+
+
+      if(txt)
+        txt.value=
+          transcript;
+
+
+      if(hidden)
+        hidden.value=
+          transcript;
+
+
+      stat.innerHTML=
+        `✅ Heard: <b>${esc(transcript)}</b> — EDIT if needed`;
+
+
+      stat.className=
+        "mt-2 text-[9px] font-black text-center bg-[#dcfce7] border-2 border-black rounded-full py-2";
+    };
+
+
+  recognition.onend=
+    function(){
+
+      btn.classList.remove(
+        "pulse",
+        "bg-red-500"
+      );
+
+      btn.innerText="🎤";
+
+      isRecording=false;
+
+      if(
+        navigator.vibrate
+      ){
+        navigator.vibrate(40);
+      }
+    };
+
+
+  recognition.onerror=
+    function(){
+
+      btn.classList.remove(
+        "pulse",
+        "bg-red-500"
+      );
+
+      btn.innerText="🎤";
+
+      isRecording=false;
+
+      stat.innerText=
+        "❌ Voice not recognised. Try again.";
+    };
+
+
+  try{
+
+    recognition.start();
+
+  }catch(e){}
+
+}
+
+
+// ============================================================
+// FIREBASE EXAM STATUS
+// ============================================================
+
+async function hasSubmittedThisWeek(){
+
+  if(!currentUser)
+    return false;
+
+
+  try{
+
+    const {
+      sat,
+      sun
+    }=
+      getSatSun();
+
+
+    const q=
+      window.FB.query(
+        window.FB.collection(
+          window.FB.db,
+          "exam_submissions"
+        ),
+
+        window.FB.where(
+          "userId",
+          "==",
+          currentUser.uid
+        )
+      );
+
+
+    const snap=
+      await window.FB.getDocs(q);
+
+
+    let done=false;
+
+
+    snap.forEach(
+      d=>{
+
+        const data=
+          d.data();
+
+
+        const date=
+          data.date?.toDate
+            ? data.date.toDate()
+            : new Date(
+                data.date ||
+                0
+              );
+
+
+        if(
+          date>=sat &&
+          date<=sun
+        ){
+
+          done=true;
+        }
+      }
+    );
+
+
+    return done;
+
+  }catch(e){
+
+    return false;
+  }
+}
+
+
+// ============================================================
+// LOAD STORED EXAMS
+// ============================================================
+
+async function loadExams(){
+
+  const grade=
+    gradeSel.value;
+
+
+  const sub=
+    subSel.value;
+
+
+  currentExamGrade=
+    grade;
+
+
+  currentExamSubject=
+    sub;
+
+
+  const list=
+    document.getElementById(
+      "examsList"
+    );
+
+
+  const banner=
+    document.getElementById(
+      "pendingBanner"
+    );
+
+
+  list.innerHTML=
+    `<p class="text-center py-4 font-black text-[11px]">
+      ⏳ Loading weekly exam...
+    </p>`;
+
+
+  banner.innerHTML="";
+
+
+  const {
+    isIn
+  }=
+    getSatSun();
+
+
+  const done=
+    await hasSubmittedThisWeek();
+
+
+  if(!isIn){
+
+    banner.innerHTML=
+      `<div class="bg-orange-100 border-[2.5px] border-black rounded-xl p-3 text-center font-black text-[11px]">
+        ⏰ Weekly exam opens Saturday.
+        Monday–Friday use Daily Homework.
+      </div>`;
+
+  }else if(!done){
+
+    banner.innerHTML=
+      `<div class="bg-red-600 text-white border-[2.5px] border-black rounded-xl p-3 font-black text-[11px] shadow-[2px_2px_0_0_#000]">
+        ⚠️ WEEKLY EXAM PENDING •
+        ${esc(currentSHKE)} •
+        0/100 • 🔊🎤 Ready
+      </div>`;
+
+  }else{
+
+    banner.innerHTML=
+      `<div class="bg-green-600 text-white border-[2.5px] border-black rounded-xl p-3 text-center font-black text-[11px]">
+        ✅ You have completed this week's exam.
+      </div>`;
+  }
+
+
+  try{
+
+    let q;
+
+
+    if(sub==="All Subjects"){
+
+      q=
+        window.FB.query(
+          window.FB.collection(
+            window.FB.db,
+            "resources"
+          ),
+
+          window.FB.where(
+            "grade",
+            "==",
+            grade
+          ),
+
+          window.FB.where(
+            "type",
+            "==",
+            "Exam"
+          )
+        );
+
+    }else{
+
+      q=
+        window.FB.query(
+          window.FB.collection(
+            window.FB.db,
+            "resources"
+          ),
+
+          window.FB.where(
+            "grade",
+            "==",
+            grade
+          ),
+
+          window.FB.where(
+            "subject",
+            "==",
+            sub
+          ),
+
+          window.FB.where(
+            "type",
+            "==",
+            "Exam"
+          )
+        );
+    }
+
+
+    const snap=
+      await window.FB.getDocs(q);
+
+
+    list.innerHTML="";
+
+
+    if(
+      snap.empty
+    ){
+
+      list.innerHTML=
+        `<div class="bg-white border-[2.5px] border-dashed border-black rounded-xl p-4 text-center">
+
+          <p class="font-black text-[11px]">
+            No stored exam yet for ${esc(grade)} ${esc(sub)}
+          </p>
+
+          <p class="text-[9px] mt-2">
+            Generate a fresh 100-mark AI exam instead.
+          </p>
+
+          <button
+            onclick="generateAIExam()"
+            class="mt-3 bg-black text-white px-6 py-3 rounded-full text-[11px] font-black border-2 border-black shadow-[2px_2px_0_0_#000] fun-btn"
+          >
+            🤖 Generate AI 100 Marks
+          </button>
+
+        </div>`;
+
+      return;
+    }
+
+
+    snap.forEach(
+      d=>{
+
+        const ex=
+          d.data();
+
+
+        const subject=
+          ex.subject ||
+          sub;
+
+
+        list.innerHTML+=
+          `<div class="bg-white border-[2.5px] border-black rounded-xl p-3 shadow-[2px_2px_0_0_#000] exam-card">
+
+            <p class="font-black text-[12px]">
+              ${esc(subject)} - ${esc(grade)}
+            </p>
+
+            <p class="text-[9px] text-gray-500">
+              100 Marks • AI/Stored Exam • 🔊🎤
+            </p>
+
+            <button
+              onclick="startStoredExam('${esc(subject)}')"
+              class="mt-3 w-full bg-[#4a86ff] text-white rounded-full py-3 font-black text-[11px] border-2 border-black shadow-[1px_1px_0_0_#000] fun-btn"
+            >
+              ${isIn && !done
+                ? "Start 100 Marks → 🔊🎤"
+                : "View Exam → 🔊🎤"}
+            </button>
+
+          </div>`;
+      }
+    );
+
+
+  }catch(error){
+
+    console.error(
+      error
+    );
+
+
+    list.innerHTML=
+      `<div class="bg-white border-2 border-black rounded-xl p-4 text-center">
+
+        <p class="font-black text-[11px]">
+          Could not load stored exams.
+        </p>
+
+        <button
+          onclick="generateAIExam()"
+          class="mt-3 bg-black text-white px-5 py-3 rounded-full text-[10px] font-black"
+        >
+          🤖 Generate AI Exam
+        </button>
+
+      </div>`;
+  }
+}
+
+
+// ============================================================
+// STORED EXAM
+// ============================================================
+
+function startStoredExam(subject){
+
+  currentExamSubject=
+    subject;
+
+
+  workArea.classList.remove(
+    "hidden"
+  );
+
+
+  workTitle.innerText=
+    `${subject} - 100 Marks`;
+
+
+  examSource.innerText=
+    "📚 SomaHub stored exam";
+
+
+  window.scrollTo(
+    0,
+    300
+  );
+
+
+  // Generate fresh AI version instead of
+  // depending on a fragile stored structure.
+  generateAIExam();
+}
+
+
+// ============================================================
+// FALLBACK EXAMS
+// ============================================================
+
+const FALLBACK_100={
+
+  Science:[
+
+    {
+      q:"Which part of a flower produces pollen?",
+      options:["Petal","Stamen","Sepal","Root"],
+      answer:"Stamen",
+      acceptedAnswers:["Stamen"],
+      marks:5,
+      strand:"Flower"
+    },
+
+    {
+      q:"What is photosynthesis?",
+      options:[
+        "The process by which plants make food",
+        "The process of plants drinking water",
+        "The process of plants sleeping",
+        "The process of plants moving"
+      ],
+      answer:"The process by which plants make food",
+      acceptedAnswers:["The process by which plants make food","Plants make food"],
+      marks:5,
+      strand:"Photosynthesis"
+    },
+
+    {
+      q:"Name two parts of a flower.",
+      options:[],
+      answer:"Petal and sepal",
+      acceptedAnswers:[
+        "Petal and sepal",
+        "Petal Sepal",
+        "Petal and sepal"
+      ],
+      marks:10,
+      strand:"Flower"
+    },
+
+    {
+      q:"Explain the water cycle.",
+      options:[],
+      answer:"Evaporation, condensation and precipitation",
+      acceptedAnswers:[
+        "Evaporation condensation precipitation",
+        "Evaporation, condensation and precipitation"
+      ],
+      marks:10,
+      strand:"Water Cycle"
+    },
+
+    {
+      q:"Which three are the common states of matter?",
+      options:[
+        "Solid, liquid and gas",
+        "Hot, cold and warm",
+        "Big, small and medium",
+        "Red, blue and green"
+      ],
+      answer:"Solid, liquid and gas",
+      acceptedAnswers:["Solid liquid gas"],
+      marks:5,
+      strand:"Matter"
+    },
+
+    {
+      q:"Which flower part contains the ovary?",
+      options:[
+        "Petal",
+        "Pistil",
+        "Stamen",
+        "Sepal"
+      ],
+      answer:"Pistil",
+      acceptedAnswers:["Pistil"],
+      marks:5,
+      strand:"Flower"
+    },
+
+    {
+      q:"Define pollination.",
+      options:[],
+      answer:"Transfer of pollen from anther to stigma",
+      acceptedAnswers:[
+        "Transfer of pollen",
+        "Transfer of pollen from anther to stigma"
+      ],
+      marks:10,
+      strand:"Flower"
+    },
+
+    {
+      q:"State four uses of water.",
+      options:[],
+      answer:"Drinking, washing, cooking and farming",
+      acceptedAnswers:[
+        "Drinking washing cooking farming"
+      ],
+      marks:10,
+      strand:"Water"
+    },
+
+    {
+      q:"Why do green plants need sunlight?",
+      options:[
+        "To make food",
+        "To sleep",
+        "To walk",
+        "To make noise"
+      ],
+      answer:"To make food",
+      acceptedAnswers:["To make food"],
+      marks:5,
+      strand:"Photosynthesis"
+    },
+
+    {
+      q:"What is germination?",
+      options:[],
+      answer:"The process by which a seed begins to grow",
+      acceptedAnswers:[
+        "Seed begins to grow",
+        "A seed begins to grow"
+      ],
+      marks:10,
+      strand:"Plants"
+    },
+
+    {
+      q:"Name three types of soil.",
+      options:[
+        "Clay, sand and loam",
+        "Red, blue and green",
+        "Hot, cold and warm",
+        "Big, medium and small"
+      ],
+      answer:"Clay, sand and loam",
+      acceptedAnswers:[
+        "Clay sand loam"
+      ],
+      marks:5,
+      strand:"Soil"
+    },
+
+    {
+      q:"State five importance of plants.",
+      options:[],
+      answer:"Food, medicine, timber, oxygen and shade",
+      acceptedAnswers:[
+        "Food medicine timber oxygen shade"
+      ],
+      marks:10,
+      strand:"Plants"
+    }
+  ],
+
+
+  SST:[
+
+    {
+      q:"What is the capital city of Kenya?",
+      options:[
+        "Nairobi",
+        "Mombasa",
+        "Kisumu",
+        "Nakuru"
+      ],
+      answer:"Nairobi",
+      marks:5,
+      strand:"Map Work"
+    },
+
+    {
+      q:"Which instrument is used to show direction on a map?",
+      options:[
+        "Compass",
+        "Ruler",
+        "Pencil",
+        "Eraser"
+      ],
+      answer:"Compass",
+      marks:5,
+      strand:"Map Work"
+    },
+
+    {
+      q:"Define a map and state two uses.",
+      options:[],
+      answer:"A representation of an area used for locating places and navigation",
+      acceptedAnswers:[
+        "Representation of an area",
+        "Map is a representation of an area"
+      ],
+      marks:10,
+      strand:"Map Work"
+    },
+
+    {
+      q:"Name two lakes found in the Rift Valley.",
+      options:[
+        "Turkana and Baringo",
+        "Victoria and Tanganyika",
+        "Victoria and Kyoga",
+        "Tanganyika and Albert"
+      ],
+      answer:"Turkana and Baringo",
+      acceptedAnswers:[
+        "Turkana Baringo"
+      ],
+      marks:10,
+      strand:"Rift Valley"
+    },
+
+    {
+      q:"Name two physical features found in Kenya.",
+      options:[],
+      answer:"Mountains and Rift Valley",
+      acceptedAnswers:[
+        "Mountains Rift Valley"
+      ],
+      marks:10,
+      strand:"Physical Features"
+    },
+
+    {
+      q:"What is a compass?",
+      options:[],
+      answer:"An instrument used to find direction",
+      acceptedAnswers:[
+        "Instrument used to find direction"
+      ],
+      marks:10,
+      strand:"Map Work"
+    },
+
+    {
+      q:"State four uses of maps.",
+      options:[],
+      answer:"Finding places, measuring distance, showing direction and planning routes",
+      acceptedAnswers:[
+        "Finding places measuring distance showing direction planning routes"
+      ],
+      marks:10,
+      strand:"Map Work"
+    },
+
+    {
+      q:"Which is the largest lake in Africa by surface area?",
+      options:[
+        "Lake Victoria",
+        "Lake Turkana",
+        "Lake Baringo",
+        "Lake Naivasha"
+      ],
+      answer:"Lake Victoria",
+      marks:5,
+      strand:"Lakes"
+    },
+
+    {
+      q:"What is a physical feature?",
+      options:[],
+      answer:"A natural feature found on the earth's surface",
+      acceptedAnswers:[
+        "Natural feature on the earth's surface"
+      ],
+      marks:10,
+      strand:"Physical Features"
+    },
+
+    {
+      q:"Name four counties through which the Rift Valley passes.",
+      options:[],
+      answer:"Any four correct counties",
+      acceptedAnswers:[
+        "Nakuru",
+        "Narok",
+        "Baringo",
+        "Turkana",
+        "Kajiado"
+      ],
+      marks:10,
+      strand:"Rift Valley"
+    }
+  ],
+
+
+  Mathematics:[
+
+    {
+      q:"Calculate 3/4 + 1/4.",
+      options:["1/2","1","2","3/4"],
+      answer:"1",
+      marks:10,
+      strand:"Fractions"
+    },
+
+    {
+      q:"Find 25% of 200.",
+      options:["25","50","75","100"],
+      answer:"50",
+      marks:10,
+      strand:"Percentages"
+    },
+
+    {
+      q:"A triangle has a base of 10 cm and height of 6 cm. Find its area.",
+      options:["30 cm²","60 cm²","15 cm²","16 cm²"],
+      answer:"30 cm²",
+      acceptedAnswers:["30"],
+      marks:10,
+      strand:"Geometry"
+    },
+
+    {
+      q:"Solve x + 5 = 12.",
+      options:["5","7","12","17"],
+      answer:"7",
+      marks:10,
+      strand:"Algebra"
+    },
+
+    {
+      q:"Find the next number: 2, 4, 6, 8, __.",
+      options:["10","12","9","11"],
+      answer:"10",
+      marks:10,
+      strand:"Patterns"
+    },
+
+    {
+      q:"Calculate 456 + 237.",
+      options:["683","693","703","673"],
+      answer:"693",
+      marks:10,
+      strand:"Number"
+    },
+
+    {
+      q:"What is 3 × 24?",
+      options:["62","72","82","92"],
+      answer:"72",
+      marks:10,
+      strand:"Multiplication"
+    },
+
+    {
+      q:"Find 1/2 of 80.",
+      options:["20","30","40","50"],
+      answer:"40",
+      marks:10,
+      strand:"Fractions"
+    },
+
+    {
+      q:"A rectangle is 8 cm long and 5 cm wide. Find its area.",
+      options:["13 cm²","26 cm²","40 cm²","80 cm²"],
+      answer:"40 cm²",
+      acceptedAnswers:["40"],
+      marks:10,
+      strand:"Area"
+    },
+
+    {
+      q:"What is the value of 900 - 375?",
+      options:["425","525","575","625"],
+      answer:"525",
+      marks:10,
+      strand:"Subtraction"
+    }
+  ],
+
+
+  English:[
+
+    {
+      q:"Choose the correct verb: She ___ to school every day.",
+      options:["go","goes","going","gone"],
+      answer:"goes",
+      marks:10,
+      strand:"Grammar"
+    },
+
+    {
+      q:"Identify the noun in: The beautiful flower is blooming.",
+      options:["beautiful","flower","is","blooming"],
+      answer:"flower",
+      marks:10,
+      strand:"Nouns"
+    },
+
+    {
+      q:"Give the past tense of 'write'.",
+      options:["writed","wrote","written","writing"],
+      answer:"wrote",
+      marks:10,
+      strand:"Tenses"
+    },
+
+    {
+      q:"Choose a synonym for 'happy'.",
+      options:["sad","joyful","angry","tired"],
+      answer:"joyful",
+      marks:10,
+      strand:"Vocabulary"
+    },
+
+    {
+      q:"Change this sentence into the past tense: I do my homework.",
+      options:[],
+      answer:"I did my homework.",
+      acceptedAnswers:["I did my homework"],
+      marks:10,
+      strand:"Tenses"
+    },
+
+    {
+      q:"What is a pronoun?",
+      options:[],
+      answer:"A word used in place of a noun",
+      acceptedAnswers:["Word used in place of a noun"],
+      marks:10,
+      strand:"Grammar"
+    },
+
+    {
+      q:"Give the opposite of 'early'.",
+      options:["late","fast","soon","quick"],
+      answer:"late",
+      marks:10,
+      strand:"Vocabulary"
+    },
+
+    {
+      q:"Identify the adjective: The tall boy ran quickly.",
+      options:["boy","ran","tall","quickly"],
+      answer:"tall",
+      marks:10,
+      strand:"Adjectives"
+    },
+
+    {
+      q:"Write the plural of 'child'.",
+      options:["childs","children","childes","child"],
+      answer:"children",
+      marks:10,
+      strand:"Plurals"
+    },
+
+    {
+      q:"Write one sentence containing a verb.",
+      options:[],
+      answer:"A sentence containing a correct verb",
+      acceptedAnswers:["correct verb"],
+      marks:10,
+      strand:"Sentence Construction"
+    }
+  ],
+
+
+  Kiswahili:[
+
+    {
+      q:"Chagua jibu sahihi: Mtoto ___ shuleni.",
+      options:["anaenda","wanaenda","tunaenda","ninaenda"],
+      answer:"anaenda",
+      marks:10,
+      strand:"Sarufi"
+    },
+
+    {
+      q:"Kinyume cha 'kubwa' ni nini?",
+      options:["ndogo","kubwa","dogo","kubwa sana"],
+      answer:"ndogo",
+      marks:10,
+      strand:"Kinyume"
+    },
+
+    {
+      q:"Nomino ni nini?",
+      options:[
+        "Jina la mtu, kitu au mahali",
+        "Tendo",
+        "Kielezi",
+        "Kiwakilishi"
+      ],
+      answer:"Jina la mtu, kitu au mahali",
+      marks:10,
+      strand:"Nomino"
+    },
+
+    {
+      q:"Wingi wa 'kitabu' ni upi?",
+      options:["vitabu","kitabu","mavitabu","makitabu"],
+      answer:"vitabu",
+      marks:10,
+      strand:"Wingi"
+    },
+
+    {
+      q:"Andika sentensi ukitumia neno 'mwalimu'.",
+      options:[],
+      answer:"Mwalimu anafundisha wanafunzi",
+      acceptedAnswers:["Mwalimu anafundisha"],
+      marks:10,
+      strand:"Sentensi"
+    },
+
+    {
+      q:"Kinyume cha 'refu' ni nini?",
+      options:["fupi","kubwa","ndogo","pana"],
+      answer:"fupi",
+      marks:10,
+      strand:"Kinyume"
+    },
+
+    {
+      q:"Wingi wa 'mtoto' ni upi?",
+      options:["watoto","mitoto","matoto","mtoto"],
+      answer:"watoto",
+      marks:10,
+      strand:"Wingi"
+    },
+
+    {
+      q:"Taja nomino mbili.",
+      options:[],
+      answer:"Mwalimu na kitabu",
+      acceptedAnswers:["mwalimu kitabu"],
+      marks:10,
+      strand:"Nomino"
+    },
+
+    {
+      q:"Tunga sentensi ukitumia kitenzi 'soma'.",
+      options:[],
+      answer:"Mwanafunzi anasoma kitabu",
+      acceptedAnswers:["anasoma"],
+      marks:10,
+      strand:"Vitenzi"
+    },
+
+    {
+      q:"Methali ni nini?",
+      options:[],
+      answer:"Usemi mfupi wenye hekima au mafunzo",
+      acceptedAnswers:["usemi wenye hekima","usemi mfupi wenye hekima"],
+      marks:10,
+      strand:"Methali"
+    }
+  ],
+
+
+  CRE:[
+
+    {
+      q:"Who created the world?",
+      options:["God","Man","Angel","Devil"],
+      answer:"God",
+      marks:10,
+      strand:"Creation"
+    },
+
+    {
+      q:"Name two fruits of the Holy Spirit.",
+      options:[
+        "Love and joy",
+        "Hate and anger",
+        "Fear and worry",
+        "Sadness and jealousy"
+      ],
+      answer:"Love and joy",
+      marks:10,
+      strand:"Fruit of the Spirit"
+    },
+
+    {
+      q:"Who was the first man according to the Bible?",
+      options:["Adam","Moses","Jesus","Noah"],
+      answer:"Adam",
+      marks:10,
+      strand:"Creation"
+    },
+
+    {
+      q:"How many commandments were given to Moses?",
+      options:["5","10","12","7"],
+      answer:"10",
+      marks:10,
+      strand:"Commandments"
+    },
+
+    {
+      q:"Where was Jesus born?",
+      options:["Bethlehem","Nazareth","Jerusalem","Cairo"],
+      answer:"Bethlehem",
+      marks:10,
+      strand:"Life of Jesus"
+    },
+
+    {
+      q:"Name two books of the Old Testament.",
+      options:[],
+      answer:"Genesis and Exodus",
+      acceptedAnswers:["Genesis Exodus"],
+      marks:10,
+      strand:"Bible"
+    },
+
+    {
+      q:"What is prayer?",
+      options:[],
+      answer:"Communication with God",
+      acceptedAnswers:["Communication with God","Talking to God"],
+      marks:10,
+      strand:"Prayer"
+    },
+
+    {
+      q:"Name two ways Christians can show love.",
+      options:[],
+      answer:"Helping others and forgiving others",
+      acceptedAnswers:["Helping and forgiving"],
+      marks:10,
+      strand:"Christian Living"
+    },
+
+    {
+      q:"Who led the Israelites out of Egypt?",
+      options:["Moses","David","Peter","Paul"],
+      answer:"Moses",
+      marks:10,
+      strand:"Old Testament"
+    },
+
+    {
+      q:"State one lesson Christians can learn from Jesus.",
+      options:[],
+      answer:"Love others",
+      acceptedAnswers:["Love others","Love your neighbour"],
+      marks:10,
+      strand:"Life of Jesus"
+    }
+  ]
+
+};
+
+
+// ============================================================
+// MAKE SURE TOTAL IS 100
+// ============================================================
+
+function makeExactly100(list){
+
+  if(!Array.isArray(list))
+    return [];
+
+
+  let result=[];
+
+  let total=0;
+
+
+  for(
+    const item of list
+  ){
+
+    if(!item)
+      continue;
+
+
+    const q={
+      ...item
+    };
+
+
+    q.marks=
+      Number(q.marks) || 1;
+
+
+    if(
+      total + q.marks <= 100
+    ){
+
+      result.push(q);
+
+      total+=
+        q.marks;
+    }
+
+
+    if(total===100)
+      break;
+  }
+
+
+  // If AI produced less than 100 marks,
+  // adjust the final question.
+
+  if(
+    total<100 &&
+    result.length
+  ){
+
+    result[
+      result.length-1
+    ].marks +=
+      100-total;
+
+    total=100;
+  }
+
+
+  // If AI went over 100, trim final question.
+
+  if(total>100){
+
+    let running=0;
+
+    const fixed=[];
+
+
+    for(
+      const q of result
+    ){
+
+      if(
+        running>=100
+      )
+        break;
+
+
+      let marks=
+        Math.min(
+          Number(q.marks)||1,
+          100-running
+        );
+
+
+      fixed.push({
+        ...q,
+        marks
+      });
+
+
+      running+=marks;
+    }
+
+
+    result=
+      fixed;
+  }
+
+
+  return result;
+}
+
+
+// ============================================================
+// NORMALIZE AI QUESTIONS
+// ============================================================
+
+function normalizeAIQuestions(raw){
+
+  if(
+    !Array.isArray(raw)
+  )
+    return [];
+
+
+  const list=
+    raw
+      .map(
+        (item,index)=>{
+
+          if(!item)
+            return null;
+
+
+          const q=
+            item.q ||
+            item.question ||
+            item.text ||
+            "";
+
+
+          if(!q)
+            return null;
+
+
+          let options=
+            Array.isArray(
+              item.options
+            )
+              ? item.options
+              : [];
+
+
+          options=
+            options
+              .map(
+                x=>String(x)
+              )
+              .filter(Boolean)
+              .slice(0,4);
+
+
+          const answer=
+            item.answer ||
+            item.correctAnswer ||
+            item.correct ||
+            "";
+
+
+          let accepted=
+            Array.isArray(
+              item.acceptedAnswers
+            )
+              ? item.acceptedAnswers
+              : [];
+
+
+          if(
+            answer &&
+            !accepted.includes(
+              answer
+            )
+          ){
+
+            accepted.unshift(
+              answer
+            );
+          }
+
+
+          return{
+
+            q:String(q),
+
+            options,
+
+            answer:String(
+              answer
+            ),
+
+            acceptedAnswers:
+              accepted,
+
+            marks:
+              Number(
+                item.marks
+              ) || 1,
+
+            strand:
+              item.strand ||
+              item.topic ||
+              "",
+
+            explanation:
+              item.explanation ||
+              "",
+
+            diagram:
+              item.diagram ||
+              ""
+          };
+        }
+      )
+      .filter(Boolean);
+
+
+  return makeExactly100(
+    list
+  );
+}
+
+
+// ============================================================
+// AI EXAM GENERATION
+// ============================================================
+
+async function generateAIExam(){
+
+  const grade=
+    gradeSel.value;
+
+
+  let subject=
+    subSel.value;
+
+
+  if(
+    subject==="All Subjects"
+  ){
+
+    subject=
+      "Science";
+  }
+
+
+  currentExamGrade=
+    grade;
+
+  currentExamSubject=
+    subject;
+
+
+  workArea.classList.remove(
+    "hidden"
+  );
+
+
+  workTitle.innerText=
+    `${subject} - ${grade} • 100 Marks`;
+
+
+  examSource.innerText=
+    "🤖 Generating original AI exam...";
+
+
+  aiBadge.innerText=
+    "⏳ AI WORKING";
+
+
+  questions.innerHTML=
+    `<div class="col-span-full text-center py-10">
+
+      <p class="font-black text-[14px]">
+        🤖 Creating your 100-mark exam...
+      </p>
+
+      <p class="text-[10px] opacity-60 mt-2">
+        Grade ${esc(grade)} •
+        ${esc(subject)}
+      </p>
+
+      <p class="text-[10px] opacity-60 mt-1">
+        Using SomaHub learning knowledge and original questions.
+      </p>
+
+    </div>`;
+
+
+  result.classList.add(
+    "hidden"
+  );
+
+  corrBtn.classList.add(
+    "hidden"
+  );
+
+  saveWrongBtn.classList.add(
+    "hidden"
+  );
+
+
+  currentQs=[];
+
+
+  // ==========================================================
+  // WRONG QUESTION CONTEXT
+  // ==========================================================
+
+  const wrongContext=
+    wrongBank
+      .slice(-5)
+      .map(
+        w=>w.q
+      )
+      .join(" | ");
+
+
+  // ==========================================================
+  // API
+  // ==========================================================
+
+  try{
+
+    const response=
+      await fetch(
+        "/api/gemini",
+        {
+
+          method:"POST",
+
+          headers:{
+            "Content-Type":
+              "application/json"
+          },
+
+          body:
+            JSON.stringify({
+
+              task:
+                "exam_generation",
+
+              mode:
+                "exam",
+
+              question:
+                `Generate a fresh weekly 100-mark ${subject} examination for ${grade}. Create original questions based on SomaHub learning resources and approved learning knowledge. Twist previous weak areas where useful. Do not copy source questions. Return structured JSON.`,
+
+              grade,
+
+              subject,
+
+              role:
+                "Student",
+
+              source:
+                "weekly_exam",
+
+              questionCount:
+                20,
+
+              marks:
+                100,
+
+              useSomaHubKnowledge:
+                true,
+
+              wrongQuestions:
+                wrongBank
+                  .slice(-5)
+                  .map(
+                    w=>({
+                      question:w.q,
+                      subject:w.subject,
+                      grade:w.grade
+                    })
+                  ),
+
+              history:[],
+
+              shke:
+                currentSHKE
+            })
+        }
+      );
+
+
+    const data=
+      await response.json();
+
+
+    if(
+      !response.ok ||
+      !data.ok
+    ){
+
+      throw new Error(
+        data.error ||
+        "AI unavailable"
+      );
+    }
+
+
+    let aiQuestions=
+      Array.isArray(
+        data.questions
+      )
+        ? data.questions
+        : [];
+
+
+    // Defensive fallback if API returns
+    // JSON inside answer.
+
+    if(
+      !aiQuestions.length &&
+      data.answer
+    ){
+
+      try{
+
+        let text=
+          String(
+            data.answer
+          )
+          .replace(
+            /^```json/i,
+            ""
+          )
+          .replace(
+            /^```/i,
+            ""
+          )
+          .replace(
+            /```$/i,
+            ""
+          )
+          .trim();
+
+
+        const parsed=
+          JSON.parse(text);
+
+
+        if(
+          Array.isArray(parsed)
+        ){
+
+          aiQuestions=
+            parsed;
+
+        }else if(
+          Array.isArray(
+            parsed.questions
+          )
+        ){
+
+          aiQuestions=
+            parsed.questions;
+        }
+
+      }catch(e){
+
+        const match=
+          String(
+            data.answer ||
+            ""
+          ).match(
+            /\{[\s\S]*\}/
+          );
+
+
+        if(match){
+
+          try{
+
+            const parsed=
+              JSON.parse(
+                match[0]
+              );
+
+
+            if(
+              Array.isArray(
+                parsed.questions
+              )
+            ){
+
+              aiQuestions=
+                parsed.questions;
+            }
+
+          }catch(e){}
+        }
+      }
+    }
+
+
+    const normalized=
+      normalizeAIQuestions(
+        aiQuestions
+      );
+
+
+    if(
+      normalized.length
+    ){
+
+      currentQs=
+        normalized;
+
+
+      examSource.innerText=
+        `🤖 ${data.provider || "AI"} • Original SomaHub Exam`;
+
+
+      aiBadge.innerText=
+        "🤖 AI READY";
+
+
+      renderExamQs();
+
+
+      speakText(
+        `Your ${grade} ${subject} weekly exam is ready. It is worth 100 marks.`
+      );
+
+
+      return;
+    }
+
+
+    throw new Error(
+      "AI returned no usable questions"
+    );
+
+
+  }catch(error){
+
+    console.warn(
+      "AI exam generation failed:",
+      error
+    );
+
+
+    // ========================================================
+    // OFFLINE FALLBACK
+    // ========================================================
+
+    const fallback=
+      FALLBACK_100[
+        subject
+      ] ||
+      FALLBACK_100.Science;
+
+
+    currentQs=
+      makeExactly100(
+        fallback.map(
+          q=>({
+            ...q
+          })
+        )
+      );
+
+
+    examSource.innerText=
+      "📚 Offline fallback • AI temporarily unavailable";
+
+
+    aiBadge.innerText=
+      "📚 OFFLINE";
+
+
+    renderExamQs();
+
+
+    speakText(
+      "AI is temporarily unavailable. A practice exam has been loaded instead."
+    );
+  }
+}
+
+
+// ============================================================
+// DIAGRAMS
+// ============================================================
+
+function getDiagramHTML(question){
+
+  const text=
+    String(question || "")
+      .toLowerCase();
+
+
+  if(
+    text.includes("flower") ||
+    text.includes("petal") ||
+    text.includes("stamen") ||
+    text.includes("pistil")
+  ){
+
+    return `
+      <div class="bg-[#ffe0f0] border-[2.5px] border-black rounded-xl p-2 mt-3 text-center">
+
+        <p class="font-black text-[9px]">
+          🌸 Flower diagram — optional
+        </p>
+
+        <svg
+          viewBox="0 0 220 110"
+          class="w-full h-20"
+        >
+
+          <circle
+            cx="110"
+            cy="55"
+            r="12"
+            fill="#ffcc1a"
+            stroke="black"
+            stroke-width="2"
+          />
+
+          <ellipse
+            cx="110"
+            cy="22"
+            rx="25"
+            ry="14"
+            fill="#ff8a2a"
+            stroke="black"
+            stroke-width="2"
+          />
+
+          <ellipse
+            cx="110"
+            cy="88"
+            rx="25"
+            ry="14"
+            fill="#ff8a2a"
+            stroke="black"
+            stroke-width="2"
+          />
+
+          <ellipse
+            cx="77"
+            cy="55"
+            rx="25"
+            ry="14"
+            fill="#ff8a2a"
+            stroke="black"
+            stroke-width="2"
+          />
+
+          <ellipse
+            cx="143"
+            cy="55"
+            rx="25"
+            ry="14"
+            fill="#ff8a2a"
+            stroke="black"
+            stroke-width="2"
+          />
+
+          <line
+            x1="110"
+            y1="67"
+            x2="110"
+            y2="108"
+            stroke="black"
+            stroke-width="3"
+          />
+
+        </svg>
+
+      </div>
+    `;
+  }
+
+
+  if(
+    text.includes("map") ||
+    text.includes("kenya") ||
+    text.includes("rift valley") ||
+    text.includes("compass")
+  ){
+
+    return `
+      <div class="bg-[#d0e8ff] border-[2.5px] border-black rounded-xl p-2 mt-3 text-center">
+
+        <p class="font-black text-[9px]">
+          🗺️ Map / direction diagram — optional
+        </p>
+
+        <div class="flex justify-center items-center gap-4 mt-2">
+
+          <div class="border-2 border-black rounded-lg p-3 bg-white font-black text-[12px]">
+            N
+          </div>
+
+          <div class="text-[20px]">
+            🧭
+          </div>
+
+          <div class="border-2 border-black rounded-lg p-3 bg-white font-black text-[12px]">
+            E
+          </div>
+
+        </div>
+
+      </div>
+    `;
+  }
+
+
+  if(
+    text.includes("water cycle") ||
+    text.includes("evaporation") ||
+    text.includes("condensation")
+  ){
+
+    return `
+      <div class="bg-[#e0f7ff] border-[2.5px] border-black rounded-xl p-3 mt-3 text-center">
+
+        <p class="font-black text-[9px]">
+          💧 Water Cycle — optional
+        </p>
+
+        <div class="text-[20px] mt-1">
+          ☀️ → 💧 → ☁️ → 🌧️
+        </div>
+
+        <p class="text-[8px] font-black mt-1">
+          Evaporation → Condensation → Precipitation
+        </p>
+
+      </div>
+    `;
+  }
+
+
+  return "";
+}
+
+
+// ============================================================
+// RENDER QUESTIONS
+// ============================================================
 
 function renderExamQs(){
- questions.innerHTML = currentQs.map((c,i)=>{
-  let diag=getDiagramHTML((c.diagram||'')+' '+(c.q||''))||"";
-  let isMCQ=c.options&&c.options.length>0;
-  let bg = i%4===0?"#e0f2ff":i%4===1?"#ffe0f0":i%4===2?"#fff7e0":"#dcfce7";
-  let optsHTML=isMCQ? `
-    <div class="mt-3 space-y-2">
-      ${c.options.map((opt,oi)=>`
-        <label class="flex items-center gap-3 bg-white border-[2.5px] border-black rounded-full px-4 py-3 cursor-pointer shadow-[2px_2px_0_0_#000] hover:bg-[#ffcc1a] fun-btn">
-          <input type="radio" name="ans${i}" value="${opt}" onchange="document.getElementById('ans${i}').value=this.value; document.getElementById('ansText${i}').value=this.value; speakText('${opt.replace(/'/g,'')}')" class="w-6 h-6 accent-black">
-          <span class="font-black text-[12px]">${String.fromCharCode(65+oi)}. ${opt}</span>
-        </label>`).join('')}
-    </div>
-    <div class="mt-3">
-      <p class="text-[8px] font-black opacity-60">✏️ EDIT answer here (after 🎤):</p>
-      <div class="flex gap-2 mt-1">
-        <input id="ansText${i}" type="text" placeholder="Answer - EDITABLE" class="flex-1 border-[2.5px] border-black rounded-full p-3 text-[12px] font-bold bg-[#fff7e0]" oninput="document.getElementById('ans${i}').value=this.value">
-        <button id="mic${i}" onclick="startVoiceAnswer(${i})" class="bg-black text-white border-2 border-black rounded-full w-12 h-12 flex items-center justify-center">🎤</button>
+
+  if(
+    !currentQs.length
+  ){
+
+    questions.innerHTML=
+      `<p class="text-center py-8 font-black">
+        No questions available.
+      </p>`;
+
+    return;
+  }
+
+
+  questions.innerHTML=
+    currentQs
+      .map(
+        (c,i)=>{
+
+          const bg=
+            [
+              "#e0f2ff",
+              "#ffe0f0",
+              "#fff7e0",
+              "#dcfce7"
+            ][
+              i%4
+            ];
+
+
+          const diagram=
+            getDiagramHTML(
+              `${c.diagram || ""} ${c.q || ""}`
+            );
+
+
+          const isMCQ=
+            c.options &&
+            c.options.length>0;
+
+
+          let answerHTML;
+
+
+          if(isMCQ){
+
+            answerHTML=`
+
+              <div class="mt-3 space-y-2">
+
+                ${c.options
+                  .map(
+                    (opt,oi)=>`
+
+                      <label
+                        class="flex items-center gap-3 bg-white border-[2.5px] border-black rounded-full px-4 py-3 cursor-pointer shadow-[2px_2px_0_0_#000] fun-btn"
+                      >
+
+                        <input
+                          type="radio"
+                          name="ans${i}"
+                          value="${esc(opt)}"
+                          onchange="chooseOption(${i},${oi})"
+                          class="w-6 h-6 accent-black shrink-0"
+                        >
+
+                        <span class="font-black text-[12px]">
+                          ${String.fromCharCode(65+oi)}.
+                          ${esc(opt)}
+                        </span>
+
+                      </label>
+                    `
+                  )
+                  .join("")}
+
+              </div>
+
+              <div class="mt-3">
+
+                <p class="text-[8px] font-black opacity-60">
+                  ✏️ Edit answer after 🎤 if needed
+                </p>
+
+                <div class="flex gap-2 mt-1">
+
+                  <input
+                    id="ansText${i}"
+                    type="text"
+                    placeholder="Answer - EDITABLE"
+                    class="flex-1 border-[2.5px] border-black rounded-full p-3 text-[12px] font-bold bg-[#fff7e0]"
+                    oninput="syncAnswer(${i},this.value)"
+                  >
+
+                  <button
+                    id="mic${i}"
+                    onclick="startVoiceAnswer(${i})"
+                    class="bg-black text-white border-2 border-black rounded-full w-12 h-12 flex items-center justify-center"
+                  >
+                    🎤
+                  </button>
+
+                </div>
+
+                <input
+                  id="ans${i}"
+                  type="hidden"
+                >
+
+              </div>
+            `;
+
+          }else{
+
+            answerHTML=`
+
+              <div class="mt-3 flex gap-2">
+
+                <input
+                  id="ansText${i}"
+                  type="text"
+                  placeholder="Type or 🎤 - EDITABLE"
+                  class="flex-1 border-[2.5px] border-black rounded-full p-3 text-[12px] font-bold bg-white"
+                  oninput="syncAnswer(${i},this.value)"
+                >
+
+                <button
+                  id="mic${i}"
+                  onclick="startVoiceAnswer(${i})"
+                  class="bg-black text-white border-2 border-black rounded-full w-12 h-12 flex items-center justify-center"
+                >
+                  🎤
+                </button>
+
+              </div>
+
+              <input
+                id="ans${i}"
+                type="hidden"
+              >
+
+            `;
+          }
+
+
+          return `
+
+            <div
+              class="border-[3px] border-black rounded-[1.3rem] p-4 shadow-[4px_4px_0_0_#000]"
+              style="background:${bg}"
+            >
+
+              <div class="flex justify-between items-center gap-2">
+
+                <span class="bg-black text-white px-3 py-1 rounded-full text-[9px] font-black">
+                  Q${i+1} • ${c.marks} mks
+                </span>
+
+                <button
+                  onclick="speakQuestion(${i})"
+                  class="bg-[#4a86ff] text-white border-2 border-black rounded-full px-3 py-1.5 text-[9px] font-black fun-btn"
+                >
+                  🔊 Listen
+                </button>
+
+              </div>
+
+
+              <p class="font-black text-[13px] mt-3">
+                ${esc(c.q)}
+              </p>
+
+
+              ${
+                c.strand
+                  ? `<p class="text-[8px] font-black opacity-50 mt-1">
+                       ${esc(c.strand)}
+                     </p>`
+                  : ""
+              }
+
+
+              ${diagram}
+
+
+              ${answerHTML}
+
+
+              <p
+                id="micStatus${i}"
+                class="hidden mt-2 text-[9px] font-black text-center border-2 border-black rounded-full py-2 bg-[#ffcc1a]"
+              ></p>
+
+            </div>
+
+          `;
+        }
+      )
+      .join("");
+
+
+  result.classList.add(
+    "hidden"
+  );
+
+  corrBtn.classList.add(
+    "hidden"
+  );
+
+  saveWrongBtn.classList.add(
+    "hidden"
+  );
+
+
+  scoreBadge.innerText=
+    "0/100";
+
+
+  examSubmitted=false;
+}
+
+
+// ============================================================
+// OPTION SELECTION
+// ============================================================
+
+function chooseOption(
+  questionIndex,
+  optionIndex
+){
+
+  const q=
+    currentQs[
+      questionIndex
+    ];
+
+
+  if(!q)
+    return;
+
+
+  const option=
+    q.options[
+      optionIndex
+    ];
+
+
+  if(!option)
+    return;
+
+
+  const text=
+    document.getElementById(
+      "ansText"+
+      questionIndex
+    );
+
+
+  const hidden=
+    document.getElementById(
+      "ans"+
+      questionIndex
+    );
+
+
+  if(text)
+    text.value=
+      option;
+
+
+  if(hidden)
+    hidden.value=
+      option;
+
+
+  speakText(
+    option
+  );
+}
+
+
+// ============================================================
+// SYNC ANSWER
+// ============================================================
+
+function syncAnswer(
+  index,
+  value
+){
+
+  const hidden=
+    document.getElementById(
+      "ans"+index
+    );
+
+
+  if(hidden)
+    hidden.value=
+      value;
+}
+
+
+// ============================================================
+// CHECK EXAM
+// ============================================================
+
+async function checkExam(){
+
+  if(
+    !currentQs.length
+  ){
+
+    alert(
+      "Generate or load an exam first."
+    );
+
+    return;
+  }
+
+
+  let score=0;
+
+  let total=0;
+
+  let wrongNow=[];
+
+
+  currentQs.forEach(
+    (c,i)=>{
+
+      const user=
+        document.getElementById(
+          "ans"+i
+        )?.value ||
+
+        document.getElementById(
+          "ansText"+i
+        )?.value ||
+
+        "";
+
+
+      const marks=
+        Number(
+          c.marks
+        ) || 1;
+
+
+      total+=
+        marks;
+
+
+      const correct=
+        answerIsCorrect(
+          c,
+          user
+        );
+
+
+      if(correct){
+
+        score+=
+          marks;
+
+      }else{
+
+        wrongNow.push({
+
+          ...c,
+
+          userAnswer:
+            user,
+
+          subject:
+            currentExamSubject,
+
+          grade:
+            currentExamGrade,
+
+          date:
+            new Date().toISOString()
+        });
+      }
+    }
+  );
+
+
+  currentWrong=
+    wrongNow;
+
+
+  const percent=
+    total
+      ? Math.round(
+          (score/total)*100
+        )
+      : 0;
+
+
+  let message;
+
+
+  if(percent>=80){
+
+    message=
+      "🌟 Excellent work!";
+
+  }else if(percent>=60){
+
+    message=
+      "👏 Good work! Keep improving.";
+
+  }else if(percent>=40){
+
+    message=
+      "💪 Fair effort. More practice will help.";
+
+  }else{
+
+    message=
+      "📚 Keep practising. You can improve!";
+  }
+
+
+  result.innerHTML=
+    `
+
+      <p class="font-black text-[13px]">
+        🎉 Exam Result
+      </p>
+
+      <p class="text-[11px] mt-2">
+        ${esc(currentExamGrade)}
+        •
+        ${esc(currentExamSubject)}
+      </p>
+
+      <div class="mt-4 text-center">
+
+        <p class="text-[28px] font-black">
+          ${score}/${total}
+        </p>
+
+        <p class="font-black text-[13px]">
+          ${percent}%
+        </p>
+
+        <p class="font-black text-[12px] mt-2">
+          ${message}
+        </p>
+
       </div>
-      <input id="ans${i}" type="hidden">
-    </div>` : `
-    <div class="mt-3 flex gap-2">
-      <input id="ansText${i}" type="text" placeholder="Type or 🎤 - EDITABLE" class="flex-1 border-[2.5px] border-black rounded-full p-3 text-[12px] font-bold bg-white" oninput="document.getElementById('ans${i}').value=this.value">
-      <button id="mic${i}" onclick="startVoiceAnswer(${i})" class="bg-black text-white border-2 border-black rounded-full w-12 h-12 flex items-center justify-center">🎤</button>
-    </div>
-    <input id="ans${i}" type="hidden">`;
 
-  return `<div class="border-[3px] border-black rounded-[1.3rem] p-4 shadow-[4px_4px_0_0_#000]" style="background:${bg}">
-    <div class="flex justify-between items-center"><span class="bg-black text-white px-3 py-1 rounded-full text-[9px] font-black">Q${i+1} (${c.marks} mks) ${c.strand||''}</span><button onclick="speakQuestion(${i})" class="bg-[#4a86ff] text-white border-2 border-black rounded-full px-3 py-1.5 text-[9px] font-black fun-btn">🔊 Oxford Listen</button></div>
-    <p class="font-black text-[13px] mt-2">${c.q}</p>${diag}
-    ${optsHTML}
-    <p id="micStatus${i}" class="hidden mt-2 text-[9px] font-black text-center border-2 border-black rounded-full py-2 bg-[#ffcc1a]"></p>
-  </div>`;
- }).join('');
- result.classList.add('hidden'); corrBtn.classList.add('hidden'); saveWrongBtn.classList.add('hidden');
+      <div class="mt-4 bg-[#e0f2ff] border-2 border-black rounded-xl p-3 text-center">
+
+        <p class="font-black text-[10px]">
+          ❌ Questions to practise:
+          ${wrongNow.length}
+        </p>
+
+      </div>
+
+    `;
+
+
+  result.classList.remove(
+    "hidden"
+  );
+
+
+  result.scrollIntoView({
+    behavior:"smooth",
+    block:"center"
+  });
+
+
+  corrBtn.classList.remove(
+    "hidden"
+  );
+
+
+  if(
+    wrongNow.length
+  ){
+
+    saveWrongBtn.classList.remove(
+      "hidden"
+    );
+  }
+
+
+  scoreBadge.innerText=
+    `${score}/${total}`;
+
+
+  examSubmitted=true;
+
+
+  const voice=
+    `You scored ${score} out of ${total}. ${message}`;
+
+
+  speakText(
+    voice
+  );
+
+
+  if(
+    navigator.vibrate
+  ){
+
+    navigator.vibrate(
+      percent>=50
+        ? [100,50,100]
+        : [200,80,200]
+    );
+  }
+
+
+  // ==========================================================
+  // SAVE SUBMISSION
+  // ==========================================================
+
+  await saveSubmission(
+    score,
+    total,
+    percent
+  );
 }
 
-function checkExam(){
- let score=0,total=0,wrongNow=[]; let html=`<p class="font-black text-[12px]">🎉 Result 100 Marks - ${subSel.value}</p>`;
- currentQs.forEach((c,i)=>{
-   let user=(document.getElementById('ans'+i)?.value||document.getElementById('ansText'+i)?.value||"").trim();
-   let m=c.marks||10; total+=m;
-   let ok=user && c.answer.toLowerCase().includes(user.toLowerCase().slice(0,4));
-   let got=ok?m:0; score+=got; if(!ok) wrongNow.push({q:c.q, answer:c.answer});
-   html+=`<div class="border-2 border-black rounded-xl p-2 mt-2 text-[9px] font-black ${ok?'bg-[#dcfce7]':'bg-[#ffeaea]'}">${ok?'✅':'❌'} Q${i+1}: ${got}/${m}</div>`;
- });
- html+=`<p class="font-black mt-3 text-[16px] text-center">${score>=70?'🌟':score>=50?'👏':'💪'} Total ${score}/${total}</p>`;
- result.innerHTML=html; result.classList.remove('hidden'); corrBtn.classList.remove('hidden'); saveWrongBtn.classList.remove('hidden'); scoreBadge.innerText=score+"/"+total; currentWrong=wrongNow;
- let msg=score>=70?`Congratulations! Excellent! You completed Weekly Exam ${subSel.value}. You scored ${score} out of ${total}. You are a star!`:score>=50?`Good job! Weekly Exam ${subSel.value}. You scored ${score} out of ${total}. Keep it up!`:`You completed Weekly Exam ${subSel.value}. You scored ${score} out of ${total}. We will do twist next week!`;
- speakText(msg); if(navigator.vibrate) navigator.vibrate([100,50,100]);
+
+// ============================================================
+// SAVE EXAM SUBMISSION
+// ============================================================
+
+async function saveSubmission(
+  score,
+  total,
+  percent
+){
+
+  if(!currentUser)
+    return;
+
+
+  try{
+
+    await window.FB.addDoc(
+      window.FB.collection(
+        window.FB.db,
+        "exam_submissions"
+      ),
+      {
+
+        userId:
+          currentUser.uid,
+
+        indexNumber:
+          currentSHKE,
+
+        grade:
+          currentExamGrade,
+
+        subject:
+          currentExamSubject,
+
+        score,
+
+        total,
+
+        percentage:
+          percent,
+
+        wrongCount:
+          currentWrong.length,
+
+        date:
+          window.FB.serverTimestamp(),
+
+        createdAt:
+          new Date().toISOString()
+
+      }
+    );
+
+  }catch(error){
+
+    console.warn(
+      "Submission could not be saved:",
+      error
+    );
+  }
 }
-function showCorrection(){let html=`<p class="font-black text-[12px]">📖 Correction with Optional Diagrams</p>`; currentQs.forEach((c,i)=>{let user=document.getElementById('ansText'+i)?.value||document.getElementById('ans'+i)?.value||""; let diag=getDiagramHTML((c.diagram||'')+' '+(c.q||'')); html+=`<div class="border-[2.5px] border-black rounded-xl p-3 mt-3 bg-white text-[11px]"><b>Q${i+1} (${c.marks}mks):</b> ${c.q}${diag}<br>Your: <b>${user||'empty'}</b><br><span class="text-green-700 font-black">✔ ${c.answer}</span> <button onclick="speakText('${c.answer.replace(/'/g,'')}')" class="ml-2 bg-black text-white px-2 py-0.5 rounded-full text-[8px]">🔊</button></div>`;}); result.innerHTML=html; speakText("Correction shown with diagrams");}
-function saveWrong(){if(currentWrong.length==0){alert("Perfect! No wrong"); return;} let all=JSON.parse(localStorage.getItem('soma_wrong_exam')||'[]'); all=all.concat(currentWrong); if(all.length>20) all=all.slice(-20); localStorage.setItem('soma_wrong_exam', JSON.stringify(all)); wrongBank=all; alert("Saved "+currentWrong.length+" wrong → twist next week");}
 
-document.getElementById('photoInput').addEventListener('change', async e=>{
- let file=e.target.files[0]; if(!file) return; let reader=new FileReader(); reader.onload=async()=>{let b64=reader.result.split(',')[1]; photoPreview.src=reader.result; photoPreview.classList.remove('hidden'); photoStatus.innerText="📷 Marking exam..."; workArea.classList.remove('hidden'); questions.innerHTML="AI reading handwriting..."; try{const r=await fetch('/api/gemini',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({question:`Mark photo handwritten weekly exam 100 marks ${subSel.value} Grade ${gradeSel.value}. Give score and corrections.`,grade:gradeSel.value, shke:currentSHKE, photo:b64})}); let d=await r.json(); let ans=d.answer||"Could not read"; questions.innerHTML=`<div class="border-2 border-black rounded-xl p-3 bg-white text-[11px] font-bold" style="white-space:pre-wrap">${ans}</div>`; result.innerHTML=`<div class="bg-[#dcfce7] border-2 border-black rounded-xl p-3 text-[11px] font-bold" style="white-space:pre-wrap">${ans}</div>`; result.classList.remove('hidden'); photoStatus.innerText="✅ Marked"; speakText(ans.slice(0,300));}catch{ photoStatus.innerText="❌ Error"; }}; reader.readAsDataURL(file);
-});
 
-setTimeout(()=>{let FB=window.FB; FB.onAuthStateChanged(FB.auth, async(u)=>{if(u){currentUser=u;let s=await FB.getDoc(FB.doc(FB.db,"users",u.uid));if(s.exists()){currentSHKE=s.data().indexNumber||"SHKE";indexB.innerText=currentSHKE;gradeSel.value=s.data().grade||"Grade 6";}updInfo();loadExams();}});},600); setInterval(updInfo,60000); updInfo();
+// ============================================================
+// CORRECTION
+// ============================================================
+
+function showCorrection(){
+
+  if(
+    !currentQs.length
+  )
+    return;
+
+
+  let html=
+    `<p class="font-black text-[13px]">
+      📖 Correction
+    </p>`;
+
+
+  currentQs.forEach(
+    (c,i)=>{
+
+      const user=
+        document.getElementById(
+          "ansText"+i
+        )?.value ||
+
+        document.getElementById(
+          "ans"+i
+        )?.value ||
+
+        "No answer";
+
+
+      const correct=
+        answerIsCorrect(
+          c,
+          user
+        );
+
+
+      html+=`
+
+        <div
+          class="border-[2.5px] border-black rounded-xl p-3 mt-3 ${
+            correct
+              ? "bg-[#dcfce7]"
+              : "bg-[#ffeaea]"
+          }"
+        >
+
+          <p class="font-black text-[10px]">
+            Q${i+1} • ${c.marks} marks
+          </p>
+
+          <p class="font-black text-[11px] mt-1">
+            ${esc(c.q)}
+          </p>
+
+          <p class="text-[10px] mt-2">
+            Your answer:
+            <b>${esc(user)}</b>
+          </p>
+
+          <p class="text-[10px] mt-1 text-green-700 font-black">
+            ✔ Correct answer:
+            ${esc(c.answer)}
+          </p>
+
+          ${
+            c.explanation
+              ? `<p class="text-[9px] mt-2">
+                   💡 ${esc(c.explanation)}
+                 </p>`
+              : ""
+          }
+
+          <button
+            onclick="speakText('${escForJS(c.answer)}')"
+            class="mt-2 bg-black text-white px-3 py-1 rounded-full text-[9px] font-black"
+          >
+            🔊 Hear Answer
+          </button>
+
+        </div>
+
+      `;
+    }
+  );
+
+
+  result.innerHTML=
+    html;
+
+
+  result.classList.remove(
+    "hidden"
+  );
+
+
+  result.scrollIntoView({
+    behavior:"smooth",
+    block:"center"
+  });
+}
+
+
+// ============================================================
+// SAFE JS STRING
+// ============================================================
+
+function escForJS(value){
+
+  return String(value || "")
+    .replace(/\\/g,"\\\\")
+    .replace(/'/g,"\\'")
+    .replace(/"/g,'\\"')
+    .replace(/\n/g," ");
+}
+
+
+// ============================================================
+// SAVE WRONG QUESTIONS
+// ============================================================
+
+function saveWrong(){
+
+  if(
+    !currentWrong.length
+  ){
+
+    speakText(
+      "There are no wrong questions to save."
+    );
+
+    return;
+  }
+
+
+  const existing=
+    Array.isArray(
+      wrongBank
+    )
+      ? wrongBank
+      : [];
+
+
+  currentWrong.forEach(
+    wrong=>{
+
+      existing.push({
+
+        q:
+          wrong.q,
+
+        answer:
+          wrong.answer,
+
+        acceptedAnswers:
+          wrong.acceptedAnswers ||
+          [],
+
+        subject:
+          wrong.subject,
+
+        grade:
+          wrong.grade,
+
+        strand:
+          wrong.strand,
+
+        userAnswer:
+          wrong.userAnswer,
+
+        savedAt:
+          new Date().toISOString()
+      });
+    }
+  );
+
+
+  // Keep the latest 200
+  const trimmed=
+    existing.slice(-200);
+
+
+  wrongBank=
+    trimmed;
+
+
+  localStorage.setItem(
+    "soma_wrong_exam",
+    JSON.stringify(
+      trimmed
+    )
+  );
+
+
+  saveWrongBtn.innerText=
+    "✅ Saved — Twist Next Week 🔁";
+
+
+  speakText(
+    `${currentWrong.length} wrong questions have been saved for future practice.`
+  );
+}
+
+
+// ============================================================
+// FIREBASE USER
+// ============================================================
+
+setTimeout(
+  ()=>{
+
+    const FB=
+      window.FB;
+
+
+    if(!FB)
+      return;
+
+
+    FB.onAuthStateChanged(
+      FB.auth,
+      async user=>{
+
+        currentUser=
+          user ||
+          null;
+
+
+        if(user){
+
+          try{
+
+            const snap=
+              await FB.getDoc(
+                FB.doc(
+                  FB.db,
+                  "users",
+                  user.uid
+                )
+              );
+
+
+            if(
+              snap.exists()
+            ){
+
+              const data=
+                snap.data();
+
+
+              currentSHKE=
+                data.indexNumber ||
+                data.admissionNumber ||
+                "SHKE";
+
+
+              indexB.innerText=
+                currentSHKE;
+
+
+              if(
+                data.grade
+              ){
+
+                const options=
+                  Array.from(
+                    gradeSel.options
+                  );
+
+
+                const found=
+                  options.find(
+                    o=>
+                      o.value===
+                      data.grade
+                  );
+
+
+                if(found){
+
+                  gradeSel.value=
+                    data.grade;
+                }
+              }
+            }
+
+          }catch(error){
+
+            console.warn(
+              "Could not load user:",
+              error
+            );
+          }
+
+        }
+
+
+        updInfo();
+
+      }
+    );
+
+  },
+  500
+);
+
+
+// ============================================================
+// INITIALISE
+// ============================================================
+
+updInfo();
+
+
+setInterval(
+  updInfo,
+  60000
+);
+
+
+// ============================================================
+// SUBJECT / GRADE CHANGE
+// ============================================================
+
+gradeSel.addEventListener(
+  "change",
+  function(){
+
+    currentExamGrade=
+      this.value;
+
+    updInfo();
+  }
+);
+
+
+subSel.addEventListener(
+  "change",
+  function(){
+
+    currentExamSubject=
+      this.value;
+  }
+);
+
+
 </script>
-</body></html>
+
+</body>
+</html>
