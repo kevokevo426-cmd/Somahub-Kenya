@@ -14,16 +14,11 @@
 >
 
 <link
-  href="https://fonts.googleapis.com/css2?family=Nunito:wght@500;600;700;800;900&display=swap"
+  href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800;900&display=swap"
   rel="stylesheet"
 >
 
 <style>
-
-/* =========================================================
-   GLOBAL
-========================================================= */
-
 *{
   box-sizing:border-box;
 }
@@ -35,141 +30,51 @@ body{
   width:100%;
   height:100%;
   font-family:'Nunito',sans-serif;
-  background:#f4f7fc;
-  color:#172033;
+  background:#f5f8ff;
 }
 
 body{
   overflow:hidden;
 }
 
-button,
-select,
-textarea{
-  font-family:inherit;
-}
-
-button{
-  -webkit-tap-highlight-color:transparent;
-}
+/* =========================================================
+   MAIN APP
+========================================================= */
 
 #app{
+  width:100%;
   height:100dvh;
-  min-height:100vh;
+  min-height:100svh;
   display:flex;
   flex-direction:column;
+  overflow:hidden;
 }
-
 
 /* =========================================================
    HEADER
 ========================================================= */
 
-.top-header{
-  height:68px;
-  min-height:68px;
-  background:#ffffff;
-  border-bottom:1px solid #e8edf5;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  padding:0 clamp(12px,3vw,32px);
-  z-index:10;
-}
-
-.brand-area{
-  display:flex;
-  align-items:center;
-  gap:10px;
-  min-width:0;
-}
-
-.logo{
-  width:44px;
-  height:44px;
-  border-radius:50%;
-  object-fit:cover;
-  border:2px solid #e8eef8;
+#topHeader{
+  flex:0 0 auto;
+  height:64px;
+  min-height:64px;
   background:white;
-  flex-shrink:0;
+  border-bottom:1px solid #e7ebf2;
+  z-index:20;
 }
-
-.brand-text{
-  min-width:0;
-}
-
-.brand-title{
-  margin:0;
-  color:#243b8f;
-  font-size:clamp(15px,2vw,20px);
-  line-height:1.05;
-  font-weight:900;
-  white-space:nowrap;
-}
-
-.online{
-  margin-top:3px;
-  display:flex;
-  align-items:center;
-  gap:5px;
-  color:#159447;
-  font-size:10px;
-  font-weight:800;
-}
-
-.online-dot{
-  width:8px;
-  height:8px;
-  border-radius:50%;
-  background:#22c55e;
-  box-shadow:0 0 0 3px #dcfce7;
-}
-
-.header-actions{
-  display:flex;
-  align-items:center;
-  gap:8px;
-}
-
-.grade-select{
-  height:40px;
-  min-width:125px;
-  padding:0 14px;
-  border-radius:22px;
-  border:1px solid #e1e7f0;
-  background:#f7f9fd;
-  color:#263b7d;
-  font-size:13px;
-  font-weight:800;
-  outline:none;
-}
-
-.history-btn{
-  width:40px;
-  height:40px;
-  border:0;
-  border-radius:50%;
-  background:#263d99;
-  color:white;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-size:14px;
-  box-shadow:0 5px 14px rgba(38,61,153,.18);
-}
-
 
 /* =========================================================
    CHAT
 ========================================================= */
 
 #chat{
-  flex:1;
+  flex:1 1 auto;
   min-height:0;
   overflow-y:auto;
   overflow-x:hidden;
   -webkit-overflow-scrolling:touch;
   scroll-behavior:smooth;
+  padding-bottom:10px;
 }
 
 #chat::-webkit-scrollbar{
@@ -177,71 +82,64 @@ button{
 }
 
 #chat::-webkit-scrollbar-thumb{
-  background:#d7deea;
+  background:#d4d9e4;
   border-radius:20px;
 }
 
-.chat-container{
-  width:min(100%,1050px);
-  margin:auto;
-  padding:
-    clamp(20px,4vw,45px)
-    clamp(12px,3vw,28px)
-    150px;
+.chat-inner{
+  width:100%;
+  max-width:980px;
+  margin:0 auto;
+  padding:18px 14px 24px;
 }
-
 
 /* =========================================================
    WELCOME
 ========================================================= */
 
 #welcome{
+  width:100%;
+  max-width:760px;
+  margin:0 auto;
+  padding:38px 10px 25px;
   text-align:center;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  padding:
-    clamp(20px,5vw,60px)
-    10px
-    20px;
 }
 
-.welcome-icon{
-  width:92px;
-  height:92px;
-  border-radius:30px;
+.welcome-logo{
+  width:88px;
+  height:88px;
+  margin:auto;
+  border-radius:28px;
+  background:linear-gradient(145deg,#3349b8,#5368dc);
   display:flex;
   align-items:center;
   justify-content:center;
   font-size:42px;
-  background:linear-gradient(145deg,#4058c5,#243a96);
-  box-shadow:0 15px 35px rgba(39,61,154,.20);
-  margin-bottom:18px;
+  box-shadow:0 12px 30px rgba(51,73,184,.18);
 }
 
 .welcome-title{
-  margin:0;
-  color:#243b8f;
-  font-size:clamp(25px,4vw,38px);
-  line-height:1.15;
+  margin-top:18px;
+  color:#263b99;
+  font-size:clamp(25px,4vw,40px);
   font-weight:900;
+  line-height:1.15;
 }
 
 .welcome-text{
-  max-width:600px;
-  margin:10px auto 0;
-  color:#68758a;
-  font-size:clamp(13px,1.8vw,16px);
+  margin:12px auto 0;
+  max-width:560px;
+  color:#68738a;
+  font-size:clamp(14px,2vw,17px);
   line-height:1.6;
 }
 
-
 /* =========================================================
-   MESSAGES
+   MESSAGE
 ========================================================= */
 
 .message-in{
-  animation:messageIn .18s ease-out;
+  animation:messageIn .16s ease-out;
 }
 
 @keyframes messageIn{
@@ -255,80 +153,19 @@ button{
   }
 }
 
-.user-row{
-  display:flex;
-  justify-content:flex-end;
-  margin-bottom:12px;
-}
-
-.user-bubble{
-  max-width:min(78%,680px);
-  background:#dff8c8;
-  color:#17321d;
-  border-radius:20px 20px 5px 20px;
-  padding:11px 15px;
-  font-size:14px;
-  line-height:1.5;
-  box-shadow:0 3px 10px rgba(0,0,0,.04);
-  white-space:pre-wrap;
-  overflow-wrap:anywhere;
-}
-
-.photo-bubble{
-  background:#dff8c8;
-  border-radius:18px 18px 5px 18px;
-  padding:5px;
-  max-width:260px;
-}
-
-.photo-bubble img{
-  width:100%;
-  max-height:300px;
-  object-fit:contain;
-  border-radius:13px;
-}
-
-
 /* =========================================================
-   AI MESSAGE
+   AI CARD
 ========================================================= */
 
-.ai-row{
-  display:flex;
-  align-items:flex-start;
-  gap:9px;
-  margin-bottom:18px;
-}
-
-.ai-avatar{
-  width:34px;
-  height:34px;
-  min-width:34px;
-  border-radius:12px;
-  background:linear-gradient(145deg,#4058c5,#263b95);
-  color:white;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-size:16px;
-  box-shadow:0 5px 12px rgba(38,59,149,.18);
-}
-
-.ai-content{
-  min-width:0;
-  flex:1;
-  max-width:820px;
-}
-
 .ai-card{
-  background:white;
-  border:1px solid #e5eaf2;
-  border-radius:5px 20px 20px 20px;
-  padding:16px clamp(14px,2.5vw,22px);
-  color:#111827;
-  font-size:clamp(13.5px,1.7vw,15px);
+  background:#ffffff;
+  border:1px solid #e4e8f0;
+  border-radius:18px;
+  padding:16px 18px;
   line-height:1.7;
-  box-shadow:0 5px 18px rgba(29,43,77,.055);
+  font-size:14px;
+  color:#111827;
+  box-shadow:0 3px 12px rgba(30,50,90,.04);
   overflow-wrap:anywhere;
 }
 
@@ -338,630 +175,391 @@ button{
 
 .ai-card ul{
   margin:7px 0 7px 20px;
-  padding:0;
   list-style:disc;
 }
 
 .ai-card ol{
   margin:7px 0 7px 20px;
-  padding:0;
   list-style:decimal;
 }
 
-.ai-card li{
-  margin:4px 0;
-}
-
-
-/* Topic / Strand */
-
+/* Topic / Strand = RED */
 .ai-topic{
-  color:#dc2626 !important;
-  font-weight:900;
-  font-size:14px;
-  margin-top:0 !important;
-  margin-bottom:5px !important;
-}
-
-.ai-strand{
-  color:#dc2626 !important;
-  font-weight:800;
+  color:#dc2626;
   font-size:13px;
-  margin-top:2px !important;
-  margin-bottom:10px !important;
+  font-weight:900;
+  margin:2px 0 8px;
 }
 
-
-/* Explanation */
-
+/* Explanation = BLUE */
 .ai-explanation{
-  color:#2563eb !important;
+  color:#2563eb;
+  font-size:15px;
   font-weight:800;
-  font-size:14px;
-  margin-top:10px !important;
-  margin-bottom:5px !important;
+  margin:10px 0 5px;
 }
 
-
-/* Detailed answer stays black */
-
+/* Detailed text = BLACK */
 .ai-detail{
   color:#111827;
+  font-weight:600;
 }
-
-
-/* Formula */
-
-.ai-formula{
-  background:#f7f9fc;
-  border:1px dashed #cbd5e1;
-  border-radius:10px;
-  padding:9px 12px;
-  margin:10px 0;
-  text-align:center;
-  font-family:monospace;
-  color:#172033;
-}
-
-
-/* MCQ */
-
-.choice-block{
-  margin:10px 0;
-  padding:10px 12px;
-  border-radius:11px;
-  background:#f8fafc;
-  border:1px solid #e7ebf2;
-}
-
-.choice-correct{
-  border-left:4px solid #16a34a;
-  background:#f0fdf4;
-}
-
-.choice-wrong{
-  border-left:4px solid #ef4444;
-  background:#fff7f7;
-}
-
-.choice-label{
-  font-weight:900;
-}
-
-.correct-label{
-  color:#15803d;
-}
-
-.wrong-label{
-  color:#dc2626;
-}
-
 
 /* =========================================================
-   ACTION BUTTONS
+   INPUT AREA
 ========================================================= */
 
-.ai-actions{
-  display:flex;
-  flex-wrap:wrap;
-  gap:6px;
-  margin-top:8px;
+#inputFooter{
+  flex:0 0 auto;
+  width:100%;
+  background:#f1f4fa;
+  border-top:1px solid #dfe5ef;
+  padding:8px 10px;
+  padding-bottom:max(8px,env(safe-area-inset-bottom));
+  z-index:30;
 }
 
-.ai-action{
-  height:30px;
-  padding:0 11px;
-  border:1px solid #e2e7ef;
-  border-radius:16px;
-  background:white;
-  color:#445066;
-  font-size:10px;
-  font-weight:800;
-  cursor:pointer;
-}
-
-.ai-action:hover{
-  background:#f5f7fb;
-}
-
-.ai-action.dark{
-  background:#253a91;
-  border-color:#253a91;
-  color:white;
-}
-
-
-/* =========================================================
-   QUICK STATUS
-========================================================= */
-
-.answer-status{
-  display:flex;
-  align-items:center;
-  gap:7px;
-  color:#778399;
-  font-size:10px;
-  font-weight:700;
-  margin:3px 0 10px 43px;
-}
-
-.status-dot{
-  width:6px;
-  height:6px;
-  border-radius:50%;
-  background:#3b82f6;
-  animation:pulseDot 1s infinite;
-}
-
-@keyframes pulseDot{
-  0%,100%{
-    opacity:.3;
-    transform:scale(.8);
-  }
-  50%{
-    opacity:1;
-    transform:scale(1);
-  }
-}
-
-
-/* =========================================================
-   FOOTER / INPUT
-========================================================= */
-
-.input-footer{
-  flex-shrink:0;
-  background:rgba(247,249,253,.97);
-  border-top:1px solid #e2e7ef;
-  padding:
-    8px
-    max(10px,env(safe-area-inset-right))
-    max(9px,env(safe-area-inset-bottom))
-    max(10px,env(safe-area-inset-left));
-  backdrop-filter:blur(12px);
-  z-index:20;
-}
-
-.input-container{
-  width:min(100%,1050px);
+.input-inner{
+  width:100%;
+  max-width:980px;
   margin:auto;
 }
 
-
-/* Attachment preview */
-
-.preview-box{
-  display:flex;
-  align-items:center;
-  gap:9px;
-  background:white;
-  border:1px solid #e1e7ef;
-  border-radius:14px;
-  padding:7px 9px;
+#previewBox{
   margin-bottom:7px;
 }
-
-.preview-image{
-  width:40px;
-  height:40px;
-  border-radius:9px;
-  object-fit:cover;
-}
-
-.preview-icon{
-  width:40px;
-  height:40px;
-  border-radius:9px;
-  background:#f1f5f9;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  color:#64748b;
-}
-
-.preview-name{
-  flex:1;
-  min-width:0;
-  font-size:11px;
-  color:#4b5563;
-  overflow:hidden;
-  text-overflow:ellipsis;
-  white-space:nowrap;
-}
-
-.preview-close{
-  width:28px;
-  height:28px;
-  border:0;
-  border-radius:50%;
-  background:#f1f5f9;
-  color:#64748b;
-}
-
-
-/* Error */
-
-#errorBox{
-  background:#fff1f2;
-  color:#dc2626;
-  border:1px solid #fecdd3;
-  border-radius:12px;
-  padding:7px 11px;
-  font-size:11px;
-  margin-bottom:7px;
-  text-align:center;
-}
-
-
-/* Input row */
 
 .input-row{
+  width:100%;
   display:flex;
   align-items:flex-end;
   gap:7px;
 }
 
+/* Text container */
+
 .message-box{
-  flex:1;
+  flex:1 1 auto;
   min-width:0;
-  min-height:50px;
-  max-height:130px;
+  min-height:48px;
+  max-height:125px;
+  background:#ffffff;
+  border:1px solid #dce2eb;
+  border-radius:26px;
   display:flex;
   align-items:flex-end;
-  gap:2px;
-  background:white;
-  border:1px solid #dfe5ee;
-  border-radius:27px;
-  padding:5px 7px;
-  box-shadow:0 4px 16px rgba(32,49,87,.06);
+  padding:4px 7px;
+  box-shadow:0 2px 8px rgba(20,40,80,.05);
 }
 
-.attach-button{
-  width:39px;
-  height:39px;
-  min-width:39px;
-  border:0;
+.message-box:focus-within{
+  border-color:#7184d8;
+  box-shadow:0 0 0 3px rgba(81,102,210,.08);
+}
+
+.tool-btn{
+  width:38px;
+  height:38px;
+  min-width:38px;
   border-radius:50%;
+  border:0;
   background:transparent;
-  color:#69778d;
+  color:#667085;
   display:flex;
   align-items:center;
   justify-content:center;
-  font-size:16px;
+  cursor:pointer;
+  transition:.15s;
 }
 
-.attach-button:hover{
-  background:#f1f4f8;
+.tool-btn:hover{
+  background:#eef1f6;
+}
+
+.tool-btn:active{
+  transform:scale(.94);
 }
 
 #msg{
   flex:1;
   min-width:0;
-  min-height:39px;
-  max-height:115px;
-  resize:none;
   border:0;
   outline:none;
   background:transparent;
-  color:#172033;
-  font-size:14px;
-  line-height:1.45;
+  resize:none;
+  font-family:'Nunito',sans-serif;
+  font-size:15px;
+  line-height:21px;
+  color:#182033;
   padding:9px 6px;
+  min-height:40px;
+  max-height:105px;
+  overflow-y:auto;
 }
 
 #msg::placeholder{
-  color:#9aa5b5;
+  color:#98a2b3;
 }
 
+/* Action buttons */
 
-/* Voice */
-
-.voice-button,
-.send-button{
-  width:50px;
-  height:50px;
-  min-width:50px;
+.action-btn{
+  width:48px;
+  height:48px;
+  min-width:48px;
   border:0;
   border-radius:50%;
   display:flex;
   align-items:center;
   justify-content:center;
   color:white;
-  box-shadow:0 6px 16px rgba(0,0,0,.13);
-  transition:
-    transform .12s,
-    box-shadow .12s,
-    background .12s;
+  cursor:pointer;
+  box-shadow:0 4px 12px rgba(30,45,100,.18);
+  transition:.15s;
 }
 
-.voice-button{
-  background:#263c96;
+.action-btn:active{
+  transform:scale(.92);
 }
 
-.send-button{
-  background:#20bd67;
+#voiceBtn{
+  background:#263b99;
 }
 
-.voice-button:active,
-.send-button:active{
-  transform:scale(.93);
+#sendBtn{
+  background:#20c56b;
 }
 
-.voice-button.recording{
+#voiceBtn.recording{
   background:#dc2626;
-  animation:recordPulse 1s infinite;
+  animation:pulseRecord 1s infinite;
 }
 
-@keyframes recordPulse{
+@keyframes pulseRecord{
   0%,100%{
     box-shadow:0 0 0 0 rgba(220,38,38,.25);
   }
   50%{
-    box-shadow:0 0 0 10px rgba(220,38,38,0);
+    box-shadow:0 0 0 9px rgba(220,38,38,0);
   }
 }
 
-
-/* Listening text */
-
-.listen-text{
-  text-align:center;
-  color:#dc2626;
-  font-size:10px;
-  font-weight:800;
-  margin-top:3px;
+#listenTxt{
+  height:15px;
+  line-height:15px;
 }
 
+/* =========================================================
+   THINKING
+========================================================= */
+
+.thinking-bubble{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  color:#7b8496;
+  font-size:12px;
+}
+
+.thinking-dots{
+  display:flex;
+  gap:3px;
+}
+
+.thinking-dots span{
+  width:5px;
+  height:5px;
+  border-radius:50%;
+  background:#6574c5;
+  animation:dot .8s infinite;
+}
+
+.thinking-dots span:nth-child(2){
+  animation-delay:.15s;
+}
+
+.thinking-dots span:nth-child(3){
+  animation-delay:.3s;
+}
+
+@keyframes dot{
+  0%,100%{
+    opacity:.25;
+    transform:translateY(0);
+  }
+  50%{
+    opacity:1;
+    transform:translateY(-2px);
+  }
+}
 
 /* =========================================================
    HISTORY
 ========================================================= */
 
-.history-drawer{
+#historyDrawer{
   position:fixed;
   inset:0;
   z-index:100;
   background:#f8faff;
-  display:none;
-  flex-direction:column;
 }
-
-.history-drawer.open{
-  display:flex;
-}
-
-.history-header{
-  height:60px;
-  flex-shrink:0;
-  background:white;
-  border-bottom:1px solid #e4e9f1;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  padding:0 15px;
-}
-
-.history-list{
-  flex:1;
-  overflow:auto;
-  padding:12px;
-}
-
-.history-item{
-  background:white;
-  border:1px solid #e4e9f1;
-  border-radius:13px;
-  padding:12px;
-  margin-bottom:8px;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-}
-
-
-/* =========================================================
-   TABLET
-========================================================= */
-
-@media (min-width:600px){
-
-  .top-header{
-    height:74px;
-    min-height:74px;
-  }
-
-  .logo{
-    width:48px;
-    height:48px;
-  }
-
-  .welcome-icon{
-    width:105px;
-    height:105px;
-  }
-
-  .message-box{
-    min-height:56px;
-  }
-
-  .voice-button,
-  .send-button{
-    width:54px;
-    height:54px;
-    min-width:54px;
-  }
-}
-
-
-/* =========================================================
-   LAPTOP / DESKTOP
-========================================================= */
-
-@media (min-width:900px){
-
-  .chat-container{
-    padding-bottom:170px;
-  }
-
-  .input-footer{
-    padding-top:10px;
-  }
-
-  .message-box{
-    min-height:58px;
-  }
-
-  .attach-button{
-    width:42px;
-    height:42px;
-  }
-
-  #msg{
-    min-height:42px;
-  }
-
-  .voice-button,
-  .send-button{
-    width:56px;
-    height:56px;
-    min-width:56px;
-  }
-}
-
 
 /* =========================================================
    SMALL PHONES
 ========================================================= */
 
-@media (max-width:430px){
+@media(max-width:480px){
 
-  .top-header{
-    height:64px;
-    min-height:64px;
-    padding:0 10px;
+  #topHeader{
+    height:60px;
+    min-height:60px;
   }
 
-  .logo{
-    width:40px;
-    height:40px;
+  .header-title{
+    font-size:13px !important;
   }
 
-  .brand-title{
-    font-size:15px;
+  .header-status{
+    font-size:9px !important;
   }
 
-  .online{
-    font-size:9px;
+  #grade{
+    max-width:105px;
+    font-size:11px !important;
+    padding-left:10px;
+    padding-right:10px;
   }
 
-  .grade-select{
-    min-width:102px;
-    height:38px;
-    padding:0 10px;
-    font-size:12px;
+  .chat-inner{
+    padding:12px 9px 16px;
   }
 
-  .history-btn{
-    width:38px;
-    height:38px;
+  #welcome{
+    padding:25px 8px 20px;
   }
 
-  .welcome-icon{
-    width:78px;
-    height:78px;
+  .welcome-logo{
+    width:72px;
+    height:72px;
     border-radius:24px;
-    font-size:35px;
+    font-size:34px;
   }
 
   .welcome-title{
-    font-size:25px;
+    font-size:24px;
   }
 
   .welcome-text{
-    font-size:12.5px;
+    font-size:13px;
   }
 
   .ai-card{
     font-size:13.5px;
-    padding:13px;
+    padding:14px;
+    border-radius:16px;
   }
 
-  .ai-avatar{
-    width:31px;
-    height:31px;
-    min-width:31px;
+  .message-box{
+    min-height:46px;
   }
 
-  .user-bubble{
-    max-width:84%;
-  }
-
-  .attach-button{
-    width:35px;
-    min-width:35px;
-    height:35px;
+  .tool-btn{
+    width:34px;
+    min-width:34px;
+    height:36px;
   }
 
   #msg{
-    font-size:13.5px;
+    font-size:14px;
     padding-left:4px;
     padding-right:4px;
   }
 
-  .voice-button,
-  .send-button{
-    width:47px;
-    height:47px;
-    min-width:47px;
+  .action-btn{
+    width:45px;
+    height:45px;
+    min-width:45px;
   }
 
 }
 
-
 /* =========================================================
-   VERY SMALL PHONES
+   TABLETS
 ========================================================= */
 
-@media (max-width:360px){
+@media(min-width:600px){
 
-  .brand-title{
-    font-size:14px;
+  #topHeader{
+    height:70px;
+    min-height:70px;
   }
 
-  .grade-select{
-    min-width:90px;
+  .chat-inner{
+    padding-left:24px;
+    padding-right:24px;
   }
 
-  .history-btn{
-    width:36px;
-    height:36px;
-  }
-
-  .header-actions{
-    gap:5px;
+  #inputFooter{
+    padding-left:20px;
+    padding-right:20px;
   }
 
   .message-box{
-    gap:0;
+    min-height:52px;
   }
 
-  .attach-button{
-    width:32px;
-    min-width:32px;
-    font-size:14px;
+  #msg{
+    font-size:16px;
   }
 
-  .voice-button,
-  .send-button{
-    width:43px;
-    height:43px;
-    min-width:43px;
-  }
 }
 
+/* =========================================================
+   LAPTOP / DESKTOP
+========================================================= */
+
+@media(min-width:1024px){
+
+  #topHeader{
+    height:74px;
+    min-height:74px;
+  }
+
+  .chat-inner{
+    padding-top:24px;
+  }
+
+  #inputFooter{
+    padding:12px 24px 14px;
+  }
+
+  .message-box{
+    min-height:54px;
+  }
+
+  .action-btn{
+    width:52px;
+    height:52px;
+    min-width:52px;
+  }
+
+}
+
+/* Prevent iOS/Android weird selection */
+button,
+select{
+  -webkit-tap-highlight-color:transparent;
+}
+
+button{
+  font-family:inherit;
+}
+
+.hidden{
+  display:none !important;
+}
 </style>
 </head>
-
 
 <body>
 
@@ -971,39 +569,35 @@ button{
      HEADER
 ======================================================= -->
 
-<header class="top-header">
+<header id="topHeader" class="flex items-center justify-between px-3 md:px-5">
 
-  <div class="brand-area">
+  <div class="flex items-center gap-2.5 min-w-0">
 
     <img
       src="/logo.png"
-      class="logo"
+      onerror="this.onerror=null;this.src='https://i.pravatar.cc/100'"
+      class="w-10 h-10 md:w-11 md:h-11 rounded-full bg-white border object-cover shrink-0"
       alt="SomaHub"
-      onerror="this.src='https://i.pravatar.cc/100'"
     >
 
-    <div class="brand-text">
-
-      <p class="brand-title">
+    <div class="leading-tight min-w-0">
+      <p class="header-title font-black text-[15px] md:text-[17px] text-[#263b99] truncate">
         SomaHub Tutor
       </p>
 
-      <div class="online">
-        <span class="online-dot"></span>
+      <p class="header-status text-[10px] md:text-[11px] text-green-600 font-bold flex items-center gap-1">
+        <span class="w-2 h-2 bg-green-500 rounded-full inline-block"></span>
         Online • Auto EN/SW
-      </div>
-
+      </p>
     </div>
 
   </div>
 
-
-  <div class="header-actions">
+  <div class="flex items-center gap-2">
 
     <select
       id="grade"
-      class="grade-select"
-      aria-label="Select grade"
+      class="h-9 md:h-10 bg-[#f3f5fa] rounded-full px-3 md:px-4 text-[11px] md:text-[12px] font-bold outline-none border border-[#e1e5ed]"
     >
       <option>Playground</option>
       <option>PP1</option>
@@ -1020,10 +614,9 @@ button{
       <option>Grade 10</option>
     </select>
 
-
     <button
-      class="history-btn"
       onclick="openHistory()"
+      class="w-9 h-9 md:w-10 md:h-10 rounded-full bg-[#263b99] text-white flex items-center justify-center text-[12px] shadow-sm"
       aria-label="History"
     >
       <i class="fa-regular fa-clock"></i>
@@ -1035,33 +628,31 @@ button{
 
 
 <!-- =======================================================
-     CHAT
+     CHAT AREA
 ======================================================= -->
 
 <main id="chat">
 
-  <div class="chat-container">
+  <div class="chat-inner">
 
     <!-- WELCOME -->
 
     <div id="welcome">
 
-      <div class="welcome-icon">
+      <div class="welcome-logo">
         🎓
       </div>
 
-      <h1 class="welcome-title">
+      <h2 class="welcome-title">
         How can I help you learn?
-      </h1>
+      </h2>
 
       <p class="welcome-text">
-        Ask me anything about your school work,
-        upload a homework photo, or speak your question.
+        Ask a question, upload homework, or say Habari.
         SomaHub Tutor understands English and Kiswahili.
       </p>
 
     </div>
-
 
     <!-- MESSAGES -->
 
@@ -1076,45 +667,38 @@ button{
      INPUT FOOTER
 ======================================================= -->
 
-<footer class="input-footer">
+<footer id="inputFooter">
 
-  <div class="input-container">
-
+  <div class="input-inner">
 
     <!-- ATTACHMENT PREVIEW -->
 
     <div
       id="previewBox"
-      class="preview-box"
-      style="display:none"
+      class="hidden bg-white rounded-xl p-2 flex items-center gap-2 border border-gray-200"
     >
 
       <img
         id="previewImg"
-        class="preview-image"
-        style="display:none"
-        alt="Preview"
+        class="w-10 h-10 rounded-lg object-cover hidden"
+        alt=""
       >
 
-      <div
+      <i
         id="previewDocIcon"
-        class="preview-icon"
-        style="display:none"
-      >
-        <i class="fa-solid fa-file-lines"></i>
-      </div>
+        class="fa-solid fa-file text-gray-400 text-lg hidden"
+      ></i>
 
       <span
         id="previewName"
-        class="preview-name"
+        class="text-[11px] flex-1 truncate font-semibold text-gray-700"
       ></span>
 
       <button
-        class="preview-close"
         onclick="clearAttach()"
-        aria-label="Remove attachment"
+        class="w-7 h-7 bg-gray-900 text-white rounded-full text-[10px]"
       >
-        <i class="fa-solid fa-xmark"></i>
+        ✕
       </button>
 
     </div>
@@ -1124,52 +708,50 @@ button{
 
     <div
       id="errorBox"
-      style="display:none"
+      class="hidden bg-red-50 text-red-600 text-[11px] px-3 py-1.5 rounded-xl mb-2 text-center"
     ></div>
 
 
-    <!-- INPUT -->
+    <!-- INPUT ROW -->
 
     <div class="input-row">
 
+      <!-- TEXT + TOOLS -->
 
       <div class="message-box">
-
 
         <!-- DOCUMENT -->
 
         <button
-          class="attach-button"
           onclick="document.getElementById('docInput').click()"
+          class="tool-btn"
           aria-label="Attach document"
         >
           <i class="fa-solid fa-paperclip"></i>
         </button>
 
-
         <!-- IMAGE -->
 
         <button
-          class="attach-button"
           onclick="document.getElementById('imgInput').click()"
+          class="tool-btn"
           aria-label="Choose image"
         >
           <i class="fa-solid fa-image"></i>
         </button>
 
-
         <!-- CAMERA -->
 
         <button
-          class="attach-button"
           onclick="document.getElementById('camInput').click()"
+          class="tool-btn"
           aria-label="Take photo"
         >
           <i class="fa-solid fa-camera"></i>
         </button>
 
 
-        <!-- TEXT -->
+        <!-- MESSAGE -->
 
         <textarea
           id="msg"
@@ -1182,11 +764,11 @@ button{
       </div>
 
 
-      <!-- HOLD TO SPEAK -->
+      <!-- VOICE -->
 
       <button
         id="voiceBtn"
-        class="voice-button"
+        class="action-btn"
         aria-label="Hold to speak"
         title="Hold to speak"
       >
@@ -1198,25 +780,24 @@ button{
 
       <button
         id="sendBtn"
-        class="send-button"
+        class="action-btn"
         onclick="sendMsg()"
         aria-label="Send"
       >
-        <i class="fa-solid fa-paper-plane"></i>
+        <i class="fa-solid fa-paper-plane text-[15px]"></i>
       </button>
 
     </div>
 
 
-    <!-- LISTENING -->
+    <!-- RECORDING STATUS -->
 
-    <div
+    <p
       id="listenTxt"
-      class="listen-text"
-      style="display:none"
+      class="hidden text-[10px] text-red-500 text-center mt-1 font-bold animate-pulse"
     >
-      ● Listening... release when finished
-    </div>
+      ● Listening... release to stop
+    </p>
 
   </div>
 
@@ -1226,41 +807,39 @@ button{
 
 
 <!-- =======================================================
-     HISTORY DRAWER
+     HISTORY
 ======================================================= -->
 
 <div
   id="historyDrawer"
-  class="history-drawer"
+  class="hidden flex-col"
 >
 
-  <div class="history-header">
+  <div class="h-14 border-b bg-white flex items-center justify-between px-4 shrink-0">
 
     <button
       onclick="closeHistory()"
-      class="text-sm font-extrabold text-[#263b8f]"
+      class="font-bold text-sm text-[#263b99]"
     >
-      <i class="fa-solid fa-arrow-left mr-1"></i>
-      Back
+      ← Back
     </button>
 
-    <b class="text-sm">
-      Learning History
+    <b class="text-[14px]">
+      History
     </b>
 
     <button
       onclick="clearHistory()"
-      class="text-xs font-bold text-gray-500"
+      class="text-[11px] text-gray-500"
     >
       Delete All
     </button>
 
   </div>
 
-
   <div
     id="historyList"
-    class="history-list"
+    class="flex-1 overflow-auto p-3"
   ></div>
 
 </div>
@@ -1299,15 +878,10 @@ button{
 <script>
 
 /* =========================================================
-   API
+   CONFIG
 ========================================================= */
 
 const PROXY = "/api/gemini";
-
-
-/* =========================================================
-   STATE
-========================================================= */
 
 let grade = "Grade 7";
 
@@ -1319,36 +893,20 @@ let isThinking = false;
 
 let recognition = null;
 let listening = false;
-let recognitionStarted = false;
 
 let chatHistory = [];
 
-let speechQueue = [];
-
-let currentSpeech = null;
-
 
 /* =========================================================
-   ELEMENTS
+   DOM
 ========================================================= */
 
-const chat =
-  document.getElementById("chat");
-
-const messages =
-  document.getElementById("messages");
-
-const msg =
-  document.getElementById("msg");
-
-const welcome =
-  document.getElementById("welcome");
-
-const voiceBtn =
-  document.getElementById("voiceBtn");
-
-const listenTxt =
-  document.getElementById("listenTxt");
+const chat = document.getElementById("chat");
+const messages = document.getElementById("messages");
+const msg = document.getElementById("msg");
+const welcome = document.getElementById("welcome");
+const voiceBtn = document.getElementById("voiceBtn");
+const listenTxt = document.getElementById("listenTxt");
 
 
 /* =========================================================
@@ -1370,27 +928,17 @@ const SW = [
   "soma",
   "darasa",
   "mtihani",
-  "swali",
-  "masomo",
-  "tafadhali",
-  "nini",
-  "vipi",
-  "kwa nini"
+  "kwa nini",
+  "ni nini"
 ];
 
+function detectLang(t){
 
-function detectLang(text){
+  if(!t) return "EN";
 
-  if(!text){
-    return "EN";
-  }
+  const l = String(t).toLowerCase();
 
-  const value =
-    String(text).toLowerCase();
-
-  return SW.some(
-    word => value.includes(word)
-  )
+  return SW.some(k => l.includes(k))
     ? "SW"
     : "EN";
 }
@@ -1402,14 +950,11 @@ function detectLang(text){
 
 document
   .getElementById("grade")
-  .addEventListener(
-    "change",
-    function(e){
+  .addEventListener("change", e => {
 
-      grade =
-        e.target.value;
-    }
-  );
+    grade = e.target.value;
+
+  });
 
 
 /* =========================================================
@@ -1420,43 +965,67 @@ function resizeTextarea(){
 
   msg.style.height = "auto";
 
-  msg.style.height =
-    Math.min(
-      msg.scrollHeight,
-      115
-    ) + "px";
+  const h = Math.min(
+    Math.max(msg.scrollHeight,40),
+    105
+  );
+
+  msg.style.height = h + "px";
 }
 
-
-msg.addEventListener(
-  "input",
-  resizeTextarea
-);
-
-
-/*
-  Enter = new paragraph.
-  Ctrl + Enter / Android send button = send.
-*/
-msg.addEventListener(
-  "keydown",
-  function(e){
-
-    if(
-      e.key === "Enter" &&
-      (e.ctrlKey || e.metaKey)
-    ){
-
-      e.preventDefault();
-
-      sendMsg();
-    }
-  }
-);
+msg.addEventListener("input", resizeTextarea);
 
 
 /* =========================================================
-   HOLD-TO-SPEAK
+   KEYBOARD SEND
+========================================================= */
+
+msg.addEventListener("keydown", e => {
+
+  if(
+    e.key === "Enter" &&
+    !e.shiftKey
+  ){
+
+    e.preventDefault();
+
+    sendMsg();
+
+  }
+
+});
+
+
+/* =========================================================
+   KEEP INPUT VISIBLE WHEN KEYBOARD OPENS
+========================================================= */
+
+if(window.visualViewport){
+
+  const adjustForKeyboard = () => {
+
+    requestAnimationFrame(() => {
+
+      chat.scrollTop = chat.scrollHeight;
+
+    });
+
+  };
+
+  window.visualViewport.addEventListener(
+    "resize",
+    adjustForKeyboard
+  );
+
+  window.visualViewport.addEventListener(
+    "scroll",
+    adjustForKeyboard
+  );
+}
+
+
+/* =========================================================
+   SPEECH RECOGNITION
 ========================================================= */
 
 (function(){
@@ -1465,248 +1034,245 @@ msg.addEventListener(
     window.SpeechRecognition ||
     window.webkitSpeechRecognition;
 
-
   if(!SR){
 
-    voiceBtn.title =
-      "Speech recognition is not available in this browser";
+    recognition = null;
 
     return;
   }
 
+  recognition = new SR();
 
-  recognition =
-    new SR();
-
-
-  recognition.continuous = true;
+  recognition.continuous = false;
 
   recognition.interimResults = true;
 
   recognition.maxAlternatives = 1;
 
 
-  let finalTranscript = "";
-
-
-  recognition.onstart = function(){
+  recognition.onstart = () => {
 
     listening = true;
 
-    recognitionStarted = true;
-
-    voiceBtn.classList.add(
-      "recording"
-    );
+    voiceBtn.classList.add("recording");
 
     voiceBtn.innerHTML =
       '<i class="fa-solid fa-stop"></i>';
 
-    listenTxt.style.display =
-      "block";
+    listenTxt.classList.remove("hidden");
+
   };
 
 
-  recognition.onresult =
-    function(event){
-
-      let interim = "";
-
-
-      for(
-        let i = event.resultIndex;
-        i < event.results.length;
-        i++
-      ){
-
-        const transcript =
-          event.results[i][0].transcript;
-
-
-        if(
-          event.results[i].isFinal
-        ){
-
-          finalTranscript +=
-            transcript + " ";
-
-        }else{
-
-          interim += transcript;
-        }
-      }
-
-
-      const current =
-        finalTranscript +
-        interim;
-
-
-      /*
-       * Voice text goes into the input.
-       * It is NOT sent automatically.
-       */
-
-      msg.value =
-        current.trim();
-
-      resizeTextarea();
-    };
-
-
-  recognition.onerror =
-    function(event){
-
-      if(
-        event.error !== "aborted" &&
-        event.error !== "no-speech"
-      ){
-
-        showError(
-          "Voice input: " +
-          event.error
-        );
-      }
-
-      stopListeningUI();
-    };
-
-
-  recognition.onend =
-    function(){
-
-      /*
-       * Some mobile browsers automatically
-       * stop recognition. Do not restart here
-       * because the user controls recording.
-       */
-
-      stopListeningUI();
-    };
-
-
-  function beginVoice(){
-
-    if(listening){
-      return;
-    }
-
-
-    finalTranscript =
-      msg.value
-        ? msg.value.trim() + " "
-        : "";
-
-
-    recognition.lang =
-      detectLang(msg.value) === "SW"
-        ? "sw-KE"
-        : "en-KE";
-
-
-    try{
-
-      recognition.start();
-
-    }catch(error){
-
-      /*
-       * Browser may report "already started".
-       */
-
-      stopListeningUI();
-    }
-  }
-
-
-  function endVoice(){
-
-    if(
-      recognition &&
-      listening
-    ){
-
-      try{
-        recognition.stop();
-      }catch(e){}
-    }
-  }
-
-
-  function stopListeningUI(){
+  recognition.onend = () => {
 
     listening = false;
 
-    recognitionStarted = false;
-
-    voiceBtn.classList.remove(
-      "recording"
-    );
+    voiceBtn.classList.remove("recording");
 
     voiceBtn.innerHTML =
       '<i class="fa-solid fa-microphone"></i>';
 
-    listenTxt.style.display =
-      "none";
-  }
+    listenTxt.classList.add("hidden");
+
+    resizeTextarea();
+
+    msg.focus();
+
+  };
 
 
-  /*
-   * Pointer events work for both
-   * touch screens and mouse.
-   */
+  recognition.onerror = e => {
 
-  voiceBtn.addEventListener(
-    "pointerdown",
-    function(e){
+    listening = false;
 
-      e.preventDefault();
+    voiceBtn.classList.remove("recording");
 
-      beginVoice();
+    voiceBtn.innerHTML =
+      '<i class="fa-solid fa-microphone"></i>';
+
+    listenTxt.classList.add("hidden");
+
+    if(e.error !== "no-speech"){
+      showError("Voice input: " + e.error);
     }
-  );
+
+  };
 
 
-  voiceBtn.addEventListener(
-    "pointerup",
-    function(e){
+  recognition.onresult = e => {
 
-      e.preventDefault();
+    let finalText = "";
+    let interimText = "";
 
-      endVoice();
-    }
-  );
+    for(
+      let i = e.resultIndex;
+      i < e.results.length;
+      i++
+    ){
 
+      const text =
+        e.results[i][0].transcript;
 
-  voiceBtn.addEventListener(
-    "pointercancel",
-    function(){
+      if(e.results[i].isFinal){
 
-      endVoice();
-    }
-  );
+        finalText += text;
 
+      }else{
 
-  voiceBtn.addEventListener(
-    "pointerleave",
-    function(e){
+        interimText += text;
 
-      /*
-       * On desktop, releasing outside
-       * the button stops recording.
-       */
-
-      if(
-        e.pointerType === "mouse" &&
-        listening
-      ){
-
-        endVoice();
       }
+
     }
-  );
+
+    /*
+      IMPORTANT:
+      Voice goes into the text box.
+      It does NOT send automatically.
+      User can edit before sending.
+    */
+
+    if(finalText){
+
+      const existing =
+        msg.dataset.voiceBase || "";
+
+      msg.value =
+        (existing ? existing + " " : "") +
+        finalText.trim();
+
+      msg.dataset.voiceBase =
+        msg.value;
+
+    }else if(interimText){
+
+      const existing =
+        msg.dataset.voiceBase || "";
+
+      msg.value =
+        (existing ? existing + " " : "") +
+        interimText.trim();
+
+    }
+
+    resizeTextarea();
+
+  };
 
 })();
+
+
+/* =========================================================
+   HOLD TO RECORD
+========================================================= */
+
+function startVoice(e){
+
+  if(e){
+
+    e.preventDefault();
+
+  }
+
+  if(!recognition){
+
+    showError(
+      "Voice typing is not supported here. Try Chrome."
+    );
+
+    return;
+  }
+
+  if(listening) return;
+
+  /*
+    Save current text so voice can be added
+    without destroying what the learner typed.
+  */
+
+  msg.dataset.voiceBase =
+    msg.value.trim();
+
+  recognition.lang =
+    detectLang(msg.value) === "SW"
+      ? "sw-KE"
+      : "en-KE";
+
+  try{
+
+    recognition.start();
+
+  }catch(err){
+
+    /* Browser may say recognition is already active */
+
+  }
+
+}
+
+
+function stopVoice(e){
+
+  if(e){
+
+    e.preventDefault();
+
+  }
+
+  if(
+    recognition &&
+    listening
+  ){
+
+    recognition.stop();
+
+  }
+
+}
+
+
+/*
+  Mobile
+*/
+
+voiceBtn.addEventListener(
+  "touchstart",
+  startVoice,
+  {passive:false}
+);
+
+voiceBtn.addEventListener(
+  "touchend",
+  stopVoice,
+  {passive:false}
+);
+
+voiceBtn.addEventListener(
+  "touchcancel",
+  stopVoice,
+  {passive:false}
+);
+
+
+/*
+  Desktop
+*/
+
+voiceBtn.addEventListener(
+  "mousedown",
+  startVoice
+);
+
+voiceBtn.addEventListener(
+  "mouseup",
+  stopVoice
+);
+
+voiceBtn.addEventListener(
+  "mouseleave",
+  stopVoice
+);
 
 
 /* =========================================================
@@ -1715,155 +1281,100 @@ msg.addEventListener(
 
 function handlePhoto(input){
 
-  const file =
-    input.files?.[0];
+  const f = input.files[0];
 
-  if(!file){
-    return;
-  }
+  if(!f) return;
 
+  const reader = new FileReader();
 
-  const reader =
-    new FileReader();
+  reader.onload = () => {
 
+    const img = new Image();
 
-  reader.onload =
-    function(){
+    img.onload = () => {
 
-      const image =
-        new Image();
+      const canvas =
+        document.createElement("canvas");
 
+      let w = img.width;
+      let h = img.height;
 
-      image.onload =
-        function(){
+      /*
+        Keep images reasonably small for
+        fast API requests.
+      */
 
-          const canvas =
-            document.createElement(
-              "canvas"
-            );
+      const max = 1200;
 
+      if(w > max || h > max){
 
-          let width =
-            image.width;
-
-          let height =
-            image.height;
-
-
-          /*
-           * Keep images reasonably small
-           * for fast mobile uploads.
-           */
-
-          const max =
-            1100;
-
-
-          if(
-            width > max ||
-            height > max
-          ){
-
-            const scale =
-              Math.min(
-                max / width,
-                max / height
-              );
-
-            width =
-              Math.round(
-                width * scale
-              );
-
-            height =
-              Math.round(
-                height * scale
-              );
-          }
-
-
-          canvas.width =
-            width;
-
-          canvas.height =
-            height;
-
-
-          const ctx =
-            canvas.getContext(
-              "2d"
-            );
-
-
-          ctx.drawImage(
-            image,
-            0,
-            0,
-            width,
-            height
+        const scale =
+          Math.min(
+            max / w,
+            max / h
           );
 
+        w = Math.round(w * scale);
+        h = Math.round(h * scale);
 
-          uploadedPhoto =
-            canvas.toDataURL(
-              "image/jpeg",
-              0.72
-            );
+      }
 
+      canvas.width = w;
+      canvas.height = h;
 
-          uploadedMime =
-            "image/jpeg";
+      const ctx =
+        canvas.getContext("2d");
 
+      ctx.drawImage(
+        img,
+        0,
+        0,
+        w,
+        h
+      );
 
-          document
-            .getElementById(
-              "previewImg"
-            )
-            .src =
-            uploadedPhoto;
+      uploadedPhoto =
+        canvas.toDataURL(
+          "image/jpeg",
+          0.72
+        );
 
+      uploadedMime =
+        "image/jpeg";
 
-          document
-            .getElementById(
-              "previewImg"
-            )
-            .style.display =
-            "block";
+      document
+        .getElementById("previewImg")
+        .src = uploadedPhoto;
 
+      document
+        .getElementById("previewImg")
+        .classList
+        .remove("hidden");
 
-          document
-            .getElementById(
-              "previewDocIcon"
-            )
-            .style.display =
-            "none";
+      document
+        .getElementById("previewDocIcon")
+        .classList
+        .add("hidden");
 
+      document
+        .getElementById("previewName")
+        .textContent = f.name;
 
-          document
-            .getElementById(
-              "previewName"
-            )
-            .textContent =
-            file.name;
+      document
+        .getElementById("previewBox")
+        .classList
+        .remove("hidden");
 
-
-          document
-            .getElementById(
-              "previewBox"
-            )
-            .style.display =
-            "flex";
-        };
-
-
-      image.src =
-        reader.result;
     };
 
+    img.src = reader.result;
 
-  reader.readAsDataURL(file);
+  };
+
+  reader.readAsDataURL(f);
 
   input.value = "";
+
 }
 
 
@@ -1873,55 +1384,37 @@ function handlePhoto(input){
 
 function handleDoc(input){
 
-  const file =
-    input.files?.[0];
+  const f = input.files[0];
 
-  if(!file){
-    return;
-  }
-
+  if(!f) return;
 
   uploadedDocName =
-    file.name;
+    f.name;
 
   uploadedPhoto = "";
 
-  uploadedMime = "";
-
+  document
+    .getElementById("previewImg")
+    .classList
+    .add("hidden");
 
   document
-    .getElementById(
-      "previewImg"
-    )
-    .style.display =
-    "none";
-
+    .getElementById("previewDocIcon")
+    .classList
+    .remove("hidden");
 
   document
-    .getElementById(
-      "previewDocIcon"
-    )
-    .style.display =
-    "flex";
-
-
-  document
-    .getElementById(
-      "previewName"
-    )
+    .getElementById("previewName")
     .textContent =
-    file.name;
-
+    f.name;
 
   document
-    .getElementById(
-      "previewBox"
-    )
-    .style.display =
-    "flex";
-
+    .getElementById("previewBox")
+    .classList
+    .remove("hidden");
 
   input.value = "";
+
 }
 
 
@@ -1937,13 +1430,11 @@ function clearAttach(){
 
   uploadedDocName = "";
 
-
   document
-    .getElementById(
-      "previewBox"
-    )
-    .style.display =
-    "none";
+    .getElementById("previewBox")
+    .classList
+    .add("hidden");
+
 }
 
 
@@ -1951,71 +1442,63 @@ function clearAttach(){
    ERROR
 ========================================================= */
 
-function showError(message){
+function showError(text){
 
   const box =
-    document.getElementById(
-      "errorBox"
-    );
-
+    document.getElementById("errorBox");
 
   box.textContent =
-    String(message || "Something went wrong.");
+    text || "Something went wrong.";
 
+  box.classList.remove("hidden");
 
-  box.style.display =
-    "block";
+  setTimeout(() => {
 
+    box.classList.add("hidden");
 
-  setTimeout(
-    function(){
+  },5000);
 
-      box.style.display =
-        "none";
-
-    },
-    5000
-  );
 }
 
 
 /* =========================================================
-   CLEAN AI TEXT
+   CLEAN AI RESPONSE
 ========================================================= */
 
 function cleanAIText(text){
 
-  let value =
+  let t =
     String(text || "");
 
+  /*
+    Remove square bracket labels.
+  */
+
+  t = t.replace(
+    /\[(topic|strand|explanation|answer|details?|detailed explanation|reason|correct answer)\]\s*/gi,
+    ""
+  );
 
   /*
-   * Remove common decorative line brackets
-   * and box characters.
-   */
+    Remove accidental markdown heading markers.
+  */
 
-  value =
-    value
-      .replace(/【/g,"")
-      .replace(/】/g,"")
-      .replace(/〔/g,"")
-      .replace(/〕/g,"")
-      .replace(/^\s*[\[\]]\s*$/gm,"")
-      .replace(/^\s*[-_=]{3,}\s*$/gm,"");
-
+  t = t.replace(
+    /^#{1,6}\s*/gm,
+    ""
+  );
 
   /*
-   * Remove markdown heading symbols.
-   */
+    Remove empty brackets.
+  */
 
-  value =
-    value.replace(
-      /^#{1,6}\s*/gm,
-      ""
-    );
+  t = t.replace(
+    /\[\s*\]/g,
+    ""
+  );
 
+  return t.trim();
 
-  return value.trim();
 }
 
 
@@ -2025,368 +1508,127 @@ function cleanAIText(text){
 
 function formatResponse(text){
 
-  let source =
+  let t =
     cleanAIText(text);
 
-
   /*
-   * Protect formulas first.
-   */
+    Escape unsafe HTML first.
+  */
 
-  const formulas = [];
-
-
-  source =
-    source.replace(
-      /\$\$([\s\S]*?)\$\$/g,
-      function(_, formula){
-
-        const id =
-          formulas.length;
-
-        formulas.push(
-          formula.trim()
-        );
-
-        return `@@FORMULA_${id}@@`;
-      }
-    );
+  t = t
+    .replace(/&/g,"&amp;")
+    .replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;");
 
 
   /*
-   * Escape HTML.
-   */
+    Bold markdown.
+  */
 
-  source =
-    source
-      .replace(/&/g,"&amp;")
-      .replace(/</g,"&lt;")
-      .replace(/>/g,"&gt;");
-
-
-  /*
-   * Bold markdown.
-   */
-
-  source =
-    source.replace(
-      /\*\*(.*?)\*\*/g,
-      "<strong>$1</strong>"
-    );
+  t = t.replace(
+    /\*\*(.*?)\*\*/g,
+    "<strong>$1</strong>"
+  );
 
 
   /*
-   * Process lines.
-   */
+    Topic / Strand lines.
+  */
+
+  t = t.replace(
+    /^(Topic|Strand)\s*[:\-]\s*(.*?)$/gim,
+    '<div class="ai-topic">$1: $2</div>'
+  );
+
+
+  /*
+    Explanation heading.
+  */
+
+  t = t.replace(
+    /^(Explanation|Answer|Correct Answer)\s*[:\-]?\s*$/gim,
+    '<div class="ai-explanation">$1</div>'
+  );
+
+
+  /*
+    Why other choices are wrong.
+  */
+
+  t = t.replace(
+    /^(Why the other choices are wrong|Why other choices are wrong)\s*[:\-]?\s*$/gim,
+    '<div class="ai-explanation">Why the other choices are wrong</div>'
+  );
+
 
   const lines =
-    source.split(/\r?\n/);
+    t.split("\n");
 
 
   let html = "";
 
-  let listMode = false;
+  for(let line of lines){
 
+    line = line.trim();
 
-  function closeList(){
+    if(!line) continue;
 
-    if(listMode){
-
-      html += "</ul>";
-
-      listMode = false;
-    }
-  }
-
-
-  lines.forEach(function(raw){
-
-    let line =
-      raw.trim();
-
-
-    if(!line){
-
-      closeList();
-
-      return;
-    }
-
-
-    /*
-     * TOPIC
-     */
-
-    let topic =
-      line.match(
-        /^(topic|subject)\s*:\s*(.*)$/i
-      );
-
-
-    if(topic){
-
-      closeList();
-
-      html +=
-        `<p class="ai-topic">Topic: ${topic[2]}</p>`;
-
-      return;
-    }
-
-
-    /*
-     * STRAND
-     */
-
-    let strand =
-      line.match(
-        /^(strand|sub[- ]?strand)\s*:\s*(.*)$/i
-      );
-
-
-    if(strand){
-
-      closeList();
-
-      html +=
-        `<p class="ai-strand">Strand: ${strand[2]}</p>`;
-
-      return;
-    }
-
-
-    /*
-     * EXPLANATION
-     */
-
-    let explanation =
-      line.match(
-        /^(explanation|explain|answer explanation)\s*:\s*(.*)$/i
-      );
-
-
-    if(explanation){
-
-      closeList();
-
-      html +=
-        `<p class="ai-explanation">Explanation: ${explanation[2]}</p>`;
-
-      return;
-    }
-
-
-    /*
-     * CHOICE CORRECT
-     */
 
     if(
-      /^(correct answer|answer)\s*:/i.test(line)
+      line.includes('class="ai-topic"') ||
+      line.includes('class="ai-explanation"')
     ){
 
-      closeList();
+      html += line;
 
-      html +=
-        `<div class="choice-block choice-correct">
-          <span class="choice-label correct-label">
-            ✓ ${line}
-          </span>
-        </div>`;
+      continue;
 
-      return;
     }
 
 
     /*
-     * WHY WRONG
-     */
+      Numbered points.
+    */
 
-    if(
-      /^(why|reason|incorrect|wrong choice|why wrong)/i.test(line) &&
-      /(wrong|incorrect|not correct)/i.test(line)
-    ){
-
-      closeList();
-
-      html +=
-        `<div class="choice-block choice-wrong">
-          <span class="choice-label wrong-label">
-            ✗ ${line}
-          </span>
-        </div>`;
-
-      return;
-    }
-
-
-    /*
-     * Bullet
-     */
-
-    if(
-      /^[-•*]\s+/.test(line)
-    ){
-
-      if(!listMode){
-
-        html += "<ul>";
-
-        listMode = true;
-      }
-
-
-      html +=
-        `<li>${line.replace(
-          /^[-•*]\s+/,
-          ""
-        )}</li>`;
-
-      return;
-    }
-
-
-    /*
-     * Numbered item
-     */
-
-    if(
-      /^\d+[\.\)]\s+/.test(line)
-    ){
-
-      closeList();
+    if(/^\d+\.\s/.test(line)){
 
       html +=
         `<p class="ai-detail">${line}</p>`;
 
-      return;
+      continue;
+
     }
 
 
     /*
-     * Multiple-choice choices
-     */
+      Bullet points.
+    */
 
     if(
-      /^[A-D][\.\)]\s+/i.test(line)
+      line.startsWith("- ") ||
+      line.startsWith("• ")
     ){
 
-      closeList();
-
-      const letter =
-        line.charAt(0).toUpperCase();
-
-
-      const isCorrect =
-        /✓|correct/i.test(line);
-
-
-      const isWrong =
-        /✗|wrong|incorrect/i.test(line);
-
-
-      const cls =
-        isCorrect
-          ? "choice-correct"
-          : isWrong
-            ? "choice-wrong"
-            : "";
-
-
       html +=
-        `<div class="choice-block ${cls}">
-          <span class="choice-label">
-            ${letter}.
-          </span>
-          ${line.slice(2).trim()}
-        </div>`;
+        `<p class="ai-detail">• ${line.slice(2)}</p>`;
 
-      return;
+      continue;
+
     }
 
 
     /*
-     * Formula placeholder
-     */
-
-    if(
-      /^@@FORMULA_\d+@@$/.test(line)
-    ){
-
-      closeList();
-
-      const index =
-        Number(
-          line.match(/\d+/)[0]
-        );
-
-
-      html +=
-        `<div class="ai-formula">
-          ${escapeHTML(formulas[index] || "")}
-        </div>`;
-
-      return;
-    }
-
-
-    /*
-     * Normal detailed text
-     */
-
-    closeList();
+      Normal detailed text.
+    */
 
     html +=
       `<p class="ai-detail">${line}</p>`;
-  });
 
-
-  closeList();
-
-
-  /*
-   * Remove empty paragraphs.
-   */
-
-  html =
-    html.replace(
-      /<p class="ai-detail"><\/p>/g,
-      ""
-    );
-
-
-  /*
-   * Restore formulas if they were
-   * embedded inside paragraphs.
-   */
-
-  formulas.forEach(
-    function(formula,index){
-
-      html =
-        html.replace(
-          `@@FORMULA_${index}@@`,
-          `<div class="ai-formula">${escapeHTML(formula)}</div>`
-        );
-    }
-  );
+  }
 
 
   return html;
-}
 
-
-/* =========================================================
-   ESCAPE HTML
-========================================================= */
-
-function escapeHTML(value){
-
-  return String(value || "")
-    .replace(/&/g,"&amp;")
-    .replace(/</g,"&lt;")
-    .replace(/>/g,"&gt;")
-    .replace(/"/g,"&quot;")
-    .replace(/'/g,"&#039;");
 }
 
 
@@ -2396,51 +1638,40 @@ function escapeHTML(value){
 
 function addUser(text){
 
-  welcome.style.display =
-    "none";
+  welcome.classList.add("hidden");
 
+  const d =
+    document.createElement("div");
 
-  const row =
-    document.createElement(
-      "div"
-    );
+  d.className =
+    "flex justify-end mb-3 message-in";
 
+  const safe =
+    String(text)
+      .replace(/</g,"&lt;")
+      .replace(/>/g,"&gt;");
 
-  row.className =
-    "user-row message-in";
+  d.innerHTML = `
+    <div
+      class="max-w-[82%] md:max-w-[70%] bg-[#dcf8c6]
+      rounded-2xl rounded-br-sm
+      px-4 py-2.5 text-[13px]
+      md:text-[14px] shadow-sm
+      text-gray-900"
+    >
+      ${safe}
+    </div>
+  `;
 
-
-  const bubble =
-    document.createElement(
-      "div"
-    );
-
-
-  bubble.className =
-    "user-bubble";
-
-
-  bubble.textContent =
-    text;
-
-
-  row.appendChild(
-    bubble
-  );
-
-
-  messages.appendChild(
-    row
-  );
-
+  messages.appendChild(d);
 
   chatHistory.push({
     role:"user",
     content:text
   });
 
-
   scrollBottom();
+
 }
 
 
@@ -2450,121 +1681,87 @@ function addUser(text){
 
 function addUserPhoto(photo){
 
-  welcome.style.display =
-    "none";
+  welcome.classList.add("hidden");
 
+  const d =
+    document.createElement("div");
 
-  const row =
-    document.createElement(
-      "div"
-    );
+  d.className =
+    "flex justify-end mb-3 message-in";
 
+  d.innerHTML = `
+    <div
+      class="bg-[#dcf8c6] rounded-xl p-1 shadow-sm"
+    >
+      <img
+        src="${photo}"
+        class="max-w-[220px] max-h-[300px] rounded-lg object-contain"
+        alt="Uploaded homework"
+      >
+    </div>
+  `;
 
-  row.className =
-    "user-row message-in";
-
-
-  const bubble =
-    document.createElement(
-      "div"
-    );
-
-
-  bubble.className =
-    "photo-bubble";
-
-
-  const image =
-    document.createElement(
-      "img"
-    );
-
-
-  image.src =
-    photo;
-
-
-  image.alt =
-    "Uploaded homework";
-
-
-  bubble.appendChild(
-    image
-  );
-
-
-  row.appendChild(
-    bubble
-  );
-
-
-  messages.appendChild(
-    row
-  );
-
+  messages.appendChild(d);
 
   scrollBottom();
+
 }
 
 
 /* =========================================================
-   SMALL RESPONSE STATUS
+   THINKING
 ========================================================= */
 
-function addStatus(){
+function addThinking(){
 
-  const existing =
-    document.getElementById(
-      "answerStatus"
-    );
+  const old =
+    document.getElementById("thinking");
 
+  if(old) old.remove();
 
-  if(existing){
-    return;
-  }
+  const d =
+    document.createElement("div");
 
+  d.id = "thinking";
 
-  const status =
-    document.createElement(
-      "div"
-    );
+  d.className =
+    "flex gap-2 mb-3 items-start message-in";
 
 
-  status.id =
-    "answerStatus";
+  d.innerHTML = `
+    <div
+      class="w-7 h-7 rounded-full
+      bg-[#3349b8] text-white
+      flex items-center justify-center
+      text-[11px] shrink-0"
+    >
+      🎓
+    </div>
 
+    <div
+      class="bg-white border border-gray-200
+      rounded-2xl px-4 py-3 shadow-sm"
+    >
 
-  status.className =
-    "answer-status message-in";
+      <div class="thinking-bubble">
 
+        <span>Thinking</span>
 
-  status.innerHTML =
-    `
-      <span class="status-dot"></span>
-      <span>SomaHub is preparing your answer...</span>
-    `;
+        <div class="thinking-dots">
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
 
+      </div>
 
-  messages.appendChild(
-    status
-  );
+    </div>
+  `;
 
+  messages.appendChild(d);
 
   scrollBottom();
-}
 
-
-/* =========================================================
-   REMOVE STATUS
-========================================================= */
-
-function removeStatus(){
-
-  document
-    .getElementById(
-      "answerStatus"
-    )
-    ?.remove();
 }
 
 
@@ -2574,133 +1771,96 @@ function removeStatus(){
 
 function addAI(text){
 
-  welcome.style.display =
-    "none";
-
-
-  removeStatus();
-
+  welcome.classList.add("hidden");
 
   const id =
     "ai_" +
     Date.now() +
     "_" +
-    Math.floor(
-      Math.random() * 1000
-    );
+    Math.floor(Math.random()*1000);
+
+  const d =
+    document.createElement("div");
+
+  d.className =
+    "flex gap-2 mb-4 message-in items-start";
 
 
-  const row =
-    document.createElement(
-      "div"
-    );
+  d.innerHTML = `
+
+    <div
+      class="w-7 h-7 rounded-full
+      bg-[#3349b8] text-white
+      flex items-center justify-center
+      text-[11px] shrink-0 mt-1"
+    >
+      🎓
+    </div>
 
 
-  row.className =
-    "ai-row message-in";
+    <div class="flex-1 min-w-0">
+
+      <div
+        id="${id}"
+        class="ai-card"
+      >
+        ${formatResponse(text)}
+      </div>
 
 
-  const avatar =
-    document.createElement(
-      "div"
-    );
+      <div
+        class="flex flex-wrap gap-1.5 mt-2"
+      >
+
+        <button
+          onclick="copyCard('${id}')"
+          class="h-7 px-3 bg-white border
+          border-gray-200 rounded-full
+          text-[10px] font-bold text-gray-700"
+        >
+          <i class="fa-regular fa-copy"></i>
+          Copy
+        </button>
 
 
-  avatar.className =
-    "ai-avatar";
+        <button
+          onclick="listenCard('${id}')"
+          class="h-7 px-3 bg-white border
+          border-gray-200 rounded-full
+          text-[10px] font-bold text-gray-700"
+        >
+          <i class="fa-solid fa-volume-high"></i>
+          Listen
+        </button>
 
 
-  avatar.textContent =
-    "🎓";
+        <button
+          onclick="downloadCard('${id}')"
+          class="h-7 px-3 bg-white border
+          border-gray-200 rounded-full
+          text-[10px] font-bold text-gray-700"
+        >
+          <i class="fa-solid fa-download"></i>
+          Download
+        </button>
 
 
-  const content =
-    document.createElement(
-      "div"
-    );
+        <button
+          onclick="printCard('${id}')"
+          class="h-7 px-3 bg-[#263b99] text-white
+          rounded-full text-[10px] font-bold"
+        >
+          <i class="fa-solid fa-print"></i>
+          Print
+        </button>
+
+      </div>
+
+    </div>
+  `;
 
 
-  content.className =
-    "ai-content";
-
-
-  const card =
-    document.createElement(
-      "div"
-    );
-
-
-  card.id =
-    id;
-
-
-  card.className =
-    "ai-card";
-
-
-  card.innerHTML =
-    formatResponse(text);
-
-
-  const actions =
-    document.createElement(
-      "div"
-    );
-
-
-  actions.className =
-    "ai-actions";
-
-
-  actions.innerHTML =
-    `
-      <button class="ai-action"
-        onclick="copyCard('${id}')">
-        <i class="fa-regular fa-copy"></i>
-        Copy
-      </button>
-
-      <button class="ai-action"
-        onclick="listenCard('${id}')">
-        <i class="fa-solid fa-volume-high"></i>
-        Listen
-      </button>
-
-      <button class="ai-action"
-        onclick="downloadCard('${id}')">
-        <i class="fa-solid fa-download"></i>
-        Download
-      </button>
-
-      <button class="ai-action dark"
-        onclick="printCard('${id}')">
-        <i class="fa-solid fa-print"></i>
-        Print
-      </button>
-    `;
-
-
-  content.appendChild(
-    card
-  );
-
-  content.appendChild(
-    actions
-  );
-
-
-  row.appendChild(
-    avatar
-  );
-
-  row.appendChild(
-    content
-  );
-
-
-  messages.appendChild(
-    row
-  );
+  messages.appendChild(d);
 
 
   chatHistory.push({
@@ -2710,6 +1870,23 @@ function addAI(text){
 
 
   scrollBottom();
+
+}
+
+
+/* =========================================================
+   SCROLL
+========================================================= */
+
+function scrollBottom(){
+
+  requestAnimationFrame(() => {
+
+    chat.scrollTop =
+      chat.scrollHeight;
+
+  });
+
 }
 
 
@@ -2719,155 +1896,78 @@ function addAI(text){
 
 async function copyCard(id){
 
-  const element =
+  const el =
     document.getElementById(id);
 
-
-  if(!element){
-    return;
-  }
-
+  if(!el) return;
 
   const text =
-    element.innerText;
-
+    el.innerText;
 
   try{
 
-    await navigator.clipboard.writeText(
-      text
-    );
+    await navigator.clipboard.writeText(text);
 
   }catch{
 
-    const area =
-      document.createElement(
-        "textarea"
-      );
+    const ta =
+      document.createElement("textarea");
 
-    area.value =
-      text;
+    ta.value = text;
 
-    document.body.appendChild(
-      area
-    );
+    document.body.appendChild(ta);
 
-    area.select();
+    ta.select();
 
-    document.execCommand(
-      "copy"
-    );
+    document.execCommand("copy");
 
-    area.remove();
+    ta.remove();
+
   }
+
 }
 
 
 /* =========================================================
-   FAST SPEAKER
+   LISTEN
 ========================================================= */
 
 function listenCard(id){
 
-  const element =
-    document.getElementById(id);
+  if(!("speechSynthesis" in window)){
 
+    showError("Speech playback is not supported.");
 
-  if(!element){
     return;
+
   }
-
-
-  /*
-   * Stop anything already speaking.
-   */
 
   speechSynthesis.cancel();
 
+  const el =
+    document.getElementById(id);
+
+  if(!el) return;
 
   const text =
-    element.innerText
-      .replace(/\n+/g," ")
-      .trim();
+    el.innerText.slice(0,3000);
 
+  const utterance =
+    new SpeechSynthesisUtterance(text);
 
-  if(!text){
-    return;
-  }
-
-
-  /*
-   * Break long answers into smaller
-   * chunks so speech starts quickly.
-   */
-
-  speechQueue =
-    text
-      .match(
-        /[^.!?]+[.!?]+|[^.!?]+$/g
-      ) || [text];
-
-
-  speakNext();
-}
-
-
-function speakNext(){
-
-  if(!speechQueue.length){
-    currentSpeech = null;
-    return;
-  }
-
-
-  const part =
-    speechQueue.shift()
-      .trim();
-
-
-  if(!part){
-    speakNext();
-    return;
-  }
-
-
-  currentSpeech =
-    new SpeechSynthesisUtterance(
-      part
-    );
-
-
-  currentSpeech.lang =
-    detectLang(part) === "SW"
+  utterance.lang =
+    detectLang(text) === "SW"
       ? "sw-KE"
       : "en-KE";
 
+  utterance.rate = 1.05;
 
-  currentSpeech.rate =
-    1.05;
-
-
-  currentSpeech.pitch =
-    1;
-
-
-  currentSpeech.onend =
-    function(){
-
-      speakNext();
-    };
-
-
-  currentSpeech.onerror =
-    function(){
-
-      currentSpeech = null;
-    };
-
+  utterance.pitch = 1;
 
   speechSynthesis.speak(
-    currentSpeech
+    utterance
   );
+
 }
 
 
@@ -2877,64 +1977,44 @@ function speakNext(){
 
 function downloadCard(id){
 
-  const element =
+  const el =
     document.getElementById(id);
 
-
-  if(!element){
-    return;
-  }
-
+  if(!el) return;
 
   const text =
-    element.innerText;
-
+    el.innerText;
 
   const blob =
     new Blob(
       [text],
-      {
-        type:"text/plain;charset=utf-8"
-      }
+      {type:"text/plain"}
     );
-
 
   const url =
-    URL.createObjectURL(
-      blob
-    );
+    URL.createObjectURL(blob);
 
+  const a =
+    document.createElement("a");
 
-  const link =
-    document.createElement(
-      "a"
-    );
+  a.href = url;
 
-
-  link.href =
-    url;
-
-  link.download =
-    "SomaHub-Tutor-" +
+  a.download =
+    "SomaHub-" +
     Date.now() +
     ".txt";
 
+  document.body.appendChild(a);
 
-  document.body.appendChild(
-    link
-  );
+  a.click();
 
-  link.click();
-
-  link.remove();
-
+  a.remove();
 
   setTimeout(
-    function(){
-      URL.revokeObjectURL(url);
-    },
+    () => URL.revokeObjectURL(url),
     1000
   );
+
 }
 
 
@@ -2944,37 +2024,34 @@ function downloadCard(id){
 
 function printCard(id){
 
-  const element =
+  const el =
     document.getElementById(id);
 
+  if(!el) return;
 
-  if(!element){
-    return;
-  }
+  const content =
+    el.innerHTML;
 
-
-  const printWindow =
+  const w =
     window.open(
       "",
       "_blank"
     );
 
+  if(!w){
 
-  if(!printWindow){
     showError(
       "Please allow pop-ups to print."
     );
 
     return;
+
   }
 
-
-  printWindow.document.write(
-    `
+  w.document.write(`
     <!DOCTYPE html>
     <html>
     <head>
-
       <title>SomaHub Tutor</title>
 
       <style>
@@ -2982,31 +2059,24 @@ function printCard(id){
         body{
           font-family:Arial,sans-serif;
           padding:25px;
-          color:#111827;
           line-height:1.7;
           font-size:14px;
+          color:#111;
         }
 
-        .topic{
+        .ai-topic{
           color:#dc2626;
           font-weight:bold;
         }
 
-        .strand{
-          color:#dc2626;
-          font-weight:bold;
-        }
-
-        .explanation{
+        .ai-explanation{
           color:#2563eb;
           font-weight:bold;
+          margin-top:15px;
         }
 
-        .formula{
-          background:#f5f7fa;
-          padding:10px;
-          margin:10px 0;
-          text-align:center;
+        .ai-detail{
+          color:#111;
         }
 
       </style>
@@ -3015,7 +2085,7 @@ function printCard(id){
 
     <body>
 
-      ${element.innerHTML}
+      ${content}
 
       <script>
         window.onload=function(){
@@ -3025,56 +2095,38 @@ function printCard(id){
 
     </body>
     </html>
-    `
-  );
+  `);
 
+  w.document.close();
 
-  printWindow.document.close();
 }
 
 
 /* =========================================================
-   HISTORY SAVE
+   SAVE HISTORY
 ========================================================= */
 
-function saveHistory(title){
+function saveH(text){
 
-  try{
-
-    const history =
-      JSON.parse(
-        localStorage.getItem(
-          "sh"
-        ) || "[]"
-      );
-
-
-    history.unshift({
-
-      id:Date.now(),
-
-      title:
-        String(
-          title ||
-          "Learning session"
-        ).slice(0,70),
-
-      time:
-        new Date().toISOString(),
-
-      grade
-
-    });
-
-
-    localStorage.setItem(
-      "sh",
-      JSON.stringify(
-        history.slice(0,100)
-      )
+  const h =
+    JSON.parse(
+      localStorage.getItem("sh") || "[]"
     );
 
-  }catch(e){}
+  h.unshift({
+    id:Date.now(),
+    title:String(text).slice(0,60),
+    time:new Date().toISOString(),
+    grade:grade
+  });
+
+  localStorage.setItem(
+    "sh",
+    JSON.stringify(
+      h.slice(0,100)
+    )
+  );
+
 }
 
 
@@ -3089,121 +2141,82 @@ function openHistory(){
       "historyDrawer"
     );
 
+  drawer.classList.remove("hidden");
 
-  drawer.classList.add(
-    "open"
-  );
+  drawer.classList.add("flex");
 
+  const h =
+    JSON.parse(
+      localStorage.getItem("sh") || "[]"
+    );
 
   const list =
     document.getElementById(
       "historyList"
     );
 
+  if(!h.length){
 
-  let history = [];
-
-
-  try{
-
-    history =
-      JSON.parse(
-        localStorage.getItem(
-          "sh"
-        ) || "[]"
-      );
-
-  }catch(e){
-
-    history = [];
-  }
-
-
-  if(!history.length){
-
-    list.innerHTML =
-      `
-      <div class="text-center text-gray-400 mt-20 text-sm">
-        <i class="fa-regular fa-clock text-3xl mb-3"></i>
-        <p>No learning history yet.</p>
-      </div>
-      `;
+    list.innerHTML = `
+      <p
+        class="text-center text-gray-400
+        mt-20 text-xs"
+      >
+        No history yet
+      </p>
+    `;
 
     return;
-  }
 
+  }
 
   list.innerHTML = "";
 
+  h.forEach(item => {
 
-  history.forEach(
-    function(item){
+    const div =
+      document.createElement("div");
 
-      const div =
-        document.createElement(
-          "div"
-        );
+    div.className =
+      "py-3 border-b flex justify-between gap-3";
 
+    const safeTitle =
+      String(item.title)
+        .replace(/</g,"&lt;")
+        .replace(/>/g,"&gt;");
 
-      div.className =
-        "history-item";
+    div.innerHTML = `
 
+      <div class="min-w-0">
 
-      const left =
-        document.createElement(
-          "div"
-        );
-
-
-      left.innerHTML =
-        `
-        <p class="font-extrabold text-sm text-gray-800">
-          ${escapeHTML(item.title)}
+        <p
+          class="text-[12px] font-bold
+          truncate"
+        >
+          ${safeTitle}
         </p>
 
-        <p class="text-[10px] text-gray-500 mt-1">
-          ${escapeHTML(item.grade || "")}
+        <p
+          class="text-[9px] text-gray-500 mt-1"
+        >
+          ${item.grade || "Learner"}
         </p>
-        `;
 
+      </div>
 
-      const button =
-        document.createElement(
-          "button"
-        );
+      <button
+        onclick="delH('${item.id}')"
+        class="text-[16px] text-gray-400 shrink-0"
+      >
+        ×
+      </button>
 
+    `;
 
-      button.className =
-        "text-gray-400 px-2";
+    list.appendChild(div);
 
+  });
 
-      button.innerHTML =
-        '<i class="fa-solid fa-trash"></i>';
-
-
-      button.onclick =
-        function(){
-
-          deleteHistoryItem(
-            item.id
-          );
-        };
-
-
-      div.appendChild(
-        left
-      );
-
-      div.appendChild(
-        button
-      );
-
-
-      list.appendChild(
-        div
-      );
-    }
-  );
 }
 
 
@@ -3213,13 +2226,15 @@ function openHistory(){
 
 function closeHistory(){
 
-  document
-    .getElementById(
+  const drawer =
+    document.getElementById(
       "historyDrawer"
-    )
-    .classList.remove(
-      "open"
     );
+
+  drawer.classList.add("hidden");
+
+  drawer.classList.remove("flex");
+
 }
 
 
@@ -3227,31 +2242,25 @@ function closeHistory(){
    DELETE HISTORY ITEM
 ========================================================= */
 
-function deleteHistoryItem(id){
+function delH(id){
 
-  let history =
+  let h =
     JSON.parse(
-      localStorage.getItem(
-        "sh"
-      ) || "[]"
+      localStorage.getItem("sh") || "[]"
     );
 
-
-  history =
-    history.filter(
-      item =>
-        String(item.id) !==
-        String(id)
+  h =
+    h.filter(
+      x => String(x.id) !== String(id)
     );
-
 
   localStorage.setItem(
     "sh",
-    JSON.stringify(history)
+    JSON.stringify(h)
   );
 
-
   openHistory();
+
 }
 
 
@@ -3262,64 +2271,28 @@ function deleteHistoryItem(id){
 function clearHistory(){
 
   if(
-    !confirm(
-      "Delete all learning history?"
+    confirm(
+      "Delete all history?"
     )
   ){
 
-    return;
+    localStorage.removeItem("sh");
+
+    openHistory();
+
   }
 
-
-  localStorage.removeItem(
-    "sh"
-  );
-
-
-  openHistory();
 }
 
 
 /* =========================================================
-   SCROLL
-========================================================= */
-
-function scrollBottom(){
-
-  requestAnimationFrame(
-    function(){
-
-      chat.scrollTop =
-        chat.scrollHeight;
-    }
-  );
-}
-
-
-/* =========================================================
-   SEND
+   SEND MESSAGE
 ========================================================= */
 
 async function sendMsg(){
 
-  /*
-   * Stop voice recording first.
-   */
-
-  if(
-    recognition &&
-    listening
-  ){
-
-    try{
-      recognition.stop();
-    }catch(e){}
-  }
-
-
   const text =
     msg.value.trim();
-
 
   if(
     !text &&
@@ -3327,22 +2300,34 @@ async function sendMsg(){
   ){
 
     return;
-  }
 
+  }
 
   if(isThinking){
 
     return;
+
   }
 
 
   /*
-   * Display user's message.
-   */
+    Stop voice if active.
+  */
+
+  if(
+    recognition &&
+    listening
+  ){
+
+    recognition.stop();
+
+  }
+
 
   if(text){
 
     addUser(text);
+
   }
 
 
@@ -3351,183 +2336,149 @@ async function sendMsg(){
     addUserPhoto(
       uploadedPhoto
     );
+
   }
 
 
-  saveHistory(
+  saveH(
     text ||
     uploadedDocName ||
-    "Photo question"
+    "Photo"
   );
 
 
   const originalQuestion =
     text ||
-    "Please explain this uploaded image.";
+    "Explain this image";
+
+
+  const lang =
+    detectLang(text);
 
 
   /*
-   * Keep attachment before clearing.
-   */
+    Clear input immediately.
+    This makes the interface feel faster.
+  */
+
+  msg.value = "";
+
+  msg.dataset.voiceBase = "";
+
+  resizeTextarea();
+
 
   const keepPhoto =
     uploadedPhoto;
-
 
   const keepMime =
     uploadedMime ||
     "image/jpeg";
 
 
-  const keepDoc =
-    uploadedDocName;
-
-
-  /*
-   * Clear input immediately.
-   */
-
-  msg.value = "";
-
-  msg.style.height =
-    "auto";
-
-
   clearAttach();
 
 
   /*
-   * Prepare language.
-   */
+    THINKING UI appears immediately.
+  */
 
-  const language =
-    detectLang(
-      originalQuestion
-    );
+  addThinking();
+
+  isThinking = true;
 
 
   /*
-   * Tell the model how to structure
-   * educational answers.
-   *
-   * This is sent along with the actual
-   * question but the learner only sees
-   * the original question above.
-   */
+    IMPORTANT:
+    These instructions tell the API how the
+    learner wants the answer formatted.
 
-  let modelQuestion =
-    originalQuestion;
+    They are not shown to the learner.
+  */
 
+  const formattingInstruction = `
 
-  modelQuestion +=
-    `
+SomaHub Tutor response style:
 
-Teaching response preference:
-Answer naturally at the selected grade level.
-When appropriate, clearly identify the Topic and Strand.
-Give an Explanation followed by detailed text.
-For multiple-choice questions, identify the correct answer and explain briefly why each of the other choices is wrong.
-Do not use decorative brackets, box lines, or unnecessary separators.
-Keep the answer clear and readable on a phone.
+Use a friendly, human and age-appropriate teaching style.
+
+If relevant, begin with:
+Topic: [topic]
+or
+Strand: [strand]
+
+Then give:
+Explanation:
+
+Then give the detailed explanation in clear black-text-friendly paragraphs.
+
+Do not use square brackets in the final answer.
+
+For multiple-choice questions:
+- clearly identify the correct answer
+- explain why it is correct
+- explain briefly why each of the other choices is wrong
+
+For mathematics, show clear working.
+
+Keep the explanation suitable for ${grade}.
+
+Do not unnecessarily repeat the question.
+Do not use long introductions.
+Do not add unnecessary headings.
 `;
 
 
+  const apiQuestion =
+    originalQuestion +
+    "\n\n" +
+    formattingInstruction;
+
+
+  const payload = {
+
+    question:apiQuestion,
+
+    originalQuestion:originalQuestion,
+
+    grade:grade,
+
+    role:"Student",
+
+    task:lang,
+
+    mode:"student",
+
+    history:
+      chatHistory.slice(-6),
+
+    photo:keepPhoto,
+
+    mimeType:keepMime,
+
+    provider:"auto"
+
+  };
+
+
   /*
-   * Small status instead of a large
-   * Thinking bubble.
-   */
-
-  addStatus();
-
-
-  isThinking =
-    true;
-
-
-  /*
-   * Abort very long network hangs.
-   * Normal answers should return well
-   * before this.
-   */
+    Use a controller so a stalled request
+    does not leave the learner waiting forever.
+  */
 
   const controller =
     new AbortController();
 
-
   const timeout =
     setTimeout(
-      function(){
-
-        controller.abort();
-
-      },
-      60000
+      () => controller.abort(),
+      45000
     );
 
 
   try{
 
-    const payload = {
-
-      question:
-        modelQuestion,
-
-      originalQuestion:
-        originalQuestion,
-
-      grade:
-        grade,
-
-      role:
-        "Student",
-
-      task:
-        language,
-
-      mode:
-        "student",
-
-      subject:
-        "",
-
-      topic:
-        "",
-
-      strand:
-        "",
-
-      history:
-        chatHistory.slice(-8),
-
-      photo:
-        keepPhoto,
-
-      mimeType:
-        keepMime,
-
-      provider:
-        "auto",
-
-      /*
-       * Extra metadata for future
-       * SomaHub frontend versions.
-       */
-
-      responseStyle:
-        "topic-strand-explanation-detailed",
-
-      explainWrongChoices:
-        true,
-
-      useSomaHubFiles:
-        true,
-
-      repository:
-        "kevokevo426-cmd/Somahub-Kenya"
-    };
-
-
-    const response =
+    const res =
       await fetch(
         PROXY,
         {
@@ -3547,13 +2498,8 @@ Keep the answer clear and readable on a phone.
       );
 
 
-    clearTimeout(
-      timeout
-    );
-
-
-    const raw =
-      await response.text();
+    const textRes =
+      await res.text();
 
 
     let data;
@@ -3562,129 +2508,131 @@ Keep the answer clear and readable on a phone.
     try{
 
       data =
-        JSON.parse(raw);
+        JSON.parse(textRes);
 
     }catch{
 
       throw new Error(
-        raw.slice(
-          0,
-          300
-        ) ||
-        "Invalid server response."
+        textRes.slice(0,250) ||
+        "Invalid server response"
       );
+
     }
 
 
-    removeStatus();
+    document
+      .getElementById("thinking")
+      ?.remove();
 
 
-    if(!response.ok){
+    if(!res.ok){
 
       throw new Error(
         data.error ||
-        "SomaHub could not answer right now."
+        "Server error"
       );
+
     }
 
 
-    const answer =
+    const reply =
       data.answer ||
       data.reply ||
       "";
 
 
-    if(!answer){
+    if(!reply){
 
       throw new Error(
         "SomaHub returned an empty answer."
       );
+
     }
 
 
-    addAI(answer);
+    /*
+      Show answer immediately.
+    */
+
+    addAI(reply);
 
 
   }catch(error){
 
-    clearTimeout(
-      timeout
-    );
+    document
+      .getElementById("thinking")
+      ?.remove();
 
 
-    removeStatus();
-
-
-    let message =
-      error?.message ||
-      "Something went wrong.";
+    let errorMessage =
+      error.message;
 
 
     if(
-      error?.name ===
-      "AbortError"
+      error.name === "AbortError"
     ){
 
-      message =
-        "The response took too long. Please try again.";
+      errorMessage =
+        "The response is taking too long. Please try again.";
+
     }
 
 
     showError(
-      message
+      errorMessage
     );
 
 
     /*
-     * Keep error response short.
-     */
+      Keep error friendly rather than
+      displaying raw technical information
+      inside a normal AI card.
+    */
 
     addAI(
-      language === "SW"
-        ? "Samahani, kuna hitilafu wakati wa kupata jibu. Tafadhali jaribu tena."
-        : "Sorry, I couldn't get the answer right now. Please try again."
+      lang === "SW"
+        ? "Samahani, sijapata jibu kwa sasa. Tafadhali jaribu tena."
+        : "Sorry, I couldn't get an answer right now. Please try again."
     );
 
   }finally{
 
-    isThinking =
-      false;
+    clearTimeout(timeout);
 
-    scrollBottom();
+    isThinking = false;
+
+    setTimeout(
+      scrollBottom,
+      30
+    );
+
   }
+
 }
 
 
 /* =========================================================
-   INITIAL SETUP
+   INITIAL TEXTAREA SIZE
 ========================================================= */
 
-(function(){
-
-  /*
-   * Make sure textarea starts compact.
-   */
-
-  msg.style.height =
-    "auto";
+resizeTextarea();
 
 
-  /*
-   * Stop speech when leaving page.
-   */
+/* =========================================================
+   KEEP CHAT AT BOTTOM WHEN APP RESIZES
+========================================================= */
 
-  window.addEventListener(
-    "beforeunload",
-    function(){
+window.addEventListener(
+  "resize",
+  () => {
 
-      try{
-        speechSynthesis.cancel();
-      }catch(e){}
+    setTimeout(
+      scrollBottom,
+      80
+    );
 
-    }
-  );
-
-})();
+  }
+);
 
 </script>
 
