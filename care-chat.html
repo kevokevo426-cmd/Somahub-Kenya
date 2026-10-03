@@ -1,13 +1,16 @@
 <!DOCTYPE html>
 <html><head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Care Chat - SomaHub</title>
+<title>Care Chat - SomaHub Tutor</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;800;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <style>
 body{font-family:'Nunito',sans-serif;background:#e5ddd5}
 .chat-bg{background-image:url('https://user-images.githubusercontent.com/15075759/28719144-86dc0f70-73b1-11e7-911d-60d70fcded21.png');}
+#chatArea{scroll-behavior:smooth}
+#chatArea::-webkit-scrollbar{width:5px}
+#chatArea::-webkit-scrollbar-thumb{background:#999;border-radius:10px}
 </style>
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
@@ -19,65 +22,126 @@ const app=initializeApp(cfg); window.FB={auth:getAuth(app),db:getFirestore(app),
 </head>
 <body class="flex justify-center"><div class="w-full max-w-[420px] bg-[#e5ddd5] min-h-screen flex flex-col relative">
 
-<!-- WhatsApp Header -->
-<div class="bg-[#075e54] text-white p-3 flex items-center gap-3 sticky top-0 z-50">
-<a href="student.html" class="text-white text-[18px]"><i class="fa-solid fa-arrow-left"></i></a>
-<img src="https://i.pravatar.cc/100?img=12" class="w-10 h-10 rounded-full">
+<!-- WhatsApp Header + LOGO + GRADE + LANG -->
+<div class="bg-[#075e54] text-white p-2.5 flex items-center gap-2 sticky top-0 z-50">
+<a href="student.html" class="text-white text-[16px]"><i class="fa-solid fa-arrow-left"></i></a>
+<img src="/logo.png" onerror="this.src='https://i.pravatar.cc/100?img=12'" class="w-9 h-9 rounded-full bg-white object-cover">
 <div class="flex-1">
-<p class="font-black text-[14px] leading-none">SomaHub Support</p>
-<p class="text-[10px] opacity-80 mt-1"><span class="w-2 h-2 bg-green-400 rounded-full inline-block"></span> Online • Replies in minutes</p>
+<p class="font-black text-[12px] leading-none flex items-center gap-1">SomaHub Tutor <span id="autoBadge" class="hidden text-[8px] bg-green-400 text-black px-1.5 py-0.5 rounded-full">Auto: SW</span></p>
+<p class="text-[9px] opacity-80 mt-0.5">Online • Grade: <span id="gradeShowTop">Grade 7</span> • <span id="langShow">EN</span></p>
 </div>
-<a href="tel:0701305109" class="w-8 h-8 bg-[#128c7e] rounded-full flex items-center justify-center"><i class="fa-solid fa-phone text-[12px]"></i></a>
+<button onclick="toggleLang()" id="langBtn" class="w-8 h-8 bg-[#128c7e] rounded-full flex items-center justify-center text-[10px] font-black">EN</button>
+<button onclick="openHistory()" class="w-8 h-8 bg-[#128c7e] rounded-full flex items-center justify-center"><i class="fa-regular fa-clock text-[11px]"></i></button>
+<a href="tel:0701305109" class="w-8 h-8 bg-[#25d366] rounded-full flex items-center justify-center"><i class="fa-solid fa-phone text-[11px]"></i></a>
 </div>
 
-<!-- SHKE Badge -->
-<div class="bg-[#fff7e0] text-center py-2 border-b border-black/10">
-<p class="text-[10px] font-black">🔒 Chat secure • Your SHKE: <span id="shkeShow" class="bg-black text-white px-2 py-0.5 rounded-full">SHKE...</span> • Grade: <span id="gradeShow">...</span></p>
+<!-- Grade Selector + SHKE -->
+<div class="bg-[#fff7e0] text-center py-2 border-b border-black/10 flex justify-center gap-2 items-center px-2">
+<select id="gradeSelect" class="text-[10px] font-bold bg-white border rounded-full px-2 py-1">
+<option>Playground</option><option>PP1</option><option>PP2</option><option>Grade 1</option><option>Grade 2</option><option>Grade 3</option><option>Grade 4</option><option>Grade 5</option><option>Grade 6</option><option selected>Grade 7</option><option>Grade 8</option><option>Grade 9</option><option>Grade 10</option>
+</select>
+<p class="text-[9px] font-black">SHKE: <span id="shkeShow" class="bg-black text-white px-2 py-0.5 rounded-full">SHKE...</span></p>
+<span id="gradeShow" class="text-[9px] font-bold bg-[#075e54] text-white px-2 py-0.5 rounded-full">Grade 7</span>
 </div>
 
 <!-- Messages Area -->
-<div id="chatArea" class="flex-1 chat-bg p-3 space-y-2 overflow-y-auto pb-[80px]">
-<div class="flex justify-center"><span class="bg-[#fff7e0] border shadow text-[9px] px-3 py-1 rounded-full font-bold">Today - Encrypted</span></div>
-<div class="bg-white border shadow rounded-lg rounded-tl-none p-3 max-w-[80%]">
-<p class="font-black text-[11px]">👋 Hi! SomaHub Care here</p>
-<p class="text-[11px] mt-1">How can we help? Ask about:</p>
-<p class="text-[10px] mt-2 leading-4">• Daily HW 10 Marks (Mon-Fri)<br>• Weekly Exam 100 Marks (Sat-Sun)<br>• Notes, ICT, Foreign Language, Games<br>• Payments, Points to KES</p>
-<p class="text-[8px] text-gray-500 mt-2 text-right">11:34 AM</p>
+<div id="chatArea" class="flex-1 chat-bg p-3 space-y-2 overflow-y-auto pb-[110px]">
+<div class="flex justify-center"><span class="bg-[#fff7e0] border shadow text-[9px] px-3 py-1 rounded-full font-bold">Today - Encrypted • Auto EN/SW</span></div>
+<div id="welcomeMsg" class="bg-white border shadow rounded-lg rounded-tl-none p-3 max-w-[85%]">
+<p class="font-black text-[11px]">👋 Habari! SomaHub Care</p>
+<p class="text-[11px] mt-1" id="welcomeText">How can we help? Type Kiswahili or English - I auto-detect like Meta AI 🎤</p>
+<p class="text-[10px] mt-2 leading-4">• Daily HW 10 Marks<br>• Weekly Exam 100 Marks<br>• Tap 🎤 to speak SW/EN<br>• Attach file/image/camera 📎</p>
+<p class="text-[8px] text-gray-500 mt-2 text-right">Now</p>
 </div>
 </div>
 
-<!-- Input Area - WhatsApp Style -->
-<div class="bg-[#f0f0f0] p-2 flex items-center gap-2 fixed bottom-0 w-full max-w-[420px] border-t">
-<button class="w-10 h-10 bg-white rounded-full flex items-center justify-center text-gray-500"><i class="fa-solid fa-face-smile"></i></button>
-<input id="msgInput" placeholder="Type a message..." class="flex-1 bg-white rounded-full px-4 py-3 text-[12px] font-bold border outline-none">
-<button id="sendBtn" onclick="sendMsg()" class="w-11 h-11 bg-[#25d366] rounded-full flex items-center justify-center text-white shadow"><i class="fa-solid fa-paper-plane text-[14px]"></i></button>
+<!-- Preview -->
+<div id="previewBox" class="hidden bg-[#f0f0f0] p-2 border-t text-[10px]"><span id="previewText"></span> <button onclick="clearAttach()" class="ml-2 bg-black text-white px-2 py-0.5 rounded-full">X</button></div>
+
+<!-- Input Area -->
+<div class="bg-[#f0f0f0] p-2 flex items-center gap-1.5 fixed bottom-0 w-full max-w-[420px] border-t">
+<input type="file" id="fileInput" class="hidden" accept=".pdf,.doc,.docx,.txt">
+<input type="file" id="imageInput" class="hidden" accept="image/*">
+<input type="file" id="cameraInput" class="hidden" accept="image/*" capture="environment">
+
+<button onclick="document.getElementById('fileInput').click()" class="w-9 h-9 bg-white rounded-full flex items-center justify-center text-gray-500"><i class="fa-solid fa-paperclip text-[12px]"></i></button>
+<button onclick="document.getElementById('imageInput').click()" class="w-9 h-9 bg-white rounded-full flex items-center justify-center text-pink-400"><i class="fa-regular fa-image text-[12px]"></i></button>
+<button id="voiceBtn" onclick="toggleVoice()" class="w-9 h-9 bg-white rounded-full flex items-center justify-center text-[#075e54]"><i class="fa-solid fa-microphone text-[12px]"></i></button>
+
+<input id="msgInput" placeholder="Type or tap 🎤 speak Kiswahili/English..." class="flex-1 bg-white rounded-full px-4 py-3 text-[11px] font-bold border outline-none">
+<button id="sendBtn" onclick="sendMsg()" class="w-11 h-11 bg-[#25d366] rounded-full flex items-center justify-center text-white shadow"><i class="fa-solid fa-paper-plane text-[13px]"></i></button>
+</div>
+
+<!-- HISTORY DRAWER -->
+<div id="historyDrawer" class="fixed inset-0 z-[60] bg-[#fffaf5] hidden flex-col max-w-[420px] mx-auto">
+<div class="flex items-center justify-between p-4 border-b bg-white"><button onclick="closeHistory()">←</button><b class="text-xs">History - parent.html</b><button onclick="clearHistory()" class="text-[10px] text-red-600 font-bold">Delete data...</button></div>
+<div id="historyList" class="flex-1 overflow-auto p-3"></div>
+<a href="/parent.html" target="_blank" class="m-3 p-3 bg-[#075e54] text-white rounded-full text-center text-xs font-bold">Open parent.html 👨‍👩‍👧</a>
 </div>
 
 </div>
+
 <script>
-let currentUser=null, shke="SHKE", grade="Grade 6", name="Learner";
+let currentUser=null, shke="SHKE", grade="Grade 7", name="Learner", lang="EN", attachedFile="", recognition=null, listening=false;
+const SW_KEYWORDS=["habari","mambo","nisaidie","hisabati","hesabu","sayansi","kiswahili","insha","shule","mwalimu","asante","eleza","soma","darasa","mtihani","kazi","nini","nani","wapi","je","mimi","sawa","ndio"];
+function detectLang(t){ if(!t||t.length<3) return null; const l=t.toLowerCase(); if(SW_KEYWORDS.some(k=>l.includes(k))) return "SW"; if(["what","how","math","science","help","solve","homework"].some(w=>l.includes(w))) return "EN"; return null; }
+function toggleLang(){ lang=lang==="EN"?"SW":"EN"; document.getElementById('langBtn').innerText=lang; document.getElementById('langShow').innerText=lang; localStorage.setItem('somahub_lang',lang); }
+function saveHistory(title){ const h=JSON.parse(localStorage.getItem('somahub_history')||"[]"); h.unshift({id:Date.now().toString(), title:title.slice(0,60), time:new Date().toISOString(), grade, lang, shke, url:title.toLowerCase().replace(/ /g,'-')}); localStorage.setItem('somahub_history', JSON.stringify(h.slice(0,200))); }
+function openHistory(){ document.getElementById('historyDrawer').classList.remove('hidden'); document.getElementById('historyDrawer').classList.add('flex'); renderHistory(); }
+function closeHistory(){ document.getElementById('historyDrawer').classList.add('hidden'); }
+function renderHistory(){ const h=JSON.parse(localStorage.getItem('somahub_history')||"[]"); const list=document.getElementById('historyList'); list.innerHTML=""; if(!h.length){list.innerHTML='<p class="text-center text-gray-400 mt-20 text-xs">No history yet</p>'; return;} const today=new Date().toDateString(); const yest=new Date(); yest.setDate(yest.getDate()-1); const groups={Today:[], Yesterday:[], Earlier:[]}; h.forEach(it=>{const d=new Date(it.time).toDateString(); if(d===today) groups.Today.push(it); else if(d===new Date(yest).toDateString()) groups.Yesterday.push(it); else groups.Earlier.push(it);}); Object.entries(groups).forEach(([label,items])=>{ if(!items.length) return; const header=document.createElement('p'); header.className="text-[10px] text-gray-400 mt-3 mb-1"; header.textContent=label; list.appendChild(header); items.forEach(it=>{ const div=document.createElement('div'); div.className="flex items-center gap-2 py-2 border-b bg-white rounded-xl px-2 mb-1"; div.innerHTML=`<div class="w-7 h-7 rounded-full bg-orange-100 flex items-center justify-center text-[9px] font-bold">${it.lang}</div><div class="flex-1 overflow-hidden"><p class="text-[11px] font-bold truncate">${it.title}</p><p class="text-[9px] text-gray-500">${it.grade} • ${it.shke} • ${it.lang}</p></div><button onclick="deleteHistory('${it.id}')" class="w-6 h-6 rounded-full bg-black text-white text-[10px]">×</button>`; list.appendChild(div); }); }); }
+function deleteHistory(id){ let h=JSON.parse(localStorage.getItem('somahub_history')||"[]"); h=h.filter(x=>x.id!==id); localStorage.setItem('somahub_history', JSON.stringify(h)); renderHistory(); }
+function clearHistory(){ if(confirm('Delete all?')){ localStorage.removeItem('somahub_history'); renderHistory(); } }
+
+// Voice like Meta AI
+(function initVoice(){
+ const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+ if(!SR) return;
+ recognition=new SR(); recognition.continuous=false; recognition.interimResults=true;
+ recognition.onstart=()=>{listening=true; document.getElementById('voiceBtn').classList.add('bg-red-100'); document.getElementById('msgInput').placeholder="Listening... ongea sasa";};
+ recognition.onend=()=>{listening=false; document.getElementById('voiceBtn').classList.remove('bg-red-100'); document.getElementById('msgInput').placeholder="Type or tap 🎤 speak...";};
+ recognition.onresult=(e)=>{ const t=e.results[0][0].transcript; document.getElementById('msgInput').value=t; const d=detectLang(t); if(d){lang=d; document.getElementById('langBtn').innerText=lang; document.getElementById('langShow').innerText=lang; document.getElementById('autoBadge').innerText="Auto: "+lang; document.getElementById('autoBadge').classList.remove('hidden'); setTimeout(()=>document.getElementById('autoBadge').classList.add('hidden'),2000);} };
+})();
+function toggleVoice(){ if(!recognition){alert('Use Chrome'); return;} if(listening){recognition.stop(); return;} recognition.lang=lang==="SW"?"sw-KE":"en-KE"; recognition.start(); }
+
+// Attachments
+document.getElementById('fileInput').addEventListener('change',e=>{ const f=e.target.files[0]; if(!f) return; attachedFile=f.name; document.getElementById('previewBox').classList.remove('hidden'); document.getElementById('previewText').innerText="📎 "+f.name; });
+document.getElementById('imageInput').addEventListener('change',e=>{ const f=e.target.files[0]; if(!f) return; attachedFile=f.name; document.getElementById('previewBox').classList.remove('hidden'); document.getElementById('previewText').innerText="🖼️ "+f.name; });
+document.getElementById('cameraInput').addEventListener('change',e=>{ const f=e.target.files[0]; if(!f) return; attachedFile=f.name; document.getElementById('previewBox').classList.remove('hidden'); document.getElementById('previewText').innerText="📷 "+f.name; });
+function clearAttach(){ attachedFile=""; document.getElementById('previewBox').classList.add('hidden'); }
+
 async function sendMsg(){
- let txt=document.getElementById('msgInput').value.trim(); if(!txt) return;
+ let input=document.getElementById('msgInput'); let txt=input.value.trim(); if(!txt &&!attachedFile) return;
  let area=document.getElementById('chatArea');
- // Student message UI
- area.innerHTML+=`<div class="flex justify-end"><div class="bg-[#dcf8c6] border shadow rounded-lg rounded-tr-none p-3 max-w-[80%]"><p class="text-[11px] font-bold">${txt}</p><p class="text-[8px] text-gray-500 mt-1 text-right">${new Date().toLocaleTimeString()} ✓✓</p></div></div>`;
- document.getElementById('msgInput').value="";
- area.scrollTop=area.scrollHeight;
- // Save to Firebase
+ // Auto detect language like Meta AI
+ let detected=detectLang(txt); if(detected){ lang=detected; document.getElementById('langBtn').innerText=lang; document.getElementById('langShow').innerText=lang; }
+ let displayText = txt + (attachedFile? (txt?" ":"")+"["+attachedFile+"]" : "");
+ area.innerHTML+=`<div class="flex justify-end"><div class="bg-[#dcf8c6] border shadow rounded-lg rounded-tr-none p-3 max-w-[80%]"><p class="text-[11px] font-bold">${displayText}</p><p class="text-[8px] text-gray-500 mt-1 text-right">${new Date().toLocaleTimeString()} ✓✓ • ${grade} • ${lang}</p></div></div>`;
+ saveHistory(displayText);
+ input.value=""; clearAttach(); area.scrollTop=area.scrollHeight;
+ // Save to Firebase with grade + lang filtering
  try{
   let FB=window.FB;
-  await FB.addDoc(FB.collection(FB.db,"care_chats"),{userId:currentUser?.uid||"guest",shke:shke,grade:grade,name:name,message:txt,from:"student",time:FB.serverTimestamp()});
+  await FB.addDoc(FB.collection(FB.db,"care_chats"),{userId:currentUser?.uid||"guest",shke,grade,lang,name,message:displayText,from:"student",time:FB.serverTimestamp(), prompt: `Grade=${grade} Lang=${lang} ${lang==="SW"?"JIBU KWA KISWAHILI":"Answer in English"} - ${displayText}`});
  }catch(e){}
- // Auto reply simulation (until admin replies in admin.html)
- setTimeout(()=>{ area.innerHTML+=`<div class="bg-white border shadow rounded-lg rounded-tl-none p-3 max-w-[80%]"><p class="text-[11px]">✅ Received! Admin will reply soon. SHKE ${shke} noted. For urgent call 0701305109</p><p class="text-[8px] text-gray-500 mt-2 text-right">Now</p></div>`; area.scrollTop=area.scrollHeight; },800);
+ setTimeout(()=>{
+   let reply = lang==="SW"? `✅ Nimepokea! SHKE ${shke} • ${grade}. Mwalimu atajibu hivi karibuni. Kwa haraka piga 0701305109` : `✅ Received! SHKE ${shke} • ${grade}. Admin will reply soon. For urgent call 0701305109`;
+   area.innerHTML+=`<div class="bg-white border shadow rounded-lg rounded-tl-none p-3 max-w-[80%]"><p class="text-[11px]">${reply}</p><p class="text-[8px] text-gray-500 mt-2 text-right">Now • ${lang}</p></div>`;
+   area.scrollTop=area.scrollHeight;
+   // Voice reply like Meta AI
+   let utter=new SpeechSynthesisUtterance(reply); utter.lang=lang==="SW"?"sw-KE":"en-KE"; utter.rate=0.9; speechSynthesis.speak(utter);
+ },700);
 }
-// Load chat history
+
 function loadChats(){
  let FB=window.FB; if(!currentUser) return;
  let q=FB.query(FB.collection(FB.db,"care_chats"),FB.where("userId","==",currentUser.uid),FB.orderBy("time","asc"));
- FB.onSnapshot(q,(snap)=>{let area=document.getElementById('chatArea'); snap.forEach(d=>{let m=d.data(); if(m.from==="admin"){area.innerHTML+=`<div class="bg-white border shadow rounded-lg rounded-tl-none p-3 max-w-[80%]"><p class="text-[11px]">${m.message}</p><p class="text-[8px] text-gray-500 mt-1 text-right">Admin</p></div>`;}}); area.scrollTop=area.scrollHeight;});
+ FB.onSnapshot(q,(snap)=>{let area=document.getElementById('chatArea'); snap.forEach(d=>{let m=d.data(); if(m.from==="admin"){area.innerHTML+=`<div class="bg-white border shadow rounded-lg rounded-tl-none p-3 max-w-[80%]"><p class="text-[11px]">${m.message}</p><p class="text-[8px] text-gray-500 mt-1 text-right">Admin • ${m.grade||''}</p></div>`;}}); area.scrollTop=area.scrollHeight;});
 }
-setTimeout(()=>{let FB=window.FB; let p=new URLSearchParams(location.search); shke=p.get('shke')||localStorage.getItem('sh_index')||"SHKE"; grade=p.get('grade')||"Grade 6"; name=p.get('name')||"Learner"; document.getElementById('shkeShow').innerText=shke; document.getElementById('gradeShow').innerText=grade; FB.onAuthStateChanged(FB.auth, async(u)=>{if(u){currentUser=u; let s=await FB.getDoc(FB.doc(FB.db,"users",u.uid)); if(s.exists()){let d=s.data(); shke=d.indexNumber||shke; grade=d.grade||grade; name=d.firstName||name; document.getElementById('shkeShow').innerText=shke; document.getElementById('gradeShow').innerText=grade;} loadChats();}});},500);
+
+setTimeout(()=>{let FB=window.FB; let p=new URLSearchParams(location.search); shke=p.get('shke')||localStorage.getItem('sh_index')||"SHKE"; grade=localStorage.getItem('somahub_grade')||p.get('grade')||"Grade 7"; name=p.get('name')||"Learner"; lang=localStorage.getItem('somahub_lang')||"EN"; document.getElementById('shkeShow').innerText=shke; document.getElementById('gradeShow').innerText=grade; document.getElementById('gradeShowTop').innerText=grade; document.getElementById('gradeSelect').value=grade; document.getElementById('langBtn').innerText=lang; document.getElementById('langShow').innerText=lang; FB.onAuthStateChanged(FB.auth, async(u)=>{if(u){currentUser=u; let s=await FB.getDoc(FB.doc(FB.db,"users",u.uid)); if(s.exists()){let d=s.data(); shke=d.indexNumber||shke; grade=d.grade||grade; name=d.firstName||name; document.getElementById('shkeShow').innerText=shke; document.getElementById('gradeShow').innerText=grade; document.getElementById('gradeShowTop').innerText=grade;} loadChats();}});},500);
+document.getElementById('gradeSelect').addEventListener('change',e=>{ grade=e.target.value; document.getElementById('gradeShow').innerText=grade; document.getElementById('gradeShowTop').innerText=grade; localStorage.setItem('somahub_grade',grade); });
+document.getElementById('msgInput').addEventListener('input',e=>{ let d=detectLang(e.target.value); if(d && d!==lang && e.target.value.length>4){ lang=d; document.getElementById('langBtn').innerText=lang; document.getElementById('langShow').innerText=lang; } });
 document.getElementById('msgInput').addEventListener('keypress',e=>{if(e.key==='Enter') sendMsg();});
 </script>
 </body></html>
