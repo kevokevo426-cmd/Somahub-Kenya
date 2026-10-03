@@ -8,124 +8,136 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;800&display=swap" rel="stylesheet">
 <style>
-*{box-sizing:border-box}html,body{margin:0;padding:0;height:100%;font-family:'Nunito',Inter,sans-serif;background:#f7f7f8}body{overflow:hidden}#app{height:100dvh;display:flex;flex-direction:column}#chat::-webkit-scrollbar{width:6px}#chat::-webkit-scrollbar-thumb{background:#c7c7c7;border-radius:20px}textarea{resize:none}.message-in{animation:in.2s ease-out}@keyframes in{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}.typing-dot{width:6px;height:6px;background:#555;border-radius:50%;animation:typing 1.2s infinite}.photo-message{max-width:300px;border-radius:16px}.ai-response{font-size:14px;line-height:1.7}.answer-box{background:#ecfdf3;border:1px solid #a7f3d0;border-radius:14px;padding:10px;margin:10px 0}.safe-bottom{padding-bottom:max(10px,env(safe-area-inset-bottom))}
+*{box-sizing:border-box}html,body{margin:0;padding:0;height:100%;font-family:'Nunito',Inter,sans-serif;background:#f7f7f8}body{overflow:hidden}#app{height:100dvh;display:flex;flex-direction:column}#chat{scroll-behavior:smooth}#chat::-webkit-scrollbar{width:6px}#chat::-webkit-scrollbar-thumb{background:#c7c7c7;border-radius:20px}textarea{resize:none}.message-in{animation:in.2s ease-out}@keyframes in{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}.typing-dot{width:6px;height:6px;background:#555;border-radius:50%;animation:typing 1.2s infinite}.photo-message{max-width:280px;border-radius:12px}.ai-response{font-size:13.5px;line-height:1.7}.safe-bottom{padding-bottom:max(8px,env(safe-area-inset-bottom))}
 </style>
 </head>
 <body>
 <div id="app">
-<header class="bg-white border-b shrink-0">
-<div class="max-w-4xl mx-auto px-3 py-2.5 flex items-center justify-between gap-2">
-<div class="flex items-center gap-2.5">
-<img src="/logo.png" onerror="this.style.display='none'" class="w-9 h-9 rounded-full object-cover bg-white">
-<div>
-<h1 class="font-extrabold text-[14px] leading-none text-[#1a1a6c]">SomaHub<br>Tutor</h1>
-<span id="knowledgeStatus" class="text-[10px] text-gray-500">Learning assistant • <span id="langShow">EN</span></span>
+
+<!-- SMALL TOP BAR - FITS WELL -->
+<header class="bg-white border-b border-[#e5e5e5] shrink-0 sticky top-0 z-20">
+<div class="max-w-4xl mx-auto px-2.5 py-2 flex items-center justify-between gap-1">
+<div class="flex items-center gap-1.5 min-w-0">
+<img src="/logo.png" onerror="this.style.display='none'" class="w-7 h-7 rounded-full bg-white object-cover shrink-0 border">
+<div class="leading-none min-w-0">
+<p class="font-extrabold text-[11px] text-[#1a1a6c] truncate">SomaHub Tutor</p>
+<p class="text-[8px] text-gray-500 flex items-center gap-1"><span class="w-1.5 h-1.5 bg-green-500 rounded-full inline-block"></span><span id="statusTxt">Online</span> • <span id="langShow">EN</span></p>
 </div>
 </div>
-<div class="flex items-center gap-1.5">
-<button id="langToggle" onclick="toggleLang()" class="px-2.5 py-1.5 rounded-full bg-[#1a1a6c] text-white text-[10px] font-bold">🌐 EN</button>
-<select id="grade" class="bg-gray-100 rounded-full px-2.5 py-1.5 text-[10px] font-bold outline-none">
-<option>Playground</option><option>PP1</option><option>PP2</option><option>Grade 1</option><option>Grade 2</option><option>Grade 3</option><option>Grade 4</option><option>Grade 5</option><option>Grade 6</option><option selected>Grade 7</option><option>Grade 8</option><option>Grade 9</option><option>Grade 10</option>
-</select>
-<button onclick="openHistory()" class="w-8 h-8 rounded-full bg-black text-white flex items-center justify-center text-xs"><i class="fa-regular fa-clock"></i></button>
+<div class="flex items-center gap-1 shrink-0">
+<button id="langToggle" onclick="toggleLang()" class="h-6 px-2 rounded-full bg-[#1a1a6c] text-white text-[8px] font-bold">🌐 EN</button>
+<select id="grade" class="h-6 bg-gray-100 rounded-full px-2 text-[9px] font-bold outline-none border-0 max-w-[72px]"><option>Playground</option><option>PP1</option><option>PP2</option><option>Grade 1</option><option>Grade 2</option><option>Grade 3</option><option>Grade 4</option><option>Grade 5</option><option>Grade 6</option><option selected>Grade 7</option><option>Grade 8</option><option>Grade 9</option><option>Grade 10</option></select>
+<button onclick="openHistory()" class="w-6 h-6 rounded-full bg-black text-white flex items-center justify-center text-[10px]" title="History"><i class="fa-regular fa-clock"></i></button>
 </div>
 </div>
 </header>
 
 <main id="chat" class="flex-1 overflow-y-auto">
-<div class="max-w-4xl mx-auto px-4 py-6 pb-40">
-<div id="welcome" class="flex flex-col items-center text-center py-10">
-<div class="w-16 h-16 rounded-full bg-black text-white flex items-center justify-center text-2xl">🎓</div>
-<h2 id="welcomeTitle" class="text-2xl font-extrabold mt-4 text-[#1a1a6c]">How can I help you learn today?</h2>
-<p class="text-gray-500 text-sm mt-2">Ask questions, explore subjects, or get help with homework — for kids & teachers</p>
-<p class="text-[10px] text-gray-400 mt-1">Type Kiswahili or English - I auto-detect like Meta AI</p>
+<div class="max-w-4xl mx-auto px-3 py-4 pb-40">
+<div id="welcome" class="flex flex-col items-center text-center py-8">
+<div class="w-14 h-14 rounded-full bg-black text-white flex items-center justify-center text-xl">🎓</div>
+<h2 class="text-xl font-extrabold mt-3">How can I help you learn?</h2>
+<p class="text-gray-500 text-xs mt-1 max-w-[280px]">Ask a question, upload work, create homework. Auto EN/SW like Meta AI.</p>
 </div>
 <div id="messages"></div>
 </div>
 </main>
 
-<footer class="fixed bottom-0 left-0 right-0 bg-white border-t safe-bottom">
-<div class="max-w-4xl mx-auto px-3 py-2">
-<div id="photoPreviewBox" class="hidden mb-2"><div class="relative inline-block border bg-gray-50 p-1 rounded-xl"><img id="photoPreview" class="w-20 h-20 object-cover rounded-lg"><button onclick="removeSelectedPhoto()" class="absolute -top-2 -right-2 w-5 h-5 rounded-full bg-black text-white text-[9px]">✕</button></div><div id="fileName" class="text-[10px] text-gray-500"></div></div>
-<div id="errorBox" class="hidden mb-2 bg-red-50 border border-red-200 text-red-700 rounded-xl px-3 py-2 text-xs"></div>
-<div class="bg-[#f7f7f8] border rounded-[24px] p-2 flex items-end gap-1">
-<input id="fileInput" type="file" class="hidden" accept=".pdf,.doc,.docx,.txt" onchange="handleFile(this)">
-<input id="imageInput" type="file" class="hidden" accept="image/*" onchange="handlePhoto(this)">
-<input id="photoInput" type="file" class="hidden" accept="image/*" capture="environment" onchange="handlePhoto(this)">
-<button onclick="document.getElementById('fileInput').click()" class="w-9 h-9 rounded-full bg-[#e9d5ff] flex items-center justify-center text-xs">📎</button>
-<button onclick="document.getElementById('imageInput').click()" class="w-9 h-9 rounded-full bg-[#fecdd3] flex items-center justify-center text-xs">🖼️</button>
-<button onclick="document.getElementById('photoInput').click()" class="w-9 h-9 rounded-full bg-[#bbf7d0] flex items-center justify-center text-xs">📷</button>
-<button id="voiceBtn" onclick="toggleVoice()" class="w-9 h-9 rounded-full bg-[#1a1a6c] text-white flex items-center justify-center text-xs"><i class="fa-solid fa-microphone"></i></button>
-<textarea id="msg" rows="1" placeholder="Ask me anything... or tap 🎤 speak Kiswahili/English" class="flex-1 bg-transparent outline-none text-[14px] px-2 py-2 min-h-[40px] max-h-[120px]"></textarea>
-<button id="sendBtn" onclick="sendMsg()" class="w-10 h-10 rounded-full bg-black text-white flex items-center justify-center">↑</button>
+<!-- WHATSAPP STYLE TYPING AREA -->
+<footer class="fixed bottom-0 left-0 right-0 bg-[#f0f0f0] border-t border-[#e5e5e5] safe-bottom z-20">
+<div class="max-w-4xl mx-auto px-2 py-2">
+<div id="photoPreviewBox" class="hidden mb-2"><div class="bg-white rounded-xl p-2 border flex items-center gap-2"><img id="photoPreview" class="w-12 h-12 rounded-lg object-cover"><span id="fileName" class="text-[10px] flex-1 truncate"></span><button onclick="removeSelectedPhoto()" class="w-6 h-6 bg-black text-white rounded-full text-[10px]">✕</button></div></div>
+<div id="errorBox" class="hidden mb-2 bg-red-50 text-red-600 text-[11px] px-3 py-1.5 rounded-full text-center"></div>
+
+<div class="flex items-end gap-1">
+<div class="flex-1 bg-white rounded-[24px] border flex items-end px-1 py-1 shadow-sm">
+<button onclick="document.getElementById('photoInput').click()" class="w-8 h-8 rounded-full hover:bg-gray-100 flex items-center justify-center shrink-0"><i class="fa-solid fa-paperclip text-gray-500 text-[13px]"></i></button>
+<input id="photoInput" type="file" accept="image/*" capture="environment" class="hidden" onchange="handlePhoto(this)">
+<textarea id="msg" rows="1" placeholder="Message..." class="flex-1 bg-transparent border-0 outline-none text-[13px] px-2 py-1.5 min-h-[22px] max-h-[90px] resize-none"></textarea>
+<button id="voiceBtn" onclick="toggleVoice()" class="w-8 h-8 rounded-full hover:bg-gray-100 flex items-center justify-center shrink-0"><i class="fa-solid fa-microphone text-gray-500 text-[13px]"></i></button>
 </div>
-<p id="listeningText" class="text-[10px] text-red-500 hidden animate-pulse text-center mt-1">● Listening... speak now SW/EN</p>
+<button id="sendBtn" onclick="sendMsg()" class="w-9 h-9 rounded-full bg-[#25d366] text-white flex items-center justify-center shadow shrink-0"><i class="fa-solid fa-paper-plane text-[12px]"></i></button>
+</div>
+<p id="listeningText" class="hidden text-[9px] text-red-500 text-center mt-1 animate-pulse">● Listening SW/EN...</p>
 </div>
 </footer>
 </div>
 
-<div id="historyDrawer" class="fixed inset-0 z-50 bg-[#fffaf5] hidden flex-col"><div class="flex items-center justify-between p-4 border-b bg-white"><button onclick="closeHistory()">←</button><b class="text-sm">History</b><button onclick="clearHistory()" class="text-[10px] font-bold">Delete data...</button></div><div id="historyList" class="flex-1 overflow-auto p-4"></div><a href="/parent.html" target="_blank" class="m-3 p-3 bg-black text-white rounded-full text-center text-xs">Open parent.html</a></div>
+<div id="historyDrawer" class="fixed inset-0 z-50 bg-[#fffaf5] hidden flex-col"><div class="flex items-center justify-between p-3 border-b bg-white"><button onclick="closeHistory()" class="px-2">←</button><b class="text-[13px]">History</b><button onclick="clearHistory()" class="text-[9px] text-gray-500">Delete</button></div><div id="historyList" class="flex-1 overflow-auto p-3"></div></div>
 
 <script>
 const PROXY="/api/gemini";
-let grade="Grade 7", lang="EN", uploadedPhoto="", uploadedFileName="", isThinking=false, recognition=null, listening=false;
+let grade="Grade 7", lang="EN", mode="student", uploadedPhoto="", uploadedMimeType="image/jpeg", isThinking=false, recognition=null, listening=false;
+let chatHistory=[];
 const chat=document.getElementById("chat"), messages=document.getElementById("messages"), msg=document.getElementById("msg"), welcome=document.getElementById("welcome");
-const SW_KEYWORDS=["habari","mambo","nisaidie","hisabati","hesabu","sayansi","kiswahili","insha","shule","mwalimu","asante","eleza","soma","darasa","mtihani","kazi","nini","nani","wapi","je"];
-function detectLang(t){ if(!t||t.length<3) return null; const l=t.toLowerCase(); if(SW_KEYWORDS.some(k=>l.includes(k))) return "SW"; return "EN"; }
-function toggleLang(){ lang=lang==="EN"?"SW":"EN"; document.getElementById("langToggle").textContent="🌐 "+lang; document.getElementById("langShow").textContent=lang; localStorage.setItem("somahub_lang",lang); }
+const SW=["habari","mambo","nisaidie","hesabu","hisabati","sayansi","kiswahili","shule","mwalimu","asante","eleza","soma","darasa","mtihani","kazi"];
+function detectLang(t){ if(!t) return null; const l=t.toLowerCase(); if(SW.some(k=>l.includes(k))) return "SW"; return null; }
+function toggleLang(){ lang=lang==="EN"?"SW":"EN"; document.getElementById("langToggle").textContent="🌐 "+lang; document.getElementById("langShow").textContent=lang; }
+document.getElementById("grade").addEventListener("change",e=>{ grade=e.target.value; });
+msg.addEventListener("input",()=>{ msg.style.height="20px"; msg.style.height=Math.min(msg.scrollHeight,90)+"px"; const d=detectLang(msg.value); if(d&&d!==lang&&msg.value.length>3){ lang=d; document.getElementById("langToggle").textContent="🌐 "+lang; document.getElementById("langShow").textContent=lang; }});
+
+// VOICE LIKE META AI
+(function(){ const SR=window.SpeechRecognition||window.webkitSpeechRecognition; if(!SR) return; recognition=new SR(); recognition.onstart=()=>{ listening=true; document.getElementById("listeningText").classList.remove("hidden"); }; recognition.onend=()=>{ listening=false; document.getElementById("listeningText").classList.add("hidden"); }; recognition.onresult=(e)=>{ msg.value=e.results[0][0].transcript; msg.dispatchEvent(new Event('input')); }; })();
+function toggleVoice(){ if(!recognition){ alert("Use Chrome"); return; } if(listening){ recognition.stop(); return; } recognition.lang=lang==="SW"?"sw-KE":"en-KE"; recognition.start(); }
+
+function handlePhoto(input){ const file=input.files[0]; if(!file) return; const url=URL.createObjectURL(file); const img=new Image(); img.onload=()=>{ const c=document.createElement("canvas"); let w=img.width,h=img.height; const max=1200; if(w>max||h>max){ const r=Math.min(max/w,max/h); w=Math.round(w*r); h=Math.round(h*r);} c.width=w; c.height=h; c.getContext("2d").drawImage(img,0,0,w,h); uploadedPhoto=c.toDataURL("image/jpeg",0.7); uploadedMimeType="image/jpeg"; document.getElementById("photoPreview").src=uploadedPhoto; document.getElementById("photoPreviewBox").classList.remove("hidden"); document.getElementById("fileName").textContent=file.name; URL.revokeObjectURL(url); chat.scrollTop=chat.scrollHeight; }; img.src=url; input.value=""; }
+function removeSelectedPhoto(){ uploadedPhoto=""; document.getElementById("photoPreviewBox").classList.add("hidden"); }
 function showError(m){ const b=document.getElementById("errorBox"); b.textContent=m; b.classList.remove("hidden"); setTimeout(()=>b.classList.add("hidden"),5000); }
-document.getElementById("grade").addEventListener("change",e=>{grade=e.target.value; localStorage.setItem("somahub_grade",grade);});
-msg.addEventListener("input",()=>{ msg.style.height="40px"; msg.style.height=Math.min(msg.scrollHeight,120)+"px"; const d=detectLang(msg.value); if(d&&d!==lang&&msg.value.length>4){ lang=d; document.getElementById("langToggle").textContent="🌐 "+lang; document.getElementById("langShow").textContent=lang; }});
-
-// VOICE
-(function(){ const SR=window.SpeechRecognition||window.webkitSpeechRecognition; if(!SR) return; recognition=new SR(); recognition.continuous=false; recognition.interimResults=true; recognition.onstart=()=>{listening=true; document.getElementById("voiceBtn").innerHTML="●"; document.getElementById("listeningText").classList.remove("hidden");}; recognition.onend=()=>{listening=false; document.getElementById("voiceBtn").innerHTML='<i class="fa-solid fa-microphone"></i>'; document.getElementById("listeningText").classList.add("hidden");}; recognition.onresult=(e)=>{ msg.value=e.results[0][0].transcript; msg.dispatchEvent(new Event('input')); }; })();
-function toggleVoice(){ if(!recognition){ showError("Use Chrome for voice"); return; } if(listening){ recognition.stop(); return; } recognition.lang=lang==="SW"?"sw-KE":"en-KE"; recognition.start(); }
-
-function handlePhoto(i){ const f=i.files[0]; if(!f) return; const url=URL.createObjectURL(f); const img=new Image(); img.onload=()=>{ const c=document.createElement("canvas"); let w=img.width,h=img.height; const max=1000; if(w>max||h>max){ const r=Math.min(max/w,max/h); w=Math.round(w*r); h=Math.round(h*r);} c.width=w; c.height=h; c.getContext("2d").drawImage(img,0,0,w,h); uploadedPhoto=c.toDataURL("image/jpeg",0.7); uploadedFileName=f.name; document.getElementById("photoPreview").src=uploadedPhoto; document.getElementById("photoPreviewBox").classList.remove("hidden"); document.getElementById("fileName").textContent="📷 "+f.name; URL.revokeObjectURL(url); }; img.src=url; i.value=""; }
-function handleFile(i){ const f=i.files[0]; if(!f) return; uploadedFileName=f.name; uploadedPhoto=""; document.getElementById("photoPreviewBox").classList.remove("hidden"); document.getElementById("fileName").textContent="📎 "+f.name; i.value=""; }
-function removeSelectedPhoto(){ uploadedPhoto=""; uploadedFileName=""; document.getElementById("photoPreviewBox").classList.add("hidden"); }
 function escapeHTML(t){ return String(t).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
-function addUserText(t){ const d=document.createElement("div"); d.className="flex justify-end mb-4 message-in"; d.innerHTML=`<div class="max-w-[80%] bg-black text-white rounded-3xl rounded-br-lg px-4 py-3 text-[13px]">${escapeHTML(t)}</div>`; messages.appendChild(d); }
-function addUserPhoto(p){ const d=document.createElement("div"); d.className="flex justify-end mb-4 message-in"; d.innerHTML=`<div class="bg-black rounded-2xl p-1"><img src="${p}" class="photo-message"></div>`; messages.appendChild(d); }
-function addThinking(){ const d=document.createElement("div"); d.id="thinking"; d.className="flex justify-start mb-4 message-in"; d.innerHTML=`<div class="flex gap-2"><div class="w-8 h-8 rounded-full bg-black text-white flex items-center justify-center text-xs">🎓</div><div class="bg-white border rounded-2xl px-4 py-3"><div class="flex gap-1"><span class="typing-dot"></span><span class="typing-dot"></span></div></div></div>`; messages.appendChild(d); chat.scrollTop=chat.scrollHeight; }
-function addAIMessage(t){ const d=document.createElement("div"); d.className="flex justify-start mb-4 message-in"; d.innerHTML=`<div class="flex gap-2 max-w-[90%]"><div class="w-8 h-8 rounded-full bg-black text-white flex items-center justify-center text-xs">🎓</div><div class="bg-white border rounded-2xl px-4 py-3 shadow-sm"><div class="ai-response">${t.replace(/\n/g,"<br>")}</div><div class="mt-2 flex gap-3 text-[10px] text-gray-400"><button onclick="navigator.clipboard.writeText(this.parentNode.parentNode.innerText)">Copy</button><button onclick="speechSynthesis.speak(new SpeechSynthesisUtterance(this.parentNode.parentNode.innerText.slice(0,300)))">Listen 🔊</button></div></div></div>`; messages.appendChild(d); }
-
+function addUserText(t){ const d=document.createElement("div"); d.className="flex justify-end mb-3 message-in"; d.innerHTML=`<div class="max-w-[80%] bg-[#075e54] text-white rounded-2xl rounded-br-sm px-3 py-2 text-[13px]">${escapeHTML(t)}</div>`; messages.appendChild(d); chatHistory.push({role:"user", content:t}); }
+function addUserPhoto(p){ const d=document.createElement("div"); d.className="flex justify-end mb-3 message-in"; d.innerHTML=`<div class="bg-[#075e54] rounded-2xl p-1"><img src="${p}" class="photo-message"></div>`; messages.appendChild(d); }
+function addThinking(){ const d=document.createElement("div"); d.id="thinking"; d.className="flex justify-start mb-3 message-in"; d.innerHTML=`<div class="flex gap-2 items-end"><div class="w-6 h-6 rounded-full bg-black text-white flex items-center justify-center text-[10px] shrink-0">🎓</div><div class="bg-white border rounded-2xl rounded-bl-sm px-3 py-2"><div class="flex gap-1"><span class="typing-dot"></span><span class="typing-dot"></span></div></div></div>`; messages.appendChild(d); chat.scrollTop=chat.scrollHeight; }
+function addAIMessage(t){ const d=document.createElement("div"); d.className="flex justify-start mb-3 message-in"; d.innerHTML=`<div class="flex gap-2 max-w-[88%] items-end"><div class="w-6 h-6 rounded-full bg-black text-white flex items-center justify-center text-[10px] shrink-0">🎓</div><div class="bg-white border rounded-2xl rounded-bl-sm px-3 py-2 shadow-sm"><div class="ai-response text-[13px]">${t.replace(/\n/g,"<br>")}</div><div class="mt-1 flex gap-2 text-[9px] text-gray-400"><button onclick="navigator.clipboard.writeText(\`${t.replace(/`/g,'').replace(/\n/g,' ')}\`)">Copy</button><button onclick="speechSynthesis.speak(new SpeechSynthesisUtterance(\`${t.replace(/`/g,'').slice(0,300)}\`))">Listen</button></div></div></div>`; messages.appendChild(d); chatHistory.push({role:"assistant", content:t}); }
 function saveHistory(title){ const h=JSON.parse(localStorage.getItem("somahub_history")||"[]"); h.unshift({id:Date.now().toString(), title:title.slice(0,60), time:new Date().toISOString(), grade, lang}); localStorage.setItem("somahub_history", JSON.stringify(h.slice(0,200))); }
-function openHistory(){ document.getElementById("historyDrawer").classList.remove("hidden"); document.getElementById("historyDrawer").classList.add("flex"); const h=JSON.parse(localStorage.getItem("somahub_history")||"[]"); const list=document.getElementById("historyList"); list.innerHTML=h.length?"":'<p class="text-center text-gray-400 mt-20 text-sm">No history yet</p>'; h.forEach(it=>{ const div=document.createElement("div"); div.className="flex items-center justify-between py-3 border-b"; div.innerHTML=`<div><p class="text-[13px] font-bold">${escapeHTML(it.title)}</p><p class="text-[10px] text-gray-500">${it.grade} • ${it.lang} • ${new Date(it.time).toLocaleDateString()}</p></div><button onclick="deleteHistory('${it.id}')" class="w-6 h-6 rounded-full bg-black text-white text-xs">×</button>`; list.appendChild(div); }); }
+function openHistory(){ document.getElementById("historyDrawer").classList.remove("hidden"); document.getElementById("historyDrawer").classList.add("flex"); const h=JSON.parse(localStorage.getItem("somahub_history")||"[]"); const list=document.getElementById("historyList"); list.innerHTML=h.length?"":'<p class="text-center text-gray-400 mt-20 text-xs">No history</p>'; h.forEach(it=>{ const div=document.createElement("div"); div.className="flex justify-between items-center py-2 border-b"; div.innerHTML=`<div><p class="text-[12px] font-bold">${escapeHTML(it.title)}</p><p class="text-[9px] text-gray-500">${it.grade} • ${it.lang}</p></div><button onclick="deleteHistory('${it.id}')" class="w-5 h-5 bg-black text-white rounded-full text-[9px]">×</button>`; list.appendChild(div); }); }
 function closeHistory(){ document.getElementById("historyDrawer").classList.add("hidden"); }
 function deleteHistory(id){ let h=JSON.parse(localStorage.getItem("somahub_history")||"[]"); h=h.filter(x=>x.id!==id); localStorage.setItem("somahub_history", JSON.stringify(h)); openHistory(); }
 function clearHistory(){ if(confirm("Delete all?")){ localStorage.removeItem("somahub_history"); openHistory(); } }
 
 async function sendMsg(){
- const text=msg.value.trim(); if(!text &&!uploadedPhoto &&!uploadedFileName) return; if(isThinking) return;
- welcome.classList.add("hidden");
- if(text) addUserText(text);
- if(uploadedPhoto) addUserPhoto(uploadedPhoto);
- saveHistory(text||uploadedFileName||"Photo");
- const sendingText=text||"Explain this attachment: "+uploadedFileName;
- msg.value=""; removeSelectedPhoto(); addThinking(); isThinking=true;
+  const text=msg.value.trim(); if(!text &&!uploadedPhoto) return; if(isThinking) return;
+  welcome.classList.add("hidden"); if(text) addUserText(text); if(uploadedPhoto) addUserPhoto(uploadedPhoto);
+  saveHistory(text||"Photo"); const q=text||"Please explain this image";
+  msg.value=""; msg.style.height="20px"; const keepPhoto=uploadedPhoto; const keepMime=uploadedMimeType; removeSelectedPhoto();
+  addThinking(); isThinking=true;
 
- const systemPrompt=`You are SomaHub Tutor. Grade=${grade}. Language=${lang}. ${lang==="SW"?"JIBU KWA KISWAHILI SANIFU RAHISI TU.":"Answer in simple English for "+grade}. CBC Kenya curriculum. Playground-PP2: use simple words + emojis. Grade 7-10: deep CBC explanation. Be friendly for kids & teachers.`;
+  // === PAYLOAD EXACTLY AS YOUR BACKEND EXPECTS ===
+  const payload={
+    question: (lang==="SW"? "[Jibu kwa Kiswahili sanifu rahisi kwa "+grade+"] ":"[Answer in simple English for "+grade+"] ") + q,
+    originalQuestion: q,
+    grade: grade,
+    role: lang==="SW"?"Mwanafunzi":"Student",
+    task: lang,
+    mode: mode,
+    subject: "",
+    topic: "",
+    strand: "",
+    questionCount: "",
+    totalMarks: "",
+    shke: "",
+    knowledge: [],
+    history: chatHistory.slice(-6),
+    photo: keepPhoto || "",
+    mimeType: keepMime || "image/jpeg",
+    provider: "auto"
+  };
 
- try{
-   const res=await fetch(PROXY,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({prompt:systemPrompt+"\n\nUser question: "+sendingText, grade, lang, image:uploadedPhoto||null})});
-   const data=await res.json();
-   document.getElementById("thinking")?.remove();
-   if(!res.ok) throw new Error(data.error||"API error");
-   const reply=data.reply||data.text||data.response||"";
-   if(!reply) throw new Error("Empty reply from AI");
-   addAIMessage(reply);
-   const utter=new SpeechSynthesisUtterance(reply.slice(0,250)); utter.lang=lang==="SW"?"sw-KE":"en-KE"; speechSynthesis.speak(utter);
- }catch(e){
-   document.getElementById("thinking")?.remove();
-   showError("Backend error: "+e.message+" - Check /api/gemini");
-   addAIMessage(lang==="SW"?"Samahani, kuna hitilafu ya server. Angalia /api/gemini iko sawa.":"Sorry, backend error. Please check /api/gemini file exists and has GEMINI_API_KEY.");
- }
- isThinking=false; chat.scrollTop=chat.scrollHeight;
+  try{
+    const res=await fetch(PROXY,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(payload)});
+    const data=await res.json();
+    document.getElementById("thinking")?.remove();
+    if(!res.ok){ throw new Error(data.error||"Server error"); }
+    const reply=data.answer || data.reply || data.text || "";
+    if(!reply) throw new Error("Empty answer");
+    addAIMessage(reply);
+  }catch(e){
+    document.getElementById("thinking")?.remove();
+    showError(e.message);
+    addAIMessage(lang==="SW"?"Samahani, kuna hitilafu ya server. Angalia /api/gemini iko sawa.":"Sorry, server error. Please check /api/gemini. Error: "+e.message);
+  }
+  isThinking=false; chat.scrollTop=chat.scrollHeight;
 }
-
-(function(){ const sg=localStorage.getItem("somahub_grade"); const sl=localStorage.getItem("somahub_lang"); if(sg){ grade=sg; document.getElementById("grade").value=sg; } if(sl){ lang=sl; document.getElementById("langToggle").textContent="🌐 "+lang; document.getElementById("langShow").textContent=lang; } })();
-msg.addEventListener("keydown",e=>{ if(e.key==="Enter" &&!e.shiftKey){ e.preventDefault(); sendMsg(); }});
+msg.addEventListener("keydown",e=>{ if(e.key==="Enter"&&!e.shiftKey){ e.preventDefault(); sendMsg(); }});
 </script>
 </body>
 </html>
