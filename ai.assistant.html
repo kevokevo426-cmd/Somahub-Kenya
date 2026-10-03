@@ -1,153 +1,2041 @@
-<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE html><html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>SomaHub Tutor</title>
-<script src="https://cdn.tailwindcss.com"></script>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;800&display=swap" rel="stylesheet">
-<style>
-*{box-sizing:border-box}html,body{margin:0;padding:0;height:100%;font-family:'Nunito',sans-serif;background:#f5f5f0}body{overflow:hidden}
-#app{height:100dvh;display:flex;flex-direction:column}
-#chat{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch}
-#chat::-webkit-scrollbar{width:0}
-.ai-card{background:#fff;border:1px solid #e5e7eb;border-radius:16px;padding:14px 16px;line-height:1.65;font-size:13.5px;color:#111}
-.ai-card h3{font-weight:800;font-size:12px;margin:12px 0 6px;color:#1a1a6c;text-transform:uppercase}
-.ai-card p{margin:6px 0}.ai-card ul{margin:6px 0 6px 18px;list-style:disc}.ai-card ol{margin:6px 0 6px 18px;list-style:decimal}
-.message-in{animation:in.18s ease-out}@keyframes in{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
-</style>
-</head>
-<body>
-<div id="app">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>SomaHub Tutor</title><script src="https://cdn.tailwindcss.com"></script><link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"><link href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800;900&display=swap"
+rel="stylesheet"><style>
 
-<!-- HEADER - Proper size 56px -->
-<header class="bg-white border-b border-gray-200 shrink-0 h-[56px] flex items-center justify-between px-3">
-<div class="flex items-center gap-2.5">
-<img src="/logo.png" onerror="this.src='https://i.pravatar.cc/100'" class="w-9 h-9 rounded-full bg-white border object-cover">
-<div class="leading-tight">
-<p class="font-black text-[14px] text-[#1a1a6c]">SomaHub Tutor</p>
-<p class="text-[10px] text-green-600 font-bold flex items-center gap-1"><span class="w-2 h-2 bg-green-500 rounded-full inline-block"></span>Online • Auto EN/SW</p>
-</div>
-</div>
-<div class="flex items-center gap-2">
-<select id="grade" class="h-8 bg-gray-100 rounded-full px-3 text-[12px] font-bold outline-none border-0"><option>Playground</option><option>PP1</option><option>PP2</option><option>Grade 1</option><option>Grade 2</option><option>Grade 3</option><option>Grade 4</option><option>Grade 5</option><option>Grade 6</option><option selected>Grade 7</option><option>Grade 8</option><option>Grade 9</option><option>Grade 10</option></select>
-<button onclick="openHistory()" class="w-8 h-8 rounded-full bg-black text-white flex items-center justify-center text-[12px]"><i class="fa-regular fa-clock"></i></button>
-</div>
-</header>
+*{
+  box-sizing:border-box;
+}
 
-<!-- CHAT AREA WITH WELCOME -->
-<main id="chat">
-<div class="max-w-3xl mx-auto px-3 py-4 pb-32">
-<!-- WELCOME - Now visible -->
-<div id="welcome" class="flex flex-col items-center text-center py-12">
-<div class="w-20 h-20 rounded-full bg-black text-white flex items-center justify-center text-3xl">🎓</div>
-<h2 class="text-[20px] font-extrabold mt-4 text-[#1a1a6c]">How can I help you learn?</h2>
-<p class="text-gray-500 text-[13px] mt-2 max-w-[300px] leading-snug">Ask a question, upload homework photo, or say Habari. I auto-detect English / Kiswahili like Meta AI.</p>
-<div class="grid grid-cols-2 gap-2 mt-6 w-full max-w-[320px]">
-<button onclick="quickAsk('What is photosynthesis?')" class="bg-white border rounded-xl p-3 text-[11px] font-bold text-left">🌱 What is photosynthesis?</button>
-<button onclick="quickAsk('Nisaidie hesabu darasa la 7')" class="bg-white border rounded-xl p-3 text-[11px] font-bold text-left">🔢 Nisaidie hesabu</button>
-<button onclick="quickAsk('Explain matter for Grade 7')" class="bg-white border rounded-xl p-3 text-[11px] font-bold text-left">🧪 What is matter?</button>
-<button onclick="quickAsk('Mark my work')" class="bg-white border rounded-xl p-3 text-[11px] font-bold text-left">✅ Mark my work</button>
+html,
+body{
+  margin:0;
+  padding:0;
+  width:100%;
+  height:100%;
+  font-family:'Nunito',sans-serif;
+  background:#f4f7fb;
+}
+
+body{
+  overflow:hidden;
+}
+
+button,
+select,
+textarea{
+  font-family:inherit;
+}
+
+button{
+  -webkit-tap-highlight-color:transparent;
+}
+
+/* APP */
+
+#app{
+  width:100%;
+  height:100dvh;
+  min-height:100dvh;
+  display:flex;
+  flex-direction:column;
+  overflow:hidden;
+}
+
+/* HEADER */
+
+.top-header{
+  height:60px;
+  min-height:60px;
+  background:#ffffff;
+  border-bottom:1px solid #e7ebf2;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:0 14px;
+  z-index:10;
+}
+
+.brand{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  min-width:0;
+}
+
+.logo{
+  width:38px;
+  height:38px;
+  border-radius:12px;
+  object-fit:cover;
+  border:1px solid #e5e7eb;
+  background:#eef2ff;
+  flex-shrink:0;
+}
+
+.brand-title{
+  font-size:15px;
+  font-weight:900;
+  color:#25358a;
+  line-height:1.1;
+}
+
+.online{
+  margin-top:2px;
+  font-size:9px;
+  font-weight:800;
+  color:#16a34a;
+  display:flex;
+  align-items:center;
+  gap:4px;
+}
+
+.online-dot{
+  width:7px;
+  height:7px;
+  border-radius:50%;
+  background:#22c55e;
+  display:inline-block;
+}
+
+.header-actions{
+  display:flex;
+  align-items:center;
+  gap:7px;
+}
+
+.grade-select{
+  height:34px;
+  border:1px solid #e3e7ef;
+  background:#f6f8fc;
+  color:#25358a;
+  border-radius:18px;
+  padding:0 11px;
+  font-size:11px;
+  font-weight:800;
+  outline:none;
+  max-width:125px;
+}
+
+.history-btn{
+  width:34px;
+  height:34px;
+  border:0;
+  border-radius:50%;
+  background:#25358a;
+  color:white;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  cursor:pointer;
+}
+
+/* CHAT */
+
+#chat{
+  flex:1;
+  min-height:0;
+  overflow-y:auto;
+  -webkit-overflow-scrolling:touch;
+  scroll-behavior:smooth;
+}
+
+#chat::-webkit-scrollbar{
+  width:5px;
+}
+
+#chat::-webkit-scrollbar-thumb{
+  background:#cbd5e1;
+  border-radius:20px;
+}
+
+.chat-container{
+  width:100%;
+  max-width:900px;
+  margin:0 auto;
+  padding:20px 16px 150px;
+}
+
+/* WELCOME */
+
+#welcome{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  text-align:center;
+  padding:35px 10px 20px;
+}
+
+.welcome-icon{
+  width:78px;
+  height:78px;
+  border-radius:24px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:34px;
+  background:linear-gradient(135deg,#25358a,#4f67d8);
+  box-shadow:0 10px 25px rgba(37,53,138,.20);
+}
+
+.welcome-title{
+  margin-top:16px;
+  font-size:23px;
+  font-weight:900;
+  color:#25358a;
+}
+
+.welcome-text{
+  margin-top:7px;
+  max-width:430px;
+  font-size:13px;
+  line-height:1.55;
+  color:#64748b;
+}
+
+/* QUICK QUESTIONS */
+
+.quick-grid{
+  width:100%;
+  max-width:600px;
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:10px;
+  margin-top:22px;
+}
+
+.quick-btn{
+  min-height:65px;
+  padding:12px;
+  background:#ffffff;
+  border:1px solid #e3e8f1;
+  border-radius:15px;
+  text-align:left;
+  font-size:12px;
+  font-weight:800;
+  color:#26334f;
+  cursor:pointer;
+  transition:.15s ease;
+  box-shadow:0 3px 10px rgba(15,23,42,.04);
+}
+
+.quick-btn:hover{
+  transform:translateY(-1px);
+  border-color:#aebcf0;
+  box-shadow:0 6px 18px rgba(37,53,138,.09);
+}
+
+.quick-btn:active{
+  transform:scale(.98);
+}
+
+/* USER MESSAGE */
+
+.user-row{
+  display:flex;
+  justify-content:flex-end;
+  margin-bottom:10px;
+}
+
+.user-bubble{
+  max-width:min(78%,620px);
+  background:#dff7c8;
+  color:#17321b;
+  border-radius:18px 18px 5px 18px;
+  padding:10px 14px;
+  font-size:13.5px;
+  line-height:1.5;
+  box-shadow:0 2px 7px rgba(15,23,42,.05);
+}
+
+/* AI */
+
+.ai-row{
+  display:flex;
+  align-items:flex-start;
+  gap:9px;
+  margin-bottom:15px;
+}
+
+.ai-avatar{
+  width:30px;
+  height:30px;
+  min-width:30px;
+  border-radius:10px;
+  background:linear-gradient(135deg,#25358a,#4f67d8);
+  color:white;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:14px;
+  margin-top:2px;
+}
+
+.ai-content{
+  flex:1;
+  min-width:0;
+}
+
+.ai-card{
+  background:#ffffff;
+  border:1px solid #e3e8f1;
+  border-radius:6px 17px 17px 17px;
+  padding:14px 16px;
+  line-height:1.65;
+  font-size:13.5px;
+  color:#182033;
+  box-shadow:0 3px 12px rgba(15,23,42,.045);
+  overflow-wrap:anywhere;
+}
+
+.ai-card h3{
+  font-weight:900;
+  font-size:12px;
+  margin:13px 0 7px;
+  color:#25358a;
+  text-transform:uppercase;
+}
+
+.ai-card p{
+  margin:6px 0;
+}
+
+.ai-card ul{
+  margin:7px 0 7px 18px;
+  list-style:disc;
+}
+
+.ai-card ol{
+  margin:7px 0 7px 18px;
+  list-style:decimal;
+}
+
+/* MESSAGE ACTIONS */
+
+.message-actions{
+  display:flex;
+  flex-wrap:wrap;
+  gap:5px;
+  margin-top:7px;
+}
+
+.message-action{
+  height:29px;
+  padding:0 10px;
+  border-radius:15px;
+  background:white;
+  border:1px solid #e1e6ef;
+  color:#334155;
+  font-size:10px;
+  font-weight:800;
+  cursor:pointer;
+}
+
+.message-action.primary{
+  background:#25358a;
+  color:white;
+  border-color:#25358a;
+}
+
+/* THINKING */
+
+.thinking{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  margin-bottom:12px;
+}
+
+.thinking-avatar{
+  width:30px;
+  height:30px;
+  border-radius:10px;
+  background:#25358a;
+  color:white;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:13px;
+}
+
+.thinking-box{
+  background:white;
+  border:1px solid #e5e7eb;
+  border-radius:15px;
+  padding:8px 14px;
+  color:#64748b;
+  font-size:12px;
+}
+
+/* FOOTER */
+
+.footer{
+  flex-shrink:0;
+  background:#ffffff;
+  border-top:1px solid #e4e8ef;
+  padding:8px 10px;
+  padding-bottom:max(8px,env(safe-area-inset-bottom));
+  z-index:20;
+  box-shadow:0 -4px 15px rgba(15,23,42,.035);
+}
+
+.footer-inner{
+  width:100%;
+  max-width:900px;
+  margin:auto;
+}
+
+/* ATTACHMENT */
+
+.preview{
+  margin-bottom:7px;
+  background:#f8fafc;
+  border:1px solid #e2e8f0;
+  border-radius:12px;
+  padding:7px;
+  display:flex;
+  align-items:center;
+  gap:8px;
+}
+
+.preview-img{
+  width:40px;
+  height:40px;
+  border-radius:8px;
+  object-fit:cover;
+}
+
+.preview-name{
+  flex:1;
+  min-width:0;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+  font-size:11px;
+  color:#475569;
+}
+
+.preview-close{
+  width:25px;
+  height:25px;
+  border:0;
+  border-radius:50%;
+  background:#25358a;
+  color:white;
+  font-size:10px;
+}
+
+/* ERROR */
+
+.error-box{
+  background:#fff1f2;
+  color:#dc2626;
+  border:1px solid #fecdd3;
+  font-size:11px;
+  padding:6px 12px;
+  border-radius:15px;
+  text-align:center;
+  margin-bottom:7px;
+}
+
+/* INPUT */
+
+.input-row{
+  display:flex;
+  align-items:flex-end;
+  gap:7px;
+}
+
+.input-box{
+  flex:1;
+  min-width:0;
+  min-height:46px;
+  background:#f7f9fc;
+  border:1px solid #dfe5ee;
+  border-radius:24px;
+  padding:3px 6px;
+  display:flex;
+  align-items:flex-end;
+  gap:1px;
+}
+
+.tool-btn{
+  width:37px;
+  height:37px;
+  min-width:37px;
+  border:0;
+  border-radius:50%;
+  background:transparent;
+  color:#64748b;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  cursor:pointer;
+}
+
+.tool-btn:hover{
+  background:#eaf0ff;
+  color:#25358a;
+}
+
+#msg{
+  flex:1;
+  min-width:0;
+  min-height:22px;
+  max-height:105px;
+  resize:none;
+  border:0;
+  outline:none;
+  background:transparent;
+  padding:10px 5px;
+  font-size:14px;
+  line-height:1.4;
+  color:#172033;
+}
+
+#msg::placeholder{
+  color:#94a3b8;
+}
+
+.circle-action{
+  width:44px;
+  height:44px;
+  min-width:44px;
+  border:0;
+  border-radius:50%;
+  color:white;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  cursor:pointer;
+  box-shadow:0 4px 10px rgba(15,23,42,.12);
+}
+
+.voice{
+  background:#25358a;
+}
+
+.send{
+  background:#22c55e;
+}
+
+.listen-text{
+  font-size:10px;
+  color:#ef4444;
+  text-align:center;
+  margin-top:3px;
+}
+
+/* HISTORY */
+
+.history{
+  position:fixed;
+  inset:0;
+  z-index:100;
+  background:#f8fafc;
+  display:none;
+  flex-direction:column;
+}
+
+.history.show{
+  display:flex;
+}
+
+.history-header{
+  height:60px;
+  min-height:60px;
+  background:white;
+  border-bottom:1px solid #e5e7eb;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:0 15px;
+}
+
+.history-title{
+  font-size:14px;
+  font-weight:900;
+  color:#25358a;
+}
+
+.history-back{
+  border:0;
+  background:transparent;
+  color:#25358a;
+  font-weight:800;
+}
+
+.history-delete{
+  border:0;
+  background:transparent;
+  color:#64748b;
+  font-size:11px;
+}
+
+.history-list{
+  flex:1;
+  overflow:auto;
+  padding:12px;
+}
+
+.history-item{
+  background:white;
+  border:1px solid #e5e7eb;
+  border-radius:12px;
+  padding:11px;
+  margin-bottom:8px;
+}
+
+/* ANIMATION */
+
+.message-in{
+  animation:messageIn .18s ease-out;
+}
+
+@keyframes messageIn{
+  from{
+    opacity:0;
+    transform:translateY(5px);
+  }
+  to{
+    opacity:1;
+    transform:none;
+  }
+}
+
+/* TABLET */
+
+@media(min-width:600px){
+
+  .top-header{
+    height:64px;
+    padding:0 24px;
+  }
+
+  .brand-title{
+    font-size:16px;
+  }
+
+  .chat-container{
+    padding-left:28px;
+    padding-right:28px;
+  }
+
+  #welcome{
+    padding-top:55px;
+  }
+
+  .welcome-icon{
+    width:88px;
+    height:88px;
+    font-size:38px;
+  }
+
+  .welcome-title{
+    font-size:27px;
+  }
+
+  .welcome-text{
+    font-size:14px;
+  }
+
+  .quick-btn{
+    min-height:72px;
+    font-size:13px;
+  }
+
+  .ai-card{
+    font-size:14px;
+    padding:16px 18px;
+  }
+
+}
+
+/* LAPTOP / DESKTOP */
+
+@media(min-width:1024px){
+
+  body{
+    background:#eef2f7;
+  }
+
+  #app{
+    max-width:1180px;
+    margin:0 auto;
+    background:#f8fafc;
+    box-shadow:0 0 35px rgba(15,23,42,.08);
+  }
+
+  .top-header{
+    padding:0 28px;
+  }
+
+  .chat-container{
+    max-width:900px;
+    padding-top:28px;
+    padding-bottom:165px;
+  }
+
+  #welcome{
+    padding-top:70px;
+  }
+
+  .welcome-title{
+    font-size:29px;
+  }
+
+  .footer{
+    padding-left:25px;
+    padding-right:25px;
+  }
+
+  .input-box{
+    min-height:50px;
+  }
+
+  .circle-action{
+    width:46px;
+    height:46px;
+    min-width:46px;
+  }
+
+}
+
+/* VERY SMALL PHONES */
+
+@media(max-width:370px){
+
+  .top-header{
+    padding:0 8px;
+  }
+
+  .brand{
+    gap:7px;
+  }
+
+  .logo{
+    width:34px;
+    height:34px;
+  }
+
+  .brand-title{
+    font-size:13px;
+  }
+
+  .online{
+    font-size:8px;
+  }
+
+  .grade-select{
+    max-width:92px;
+    padding:0 7px;
+    font-size:10px;
+  }
+
+  .history-btn{
+    width:32px;
+    height:32px;
+  }
+
+  .chat-container{
+    padding-left:9px;
+    padding-right:9px;
+  }
+
+  .tool-btn{
+    width:32px;
+    min-width:32px;
+  }
+
+  .circle-action{
+    width:40px;
+    min-width:40px;
+    height:40px;
+  }
+
+  #msg{
+    font-size:13px;
+  }
+
+  .quick-btn{
+    font-size:10px;
+    padding:9px;
+  }
+
+  .user-bubble{
+    max-width:85%;
+  }
+
+}
+
+/* REDUCE MOTION */
+
+@media(prefers-reduced-motion:reduce){
+
+  *,
+  *::before,
+  *::after{
+    animation:none!important;
+    transition:none!important;
+    scroll-behavior:auto!important;
+  }
+
+}
+
+</style></head><body><div id="app"><!-- HEADER --><header class="top-header">  <div class="brand"><img
+  src="/logo.png"
+  onerror="this.src='https://i.pravatar.cc/100'"
+  class="logo"
+  alt="SomaHub">
+
+<div>
+  <div class="brand-title">SomaHub Tutor</div>
+
+  <div class="online">
+    <span class="online-dot"></span>
+    Online • Auto EN/SW
+  </div>
 </div>
+
+  </div>  <div class="header-actions"><select id="grade" class="grade-select">
+
+  <option>Playground</option>
+  <option>PP1</option>
+  <option>PP2</option>
+  <option>Grade 1</option>
+  <option>Grade 2</option>
+  <option>Grade 3</option>
+  <option>Grade 4</option>
+  <option>Grade 5</option>
+  <option>Grade 6</option>
+  <option selected>Grade 7</option>
+  <option>Grade 8</option>
+  <option>Grade 9</option>
+  <option>Grade 10</option>
+
+</select>
+
+<button
+  onclick="openHistory()"
+  class="history-btn"
+  aria-label="History">
+
+  <i class="fa-regular fa-clock"></i>
+
+</button>
+
+  </div></header><!-- CHAT --><main id="chat">  <div class="chat-container"><!-- WELCOME -->
+
+<div id="welcome">
+
+  <div class="welcome-icon">
+    🎓
+  </div>
+
+  <div class="welcome-title">
+    How can I help you learn?
+  </div>
+
+  <div class="welcome-text">
+    Ask a question, upload homework, or say Habari.
+    SomaHub Tutor understands English and Kiswahili.
+  </div>
+
+  <div class="quick-grid">
+
+    <button
+      onclick="quickAsk('What is photosynthesis?')"
+      class="quick-btn">
+      🌱 What is photosynthesis?
+    </button>
+
+    <button
+      onclick="quickAsk('Nisaidie hesabu darasa la 7')"
+      class="quick-btn">
+      🔢 Nisaidie hesabu
+    </button>
+
+    <button
+      onclick="quickAsk('Explain matter for Grade 7')"
+      class="quick-btn">
+      🧪 What is matter?
+    </button>
+
+    <button
+      onclick="quickAsk('Mark my work')"
+      class="quick-btn">
+      ✅ Mark my work
+    </button>
+
+  </div>
+
 </div>
+
 <div id="messages"></div>
-</div>
-</main>
 
-<!-- INPUT - Fixed, send button fully visible -->
-<footer class="shrink-0 bg-[#efeae2] border-t border-[#e0d8cc] px-2 py-2" style="padding-bottom:max(8px,env(safe-area-inset-bottom))">
-<div class="max-w-3xl mx-auto">
-<div id="previewBox" class="hidden mb-2 bg-white rounded-xl p-2 flex items-center gap-2 border"><img id="previewImg" class="w-10 h-10 rounded object-cover hidden"><i id="previewDocIcon" class="fa-solid fa-file text-gray-400 hidden"></i><span id="previewName" class="text-[11px] flex-1 truncate"></span><button onclick="clearAttach()" class="w-6 h-6 bg-black text-white rounded-full text-[10px]">✕</button></div>
-<div id="errorBox" class="hidden bg-red-50 text-red-600 text-[11px] px-3 py-1.5 rounded-full mb-2 text-center"></div>
+  </div></main><!-- FOOTER --><footer class="footer">  <div class="footer-inner"><!-- PREVIEW -->
 
-<div class="flex items-end gap-2">
-<div class="flex-1 bg-white rounded-[28px] px-2 py-1 flex items-end gap-1 shadow-sm border border-gray-200 min-h-[44px]">
-<button onclick="document.getElementById('docInput').click()" class="w-9 h-9 rounded-full hover:bg-gray-100 flex items-center justify-center shrink-0"><i class="fa-solid fa-paperclip text-gray-500"></i></button>
-<button onclick="document.getElementById('imgInput').click()" class="w-9 h-9 rounded-full hover:bg-gray-100 flex items-center justify-center shrink-0"><i class="fa-solid fa-image text-gray-500"></i></button>
-<button onclick="document.getElementById('camInput').click()" class="w-9 h-9 rounded-full hover:bg-gray-100 flex items-center justify-center shrink-0"><i class="fa-solid fa-camera text-gray-500"></i></button>
-<textarea id="msg" rows="1" placeholder="Message..." class="flex-1 bg-transparent outline-none text-[14px] px-2 py-2.5 min-h-[20px] max-h-[100px] resize-none"></textarea>
-</div>
-<button id="voiceBtn" onclick="toggleVoice()" class="w-11 h-11 rounded-full bg-[#075e54] text-white flex items-center justify-center shrink-0 shadow-md"><i class="fa-solid fa-microphone"></i></button>
-<button id="sendBtn" onclick="sendMsg()" class="w-11 h-11 rounded-full bg-[#25d366] text-white flex items-center justify-center shrink-0 shadow-md"><i class="fa-solid fa-paper-plane text-[14px]"></i></button>
-</div>
-<p id="listenTxt" class="hidden text-[10px] text-red-500 text-center mt-1 animate-pulse">● Listening SW/EN...</p>
-</div>
-</footer>
+<div id="previewBox" class="preview hidden">
+
+  <img
+    id="previewImg"
+    class="preview-img hidden"
+    alt="Preview">
+
+  <i
+    id="previewDocIcon"
+    class="fa-solid fa-file text-gray-400 hidden">
+  </i>
+
+  <span id="previewName" class="preview-name"></span>
+
+  <button
+    onclick="clearAttach()"
+    class="preview-close">
+    ✕
+  </button>
+
 </div>
 
-<div id="historyDrawer" class="fixed inset-0 z-50 bg-white hidden flex-col"><div class="h-14 border-b flex items-center justify-between px-3"><button onclick="closeHistory()" class="font-bold">← Back</button><b class="text-[13px]">History</b><button onclick="clearHistory()" class="text-[11px] text-gray-500">Delete All</button></div><div id="historyList" class="flex-1 overflow-auto p-3"></div></div>
 
-<input id="docInput" type="file" class="hidden" accept=".pdf,.doc,.docx,.txt" onchange="handleDoc(this)">
-<input id="imgInput" type="file" class="hidden" accept="image/*" onchange="handlePhoto(this)">
-<input id="camInput" type="file" class="hidden" accept="image/*" capture="environment" onchange="handlePhoto(this)">
+<!-- ERROR -->
+
+<div
+  id="errorBox"
+  class="error-box hidden">
+</div>
+
+
+<!-- INPUT -->
+
+<div class="input-row">
+
+  <div class="input-box">
+
+    <button
+      onclick="document.getElementById('docInput').click()"
+      class="tool-btn"
+      aria-label="Attach document">
+
+      <i class="fa-solid fa-paperclip"></i>
+
+    </button>
+
+    <button
+      onclick="document.getElementById('imgInput').click()"
+      class="tool-btn"
+      aria-label="Choose image">
+
+      <i class="fa-solid fa-image"></i>
+
+    </button>
+
+    <button
+      onclick="document.getElementById('camInput').click()"
+      class="tool-btn"
+      aria-label="Take photo">
+
+      <i class="fa-solid fa-camera"></i>
+
+    </button>
+
+    <textarea
+      id="msg"
+      rows="1"
+      placeholder="Ask SomaHub Tutor..."
+      autocomplete="off">
+    </textarea>
+
+  </div>
+
+
+  <button
+    id="voiceBtn"
+    onclick="toggleVoice()"
+    class="circle-action voice"
+    aria-label="Voice">
+
+    <i class="fa-solid fa-microphone"></i>
+
+  </button>
+
+
+  <button
+    id="sendBtn"
+    onclick="sendMsg()"
+    class="circle-action send"
+    aria-label="Send">
+
+    <i class="fa-solid fa-paper-plane"></i>
+
+  </button>
+
+</div>
+
+
+<div
+  id="listenTxt"
+  class="listen-text hidden">
+  ● Listening SW/EN...
+</div>
+
+  </div></footer></div><!-- HISTORY --><div id="historyDrawer" class="history">  <div class="history-header"><button
+  onclick="closeHistory()"
+  class="history-back">
+
+  ← Back
+
+</button>
+
+<div class="history-title">
+  Learning History
+</div>
+
+<button
+  onclick="clearHistory()"
+  class="history-delete">
+
+  Delete All
+
+</button>
+
+  </div>  <div
+    id="historyList"
+    class="history-list">
+  </div></div><!-- FILE INPUTS --><input
+id="docInput"
+type="file"
+class="hidden"
+accept=".pdf,.doc,.docx,.txt"
+onchange="handleDoc(this)">
+
+<input
+id="imgInput"
+type="file"
+class="hidden"
+accept="image/*"
+onchange="handlePhoto(this)">
+
+<input
+id="camInput"
+type="file"
+class="hidden"
+accept="image/*"
+capture="environment"
+onchange="handlePhoto(this)">
 
 <script>
+
 const PROXY="/api/gemini";
-let grade="Grade 7", uploadedPhoto="", uploadedMime="", uploadedDocName="", isThinking=false, recognition=null, listening=false, chatHistory=[];
-const chat=document.getElementById("chat"), messages=document.getElementById("messages"), msg=document.getElementById("msg"), welcome=document.getElementById("welcome");
-const SW=["habari","mambo","nisaidie","hesabu","hisabati","sayansi","kiswahili","shule","mwalimu","asante","eleza","soma","darasa","mtihani"];
 
-function detectLang(t){ if(!t) return "EN"; const l=t.toLowerCase(); return SW.some(k=>l.includes(k))?"SW":"EN"; }
-document.getElementById("grade").addEventListener("change",e=>grade=e.target.value);
-msg.addEventListener("input",()=>{ msg.style.height="auto"; msg.style.height=Math.min(msg.scrollHeight,100)+"px"; });
-function quickAsk(t){ msg.value=t; sendMsg(); }
+let grade="Grade 7";
+let uploadedPhoto="";
+let uploadedMime="";
+let uploadedDocName="";
+let isThinking=false;
+let recognition=null;
+let listening=false;
+let chatHistory=[];
 
-(function(){ const SR=window.SpeechRecognition||window.webkitSpeechRecognition; if(!SR) return; recognition=new SR(); recognition.onstart=()=>{ listening=true; document.getElementById("listenTxt").classList.remove("hidden"); }; recognition.onend=()=>{ listening=false; document.getElementById("listenTxt").classList.add("hidden"); }; recognition.onresult=(e)=>{ msg.value=e.results[0][0].transcript; msg.dispatchEvent(new Event('input')); }; })();
-function toggleVoice(){ if(!recognition){ alert("Use Chrome"); return; } if(listening){ recognition.stop(); return; } recognition.lang=detectLang(msg.value)==="SW"?"sw-KE":"en-KE"; recognition.start(); }
+const chat=document.getElementById("chat");
+const messages=document.getElementById("messages");
+const msg=document.getElementById("msg");
+const welcome=document.getElementById("welcome");
 
-function handlePhoto(i){ const f=i.files[0]; if(!f) return; const r=new FileReader(); r.onload=()=>{ const img=new Image(); img.onload=()=>{ const c=document.createElement("canvas"); let w=img.width,h=img.height; const m=1000; if(w>m||h>m){ const sc=Math.min(m/w,m/h); w=Math.round(w*sc); h=Math.round(h*sc);} c.width=w; c.height=h; c.getContext("2d").drawImage(img,0,0,w,h); uploadedPhoto=c.toDataURL("image/jpeg",0.7); uploadedMime="image/jpeg"; document.getElementById("previewImg").src=uploadedPhoto; document.getElementById("previewImg").classList.remove("hidden"); document.getElementById("previewDocIcon").classList.add("hidden"); document.getElementById("previewName").textContent=f.name; document.getElementById("previewBox").classList.remove("hidden"); }; img.src=r.result; }; r.readAsDataURL(f); i.value=""; }
-function handleDoc(i){ const f=i.files[0]; if(!f) return; uploadedDocName=f.name; uploadedPhoto=""; document.getElementById("previewImg").classList.add("hidden"); document.getElementById("previewDocIcon").classList.remove("hidden"); document.getElementById("previewName").textContent=f.name; document.getElementById("previewBox").classList.remove("hidden"); i.value=""; }
-function clearAttach(){ uploadedPhoto=""; uploadedMime=""; uploadedDocName=""; document.getElementById("previewBox").classList.add("hidden"); }
-function showError(m){ const b=document.getElementById("errorBox"); b.textContent=m; b.classList.remove("hidden"); setTimeout(()=>b.classList.add("hidden"),4000); }
+const SW=[
+  "habari",
+  "mambo",
+  "nisaidie",
+  "hesabu",
+  "hisabati",
+  "sayansi",
+  "kiswahili",
+  "shule",
+  "mwalimu",
+  "asante",
+  "eleza",
+  "soma",
+  "darasa",
+  "mtihani"
+];
+
+function detectLang(t){
+
+  if(!t) return "EN";
+
+  const l=t.toLowerCase();
+
+  return SW.some(k=>l.includes(k))
+    ? "SW"
+    : "EN";
+}
+
+
+document.getElementById("grade")
+.addEventListener("change",e=>{
+
+  grade=e.target.value;
+
+});
+
+
+msg.addEventListener("input",()=>{
+
+  msg.style.height="auto";
+
+  msg.style.height=
+    Math.min(msg.scrollHeight,105)+"px";
+
+});
+
+
+function quickAsk(t){
+
+  msg.value=t;
+
+  msg.dispatchEvent(new Event("input"));
+
+  sendMsg();
+
+}
+
+
+/* VOICE */
+
+(function(){
+
+  const SR=
+    window.SpeechRecognition||
+    window.webkitSpeechRecognition;
+
+  if(!SR) return;
+
+  recognition=new SR();
+
+  recognition.onstart=()=>{
+
+    listening=true;
+
+    document
+      .getElementById("listenTxt")
+      .classList.remove("hidden");
+
+  };
+
+  recognition.onend=()=>{
+
+    listening=false;
+
+    document
+      .getElementById("listenTxt")
+      .classList.add("hidden");
+
+  };
+
+  recognition.onresult=(e)=>{
+
+    msg.value=
+      e.results[0][0].transcript;
+
+    msg.dispatchEvent(
+      new Event("input")
+    );
+
+  };
+
+})();
+
+
+function toggleVoice(){
+
+  if(!recognition){
+
+    alert("Voice input works best in Chrome.");
+
+    return;
+
+  }
+
+  if(listening){
+
+    recognition.stop();
+
+    return;
+
+  }
+
+  recognition.lang=
+    detectLang(msg.value)==="SW"
+      ? "sw-KE"
+      : "en-KE";
+
+  recognition.start();
+
+}
+
+
+/* PHOTO */
+
+function handlePhoto(i){
+
+  const f=i.files[0];
+
+  if(!f) return;
+
+  const r=new FileReader();
+
+  r.onload=()=>{
+
+    const img=new Image();
+
+    img.onload=()=>{
+
+      const c=document.createElement("canvas");
+
+      let w=img.width;
+      let h=img.height;
+
+      const m=1000;
+
+      if(w>m||h>m){
+
+        const sc=
+          Math.min(m/w,m/h);
+
+        w=Math.round(w*sc);
+        h=Math.round(h*sc);
+
+      }
+
+      c.width=w;
+      c.height=h;
+
+      c.getContext("2d")
+        .drawImage(img,0,0,w,h);
+
+      uploadedPhoto=
+        c.toDataURL("image/jpeg",0.7);
+
+      uploadedMime="image/jpeg";
+
+      document
+        .getElementById("previewImg")
+        .src=uploadedPhoto;
+
+      document
+        .getElementById("previewImg")
+        .classList.remove("hidden");
+
+      document
+        .getElementById("previewDocIcon")
+        .classList.add("hidden");
+
+      document
+        .getElementById("previewName")
+        .textContent=f.name;
+
+      document
+        .getElementById("previewBox")
+        .classList.remove("hidden");
+
+    };
+
+    img.src=r.result;
+
+  };
+
+  r.readAsDataURL(f);
+
+  i.value="";
+
+}
+
+
+/* DOCUMENT */
+
+function handleDoc(i){
+
+  const f=i.files[0];
+
+  if(!f) return;
+
+  uploadedDocName=f.name;
+
+  uploadedPhoto="";
+
+  document
+    .getElementById("previewImg")
+    .classList.add("hidden");
+
+  document
+    .getElementById("previewDocIcon")
+    .classList.remove("hidden");
+
+  document
+    .getElementById("previewName")
+    .textContent=f.name;
+
+  document
+    .getElementById("previewBox")
+    .classList.remove("hidden");
+
+  i.value="";
+
+}
+
+
+/* CLEAR ATTACHMENT */
+
+function clearAttach(){
+
+  uploadedPhoto="";
+  uploadedMime="";
+  uploadedDocName="";
+
+  document
+    .getElementById("previewBox")
+    .classList.add("hidden");
+
+}
+
+
+/* ERROR */
+
+function showError(m){
+
+  const b=
+    document.getElementById("errorBox");
+
+  b.textContent=m;
+
+  b.classList.remove("hidden");
+
+  setTimeout(
+    ()=>b.classList.add("hidden"),
+    4000
+  );
+
+}
+
+
+/* RESPONSE FORMAT */
+
 function formatResponse(t){
-  let html=String(t).replace(/\$\$([\s\S]*?)\$\$/g,(m,c)=>`<div style="background:#f8fafc;border:1px dashed #cbd5e1;border-radius:8px;padding:8px;text-align:center;margin:8px 0;font-family:monospace;font-size:12px">${c.trim()}</div>`).replace(/\*\*(.*?)\*\*/g,'<b>$1</b>').replace(/^### (.*)$/gm,'<h3>$1</h3>').split('\n').map(l=>{ l=l.trim(); if(!l) return ''; if(l.startsWith('<h3')||l.startsWith('<div')) return l; if(/^\d+\.\s/.test(l)) return `<p>${l}</p>`; if(l.startsWith('- ')||l.startsWith('* ')) return `<ul><li>${l.slice(2)}</li></ul>`; return `<p>${l}</p>`; }).join(''); html=html.replace(/<\/ul><ul>/g,''); html=html.replace(/<p><\/p>/g,''); return html;
+
+  let html=String(t)
+
+    .replace(
+      /\$\$([\s\S]*?)\$\$/g,
+      (m,c)=>
+        `<div style="
+        background:#f8fafc;
+        border:1px dashed #cbd5e1;
+        border-radius:8px;
+        padding:8px;
+        text-align:center;
+        margin:8px 0;
+        font-family:monospace;
+        font-size:12px
+        ">${c.trim()}</div>`
+    )
+
+    .replace(
+      /\*\*(.*?)\*\*/g,
+      "<b>$1</b>"
+    )
+
+    .replace(
+      /^### (.*)$/gm,
+      "<h3>$1</h3>"
+    )
+
+    .split("\n")
+
+    .map(l=>{
+
+      l=l.trim();
+
+      if(!l) return "";
+
+      if(
+        l.startsWith("<h3")||
+        l.startsWith("<div")
+      ) return l;
+
+      if(/^\d+\.\s/.test(l))
+        return `<p>${l}</p>`;
+
+      if(
+        l.startsWith("- ")||
+        l.startsWith("* ")
+      )
+        return `<ul><li>${l.slice(2)}</li></ul>`;
+
+      return `<p>${l}</p>`;
+
+    })
+
+    .join("");
+
+  html=html.replace(
+    /<\/ul><ul>/g,
+    ""
+  );
+
+  html=html.replace(
+    /<p><\/p>/g,
+    ""
+  );
+
+  return html;
+
 }
-function addUser(t){ welcome.classList.add("hidden"); const d=document.createElement("div"); d.className="flex justify-end mb-2 message-in"; d.innerHTML=`<div class="max-w-[78%] bg-[#dcf8c6] rounded-2xl rounded-br-sm px-4 py-2.5 text-[13px] shadow-sm">${t.replace(/</g,'&lt;')}</div>`; messages.appendChild(d); chatHistory.push({role:"user",content:t}); chat.scrollTop=chat.scrollHeight; }
-function addUserPhoto(p){ welcome.classList.add("hidden"); const d=document.createElement("div"); d.className="flex justify-end mb-2"; d.innerHTML=`<div class="bg-[#dcf8c6] rounded-xl p-1"><img src="${p}" class="max-w-[180px] rounded-lg"></div>`; messages.appendChild(d); }
-function addThinking(){ const d=document.createElement("div"); d.id="thinking"; d.className="flex gap-2 mb-2 items-center"; d.innerHTML=`<div class="w-6 h-6 rounded-full bg-black text-white flex items-center justify-center text-[10px]">🎓</div><div class="bg-white border rounded-xl px-4 py-2 text-[12px] text-gray-500">Thinking...</div>`; messages.appendChild(d); chat.scrollTop=chat.scrollHeight; }
-function addAI(t){
+
+
+/* USER MESSAGE */
+
+function addUser(t){
+
   welcome.classList.add("hidden");
-  const id='ai_'+Date.now();
-  const d=document.createElement("div"); d.className="flex gap-2 mb-3 message-in items-start";
-  d.innerHTML=`<div class="w-6 h-6 rounded-full bg-black text-white flex items-center justify-center text-[10px] shrink-0 mt-1">🎓</div>
-  <div class="flex-1"><div id="${id}" class="ai-card">${formatResponse(t)}</div>
-  <div class="flex flex-wrap gap-1.5 mt-2"><button onclick="copyCard('${id}')" class="h-7 px-3 bg-white border rounded-full text-[10px] font-bold"><i class="fa-regular fa-copy"></i> Copy</button><button onclick="listenCard('${id}')" class="h-7 px-3 bg-white border rounded-full text-[10px] font-bold"><i class="fa-solid fa-volume-high"></i> Listen</button><button onclick="downloadCard('${id}')" class="h-7 px-3 bg-white border rounded-full text-[10px] font-bold"><i class="fa-solid fa-download"></i> Download</button><button onclick="printCard('${id}')" class="h-7 px-3 bg-black text-white rounded-full text-[10px] font-bold"><i class="fa-solid fa-print"></i> Print</button></div></div>`;
-  messages.appendChild(d); chatHistory.push({role:"assistant",content:t}); chat.scrollTop=chat.scrollHeight;
+
+  const d=
+    document.createElement("div");
+
+  d.className=
+    "user-row message-in";
+
+  d.innerHTML=`
+
+    <div class="user-bubble">
+      ${t.replace(/</g,"&lt;")}
+    </div>
+
+  `;
+
+  messages.appendChild(d);
+
+  chatHistory.push({
+    role:"user",
+    content:t
+  });
+
+  chat.scrollTop=
+    chat.scrollHeight;
+
 }
-function copyCard(id){ navigator.clipboard.writeText(document.getElementById(id).innerText); }
-function listenCard(id){ const txt=document.getElementById(id).innerText; const u=new SpeechSynthesisUtterance(txt.slice(0,800)); u.lang=detectLang(txt)==="SW"?"sw-KE":"en-KE"; speechSynthesis.speak(u); }
-function downloadCard(id){ const txt=document.getElementById(id).innerText; const blob=new Blob([txt],{type:'text/plain'}); const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='SomaHub-'+Date.now()+'.txt'; a.click(); }
-function printCard(id){ const content=document.getElementById(id).innerHTML; const w=window.open('','_blank'); w.document.write(`<html><head><title>SomaHub</title><style>body{font-family:Arial;padding:20px;line-height:1.7;font-size:13px} h3{color:#1a1a6c}</style></head><body>${content}<script>window.print()<\/script></body></html>`); w.document.close(); }
-function saveH(t){ const h=JSON.parse(localStorage.getItem("sh")||"[]"); h.unshift({id:Date.now(),title:t.slice(0,50),time:new Date().toISOString(),grade}); localStorage.setItem("sh",JSON.stringify(h.slice(0,100))); }
-function openHistory(){ document.getElementById("historyDrawer").classList.remove("hidden"); document.getElementById("historyDrawer").classList.add("flex"); const h=JSON.parse(localStorage.getItem("sh")||"[]"); const l=document.getElementById("historyList"); l.innerHTML=h.length?'':"<p class='text-center text-gray-400 mt-20 text-xs'>No history</p>"; h.forEach(it=>{ const div=document.createElement("div"); div.className="py-2.5 border-b flex justify-between"; div.innerHTML=`<div><p class="text-[12px] font-bold">${it.title}</p><p class="text-[9px] text-gray-500">${it.grade}</p></div><button onclick="delH('${it.id}')" class="text-[12px]">×</button>`; l.appendChild(div); }); }
-function closeHistory(){ document.getElementById("historyDrawer").classList.add("hidden"); }
-function delH(id){ let h=JSON.parse(localStorage.getItem("sh")||"[]"); h=h.filter(x=>x.id!=id); localStorage.setItem("sh",JSON.stringify(h)); openHistory(); }
-function clearHistory(){ if(confirm("Delete all history?")){ localStorage.removeItem("sh"); openHistory(); } }
+
+
+/* USER PHOTO */
+
+function addUserPhoto(p){
+
+  welcome.classList.add("hidden");
+
+  const d=
+    document.createElement("div");
+
+  d.className=
+    "user-row";
+
+  d.innerHTML=`
+
+    <div class="user-bubble"
+         style="padding:5px">
+
+      <img
+        src="${p}"
+        style="
+        max-width:220px;
+        max-height:300px;
+        border-radius:13px;
+        display:block;
+        object-fit:contain;
+        ">
+
+    </div>
+
+  `;
+
+  messages.appendChild(d);
+
+}
+
+
+/* THINKING */
+
+function addThinking(){
+
+  const d=
+    document.createElement("div");
+
+  d.id="thinking";
+
+  d.className="thinking";
+
+  d.innerHTML=`
+
+    <div class="thinking-avatar">
+      🎓
+    </div>
+
+    <div class="thinking-box">
+      Thinking...
+    </div>
+
+  `;
+
+  messages.appendChild(d);
+
+  chat.scrollTop=
+    chat.scrollHeight;
+
+}
+
+
+/* AI RESPONSE */
+
+function addAI(t){
+
+  welcome.classList.add("hidden");
+
+  const id=
+    "ai_"+Date.now();
+
+  const d=
+    document.createElement("div");
+
+  d.className=
+    "ai-row message-in";
+
+  d.innerHTML=`
+
+    <div class="ai-avatar">
+      🎓
+    </div>
+
+    <div class="ai-content">
+
+      <div id="${id}" class="ai-card">
+        ${formatResponse(t)}
+      </div>
+
+      <div class="message-actions">
+
+        <button
+          onclick="copyCard('${id}')"
+          class="message-action">
+
+          <i class="fa-regular fa-copy"></i>
+          Copy
+
+        </button>
+
+        <button
+          onclick="listenCard('${id}')"
+          class="message-action">
+
+          <i class="fa-solid fa-volume-high"></i>
+          Listen
+
+        </button>
+
+        <button
+          onclick="downloadCard('${id}')"
+          class="message-action">
+
+          <i class="fa-solid fa-download"></i>
+          Download
+
+        </button>
+
+        <button
+          onclick="printCard('${id}')"
+          class="message-action primary">
+
+          <i class="fa-solid fa-print"></i>
+          Print
+
+        </button>
+
+      </div>
+
+    </div>
+
+  `;
+
+  messages.appendChild(d);
+
+  chatHistory.push({
+    role:"assistant",
+    content:t
+  });
+
+  chat.scrollTop=
+    chat.scrollHeight;
+
+}
+
+
+/* COPY */
+
+function copyCard(id){
+
+  navigator.clipboard.writeText(
+    document.getElementById(id).innerText
+  );
+
+}
+
+
+/* LISTEN */
+
+function listenCard(id){
+
+  const txt=
+    document.getElementById(id).innerText;
+
+  const u=
+    new SpeechSynthesisUtterance(
+      txt.slice(0,800)
+    );
+
+  u.lang=
+    detectLang(txt)==="SW"
+      ? "sw-KE"
+      : "en-KE";
+
+  speechSynthesis.speak(u);
+
+}
+
+
+/* DOWNLOAD */
+
+function downloadCard(id){
+
+  const txt=
+    document.getElementById(id).innerText;
+
+  const blob=
+    new Blob([txt],{
+      type:"text/plain"
+    });
+
+  const a=
+    document.createElement("a");
+
+  a.href=
+    URL.createObjectURL(blob);
+
+  a.download=
+    "SomaHub-"+Date.now()+".txt";
+
+  a.click();
+
+}
+
+
+/* PRINT */
+
+function printCard(id){
+
+  const content=
+    document.getElementById(id).innerHTML;
+
+  const w=
+    window.open("","_blank");
+
+  if(!w){
+
+    alert("Please allow pop-ups to print.");
+
+    return;
+
+  }
+
+  w.document.write(`
+
+    <html>
+
+    <head>
+
+      <title>SomaHub</title>
+
+      <style>
+
+        body{
+          font-family:Arial;
+          padding:20px;
+          line-height:1.7;
+          font-size:13px;
+        }
+
+        h3{
+          color:#25358a;
+        }
+
+      </style></head>
+
+<body>
+
+  ${content}
+
+  <script>
+    window.print();
+  <\/script>
+
+</body>
+
+</html>
+
+`);
+
+w.document.close();
+
+}
+
+/* SAVE HISTORY */
+
+function saveH(t){
+
+const h=
+JSON.parse(
+localStorage.getItem("sh")||"[]"
+);
+
+h.unshift({
+id:Date.now(),
+title:t.slice(0,50),
+time:new Date().toISOString(),
+grade
+});
+
+localStorage.setItem(
+"sh",
+JSON.stringify(h.slice(0,100))
+);
+
+}
+
+/* OPEN HISTORY */
+
+function openHistory(){
+
+const drawer=
+document.getElementById("historyDrawer");
+
+drawer.classList.add("show");
+
+const h=
+JSON.parse(
+localStorage.getItem("sh")||"[]"
+);
+
+const l=
+document.getElementById("historyList");
+
+if(!h.length){
+
+l.innerHTML=
+  `<p style="
+  text-align:center;
+  color:#94a3b8;
+  margin-top:70px;
+  font-size:12px;
+  ">
+  No learning history yet
+  </p>`;
+
+return;
+
+}
+
+l.innerHTML="";
+
+h.forEach(it=>{
+
+const div=
+  document.createElement("div");
+
+div.className=
+  "history-item";
+
+div.innerHTML=`
+
+  <div style="
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:10px;
+  ">
+
+    <div style="min-width:0">
+
+      <div style="
+        font-size:12px;
+        font-weight:800;
+        color:#1e293b;
+        overflow:hidden;
+        text-overflow:ellipsis;
+        white-space:nowrap;
+      ">
+        ${it.title}
+      </div>
+
+      <div style="
+        font-size:9px;
+        color:#64748b;
+        margin-top:3px;
+      ">
+        ${it.grade}
+      </div>
+
+    </div>
+
+    <button
+      onclick="delH('${it.id}')"
+      style="
+      width:28px;
+      height:28px;
+      border:0;
+      border-radius:50%;
+      background:#f1f5f9;
+      color:#64748b;
+      "
+    >
+      ×
+    </button>
+
+  </div>
+
+`;
+
+l.appendChild(div);
+
+});
+
+}
+
+/* CLOSE HISTORY */
+
+function closeHistory(){
+
+document
+.getElementById("historyDrawer")
+.classList.remove("show");
+
+}
+
+/* DELETE HISTORY ITEM */
+
+function delH(id){
+
+let h=
+JSON.parse(
+localStorage.getItem("sh")||"[]"
+);
+
+h=
+h.filter(x=>x.id!=id);
+
+localStorage.setItem(
+"sh",
+JSON.stringify(h)
+);
+
+openHistory();
+
+}
+
+/* CLEAR HISTORY */
+
+function clearHistory(){
+
+if(
+confirm("Delete all learning history?")
+){
+
+localStorage.removeItem("sh");
+
+openHistory();
+
+}
+
+}
+
+/* SEND MESSAGE */
 
 async function sendMsg(){
-  const text=msg.value.trim(); if(!text &&!uploadedPhoto) return; if(isThinking) return;
-  if(text) addUser(text); if(uploadedPhoto) addUserPhoto(uploadedPhoto);
-  saveH(text||uploadedDocName||"Photo"); const q=text||"Explain this image";
-  const lang=detectLang(text);
-  msg.value=""; msg.style.height="20px"; const keepPhoto=uploadedPhoto; const keepMime=uploadedMime||"image/jpeg"; clearAttach();
-  addThinking(); isThinking=true;
-  const payload={question:q, originalQuestion:q, grade:grade, role:"Student", task:lang, mode:"student", history:chatHistory.slice(-6), photo:keepPhoto, mimeType:keepMime, provider:"auto"};
-  try{
-    const res=await fetch(PROXY,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(payload)});
-    const textRes=await res.text(); let data; try{ data=JSON.parse(textRes); }catch{ throw new Error(textRes.slice(0,200)); }
-    document.getElementById("thinking")?.remove();
-    if(!res.ok) throw new Error(data.error||"Server error");
-    const reply=data.answer||data.reply||""; if(!reply) throw new Error("Empty answer");
-    addAI(reply);
-  }catch(e){
-    document.getElementById("thinking")?.remove();
-    showError(e.message);
-    addAI("Samahani, kuna hitilafu: "+e.message);
-  }
-  isThinking=false; chat.scrollTop=chat.scrollHeight;
+
+const text=
+msg.value.trim();
+
+if(!text && !uploadedPhoto)
+return;
+
+if(isThinking)
+return;
+
+if(text)
+addUser(text);
+
+if(uploadedPhoto)
+addUserPhoto(uploadedPhoto);
+
+saveH(
+text||
+uploadedDocName||
+"Photo"
+);
+
+const q=
+text||
+"Explain this image";
+
+const lang=
+detectLang(text);
+
+msg.value="";
+
+msg.style.height="22px";
+
+const keepPhoto=
+uploadedPhoto;
+
+const keepMime=
+uploadedMime||
+"image/jpeg";
+
+clearAttach();
+
+addThinking();
+
+isThinking=true;
+
+const payload={
+
+question:q,
+
+originalQuestion:q,
+
+grade:grade,
+
+role:"Student",
+
+task:lang,
+
+mode:"student",
+
+history:
+  chatHistory.slice(-6),
+
+photo:keepPhoto,
+
+mimeType:keepMime,
+
+provider:"auto"
+
+};
+
+try{
+
+const res=
+  await fetch(
+    PROXY,
+    {
+      method:"POST",
+      headers:{
+        "Content-Type":
+          "application/json"
+      },
+      body:
+        JSON.stringify(payload)
+    }
+  );
+
+const textRes=
+  await res.text();
+
+let data;
+
+try{
+
+  data=
+    JSON.parse(textRes);
+
+}catch{
+
+  throw new Error(
+    textRes.slice(0,200)
+  );
+
 }
-msg.addEventListener("keydown",e=>{ if(e.key==="Enter"&&!e.shiftKey){ e.preventDefault(); sendMsg(); }});
-</script>
-</body>
+
+document
+  .getElementById("thinking")
+  ?.remove();
+
+if(!res.ok)
+  throw new Error(
+    data.error||
+    "Server error"
+  );
+
+const reply=
+  data.answer||
+  data.reply||
+  "";
+
+if(!reply)
+  throw new Error(
+    "Empty answer"
+  );
+
+addAI(reply);
+
+}catch(e){
+
+document
+  .getElementById("thinking")
+  ?.remove();
+
+showError(e.message);
+
+addAI(
+  "Samahani, kuna hitilafu: "+
+  e.message
+);
+
+}
+
+isThinking=false;
+
+chat.scrollTop=
+chat.scrollHeight;
+
+}
+
+/* ENTER TO SEND */
+
+msg.addEventListener(
+"keydown",
+e=>{
+
+if(
+  e.key==="Enter" &&
+  !e.shiftKey
+){
+
+  e.preventDefault();
+
+  sendMsg();
+
+}
+
+}
+);
+
+</script></body>
 </html>
