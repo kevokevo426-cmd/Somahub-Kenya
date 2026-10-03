@@ -4,7 +4,6 @@
 <title>Notes - SomaHub KICD</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;800;900&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <style>body{font-family:'Nunito',sans-serif;background:#f6f6f7}.no-scrollbar::-webkit-scrollbar{display:none}</style>
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
@@ -20,154 +19,154 @@ const app=initializeApp(cfg); window.FB={auth:getAuth(app),db:getFirestore(app),
 
 <div class="bg-white border-b-2 border-black p-3 flex justify-between items-center sticky top-0 z-40">
 <a href="student.html" class="bg-black text-white px-4 py-2 rounded-full font-black text-[11px]">← Home</a>
-<div class="text-center"><p class="font-black text-[14px] leading-none">📚 Notes</p><p class="text-[9px] text-gray-500 font-bold">KICD • CBC & CBE</p></div>
+<div class="text-center"><p class="font-black text-[14px]">📚 SomaHub Notes</p><p class="text-[8px] text-gray-500 font-bold">AI from KICD Design + Schemes + FAQs</p></div>
 <span id="shkeB" class="bg-[#4a86ff] text-white px-2.5 py-1 rounded-full text-[9px] font-black">SHKE...</span>
 </div>
 
 <div class="p-3 space-y-3">
+<!-- Search -->
 <div class="bg-white rounded-[1.2rem] p-3 border-2 border-black shadow-[2px_2px_0_0_#000]">
 <div class="flex gap-2">
-<input id="searchIn" placeholder="🔍 Search e.g. Photosynthesis, Fractions..." class="flex-1 bg-[#f6f6f7] border-2 border-black rounded-full px-4 py-3 text-[11px] font-bold outline-none">
+<input id="searchIn" placeholder="🔍 Search e.g. Nouns, Fractions..." class="flex-1 bg-[#f6f6f7] border-2 border-black rounded-full px-4 py-3 text-[11px] font-bold outline-none">
 <button onclick="loadNotes()" class="bg-black text-white px-5 rounded-full font-black text-[11px]">Go</button>
 </div>
 
+<!-- NEAT Grade Chips - 2 rows -->
 <p class="font-black text-[10px] mt-3 mb-1">Grade:</p>
-<div id="gradeChips" class="flex gap-1.5 overflow-x-auto no-scrollbar pb-1">
-<button onclick="setGrade('All')" class="gChip bg-black text-white px-3 py-1.5 rounded-full text-[10px] font-black border-2 border-black whitespace-nowrap">All</button>
-<button onclick="setGrade('PP1')" class="gChip bg-white px-3 py-1.5 rounded-full text-[10px] font-black border-2 border-black whitespace-nowrap">PP1</button>
-<button onclick="setGrade('PP2')" class="gChip bg-white px-3 py-1.5 rounded-full text-[10px] font-black border-2 border-black whitespace-nowrap">PP2</button>
-<button onclick="setGrade('Grade 1')" class="gChip bg-white px-3 py-1.5 rounded-full text-[10px] font-black border-2 border-black whitespace-nowrap">G1</button>
-<button onclick="setGrade('Grade 2')" class="gChip bg-white px-3 py-1.5 rounded-full text-[10px] font-black border-2 border-black whitespace-nowrap">G2</button>
-<button onclick="setGrade('Grade 3')" class="gChip bg-white px-3 py-1.5 rounded-full text-[10px] font-black border-2 border-black whitespace-nowrap">G3</button>
-<button onclick="setGrade('Grade 4')" class="gChip bg-white px-3 py-1.5 rounded-full text-[10px] font-black border-2 border-black whitespace-nowrap">G4</button>
-<button onclick="setGrade('Grade 5')" class="gChip bg-white px-3 py-1.5 rounded-full text-[10px] font-black border-2 border-black whitespace-nowrap">G5</button>
-<button onclick="setGrade('Grade 6')" class="gChip bg-[#ffcc1a] px-3 py-1.5 rounded-full text-[10px] font-black border-2 border-black whitespace-nowrap">G6</button>
-<button onclick="setGrade('Grade 7')" class="gChip bg-white px-3 py-1.5 rounded-full text-[10px] font-black border-2 border-black whitespace-nowrap">G7</button>
-<button onclick="setGrade('Grade 8')" class="gChip bg-white px-3 py-1.5 rounded-full text-[10px] font-black border-2 border-black whitespace-nowrap">G8</button>
-<button onclick="setGrade('Grade 9')" class="gChip bg-white px-3 py-1.5 rounded-full text-[10px] font-black border-2 border-black whitespace-nowrap">G9</button>
+<div class="grid grid-cols-5 gap-1.5">
+<button onclick="setGrade('PP1',this)" class="gChip bg-white py-2 rounded-full text-[10px] font-black border-2 border-black">PP1</button>
+<button onclick="setGrade('PP2',this)" class="gChip bg-white py-2 rounded-full text-[10px] font-black border-2 border-black">PP2</button>
+<button onclick="setGrade('Grade 1',this)" class="gChip bg-white py-2 rounded-full text-[10px] font-black border-2 border-black">G1</button>
+<button onclick="setGrade('Grade 2',this)" class="gChip bg-white py-2 rounded-full text-[10px] font-black border-2 border-black">G2</button>
+<button onclick="setGrade('Grade 3',this)" class="gChip bg-white py-2 rounded-full text-[10px] font-black border-2 border-black">G3</button>
+<button onclick="setGrade('Grade 4',this)" class="gChip bg-[#ffcc1a] py-2 rounded-full text-[10px] font-black border-2 border-black">G4</button>
+<button onclick="setGrade('Grade 5',this)" class="gChip bg-white py-2 rounded-full text-[10px] font-black border-2 border-black">G5</button>
+<button onclick="setGrade('Grade 6',this)" class="gChip bg-white py-2 rounded-full text-[10px] font-black border-2 border-black">G6</button>
+<button onclick="setGrade('Grade 7',this)" class="gChip bg-white py-2 rounded-full text-[10px] font-black border-2 border-black">G7</button>
+<button onclick="setGrade('Grade 8',this)" class="gChip bg-white py-2 rounded-full text-[10px] font-black border-2 border-black">G8</button>
 </div>
 
-<p class="font-black text-[10px] mt-2 mb-1">Subject:</p>
-<div id="subChips" class="flex gap-1.5 overflow-x-auto no-scrollbar pb-1">
-<button onclick="setSub('All')" class="sChip bg-black text-white px-3 py-1.5 rounded-full text-[10px] font-black border-2 border-black whitespace-nowrap">All</button>
-<button onclick="setSub('Mathematics')" class="sChip bg-white px-3 py-1.5 rounded-full text-[10px] font-black border-2 border-black whitespace-nowrap">Maths</button>
-<button onclick="setSub('English')" class="sChip bg-white px-3 py-1.5 rounded-full text-[10px] font-black border-2 border-black whitespace-nowrap">English</button>
-<button onclick="setSub('Science')" class="sChip bg-white px-3 py-1.5 rounded-full text-[10px] font-black border-2 border-black whitespace-nowrap">Science</button>
-<button onclick="setSub('SST')" class="sChip bg-white px-3 py-1.5 rounded-full text-[10px] font-black border-2 border-black whitespace-nowrap">SST</button>
-<button onclick="setSub('ICT & Coding')" class="sChip bg-[#e0f2ff] px-3 py-1.5 rounded-full text-[10px] font-black border-2 border-black whitespace-nowrap">💻 ICT</button>
-<button onclick="setSub('Foreign Language')" class="sChip bg-[#ffe8f0] px-3 py-1.5 rounded-full text-[10px] font-black border-2 border-black whitespace-nowrap">🌐 Foreign</button>
+<!-- NEAT Subject Chips -->
+<p class="font-black text-[10px] mt-3 mb-1">Subject:</p>
+<div class="grid grid-cols-3 gap-1.5">
+<button onclick="setSub('English',this)" class="sChip bg-black text-white py-2 rounded-full text-[10px] font-black border-2 border-black">English</button>
+<button onclick="setSub('Mathematics',this)" class="sChip bg-white py-2 rounded-full text-[10px] font-black border-2 border-black">Maths</button>
+<button onclick="setSub('Science',this)" class="sChip bg-white py-2 rounded-full text-[10px] font-black border-2 border-black">Science</button>
+<button onclick="setSub('SST',this)" class="sChip bg-white py-2 rounded-full text-[10px] font-black border-2 border-black">SST</button>
+<button onclick="setSub('Kiswahili',this)" class="sChip bg-white py-2 rounded-full text-[10px] font-black border-2 border-black">Kiswahili</button>
+<button onclick="setSub('Agriculture',this)" class="sChip bg-white py-2 rounded-full text-[10px] font-black border-2 border-black">Agric</button>
 </div>
 </div>
 
-<div class="flex gap-2">
-<a href="ict.html" class="flex-1 bg-[#4a86ff] text-white rounded-full py-2.5 text-center font-black text-[10px] border-2 border-black shadow-[1px_1px_0_0_#000]">💻 ICT Page</a>
-<a href="foreign-language.html" class="flex-1 bg-pink-500 text-white rounded-full py-2.5 text-center font-black text-[10px] border-2 border-black shadow-[1px_1px_0_0_#000]">🌐 Languages</a>
-<a href="games.html" class="flex-1 bg-[#ffcc1a] text-black rounded-full py-2.5 text-center font-black text-[10px] border-2 border-black shadow-[1px_1px_0_0_#000]">🎮 Games</a>
-</div>
+<!-- REMOVED: ICT Page, Languages, Games - they don't belong in notes -->
 
+<!-- Results - SomaHub Notes FIRST -->
 <div id="notesList" class="space-y-2.5"></div>
-
 </div>
 </div>
 
 <script>
-let curGrade="Grade 6", curSub="All";
-function setGrade(g){curGrade=g; document.querySelectorAll('.gChip').forEach(b=>{b.className=b.className.replace('bg-black text-white','bg-white').replace('bg-[#ffcc1a]','bg-white');}); event.target.classList.remove('bg-white'); event.target.classList.add('bg-black','text-white'); loadNotes();}
-function setSub(s){curSub=s; document.querySelectorAll('.sChip').forEach(b=>{b.className=b.className.replace('bg-black text-white','bg-white');}); event.target.classList.remove('bg-white','bg-[#e0f2ff]','bg-[#ffe8f0]'); event.target.classList.add('bg-black','text-white'); loadNotes();}
+let curGrade="Grade 4", curSub="English";
 
-function goAI(title){ let q=encodeURIComponent(`${title} ${curGrade} KICD notes explained`); location.href=`ai.assistant.html?q=${q}&grade=${encodeURIComponent(curGrade)}&subject=${encodeURIComponent(curSub)}`; }
+function setGrade(g,el){
+ curGrade=g;
+ document.querySelectorAll('.gChip').forEach(b=>{b.classList.remove('bg-black','text-white','bg-[#ffcc1a]'); b.classList.add('bg-white');});
+ el.classList.remove('bg-white'); el.classList.add('bg-black','text-white');
+ loadNotes();
+}
+function setSub(s,el){
+ curSub=s;
+ document.querySelectorAll('.sChip').forEach(b=>{b.classList.remove('bg-black','text-white'); b.classList.add('bg-white');});
+ el.classList.remove('bg-white'); el.classList.add('bg-black','text-white');
+ loadNotes();
+}
+function goAI(title){
+ let q=encodeURIComponent(`${title} ${curGrade} ${curSub} KICD notes explained from design + schemes + most asked questions`);
+ location.href=`ai.assistant.html?q=${q}&grade=${encodeURIComponent(curGrade)}&subject=${encodeURIComponent(curSub)}`;
+}
+
+// SomaHub Default AI notes for Grade 4 English (from schemes/design/Gemini/FAQs)
+const SOMAHUB_DEFAULT = {
+ "Grade 4|English": [
+  {title:"Nouns - People, Places & Things", desc:"From KICD Design + Most Asked KCPE Qs - Types of nouns with colorful examples", content:"SomaHub Modern: Noun = name... (International > Cambridge)\nTypes:\n1. Proper - Nairobi, John (capital)\n2. Common - school, boy\n3. Collective - bunch of bananas\n🎨 Diagram: Noun tree colored\n▶️ Audio: Nouns explained EN/SW\nQ: List 5 nouns in your class?"},
+  {title:"Verbs - Doing Words", desc:"From Scheme Week 4 + Past papers FAQs", content:"Verb = action... Run, eat, write..."},
+  {title:"Adjectives - Describing Words", desc:"KICD CBE Design - colorful adjectives", content:"Adjective describes noun... tall, red, happy..."},
+  {title:"Tenses - Past, Present, Future", desc:"Most asked in exams", content:"Present: I eat... Past: I ate... Future: I will eat..."},
+ ],
+};
 
 async function loadNotes(){
  let FB=window.FB, search=searchIn.value.toLowerCase(), list=document.getElementById('notesList');
- list.innerHTML=`<div class="bg-white border-2 border-black rounded-xl p-4 text-center"><p class="font-black text-[11px]">🔍 Loading ${curGrade} ${curSub!=='All'?curSub:''}...</p></div>`;
+ list.innerHTML=`<div class="bg-white border-2 border-black rounded-xl p-4 text-center"><p class="font-black text-[11px]">📚 Loading SomaHub AI Notes for ${curGrade} ${curSub}...</p><p class="text-[9px] text-gray-500 mt-1">From Design + Schemes + FAQs + Gemini</p></div>`;
  try{
   let q;
-  if(curGrade==="All"&&curSub==="All") q=FB.query(FB.collection(FB.db,"resources"),FB.where("type","==","Notes"));
-  else if(curGrade==="All") q=FB.query(FB.collection(FB.db,"resources"),FB.where("subject","==",curSub),FB.where("type","==","Notes"));
-  else if(curSub==="All") q=FB.query(FB.collection(FB.db,"resources"),FB.where("grade","==",curGrade),FB.where("type","==","Notes"));
+  if(curSub==="All") q=FB.query(FB.collection(FB.db,"resources"),FB.where("grade","==",curGrade),FB.where("type","==","Notes"));
   else q=FB.query(FB.collection(FB.db,"resources"),FB.where("grade","==",curGrade),FB.where("subject","==",curSub),FB.where("type","==","Notes"));
   let snap=await FB.getDocs(q); let filtered=[];
   snap.forEach(d=>{let n=d.data(); let txt=((n.title||'')+(n.subject||'')+(n.description||'')).toLowerCase(); if(!search||txt.includes(search)) filtered.push({id:d.id,...n});});
+
+  // IF NO FIRESTORE NOTES, SHOW SOMAHUB AI GENERATED NOTES FIRST (Your requirement)
   if(filtered.length===0){
-   list.innerHTML=`<div class="bg-white border-2 border-dashed border-black rounded-xl p-5 text-center">
-   <p class="text-[30px]">📚</p><p class="font-black text-[12px] mt-2">No notes yet for ${curGrade} ${curSub!=='All'?curSub:''} ${search?`"${search}"`:''}</p>
-   <p class="text-[10px] text-gray-500 mt-1">AI is connected - will explain instantly</p>
-   <button onclick="goAI('${search||curSub}')" class="mt-3 w-full bg-black text-white rounded-full py-3 font-black text-[11px]">🤖 Ask AI Tutor - Clean Answer →</button>
-   </div>`; return;
+   let key=`${curGrade}|${curSub}`;
+   let aiNotes=SOMAHUB_DEFAULT[key] || [
+     {title:`${curSub} - ${curGrade} KICD Overview`, desc:`AI generated from KICD Design + Schemes + Most Asked Qs`, content:`SomaHub AI Notes for ${curGrade} ${curSub}\nGenerated from:\n• KICD Curriculum Design\n• Schemes of Work\n• Teacher notes you uploaded\n• Most asked questions in exams\n• Gemini AI\n\nModern, colored, audio-visual, international > Cambridge.\nTap Ask AI for full explanation with diagrams.`}
+   ];
+   // filter by search
+   if(search) aiNotes=aiNotes.filter(n=>n.title.toLowerCase().includes(search)||n.desc.toLowerCase().includes(search));
+
+   list.innerHTML=`<div class="bg-[#ffcc1a] border-2 border-black rounded-xl p-2.5"><p class="font-black text-[11px]">✨ SomaHub AI Notes - ${filtered.length===0? aiNotes.length : filtered.length} Found</p><p class="text-[9px]">Source: Design + Schemes + Notes + FAQs + Gemini</p></div>`;
+   aiNotes.forEach((n,i)=>{
+    list.innerHTML+=`<div class="bg-white border-2 border-black rounded-xl p-3 shadow-[2px_2px_0_0_#000]">
+     <p class="font-black text-[12px]">${n.title}</p>
+     <p class="text-[10px] text-gray-600 mt-1">${n.desc}</p>
+     <div class="mt-2 flex gap-2">
+       <button onclick="document.getElementById('ai-${i}').classList.toggle('hidden')" class="flex-1 bg-black text-white rounded-full py-2.5 font-black text-[10px]">📖 Read SomaHub Notes</button>
+       <button onclick="goAI('${n.title.replace(/'/g,'')}')" class="bg-[#4a86ff] text-white border-2 border-black rounded-full px-4 py-2.5 font-black text-[10px]">🤖 Ask AI</button>
+     </div>
+     <div id="ai-${i}" class="hidden mt-3 bg-[#f6f6f7] border-2 border-black rounded-xl p-3 text-[11px] leading-5 whitespace-pre-wrap">${n.content}
+
+     <div class="mt-3 flex gap-1.5">
+       <a href="#" class="flex-1 bg-white border-2 border-black rounded-full py-2 text-center font-black text-[9px]">📄 Original PDF</a>
+       <a href="#" class="flex-1 bg-[#0ea5e9] text-white border-2 border-black rounded-full py-2 text-center font-black text-[9px]">✨ SomaHub PDF + Diagrams</a>
+     </div>
+     <div class="mt-2 flex gap-1.5">
+       <button class="flex-1 bg-orange-500 text-white border-2 border-black rounded-full py-1.5 font-black text-[9px]">▶️ Listen EN</button>
+       <button class="flex-1 bg-green-600 text-white border-2 border-black rounded-full py-1.5 font-black text-[9px]">▶️ Sikiliza SW</button>
+     </div>
+     </div>
+    </div>`;
+   });
+   return;
   }
-  list.innerHTML=`<p class="font-black text-[11px]">${filtered.length} notes found • ${curGrade} ${curSub!=='All'?curSub:''}</p>`;
+
+  // If Firestore has notes, show them as SomaHub Notes FIRST
+  list.innerHTML=`<div class="bg-[#ffcc1a] border-2 border-black rounded-xl p-2.5"><p class="font-black text-[11px]">✨ ${filtered.length} SomaHub Notes • ${curGrade} ${curSub}</p></div>`;
   filtered.forEach(n=>{
-   // VERCEL BLOB LINKS - from Firestore (same system as exams)
-   const originalBlob = n.originalBlobUrl || n.fileUrl || n.pdfUrl || '#';
-   const somaBlob = n.somaHubBlobUrl || n.somahubPdfUrl || '#';
-   const diagram = n.diagramUrl || n.somahubDiagramUrl || '';
-   const audio = n.audioUrl || '';
-   const video = n.videoUrl || '';
-
+   const originalBlob=n.originalBlobUrl||n.fileUrl||'#';
+   const somaBlob=n.somaHubBlobUrl||'#';
+   const diagram=n.diagramUrl||'';
    list.innerHTML+=`<div class="bg-white border-2 border-black rounded-xl p-3 shadow-[2px_2px_0_0_#000]">
-   <div class="flex justify-between items-start gap-2"><p class="font-black text-[12px] leading-tight">${n.title||n.subject||'KICD Notes'}</p><span class="bg-[#f6f6f7] border border-black px-2 py-0.5 rounded-full text-[8px] font-black whitespace-nowrap">${n.grade||curGrade}</span></div>
-   <p class="text-[10px] text-gray-600 mt-2 line-clamp-2">${n.description||n.content||'Tap Read for full KICD note...'}</p>
-   <div class="mt-3 flex gap-2">
-     <button onclick="document.getElementById('detail-${n.id}').classList.toggle('hidden')" class="flex-1 bg-black text-white rounded-full py-2.5 font-black text-[10px]">Read Notes → Dual View</button>
-     <button onclick="goAI('${(n.title||'').replace(/'/g,'')}')" class="bg-[#ffcc1a] border-2 border-black rounded-full px-4 py-2.5 font-black text-[10px]">Ask AI</button>
+   <p class="font-black text-[12px]">${n.title}</p><p class="text-[10px] text-gray-600 mt-1">${n.description||''}</p>
+   <div class="mt-2 flex gap-2">
+     <button onclick="document.getElementById('d-${n.id}').classList.toggle('hidden')" class="flex-1 bg-black text-white rounded-full py-2.5 font-black text-[10px]">📖 Read - Original + Modern</button>
+     <button onclick="goAI('${(n.title||'').replace(/'/g,'')}')" class="bg-[#ffcc1a] border-2 border-black rounded-full px-3 py-2.5 font-black text-[10px]">AI</button>
    </div>
-
-   <!-- NEW: DUAL VIEW - DOES NOT BREAK ORIGINAL, JUST INSIDE HIDDEN DIV -->
-   <div id="detail-${n.id}" class="hidden mt-3 space-y-3">
-
-     <!-- Download Row - Vercel Blob -->
-     <div class="flex gap-1.5">
-       <a href="${originalBlob}" target="_blank" class="flex-1 bg-white border-2 border-black rounded-full py-2 text-center font-black text-[9px]">📄 Original PDF</a>
-       <a href="${somaBlob}" target="_blank" class="flex-1 bg-[#0ea5e9] text-white border-2 border-black rounded-full py-2 text-center font-black text-[9px]">✨ SomaHub PDF</a>
-     </div>
-
-     <div class="grid grid-cols-1 gap-3">
-       <!-- LEFT: ORIGINAL UPLOADED NOTES -->
-       <div class="bg-[#f6f6f7] border-2 border-black rounded-xl p-2.5">
-         <p class="font-black text-[10px]">📘 Original Uploaded Notes</p>
-         <p class="text-[9px] text-gray-500 mb-2">Teacher upload - as is</p>
-         <div class="bg-white rounded-lg p-2 text-[11px] leading-5 whitespace-pre-wrap max-h-[200px] overflow-auto border border-black">${n.content||n.description||'Original content...'}</div>
-         ${originalBlob!=='#'? `<iframe src="${originalBlob}" class="w-full h-[200px] mt-2 rounded-lg border-2 border-black"></iframe>` : ''}
-       </div>
-
-       <!-- RIGHT: SOMAHUB MODERN - Colorful, Audio-visual, International -->
-       <div class="bg-[#e0f2ff] border-2 border-black rounded-xl p-2.5">
-         <p class="font-black text-[10px]">✨ SomaHub Modern Notes - International > Cambridge</p>
-         <p class="text-[9px] text-blue-600 mb-2">Colored diagrams + Audio + Video</p>
-
-         ${diagram? `<img src="${diagram}" class="w-full rounded-xl border-2 border-black mb-2" />` : `<div class="bg-white border-2 border-dashed border-black rounded-xl p-3 text-center text-[9px]">🎨 Colored diagram will appear here - AI generates from foundation<br/>Example: Strip cropping 3D rainbow diagram</div>`}
-
-         <div class="bg-white rounded-xl p-2.5 border-2 border-black text-[11px] leading-5">
-           <b>${n.title||'Modern Explanation'}:</b><br/>
-           ${n.somahubContent || n.somahubNotes || 'AI enriched from KICD Foundation: Well explained, international examples, why it matters, sustainability. Uses foundation outcomes. More colorful than Cambridge with real-life Kenyan + global context.'}
-         </div>
-
-         <div class="mt-2 flex flex-col gap-1.5">
-           ${audio? `<audio controls src="${audio}" class="w-full h-8"></audio>` : ''}
-           <div class="flex gap-1.5">
-             <button class="flex-1 bg-orange-500 text-white border-2 border-black rounded-full py-2 font-black text-[9px]">▶️ Listen EN</button>
-             <button class="flex-1 bg-green-600 text-white border-2 border-black rounded-full py-2 font-black text-[9px]">▶️ Sikiliza SW</button>
-           </div>
-           <a href="${video||'#'}" target="_blank" class="bg-red-600 text-white border-2 border-black rounded-full py-2 text-center font-black text-[9px]">📺 Watch Video Demo</a>
-         </div>
-
-         <!-- For Teacher: Scheme + Lesson Plan -->
-         <div class="mt-3 bg-white border-2 border-black rounded-xl p-2">
-           <p class="font-black text-[9px]">📅 Teacher: Scheme + Lesson Plan (from Foundation)</p>
-           <p class="text-[9px] mt-1">${n.scheme || 'Week 3: Drawing from observation - 3 Lessons - from KICD pg 76'}</p>
-           <p class="text-[9px] mt-1">${n.lessonPlan || 'Lesson Plan: Outcome - use tools to draw...'}</p>
-           <p class="text-[9px] mt-1"><b>Homework:</b> ${n.homework || 'Term-based homework'} | <b>Exam:</b> ${n.exam || 'Term exam'}</p>
-         </div>
-       </div>
-     </div>
+   <div id="d-${n.id}" class="hidden mt-3 space-y-2">
+     <div class="flex gap-1.5"><a href="${originalBlob}" target="_blank" class="flex-1 bg-white border-2 border-black rounded-full py-2 text-center font-black text-[9px]">📄 Original</a><a href="${somaBlob}" target="_blank" class="flex-1 bg-[#0ea5e9] text-white border-2 border-black rounded-full py-2 text-center font-black text-[9px]">✨ SomaHub Modern</a></div>
+     ${diagram?`<img src="${diagram}" class="w-full rounded-xl border-2 border-black"/>`:''}
+     <div class="bg-[#f6f6f7] border-2 border-black rounded-xl p-3 text-[11px] whitespace-pre-wrap">${n.content||n.description||''}</div>
+     <div class="bg-[#e0f2ff] border-2 border-black rounded-xl p-3 text-[11px]"><b>✨ SomaHub Modern (International):</b><br/>${n.somahubContent||'Enriched from KICD Design + Schemes + FAQs - colored, audio-visual.'}</div>
    </div>
    </div>`;
   });
- }catch(e){console.error(e); list.innerHTML=`<p class="text-center text-[10px] text-red-500 bg-white border-2 border-black rounded-xl p-3">Error loading - check internet. Tap Ask AI instead.</p>`;}
+ }catch(e){console.error(e); list.innerHTML=`<p class="text-center text-[10px] bg-white border-2 border-black rounded-xl p-3">Error - Tap Ask AI</p>`;}
 }
 setTimeout(()=>{
  let FB=window.FB; let p=new URLSearchParams(location.search); if(p.get('search')) searchIn.value=p.get('search');
- FB.onAuthStateChanged(FB.auth, async(u)=>{if(u){let s=await FB.getDoc(FB.doc(FB.db,"users",u.uid)); if(s.exists()){let d=s.data(); shkeB.innerText=d.indexNumber||"SHKE"; curGrade=d.grade||"Grade 6";}} loadNotes();} else {loadNotes();}});
+ FB.onAuthStateChanged(FB.auth, async(u)=>{
+   if(u){let s=await FB.getDoc(FB.doc(FB.db,"users",u.uid)); if(s.exists()){let d=s.data(); shkeB.innerText=d.indexNumber||"SHKE"; curGrade=d.grade||"Grade 4"; curSub="English";}}
+   loadNotes();
+ });
 },500);
 searchIn.addEventListener('keypress',e=>{if(e.key==='Enter') loadNotes();});
 </script>
