@@ -1,132 +1,3826 @@
 <!DOCTYPE html>
-<html><head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Notes - SomaHub KICD</title>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+
+<title>SomaHub KICD Notes</title>
+
 <script src="https://cdn.tailwindcss.com"></script>
-<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;800;900&display=swap" rel="stylesheet">
-<style>body{font-family:'Nunito',sans-serif;background:#f6f6f7}.no-scrollbar::-webkit-scrollbar{display:none}</style>
+
+<link
+  href="https://fonts.googleapis.com/css2?family=Nunito:wght@500;600;700;800;900&display=swap"
+  rel="stylesheet"
+>
+
+<style>
+*{
+  box-sizing:border-box;
+}
+
+html,body{
+  margin:0;
+  padding:0;
+  width:100%;
+  min-height:100%;
+  font-family:'Nunito',sans-serif;
+  background:#f4f7fb;
+  color:#111827;
+}
+
+body{
+  overflow-x:hidden;
+}
+
+button,
+input,
+select{
+  font-family:inherit;
+}
+
+button,
+a{
+  -webkit-tap-highlight-color:transparent;
+}
+
+.no-scrollbar::-webkit-scrollbar{
+  display:none;
+}
+
+.no-scrollbar{
+  scrollbar-width:none;
+}
+
+.page-shell{
+  width:100%;
+  min-height:100vh;
+}
+
+.main-container{
+  width:100%;
+  max-width:1280px;
+  margin:0 auto;
+}
+
+.top-colours{
+  height:6px;
+  display:flex;
+}
+
+.top-colours span{
+  flex:1;
+}
+
+.header{
+  background:white;
+  border-bottom:1px solid #e5e7eb;
+  position:sticky;
+  top:0;
+  z-index:50;
+  box-shadow:0 2px 12px rgba(15,23,42,.06);
+}
+
+.header-inner{
+  width:100%;
+  max-width:1280px;
+  margin:auto;
+  min-height:68px;
+  padding:10px 18px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:14px;
+}
+
+.brand{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  min-width:0;
+}
+
+.brand-logo{
+  width:43px;
+  height:43px;
+  border-radius:14px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:linear-gradient(135deg,#263b99,#4a86ff);
+  color:white;
+  font-size:22px;
+  flex-shrink:0;
+  box-shadow:0 6px 15px rgba(38,59,153,.20);
+}
+
+.brand-title{
+  font-size:16px;
+  line-height:1.1;
+  font-weight:900;
+  color:#172554;
+}
+
+.brand-subtitle{
+  margin-top:3px;
+  font-size:9px;
+  color:#64748b;
+  font-weight:800;
+}
+
+.header-actions{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  flex-shrink:0;
+}
+
+.shke{
+  background:#4a86ff;
+  color:white;
+  border-radius:999px;
+  padding:7px 11px;
+  font-size:9px;
+  font-weight:900;
+}
+
+.home-btn{
+  background:#111827;
+  color:white;
+  border-radius:999px;
+  padding:9px 14px;
+  font-size:10px;
+  font-weight:900;
+}
+
+.content{
+  padding:18px;
+}
+
+.layout{
+  display:grid;
+  grid-template-columns:300px minmax(0,1fr);
+  gap:18px;
+  align-items:start;
+}
+
+.sidebar{
+  position:sticky;
+  top:86px;
+}
+
+.panel{
+  background:white;
+  border:1px solid #e2e8f0;
+  border-radius:20px;
+  box-shadow:0 5px 20px rgba(15,23,42,.05);
+}
+
+.filter-panel{
+  padding:16px;
+}
+
+.panel-title{
+  font-size:13px;
+  font-weight:900;
+  color:#172554;
+}
+
+.panel-small{
+  font-size:9px;
+  color:#64748b;
+  font-weight:700;
+  line-height:1.5;
+}
+
+.search-wrap{
+  display:flex;
+  gap:7px;
+  margin-top:12px;
+}
+
+.search-input{
+  min-width:0;
+  flex:1;
+  background:#f8fafc;
+  border:1px solid #dbe2ea;
+  border-radius:13px;
+  padding:11px 12px;
+  outline:none;
+  font-size:11px;
+  font-weight:700;
+}
+
+.search-input:focus{
+  border-color:#4a86ff;
+  box-shadow:0 0 0 3px rgba(74,134,255,.10);
+}
+
+.search-btn{
+  border:0;
+  background:#111827;
+  color:white;
+  border-radius:13px;
+  padding:0 14px;
+  font-size:10px;
+  font-weight:900;
+}
+
+.filter-label{
+  margin-top:17px;
+  margin-bottom:8px;
+  font-size:10px;
+  font-weight:900;
+  color:#334155;
+}
+
+.grade-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:6px;
+}
+
+.subject-grid{
+  display:grid;
+  grid-template-columns:1fr;
+  gap:6px;
+}
+
+.grade-chip,
+.subject-chip{
+  border:1px solid #dbe2ea;
+  background:#f8fafc;
+  color:#334155;
+  border-radius:11px;
+  padding:8px 5px;
+  font-size:9px;
+  font-weight:900;
+  cursor:pointer;
+  transition:.15s;
+}
+
+.grade-chip:hover,
+.subject-chip:hover{
+  border-color:#4a86ff;
+}
+
+.grade-chip.active,
+.subject-chip.active{
+  background:#172554;
+  border-color:#172554;
+  color:white;
+  box-shadow:0 3px 8px rgba(23,37,84,.15);
+}
+
+.subject-chip:nth-child(2n){
+  background:#f5f9ff;
+}
+
+.subject-chip.active{
+  background:#172554;
+}
+
+.main-area{
+  min-width:0;
+}
+
+.hero{
+  background:
+    radial-gradient(circle at 90% 10%,rgba(74,134,255,.18),transparent 30%),
+    radial-gradient(circle at 10% 90%,rgba(42,197,160,.12),transparent 28%),
+    white;
+  border:1px solid #e2e8f0;
+  border-radius:24px;
+  padding:22px;
+  box-shadow:0 6px 24px rgba(15,23,42,.05);
+}
+
+.hero-top{
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-start;
+  gap:15px;
+}
+
+.hero h1{
+  margin:0;
+  color:#172554;
+  font-size:clamp(22px,3vw,34px);
+  line-height:1.1;
+  font-weight:900;
+}
+
+.hero p{
+  margin:8px 0 0;
+  max-width:680px;
+  color:#64748b;
+  font-size:12px;
+  line-height:1.7;
+  font-weight:700;
+}
+
+.ai-generate-btn{
+  border:0;
+  background:linear-gradient(135deg,#263b99,#4a86ff);
+  color:white;
+  border-radius:14px;
+  padding:11px 15px;
+  font-size:10px;
+  font-weight:900;
+  white-space:nowrap;
+  box-shadow:0 6px 15px rgba(38,59,153,.18);
+  cursor:pointer;
+}
+
+.ai-generate-btn:active{
+  transform:scale(.97);
+}
+
+.source-row{
+  display:flex;
+  flex-wrap:wrap;
+  gap:6px;
+  margin-top:16px;
+}
+
+.source-pill{
+  border-radius:999px;
+  padding:6px 9px;
+  background:#f1f5f9;
+  color:#475569;
+  font-size:8px;
+  font-weight:900;
+  border:1px solid #e2e8f0;
+}
+
+.source-pill.available{
+  background:#ecfdf5;
+  color:#047857;
+  border-color:#a7f3d0;
+}
+
+.source-pill.missing{
+  background:#fff7ed;
+  color:#c2410c;
+  border-color:#fed7aa;
+}
+
+.note-list{
+  margin-top:15px;
+  display:grid;
+  gap:12px;
+}
+
+.note-card{
+  background:white;
+  border:1px solid #e2e8f0;
+  border-radius:19px;
+  overflow:hidden;
+  box-shadow:0 4px 15px rgba(15,23,42,.045);
+}
+
+.note-head{
+  padding:15px 16px;
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:12px;
+}
+
+.note-title{
+  font-size:14px;
+  font-weight:900;
+  color:#172554;
+  line-height:1.35;
+}
+
+.note-meta{
+  margin-top:4px;
+  color:#64748b;
+  font-size:9px;
+  font-weight:800;
+}
+
+.note-description{
+  margin-top:7px;
+  color:#475569;
+  font-size:10px;
+  line-height:1.55;
+}
+
+.note-actions{
+  display:flex;
+  flex-wrap:wrap;
+  gap:7px;
+  padding:0 16px 14px;
+}
+
+.note-btn{
+  border:0;
+  border-radius:999px;
+  padding:9px 12px;
+  font-size:9px;
+  font-weight:900;
+  cursor:pointer;
+}
+
+.note-btn.primary{
+  background:#111827;
+  color:white;
+}
+
+.note-btn.ai{
+  background:#4a86ff;
+  color:white;
+}
+
+.note-btn.audio{
+  background:#f97316;
+  color:white;
+}
+
+.note-btn.video{
+  background:#dc2626;
+  color:white;
+}
+
+.note-content{
+  border-top:1px solid #edf1f5;
+  padding:15px;
+  background:#fbfdff;
+}
+
+.modern-note{
+  font-size:12px;
+  line-height:1.8;
+  color:#111827;
+}
+
+.modern-note h2{
+  color:#172554;
+  font-size:17px;
+  font-weight:900;
+  margin:0 0 9px;
+}
+
+.modern-note h3{
+  color:#2563eb;
+  font-size:13px;
+  font-weight:900;
+  margin:15px 0 5px;
+}
+
+.modern-note p{
+  margin:7px 0;
+}
+
+.modern-note ul{
+  margin:7px 0 10px 20px;
+  list-style:disc;
+}
+
+.modern-note ol{
+  margin:7px 0 10px 20px;
+  list-style:decimal;
+}
+
+.key-word{
+  background:#fff1a8;
+  color:#713f12;
+  border-radius:5px;
+  padding:1px 4px;
+  font-weight:900;
+}
+
+.topic-label{
+  color:#dc2626;
+  font-weight:900;
+}
+
+.explanation-label{
+  color:#2563eb;
+  font-weight:900;
+}
+
+.definition-box{
+  margin:10px 0;
+  padding:12px;
+  border-left:5px solid #4a86ff;
+  border-radius:10px;
+  background:#eff6ff;
+}
+
+.example-box{
+  margin:10px 0;
+  padding:12px;
+  border-left:5px solid #2ac5a0;
+  border-radius:10px;
+  background:#ecfdf5;
+}
+
+.warning-box{
+  margin:10px 0;
+  padding:12px;
+  border-left:5px solid #f59e0b;
+  border-radius:10px;
+  background:#fffbeb;
+}
+
+.visual-grid{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:9px;
+  margin-top:13px;
+}
+
+.visual-card{
+  min-height:95px;
+  padding:12px;
+  border-radius:14px;
+  background:white;
+  border:1px solid #dbe2ea;
+}
+
+.visual-icon{
+  font-size:23px;
+}
+
+.visual-title{
+  margin-top:6px;
+  font-size:10px;
+  font-weight:900;
+  color:#172554;
+}
+
+.visual-text{
+  margin-top:3px;
+  font-size:9px;
+  line-height:1.45;
+  color:#64748b;
+}
+
+.ai-box{
+  margin-top:14px;
+  background:linear-gradient(135deg,#172554,#263b99);
+  color:white;
+  border-radius:18px;
+  padding:15px;
+}
+
+.ai-box-title{
+  font-size:12px;
+  font-weight:900;
+}
+
+.ai-box-text{
+  margin-top:4px;
+  font-size:9px;
+  line-height:1.6;
+  color:#dbeafe;
+}
+
+.loading{
+  padding:25px;
+  text-align:center;
+  background:white;
+  border:1px solid #e2e8f0;
+  border-radius:18px;
+}
+
+.spinner{
+  width:26px;
+  height:26px;
+  border:3px solid #dbeafe;
+  border-top-color:#263b99;
+  border-radius:50%;
+  animation:spin .7s linear infinite;
+  margin:auto;
+}
+
+@keyframes spin{
+  to{transform:rotate(360deg)}
+}
+
+.empty{
+  padding:25px;
+  background:white;
+  border:1px dashed #cbd5e1;
+  border-radius:18px;
+  text-align:center;
+}
+
+.empty-icon{
+  font-size:34px;
+}
+
+.empty-title{
+  margin-top:8px;
+  font-size:13px;
+  font-weight:900;
+  color:#172554;
+}
+
+.empty-text{
+  margin-top:5px;
+  font-size:10px;
+  line-height:1.6;
+  color:#64748b;
+}
+
+.mobile-filter-btn{
+  display:none;
+}
+
+.mobile-filter-panel{
+  display:none;
+}
+
+.toast{
+  position:fixed;
+  left:50%;
+  bottom:20px;
+  transform:translateX(-50%) translateY(20px);
+  background:#111827;
+  color:white;
+  padding:10px 15px;
+  border-radius:999px;
+  font-size:10px;
+  font-weight:900;
+  opacity:0;
+  pointer-events:none;
+  transition:.2s;
+  z-index:100;
+  max-width:90%;
+  text-align:center;
+}
+
+.toast.show{
+  opacity:1;
+  transform:translateX(-50%) translateY(0);
+}
+
+.audio-status{
+  margin-top:8px;
+  color:#c2410c;
+  font-size:9px;
+  font-weight:900;
+  text-align:center;
+}
+
+@media(max-width:900px){
+
+  .content{
+    padding:12px;
+  }
+
+  .layout{
+    grid-template-columns:1fr;
+  }
+
+  .sidebar{
+    display:none;
+  }
+
+  .mobile-filter-btn{
+    display:flex;
+    width:100%;
+    margin-bottom:10px;
+    align-items:center;
+    justify-content:space-between;
+    background:white;
+    border:1px solid #e2e8f0;
+    border-radius:15px;
+    padding:11px 13px;
+    font-size:10px;
+    font-weight:900;
+    color:#172554;
+  }
+
+  .mobile-filter-panel.open{
+    display:block;
+    margin-bottom:12px;
+  }
+
+  .mobile-filter-panel{
+    background:white;
+    border:1px solid #e2e8f0;
+    border-radius:18px;
+    padding:13px;
+  }
+
+}
+
+@media(max-width:600px){
+
+  .header-inner{
+    min-height:60px;
+    padding:8px 10px;
+  }
+
+  .brand-logo{
+    width:37px;
+    height:37px;
+    border-radius:12px;
+    font-size:18px;
+  }
+
+  .brand-title{
+    font-size:13px;
+  }
+
+  .brand-subtitle{
+    font-size:8px;
+  }
+
+  .home-btn{
+    padding:8px 10px;
+    font-size:9px;
+  }
+
+  .shke{
+    padding:6px 8px;
+    font-size:8px;
+  }
+
+  .content{
+    padding:9px;
+  }
+
+  .hero{
+    padding:15px;
+    border-radius:18px;
+  }
+
+  .hero-top{
+    display:block;
+  }
+
+  .hero h1{
+    font-size:23px;
+  }
+
+  .hero p{
+    font-size:10px;
+  }
+
+  .ai-generate-btn{
+    margin-top:12px;
+    width:100%;
+  }
+
+  .source-row{
+    margin-top:11px;
+  }
+
+  .source-pill{
+    font-size:7.5px;
+  }
+
+  .note-head{
+    padding:13px;
+  }
+
+  .note-title{
+    font-size:12px;
+  }
+
+  .note-description{
+    font-size:9px;
+  }
+
+  .note-actions{
+    padding:0 13px 13px;
+  }
+
+  .note-btn{
+    flex:1;
+    min-width:90px;
+    padding:8px 9px;
+  }
+
+  .note-content{
+    padding:12px;
+  }
+
+  .modern-note{
+    font-size:11px;
+    line-height:1.75;
+  }
+
+  .visual-grid{
+    grid-template-columns:1fr 1fr;
+  }
+}
+
+@media(min-width:901px) and (max-width:1100px){
+
+  .layout{
+    grid-template-columns:250px minmax(0,1fr);
+  }
+
+  .content{
+    padding:14px;
+  }
+
+  .header-inner{
+    padding-left:14px;
+    padding-right:14px;
+  }
+}
+
+@media(min-width:1200px){
+
+  .content{
+    padding:24px;
+  }
+
+  .header-inner{
+    min-height:74px;
+  }
+
+  .hero{
+    padding:27px;
+  }
+
+  .note-card{
+    border-radius:21px;
+  }
+}
+</style>
+
 <script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-import { getFirestore, doc, getDoc, collection, getDocs, query, where } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-const cfg={apiKey:"AIzaSyA93BNes3AmFyxIEgjSbvbIWqLyorLsuj8",authDomain:"somahubkenya-9e458.firebaseapp.com",projectId:"somahubkenya-9e458",storageBucket:"somahubkenya-9e458.firebasestorage.app",messagingSenderId:"615579085715",appId:"1:615579085715:web:28fca37ba498324bb49666"};
-const app=initializeApp(cfg); window.FB={auth:getAuth(app),db:getFirestore(app),doc,getDoc,collection,getDocs,query,where,onAuthStateChanged};
+
+import { initializeApp }
+from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+
+import {
+  getAuth,
+  onAuthStateChanged
+}
+from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+
+import {
+  getFirestore,
+  doc,
+  getDoc,
+  collection,
+  getDocs,
+  query,
+  where
+}
+from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+
+const firebaseConfig = {
+  apiKey:"AIzaSyA93BNes3AmFyxIEgjSbvbIWqLyorLsuj8",
+  authDomain:"somahubkenya-9e458.firebaseapp.com",
+  projectId:"somahubkenya-9e458",
+  storageBucket:"somahubkenya-9e458.firebasestorage.app",
+  messagingSenderId:"615579085715",
+  appId:"1:615579085715:web:28fca37ba498324bb49666"
+};
+
+const app = initializeApp(firebaseConfig);
+
+window.FB = {
+  auth:getAuth(app),
+  db:getFirestore(app),
+  doc,
+  getDoc,
+  collection,
+  getDocs,
+  query,
+  where,
+  onAuthStateChanged
+};
+
 </script>
 </head>
-<body class="flex justify-center">
-<div class="w-full max-w-[420px] bg-[#f6f6f7] min-h-screen pb-10">
-<div class="h-2 flex"><div class="flex-1 bg-[#ff8a2a]"></div><div class="flex-1 bg-[#2ac5a0]"></div><div class="flex-1 bg-[#4a86ff]"></div><div class="flex-1 bg-[#ffcc1a]"></div></div>
 
-<div class="bg-white border-b-2 border-black p-3 flex justify-between items-center sticky top-0 z-40">
-<a href="student.html" class="bg-black text-white px-4 py-2 rounded-full font-black text-[11px]">← Home</a>
-<div class="text-center"><p class="font-black text-[14px]">📚 SomaHub Notes</p><p class="text-[8px] text-gray-500 font-bold">AI from KICD Design + Schemes + FAQs</p></div>
-<span id="shkeB" class="bg-[#4a86ff] text-white px-2.5 py-1 rounded-full text-[9px] font-black">SHKE...</span>
+<body>
+
+<div class="page-shell">
+
+  <!-- COLOUR BAR -->
+  <div class="top-colours">
+    <span style="background:#ff8a2a"></span>
+    <span style="background:#2ac5a0"></span>
+    <span style="background:#4a86ff"></span>
+    <span style="background:#ffcc1a"></span>
+  </div>
+
+
+  <!-- HEADER -->
+  <header class="header">
+
+    <div class="header-inner">
+
+      <div class="brand">
+
+        <div class="brand-logo">
+          🎓
+        </div>
+
+        <div class="min-w-0">
+
+          <div class="brand-title truncate">
+            SomaHub KICD Notes
+          </div>
+
+          <div class="brand-subtitle">
+            Learner • Teacher • AI Learning Centre
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <div class="header-actions">
+
+        <a
+          href="student.html"
+          class="home-btn"
+        >
+          ← Home
+        </a>
+
+        <span
+          id="shkeB"
+          class="shke"
+        >
+          SHKE...
+        </span>
+
+      </div>
+
+    </div>
+
+  </header>
+
+
+  <!-- MAIN -->
+  <main class="main-container content">
+
+    <!-- MOBILE FILTER BUTTON -->
+    <button
+      class="mobile-filter-btn"
+      onclick="toggleMobileFilters()"
+    >
+      <span>☰ Learning Area & Grade</span>
+      <span id="filterArrow">▼</span>
+    </button>
+
+
+    <!-- MOBILE FILTERS -->
+    <div
+      id="mobileFilters"
+      class="mobile-filter-panel"
+    >
+
+      <div class="panel-title">
+        Find Learning Resources
+      </div>
+
+      <div class="search-wrap">
+
+        <input
+          id="mobileSearchIn"
+          class="search-input"
+          placeholder="Search notes..."
+        >
+
+        <button
+          class="search-btn"
+          onclick="syncMobileSearch()"
+        >
+          Go
+        </button>
+
+      </div>
+
+      <div class="filter-label">
+        Grade
+      </div>
+
+      <div
+        id="mobileGradeGrid"
+        class="grade-grid"
+      ></div>
+
+      <div class="filter-label">
+        Learning Area
+      </div>
+
+      <div
+        id="mobileSubjectGrid"
+        class="subject-grid"
+      ></div>
+
+    </div>
+
+
+    <div class="layout">
+
+
+      <!-- DESKTOP SIDEBAR -->
+      <aside class="sidebar">
+
+        <div class="panel filter-panel">
+
+          <div class="panel-title">
+            📚 Learning Resources
+          </div>
+
+          <div class="panel-small">
+            Search notes, choose a grade and select a learning area.
+          </div>
+
+
+          <div class="search-wrap">
+
+            <input
+              id="searchIn"
+              class="search-input"
+              placeholder="Search e.g. nouns..."
+            >
+
+            <button
+              onclick="loadNotes()"
+              class="search-btn"
+            >
+              Go
+            </button>
+
+          </div>
+
+
+          <div class="filter-label">
+            Grade
+          </div>
+
+          <div
+            id="gradeGrid"
+            class="grade-grid"
+          ></div>
+
+
+          <div class="filter-label">
+            Learning Area
+          </div>
+
+          <div
+            id="subjectGrid"
+            class="subject-grid"
+          ></div>
+
+        </div>
+
+      </aside>
+
+
+      <!-- MAIN NOTES AREA -->
+      <section class="main-area">
+
+
+        <!-- HERO -->
+        <section class="hero">
+
+          <div class="hero-top">
+
+            <div>
+
+              <h1 id="pageTitle">
+                Grade 4 English Notes
+              </h1>
+
+              <p id="pageDescription">
+                Well-arranged SomaHub learning notes enriched using available curriculum designs, schemes of work, teacher resources, learner questions and AI.
+              </p>
+
+            </div>
+
+
+            <button
+              id="generateBtn"
+              class="ai-generate-btn"
+              onclick="generateModernNotes()"
+            >
+              ✨ Generate Modern AI Notes
+            </button>
+
+          </div>
+
+
+          <!-- SOURCE STATUS -->
+          <div
+            id="sourceRow"
+            class="source-row"
+          >
+
+            <span class="source-pill">
+              KICD Design
+            </span>
+
+            <span class="source-pill">
+              Admin Notes
+            </span>
+
+            <span class="source-pill">
+              Schemes
+            </span>
+
+            <span class="source-pill">
+              Teacher Questions
+            </span>
+
+            <span class="source-pill">
+              Learner Questions
+            </span>
+
+            <span class="source-pill">
+              Gemini AI
+            </span>
+
+          </div>
+
+        </section>
+
+
+        <!-- NOTES -->
+        <div
+          id="notesList"
+          class="note-list"
+        >
+
+          <div class="loading">
+
+            <div class="spinner"></div>
+
+            <p class="mt-3 text-[11px] font-black text-slate-600">
+              Loading SomaHub resources...
+            </p>
+
+          </div>
+
+        </div>
+
+
+      </section>
+
+    </div>
+
+  </main>
+
 </div>
 
-<div class="p-3 space-y-3">
-<div class="bg-white rounded-[1.2rem] p-3 border-2 border-black shadow-[2px_2px_0_0_#000]">
-<div class="flex gap-2">
-<input id="searchIn" placeholder="🔍 Search e.g. Nouns, Photosynthesis..." class="flex-1 bg-[#f6f6f7] border-2 border-black rounded-full px-4 py-3 text-[11px] font-bold outline-none">
-<button onclick="loadNotes()" class="bg-black text-white px-5 rounded-full font-black text-[11px]">Go</button>
-</div>
 
-<p class="font-black text-[10px] mt-3 mb-1">Grade:</p>
-<div class="grid grid-cols-4 gap-1.5">
-<button onclick="setGrade('Playgroup',this)" class="gChip bg-white py-2 rounded-full text-[9px] font-black border-2 border-black">Playgroup</button>
-<button onclick="setGrade('PP1',this)" class="gChip bg-white py-2 rounded-full text-[9px] font-black border-2 border-black">PP1</button>
-<button onclick="setGrade('PP2',this)" class="gChip bg-white py-2 rounded-full text-[9px] font-black border-2 border-black">PP2</button>
-<button onclick="setGrade('Grade 1',this)" class="gChip bg-white py-2 rounded-full text-[9px] font-black border-2 border-black">G1</button>
-<button onclick="setGrade('Grade 2',this)" class="gChip bg-white py-2 rounded-full text-[9px] font-black border-2 border-black">G2</button>
-<button onclick="setGrade('Grade 3',this)" class="gChip bg-white py-2 rounded-full text-[9px] font-black border-2 border-black">G3</button>
-<button onclick="setGrade('Grade 4',this)" class="gChip bg-[#ffcc1a] py-2 rounded-full text-[9px] font-black border-2 border-black">G4</button>
-<button onclick="setGrade('Grade 5',this)" class="gChip bg-white py-2 rounded-full text-[9px] font-black border-2 border-black">G5</button>
-<button onclick="setGrade('Grade 6',this)" class="gChip bg-white py-2 rounded-full text-[9px] font-black border-2 border-black">G6</button>
-<button onclick="setGrade('Grade 7',this)" class="gChip bg-white py-2 rounded-full text-[9px] font-black border-2 border-black">G7</button>
-<button onclick="setGrade('Grade 8',this)" class="gChip bg-white py-2 rounded-full text-[9px] font-black border-2 border-black">G8</button>
-<button onclick="setGrade('Grade 9',this)" class="gChip bg-white py-2 rounded-full text-[9px] font-black border-2 border-black">G9</button>
-<button onclick="setGrade('Grade 10',this)" class="gChip bg-[#4a86ff] text-white py-2 rounded-full text-[9px] font-black border-2 border-black">G10</button>
-</div>
+<!-- TOAST -->
+<div
+  id="toast"
+  class="toast"
+></div>
 
-<p class="font-black text-[10px] mt-3 mb-1">Learning Area:</p>
-<div class="grid grid-cols-2 gap-1.5">
-<button onclick="setSub('Language Activities',this)" class="sChip bg-[#fef9e7] py-2.5 rounded-full text-[9px] font-black border-2 border-black">Language Activities</button>
-<button onclick="setSub('Mathematical Activities',this)" class="sChip bg-[#eaf2ff] py-2.5 rounded-full text-[9px] font-black border-2 border-black">Mathematical Activities</button>
-<button onclick="setSub('Environmental Activities',this)" class="sChip bg-[#e8f5e9] py-2.5 rounded-full text-[9px] font-black border-2 border-black">Environmental Act.</button>
-<button onclick="setSub('Psychomotor and Creative Activities',this)" class="sChip bg-[#fce4ec] py-2.5 rounded-full text-[9px] font-black border-2 border-black">Psychomotor & Creative</button>
-<button onclick="setSub('English',this)" class="sChip bg-black text-white py-2.5 rounded-full text-[9px] font-black border-2 border-black">English</button>
-<button onclick="setSub('Kiswahili',this)" class="sChip bg-white py-2.5 rounded-full text-[9px] font-black border-2 border-black">Kiswahili</button>
-<button onclick="setSub('Mathematics',this)" class="sChip bg-white py-2.5 rounded-full text-[9px] font-black border-2 border-black">Mathematics</button>
-<button onclick="setSub('Science and Technology',this)" class="sChip bg-white py-2.5 rounded-full text-[9px] font-black border-2 border-black">Science & Technology</button>
-<button onclick="setSub('Agriculture and Nutrition',this)" class="sChip bg-white py-2.5 rounded-full text-[9px] font-black border-2 border-black">Agric & Nutrition</button>
-<button onclick="setSub('Social Studies',this)" class="sChip bg-white py-2.5 rounded-full text-[9px] font-black border-2 border-black">Social Studies</button>
-<button onclick="setSub('CRE',this)" class="sChip bg-[#fff3e0] py-2.5 rounded-full text-[9px] font-black border-2 border-black">CRE</button>
-<button onclick="setSub('IRE',this)" class="sChip bg-[#e0f2f1] py-2.5 rounded-full text-[9px] font-black border-2 border-black">IRE</button>
-<button onclick="setSub('HRE',this)" class="sChip bg-white py-2.5 rounded-full text-[9px] font-black border-2 border-black">HRE</button>
-<button onclick="setSub('Creative Arts',this)" class="sChip bg-white py-2.5 rounded-full text-[9px] font-black border-2 border-black">Creative Arts</button>
-<button onclick="setSub('Pre-Technical Studies',this)" class="sChip bg-[#f3e5f5] py-2.5 rounded-full text-[9px] font-black border-2 border-black">Pre-Technical</button>
-<button onclick="setSub('Computer Science',this)" class="sChip bg-[#e0f2ff] py-2.5 rounded-full text-[9px] font-black border-2 border-black">💻 ICT / Computer</button>
-<button onclick="setSub('Foreign Language',this)" class="sChip bg-[#ffe8f0] py-2.5 rounded-full text-[9px] font-black border-2 border-black">🌐 Foreign Language</button>
-<button onclick="setSub('Life Skills',this)" class="sChip bg-white py-2.5 rounded-full text-[9px] font-black border-2 border-black">Life Skills</button>
-</div>
-</div>
-
-<div id="notesList" class="space-y-2.5"></div>
-</div>
-</div>
 
 <script>
-let curGrade="Grade 4", curSub="English";
-function setGrade(g,el){curGrade=g; document.querySelectorAll('.gChip').forEach(b=>{b.classList.remove('bg-black','text-white'); b.classList.add('bg-white','text-black');}); el.classList.remove('bg-white','text-black'); el.classList.add('bg-black','text-white'); loadNotes();}
-function setSub(s,el){curSub=s; document.querySelectorAll('.sChip').forEach(b=>{b.classList.remove('bg-black','text-white');}); el.classList.add('bg-black','text-white'); loadNotes();}
-function goAI(title){let q=encodeURIComponent(`${title} ${curGrade} ${curSub} KICD notes explained`); location.href=`ai.assistant.html?q=${q}&grade=${encodeURIComponent(curGrade)}&subject=${encodeURIComponent(curSub)}`;}
-function openTab(id, tab){ document.querySelectorAll(`#${id}.tab`).forEach(t=>t.classList.add('hidden')); document.getElementById(`${id}-${tab}`).classList.remove('hidden'); }
+
+/* =========================================================
+   SOMAHUB NOTES ENGINE
+========================================================= */
+
+const PROXY = "/api/gemini";
+
+let curGrade = "Grade 4";
+let curSub = "English";
+
+let currentSources = {
+  designs:[],
+  adminNotes:[],
+  schemes:[],
+  teacherQuestions:[],
+  learnerQuestions:[],
+  resources:[]
+};
+
+let currentGenerated = null;
+
+let speechUtterance = null;
+
+
+/* =========================================================
+   GRADES
+========================================================= */
+
+const grades = [
+  "Playgroup",
+  "PP1",
+  "PP2",
+  "Grade 1",
+  "Grade 2",
+  "Grade 3",
+  "Grade 4",
+  "Grade 5",
+  "Grade 6",
+  "Grade 7",
+  "Grade 8",
+  "Grade 9",
+  "Grade 10"
+];
+
+
+/* =========================================================
+   SUBJECTS
+========================================================= */
+
+const subjects = [
+
+  ["Language Activities","Language Activities"],
+  ["Mathematical Activities","Mathematical Activities"],
+  ["Environmental Activities","Environmental Activities"],
+  ["Psychomotor and Creative Activities","Psychomotor & Creative"],
+  ["English","English"],
+  ["Kiswahili","Kiswahili"],
+  ["Mathematics","Mathematics"],
+  ["Science and Technology","Science & Technology"],
+  ["Agriculture and Nutrition","Agric & Nutrition"],
+  ["Social Studies","Social Studies"],
+  ["CRE","CRE"],
+  ["IRE","IRE"],
+  ["HRE","HRE"],
+  ["Creative Arts","Creative Arts"],
+  ["Pre-Technical Studies","Pre-Technical"],
+  ["Computer Science","💻 ICT / Computer"],
+  ["Foreign Language","🌐 Foreign Language"],
+  ["Life Skills","Life Skills"]
+
+];
+
+
+/* =========================================================
+   CREATE FILTERS
+========================================================= */
+
+function createFilters(){
+
+  const gradeContainers = [
+    document.getElementById("gradeGrid"),
+    document.getElementById("mobileGradeGrid")
+  ];
+
+  gradeContainers.forEach(container=>{
+
+    if(!container) return;
+
+    container.innerHTML = "";
+
+    grades.forEach(g=>{
+
+      const short = g
+        .replace("Grade ","G")
+        .replace("Playgroup","Play")
+        .replace("PP1","PP1")
+        .replace("PP2","PP2");
+
+      const button = document.createElement("button");
+
+      button.className =
+        "grade-chip " +
+        (g===curGrade ? "active" : "");
+
+      button.textContent = short;
+
+      button.onclick = ()=>{
+
+        setGrade(g);
+
+      };
+
+      container.appendChild(button);
+
+    });
+
+  });
+
+
+  const subjectContainers = [
+    document.getElementById("subjectGrid"),
+    document.getElementById("mobileSubjectGrid")
+  ];
+
+  subjectContainers.forEach(container=>{
+
+    if(!container) return;
+
+    container.innerHTML = "";
+
+    subjects.forEach(([value,label])=>{
+
+      const button = document.createElement("button");
+
+      button.className =
+        "subject-chip " +
+        (value===curSub ? "active" : "");
+
+      button.textContent = label;
+
+      button.onclick = ()=>{
+
+        setSub(value);
+
+      };
+
+      container.appendChild(button);
+
+    });
+
+  });
+
+}
+
+
+/* =========================================================
+   SET GRADE
+========================================================= */
+
+function setGrade(g){
+
+  curGrade = g;
+
+  createFilters();
+
+  updateTitle();
+
+  loadNotes();
+
+}
+
+
+/* =========================================================
+   SET SUBJECT
+========================================================= */
+
+function setSub(s){
+
+  curSub = s;
+
+  createFilters();
+
+  updateTitle();
+
+  loadNotes();
+
+}
+
+
+/* =========================================================
+   TITLE
+========================================================= */
+
+function updateTitle(){
+
+  document.getElementById("pageTitle").textContent =
+    `${curGrade} ${curSub} Notes`;
+
+}
+
+
+/* =========================================================
+   MOBILE FILTER
+========================================================= */
+
+function toggleMobileFilters(){
+
+  const panel =
+    document.getElementById("mobileFilters");
+
+  panel.classList.toggle("open");
+
+  const arrow =
+    document.getElementById("filterArrow");
+
+  arrow.textContent =
+    panel.classList.contains("open") ? "▲" : "▼";
+
+}
+
+
+function syncMobileSearch(){
+
+  const mobile =
+    document.getElementById("mobileSearchIn");
+
+  const desktop =
+    document.getElementById("searchIn");
+
+  desktop.value = mobile.value;
+
+  loadNotes();
+
+}
+
+
+/* =========================================================
+   TOAST
+========================================================= */
+
+let toastTimer;
+
+function toast(message){
+
+  const box =
+    document.getElementById("toast");
+
+  box.textContent = message;
+
+  box.classList.add("show");
+
+  clearTimeout(toastTimer);
+
+  toastTimer = setTimeout(()=>{
+
+    box.classList.remove("show");
+
+  },2800);
+
+}
+
+
+/* =========================================================
+   ESCAPE HTML
+========================================================= */
+
+function escapeHTML(value){
+
+  return String(value ?? "")
+    .replace(/&/g,"&amp;")
+    .replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;")
+    .replace(/"/g,"&quot;")
+    .replace(/'/g,"&#039;");
+
+}
+
+
+/* =========================================================
+   CLEAN AI TEXT
+========================================================= */
+
+function cleanAIText(text){
+
+  let t = String(text || "");
+
+  /* Remove common citation/line artifacts */
+  t = t.replace(/【[^】]*】/g,"");
+  t = t.replace(/\[Source:[^\]]*\]/gi,"");
+  t = t.replace(/\[Line[^\]]*\]/gi,"");
+  t = t.replace(/\[Citation[^\]]*\]/gi,"");
+
+  /* Remove accidental markdown horizontal clutter */
+  t = t.replace(/^[-_=]{4,}$/gm,"");
+
+  return t.trim();
+
+}
+
+
+/* =========================================================
+   HIGHLIGHT KEYWORDS
+========================================================= */
+
+function highlightKeywords(text){
+
+  const keywords = [
+
+    "photosynthesis",
+    "respiration",
+    "ecosystem",
+    "evaporation",
+    "condensation",
+    "fraction",
+    "decimal",
+    "noun",
+    "verb",
+    "adjective",
+    "adverb",
+    "pronoun",
+    "preposition",
+    "conjunction",
+    "democracy",
+    "environment",
+    "pollution",
+    "agriculture",
+    "nutrition",
+    "culture",
+    "heritage",
+    "energy",
+    "matter",
+    "force",
+    "habitat",
+    "adaptation",
+    "climate",
+    "soil",
+    "erosion",
+    "constitution",
+    "citizenship",
+    "communication",
+    "computer",
+    "algorithm",
+    "database",
+    "internet",
+    "security",
+    "ratio",
+    "percentage",
+    "geometry",
+    "algebra"
+
+  ];
+
+  let result = escapeHTML(text);
+
+  keywords.forEach(word=>{
+
+    const re =
+      new RegExp(
+        `\\b(${word})\\b`,
+        "gi"
+      );
+
+    result = result.replace(
+      re,
+      `<span class="key-word">$1</span>`
+    );
+
+  });
+
+  return result;
+
+}
+
+
+/* =========================================================
+   MARKDOWN TO HTML
+========================================================= */
+
+function renderNoteText(text){
+
+  let clean =
+    cleanAIText(text);
+
+  if(!clean){
+    return "";
+  }
+
+  const lines =
+    clean.split(/\r?\n/);
+
+  let html = "";
+
+  let inUL = false;
+  let inOL = false;
+
+  function closeLists(){
+
+    if(inUL){
+
+      html += "</ul>";
+      inUL = false;
+
+    }
+
+    if(inOL){
+
+      html += "</ol>";
+      inOL = false;
+
+    }
+
+  }
+
+  lines.forEach(raw=>{
+
+    let line =
+      raw.trim();
+
+    if(!line){
+
+      closeLists();
+
+      return;
+
+    }
+
+
+    /* Heading */
+    if(/^#{1,3}\s+/.test(line)){
+
+      closeLists();
+
+      line =
+        line.replace(/^#{1,3}\s+/,"");
+
+      html +=
+        `<h3>${highlightKeywords(line)}</h3>`;
+
+      return;
+
+    }
+
+
+    /* Bullet */
+    if(/^[-*•]\s+/.test(line)){
+
+      if(inOL){
+
+        html += "</ol>";
+        inOL = false;
+
+      }
+
+      if(!inUL){
+
+        html += "<ul>";
+        inUL = true;
+
+      }
+
+      line =
+        line.replace(/^[-*•]\s+/,"");
+
+      html +=
+        `<li>${formatInline(line)}</li>`;
+
+      return;
+
+    }
+
+
+    /* Numbered */
+    if(/^\d+[.)]\s+/.test(line)){
+
+      if(inUL){
+
+        html += "</ul>";
+        inUL = false;
+
+      }
+
+      if(!inOL){
+
+        html += "<ol>";
+        inOL = true;
+
+      }
+
+      line =
+        line.replace(/^\d+[.)]\s+/,"");
+
+      html +=
+        `<li>${formatInline(line)}</li>`;
+
+      return;
+
+    }
+
+
+    closeLists();
+
+
+    /* Topic */
+    if(/^topic\s*:/i.test(line)){
+
+      const value =
+        line.replace(/^topic\s*:/i,"").trim();
+
+      html +=
+        `<p class="topic-label">Topic: ${formatInline(value)}</p>`;
+
+      return;
+
+    }
+
+
+    /* Strand */
+    if(/^strand\s*:/i.test(line)){
+
+      const value =
+        line.replace(/^strand\s*:/i,"").trim();
+
+      html +=
+        `<p class="topic-label">Strand: ${formatInline(value)}</p>`;
+
+      return;
+
+    }
+
+
+    /* Explanation */
+    if(/^explanation\s*:/i.test(line)){
+
+      const value =
+        line.replace(/^explanation\s*:/i,"").trim();
+
+      html +=
+        `<div class="explanation-label">Explanation:</div>
+         <p>${formatInline(value)}</p>`;
+
+      return;
+
+    }
+
+
+    /* Definition */
+    if(/^definition\s*:/i.test(line)){
+
+      const value =
+        line.replace(/^definition\s*:/i,"").trim();
+
+      html +=
+        `<div class="definition-box">
+          <b>Definition</b>
+          <p>${formatInline(value)}</p>
+        </div>`;
+
+      return;
+
+    }
+
+
+    /* Example */
+    if(/^example\s*:/i.test(line)){
+
+      const value =
+        line.replace(/^example\s*:/i,"").trim();
+
+      html +=
+        `<div class="example-box">
+          <b>Example</b>
+          <p>${formatInline(value)}</p>
+        </div>`;
+
+      return;
+
+    }
+
+
+    /* Important */
+    if(/^important\s*:/i.test(line)){
+
+      const value =
+        line.replace(/^important\s*:/i,"").trim();
+
+      html +=
+        `<div class="warning-box">
+          <b>Important</b>
+          <p>${formatInline(value)}</p>
+        </div>`;
+
+      return;
+
+    }
+
+
+    html +=
+      `<p>${formatInline(line)}</p>`;
+
+  });
+
+
+  closeLists();
+
+  return html;
+
+}
+
+
+/* =========================================================
+   INLINE MARKDOWN
+========================================================= */
+
+function formatInline(text){
+
+  let result =
+    highlightKeywords(text);
+
+  result =
+    result.replace(
+      /\*\*(.*?)\*\*/g,
+      "<strong>$1</strong>"
+    );
+
+  result =
+    result.replace(
+      /\*(.*?)\*/g,
+      "<em>$1</em>"
+    );
+
+  return result;
+
+}
+
+
+/* =========================================================
+   SAFE ARRAY
+========================================================= */
+
+function asArray(value){
+
+  if(Array.isArray(value)){
+    return value;
+  }
+
+  return [];
+
+}
+
+
+/* =========================================================
+   GET FIELD
+========================================================= */
+
+function field(obj,...names){
+
+  for(const name of names){
+
+    if(
+      obj &&
+      obj[name] !== undefined &&
+      obj[name] !== null
+    ){
+
+      return obj[name];
+
+    }
+
+  }
+
+  return "";
+
+}
+
+
+/* =========================================================
+   FETCH OPTIONAL COLLECTION
+   Missing collection DOES NOT stop AI.
+========================================================= */
+
+async function fetchCollection(collectionName){
+
+  try{
+
+    const FB = window.FB;
+
+    const snap =
+      await FB.getDocs(
+        FB.collection(
+          FB.db,
+          collectionName
+        )
+      );
+
+    const results = [];
+
+    snap.forEach(d=>{
+
+      const data = d.data() || {};
+
+      const grade =
+        String(
+          field(data,"grade","Grade","class")
+        );
+
+      const subject =
+        String(
+          field(data,"subject","learningArea","learning_area")
+        );
+
+      const searchable =
+        JSON.stringify(data).toLowerCase();
+
+      const gradeMatch =
+        !grade ||
+        grade.toLowerCase() === curGrade.toLowerCase() ||
+        searchable.includes(curGrade.toLowerCase());
+
+      const subjectMatch =
+        !subject ||
+        subject.toLowerCase() === curSub.toLowerCase() ||
+        searchable.includes(curSub.toLowerCase());
+
+      if(gradeMatch && subjectMatch){
+
+        results.push({
+          id:d.id,
+          ...data
+        });
+
+      }
+
+    });
+
+    return results.slice(0,25);
+
+  }catch(error){
+
+    console.warn(
+      "Optional collection unavailable:",
+      collectionName,
+      error
+    );
+
+    return [];
+
+  }
+
+}
+
+
+/* =========================================================
+   FETCH RESOURCES
+========================================================= */
+
+async function fetchResources(){
+
+  const FB = window.FB;
+
+  try{
+
+    const q =
+      FB.query(
+        FB.collection(FB.db,"resources"),
+        FB.where("grade","==",curGrade),
+        FB.where("subject","==",curSub)
+      );
+
+    const snap =
+      await FB.getDocs(q);
+
+    const data = [];
+
+    snap.forEach(d=>{
+
+      data.push({
+        id:d.id,
+        ...d.data()
+      });
+
+    });
+
+    return data;
+
+  }catch(error){
+
+    console.warn(
+      "Resource filtered query failed. Trying general collection.",
+      error
+    );
+
+    try{
+
+      const snap =
+        await FB.getDocs(
+          FB.collection(
+            FB.db,
+            "resources"
+          )
+        );
+
+      const data = [];
+
+      snap.forEach(d=>{
+
+        const n =
+          d.data() || {};
+
+        const text =
+          JSON.stringify(n)
+            .toLowerCase();
+
+        if(
+          text.includes(curGrade.toLowerCase()) &&
+          text.includes(curSub.toLowerCase())
+        ){
+
+          data.push({
+            id:d.id,
+            ...n
+          });
+
+        }
+
+      });
+
+      return data;
+
+    }catch(e){
+
+      console.error(e);
+
+      return [];
+
+    }
+
+  }
+
+}
+
+
+/* =========================================================
+   LOAD ALL SOMAHUB SOURCES
+========================================================= */
+
+async function loadAllSources(){
+
+  const results =
+    await Promise.all([
+
+      fetchResources(),
+
+      fetchCollection("curriculumDesigns"),
+
+      fetchCollection("designs"),
+
+      fetchCollection("adminNotes"),
+
+      fetchCollection("notes"),
+
+      fetchCollection("schemes"),
+
+      fetchCollection("schemesOfWork"),
+
+      fetchCollection("teacherQuestions"),
+
+      fetchCollection("learnerQuestions"),
+
+      fetchCollection("questions")
+
+    ]);
+
+
+  currentSources.resources =
+    results[0];
+
+  currentSources.designs =
+    [
+      ...results[1],
+      ...results[2]
+    ].slice(0,30);
+
+  currentSources.adminNotes =
+    [
+      ...results[3],
+      ...results[4]
+    ].slice(0,30);
+
+  currentSources.schemes =
+    [
+      ...results[5],
+      ...results[6]
+    ].slice(0,30);
+
+  currentSources.teacherQuestions =
+    results[7];
+
+  currentSources.learnerQuestions =
+    results[8];
+
+  currentSources.questions =
+    results[9];
+
+
+  updateSourceStatus();
+
+}
+
+
+/* =========================================================
+   SOURCE STATUS
+========================================================= */
+
+function updateSourceStatus(){
+
+  const row =
+    document.getElementById("sourceRow");
+
+  const sources = [
+
+    [
+      "KICD Design",
+      currentSources.designs.length
+    ],
+
+    [
+      "Admin Notes",
+      currentSources.adminNotes.length
+    ],
+
+    [
+      "Schemes",
+      currentSources.schemes.length
+    ],
+
+    [
+      "Teacher Questions",
+      currentSources.teacherQuestions.length
+    ],
+
+    [
+      "Learner Questions",
+      currentSources.learnerQuestions.length
+    ],
+
+    [
+      "Gemini AI",
+      true
+    ]
+
+  ];
+
+
+  row.innerHTML = "";
+
+  sources.forEach(([name,available])=>{
+
+    const span =
+      document.createElement("span");
+
+    span.className =
+      "source-pill " +
+      (available ? "available" : "missing");
+
+    span.textContent =
+      available === true
+        ? `✓ ${name}`
+        : available > 0
+          ? `✓ ${name} (${available})`
+          : `○ ${name}`;
+
+    row.appendChild(span);
+
+  });
+
+}
+
+
+/* =========================================================
+   EXTRACT RESOURCE CONTENT
+========================================================= */
+
+function resourceText(item){
+
+  if(!item) return "";
+
+  return [
+
+    field(
+      item,
+      "title",
+      "name",
+      "topic"
+    ),
+
+    field(
+      item,
+      "description",
+      "summary"
+    ),
+
+    field(
+      item,
+      "content",
+      "notes",
+      "text",
+      "body"
+    ),
+
+    field(
+      item,
+      "somahubContent"
+    )
+
+  ]
+  .filter(Boolean)
+  .join("\n");
+
+}
+
+
+/* =========================================================
+   LIMIT SOURCE SIZE
+========================================================= */
+
+function buildSourceText(list,maxChars=6500){
+
+  let output = "";
+
+  for(const item of asArray(list)){
+
+    const text =
+      resourceText(item);
+
+    if(!text) continue;
+
+    if(
+      output.length + text.length >
+      maxChars
+    ){
+
+      output +=
+        "\n[Additional source content omitted for size.]";
+
+      break;
+
+    }
+
+    output +=
+      "\n--- SOURCE ---\n" +
+      text;
+
+  }
+
+  return output;
+
+}
+
+
+/* =========================================================
+   BUILD AI PROMPT
+========================================================= */
+
+function buildAIPrompt(){
+
+  const designs =
+    buildSourceText(
+      currentSources.designs,
+      4500
+    );
+
+  const admin =
+    buildSourceText(
+      currentSources.adminNotes,
+      5000
+    );
+
+  const schemes =
+    buildSourceText(
+      currentSources.schemes,
+      4500
+    );
+
+  const teacher =
+    buildSourceText(
+      currentSources.teacherQuestions,
+      3500
+    );
+
+  const learner =
+    buildSourceText(
+      currentSources.learnerQuestions,
+      3500
+    );
+
+  const generalQuestions =
+    buildSourceText(
+      currentSources.questions,
+      3000
+    );
+
+  const resources =
+    buildSourceText(
+      currentSources.resources,
+      5000
+    );
+
+
+  return `
+You are SomaHub Kenya's modern curriculum notes engine.
+
+Create detailed, accurate, learner-friendly and teacher-friendly study notes.
+
+CLASS/GRADE:
+${curGrade}
+
+LEARNING AREA:
+${curSub}
+
+SOURCE MATERIAL AVAILABLE:
+
+CURRICULUM DESIGNS:
+${designs || "Not available."}
+
+ADMIN NOTES:
+${admin || "Not available."}
+
+SCHEMES OF WORK:
+${schemes || "Not available."}
+
+TEACHER QUESTIONS:
+${teacher || "Not available."}
+
+LEARNER QUESTIONS:
+${learner || "Not available."}
+
+OTHER DAILY QUESTIONS:
+${generalQuestions || "Not available."}
+
+EXISTING SOMAHUB RESOURCES:
+${resources || "Not available."}
+
+
+IMPORTANT SOURCE RULE:
+
+Some sources may be missing.
+
+DO NOT stop because a source is missing.
+
+Use every available source and use your own curriculum knowledge to fill reasonable gaps.
+
+Do not claim that a missing source was consulted.
+
+Create useful notes even when only one source or no source is available.
+
+
+CONTENT REQUIREMENTS:
+
+1. Identify the likely Topic.
+2. Identify the Strand/Sub-strand where appropriate.
+3. Give a simple introduction.
+4. Give clear definitions of important terms.
+5. Explain concepts step by step.
+6. Highlight important keywords.
+7. Give realistic Kenyan classroom examples where useful.
+8. Include examples and worked examples for Mathematics or calculations.
+9. Include activities learners can do.
+10. Include common learner mistakes.
+11. Include examination/revision points.
+12. Include short questions with answers.
+13. Include application questions.
+14. Make explanations suitable for the selected grade.
+15. Teachers should also find the notes useful for lesson preparation.
+16. Where appropriate, explain diagrams, processes and cycles in words so they can be converted into visual learning cards.
+17. If there are different possible answers, explain them clearly.
+18. For multiple-choice questions, explain why the other options are incorrect when choices are supplied.
+19. Do not invent a source or say information came from KICD unless it is actually present in the supplied source material.
+20. Avoid unnecessary repetition.
+
+
+MODERN AUDIO-VISUAL STRUCTURE:
+
+Return the notes using these headings:
+
+# Topic
+# Strand / Sub-strand
+# Learning Objectives
+# Introduction
+# Key Terms
+# Main Explanation
+# Visual Learning
+# Examples
+# Activity
+# Common Mistakes
+# Revision Points
+# Check Your Understanding
+# Answers
+
+For VISUAL LEARNING, create 3 to 6 short visual cards.
+
+Use this exact style:
+
+VISUAL CARD:
+Icon: [emoji]
+Title: [short title]
+What to see: [simple visual/diagram description]
+Remember: [one important point]
+
+Keep the language natural and classroom-friendly.
+
+Do not use citation brackets, line-number brackets or strange symbols.
+
+Do not put the entire response inside a code block.
+
+Return only the notes.
+`;
+
+}
+
+
+/* =========================================================
+   GENERATE MODERN NOTES
+========================================================= */
+
+async function generateModernNotes(){
+
+  if(!window.FB){
+
+    toast("Firebase is still loading. Please try again.");
+
+    return;
+
+  }
+
+
+  const btn =
+    document.getElementById("generateBtn");
+
+  const original =
+    btn.innerHTML;
+
+  btn.disabled = true;
+
+  btn.innerHTML =
+    "⏳ Creating notes...";
+
+
+  try{
+
+    if(
+      !currentSources.resources.length &&
+      !currentSources.designs.length &&
+      !currentSources.adminNotes.length &&
+      !currentSources.schemes.length &&
+      !currentSources.teacherQuestions.length &&
+      !currentSources.learnerQuestions.length
+    ){
+
+      await loadAllSources();
+
+    }
+
+
+    const prompt =
+      buildAIPrompt();
+
+
+    const response =
+      await fetch(
+        PROXY,
+        {
+          method:"POST",
+
+          headers:{
+            "Content-Type":
+              "application/json"
+          },
+
+          body:JSON.stringify({
+
+            question:prompt,
+
+            originalQuestion:
+              `Generate modern detailed ${curGrade} ${curSub} notes`,
+
+            grade:curGrade,
+
+            role:"Student/Teacher",
+
+            task:"Generate modern curriculum learning notes",
+
+            mode:"notes",
+
+            provider:"auto",
+
+            history:[],
+
+            repository:
+              "kevokevo426-cmd/Somahub-Kenya",
+
+            source:
+              "SomaHub KICD Notes",
+
+            useSomaHubFiles:true
+
+          })
+
+        }
+      );
+
+
+    const data =
+      await response.json()
+        .catch(()=>({}));
+
+
+    if(!response.ok){
+
+      throw new Error(
+        data.error ||
+        "AI generation failed."
+      );
+
+    }
+
+
+    const answer =
+      data.answer ||
+      data.text ||
+      data.response ||
+      data.output ||
+      "";
+
+
+    if(!answer){
+
+      throw new Error(
+        "The AI returned an empty response."
+      );
+
+    }
+
+
+    currentGenerated =
+      cleanAIText(answer);
+
+
+    renderGeneratedNote(
+      currentGenerated
+    );
+
+
+    toast(
+      "✨ Modern SomaHub notes generated."
+    );
+
+
+  }catch(error){
+
+    console.error(
+      "AI notes error:",
+      error
+    );
+
+    showAIError(
+      error.message ||
+      "Unable to generate notes."
+    );
+
+  }finally{
+
+    btn.disabled = false;
+
+    btn.innerHTML =
+      original;
+
+  }
+
+}
+
+
+/* =========================================================
+   RENDER GENERATED NOTE
+========================================================= */
+
+function renderGeneratedNote(text){
+
+  const list =
+    document.getElementById("notesList");
+
+
+  const html =
+    renderNoteText(text);
+
+
+  const visualCards =
+    extractVisualCards(text);
+
+
+  list.innerHTML = `
+
+    <article class="note-card">
+
+      <div class="note-head">
+
+        <div>
+
+          <div class="note-title">
+            ✨ SomaHub Modern AI Notes
+          </div>
+
+          <div class="note-meta">
+            ${escapeHTML(curGrade)}
+            •
+            ${escapeHTML(curSub)}
+            • AI enriched
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <div class="note-actions">
+
+        <button
+          class="note-btn audio"
+          onclick="speakCurrentNotes()"
+        >
+          🔊 Listen
+        </button>
+
+        <button
+          class="note-btn video"
+          onclick="showVisualMode()"
+        >
+          🎬 Visual Mode
+        </button>
+
+        <button
+          class="note-btn ai"
+          onclick="goAI('${escapeAttribute(curSub)}')"
+        >
+          🤖 Ask AI Tutor
+        </button>
+
+      </div>
+
+
+      <div class="note-content">
+
+        <div class="modern-note">
+          ${html}
+        </div>
+
+        ${
+          visualCards
+            ? `
+              <div class="mt-5">
+
+                <h3>
+                  🎨 Visual Learning Cards
+                </h3>
+
+                <div class="visual-grid">
+                  ${visualCards}
+                </div>
+
+              </div>
+            `
+            : ""
+        }
+
+
+        <div class="ai-box">
+
+          <div class="ai-box-title">
+            ✨ SomaHub AI Learning Engine
+          </div>
+
+          <div class="ai-box-text">
+            These notes combine available SomaHub learning
+            resources with AI explanation. If a design,
+            scheme, admin note, teacher question or learner
+            question is unavailable, the AI continues using
+            the available information and fills reasonable
+            curriculum gaps.
+          </div>
+
+        </div>
+
+      </div>
+
+    </article>
+
+  `;
+
+
+  scrollToNotes();
+
+}
+
+
+/* =========================================================
+   VISUAL CARDS
+========================================================= */
+
+function extractVisualCards(text){
+
+  const blocks =
+    String(text || "")
+      .split(/VISUAL CARD:/gi)
+      .slice(1,7);
+
+  if(!blocks.length){
+
+    return `
+      <div class="visual-card">
+
+        <div class="visual-icon">📘</div>
+
+        <div class="visual-title">
+          Key Concept
+        </div>
+
+        <div class="visual-text">
+          Read the main explanation and identify the
+          important process, objects or relationships.
+        </div>
+
+      </div>
+
+      <div class="visual-card">
+
+        <div class="visual-icon">🧠</div>
+
+        <div class="visual-title">
+          Remember
+        </div>
+
+        <div class="visual-text">
+          Connect the new idea with an example you already
+          understand.
+        </div>
+
+      </div>
+    `;
+
+  }
+
+
+  return blocks.map(block=>{
+
+    const iconMatch =
+      block.match(
+        /Icon:\s*(.*)/i
+      );
+
+    const titleMatch =
+      block.match(
+        /Title:\s*(.*)/i
+      );
+
+    const visualMatch =
+      block.match(
+        /What to see:\s*([\s\S]*?)(?=Remember:|$)/i
+      );
+
+    const rememberMatch =
+      block.match(
+        /Remember:\s*([\s\S]*)/i
+      );
+
+
+    const icon =
+      iconMatch
+        ? iconMatch[1].trim()
+        : "📘";
+
+    const title =
+      titleMatch
+        ? titleMatch[1].trim()
+        : "Key Idea";
+
+    const visual =
+      visualMatch
+        ? visualMatch[1].trim()
+        : "";
+
+    const remember =
+      rememberMatch
+        ? rememberMatch[1].trim()
+        : "";
+
+
+    return `
+
+      <div class="visual-card">
+
+        <div class="visual-icon">
+          ${escapeHTML(icon)}
+        </div>
+
+        <div class="visual-title">
+          ${escapeHTML(title)}
+        </div>
+
+        <div class="visual-text">
+          ${escapeHTML(visual)}
+        </div>
+
+        ${
+          remember
+            ? `
+              <div class="mt-2 text-[8px] font-black text-blue-600">
+                Remember: ${escapeHTML(remember)}
+              </div>
+            `
+            : ""
+        }
+
+      </div>
+
+    `;
+
+  }).join("");
+
+}
+
+
+/* =========================================================
+   SHOW VISUAL MODE
+========================================================= */
+
+function showVisualMode(){
+
+  const visual =
+    document.querySelector(
+      ".visual-grid"
+    );
+
+  if(!visual){
+
+    toast(
+      "Generate AI notes first."
+    );
+
+    return;
+
+  }
+
+  visual.scrollIntoView({
+    behavior:"smooth",
+    block:"center"
+  });
+
+}
+
+
+/* =========================================================
+   SPEECH
+========================================================= */
+
+function speakText(text){
+
+  if(!("speechSynthesis" in window)){
+
+    toast(
+      "Audio reading is not supported on this browser."
+    );
+
+    return;
+
+  }
+
+
+  window.speechSynthesis.cancel();
+
+
+  const plain =
+    cleanAIText(text)
+      .replace(/[#*_]/g," ")
+      .replace(/\s+/g," ")
+      .trim();
+
+
+  if(!plain){
+
+    toast("There is no text to read.");
+
+    return;
+
+  }
+
+
+  speechUtterance =
+    new SpeechSynthesisUtterance(
+      plain
+    );
+
+
+  const lower =
+    plain.toLowerCase();
+
+
+  if(
+    /[áéíóúñ]|kwa|ya|na|ni|hii|hiyo|soma|jifunze/.test(lower)
+  ){
+
+    speechUtterance.lang =
+      "en-KE";
+
+  }else{
+
+    speechUtterance.lang =
+      "en-KE";
+
+  }
+
+
+  speechUtterance.rate =
+    0.96;
+
+  speechUtterance.pitch =
+    1;
+
+
+  speechUtterance.onstart = ()=>{
+
+    toast(
+      "🔊 Reading notes..."
+    );
+
+  };
+
+
+  speechUtterance.onend = ()=>{
+
+    toast(
+      "Audio finished."
+    );
+
+  };
+
+
+  window.speechSynthesis.speak(
+    speechUtterance
+  );
+
+}
+
+
+function speakCurrentNotes(){
+
+  if(!currentGenerated){
+
+    toast(
+      "Generate modern AI notes first."
+    );
+
+    return;
+
+  }
+
+  speakText(
+    currentGenerated
+  );
+
+}
+
+
+/* =========================================================
+   STOP AUDIO
+========================================================= */
+
+function stopAudio(){
+
+  if("speechSynthesis" in window){
+
+    window.speechSynthesis.cancel();
+
+    toast("Audio stopped.");
+
+  }
+
+}
+
+
+/* =========================================================
+   SHOW AI ERROR
+========================================================= */
+
+function showAIError(message){
+
+  const list =
+    document.getElementById("notesList");
+
+
+  list.innerHTML = `
+
+    <div class="empty">
+
+      <div class="empty-icon">
+        ⚠️
+      </div>
+
+      <div class="empty-title">
+        AI Notes Could Not Be Generated
+      </div>
+
+      <div class="empty-text">
+        ${escapeHTML(message)}
+      </div>
+
+      <button
+        onclick="generateModernNotes()"
+        class="mt-4 bg-[#263b99] text-white rounded-full px-5 py-2.5 text-[10px] font-black"
+      >
+        🔄 Try Again
+      </button>
+
+    </div>
+
+  `;
+
+}
+
+
+/* =========================================================
+   ESCAPE ATTRIBUTE
+========================================================= */
+
+function escapeAttribute(value){
+
+  return String(value || "")
+    .replace(/\\/g,"\\\\")
+    .replace(/'/g,"\\'");
+
+}
+
+
+/* =========================================================
+   GO AI
+========================================================= */
+
+function goAI(title){
+
+  const q =
+    encodeURIComponent(
+      `${title} ${curGrade} ${curSub} KICD notes explained`
+    );
+
+  location.href =
+    `ai.assistant.html?q=${q}` +
+    `&grade=${encodeURIComponent(curGrade)}` +
+    `&subject=${encodeURIComponent(curSub)}`;
+
+}
+
+
+/* =========================================================
+   TAB SYSTEM
+========================================================= */
+
+function openTab(id,tab){
+
+  document
+    .querySelectorAll(`#${id} .tab`)
+    .forEach(t=>{
+      t.classList.add("hidden");
+    });
+
+
+  const target =
+    document.getElementById(
+      `${id}-${tab}`
+    );
+
+  if(target){
+
+    target.classList.remove("hidden");
+
+  }
+
+}
+
+
+/* =========================================================
+   RENDER EXISTING FIREBASE NOTES
+========================================================= */
+
+function renderExistingNotes(items){
+
+  const list =
+    document.getElementById("notesList");
+
+
+  if(!items.length){
+
+    list.innerHTML = `
+
+      <div class="empty">
+
+        <div class="empty-icon">
+          ✨
+        </div>
+
+        <div class="empty-title">
+          No stored notes found
+        </div>
+
+        <div class="empty-text">
+          SomaHub can still create modern notes using
+          available curriculum information, teacher questions,
+          learner questions and AI.
+        </div>
+
+        <button
+          onclick="generateModernNotes()"
+          class="mt-4 bg-[#263b99] text-white rounded-full px-5 py-2.5 text-[10px] font-black"
+        >
+          ✨ Generate Modern AI Notes
+        </button>
+
+      </div>
+
+    `;
+
+    return;
+
+  }
+
+
+  list.innerHTML = `
+
+    <div class="flex items-center justify-between px-1">
+
+      <div class="text-[10px] font-black text-slate-600">
+        ${items.length} resource${items.length===1?"":"s"}
+        • ${escapeHTML(curGrade)}
+        • ${escapeHTML(curSub)}
+      </div>
+
+      <button
+        onclick="generateModernNotes()"
+        class="text-[9px] font-black text-blue-600"
+      >
+        ✨ Enrich with AI
+      </button>
+
+    </div>
+
+  `;
+
+
+  items.forEach(item=>{
+
+    const title =
+      field(
+        item,
+        "title",
+        "name",
+        "topic"
+      ) ||
+      "SomaHub Learning Notes";
+
+
+    const description =
+      field(
+        item,
+        "description",
+        "summary"
+      );
+
+
+    const content =
+      field(
+        item,
+        "content",
+        "notes",
+        "text",
+        "body"
+      );
+
+
+    const somaContent =
+      field(
+        item,
+        "somahubContent"
+      );
+
+
+    const original =
+      field(
+        item,
+        "originalBlobUrl",
+        "fileUrl"
+      ) || "#";
+
+
+    const somaPDF =
+      field(
+        item,
+        "somaHubBlobUrl"
+      ) || "#";
+
+
+    const diagram =
+      field(
+        item,
+        "diagramUrl"
+      );
+
+
+    const audio =
+      field(
+        item,
+        "audioUrl"
+      );
+
+
+    const video =
+      field(
+        item,
+        "videoUrl"
+      );
+
+
+    const id =
+      "note_" +
+      String(item.id || Math.random())
+        .replace(/[^a-zA-Z0-9_-]/g,"");
+
+
+    const contentHTML =
+      content
+        ? renderNoteText(content)
+        : `
+          <p>
+            This resource is available in SomaHub.
+            Use AI Enrichment to turn it into modern,
+            structured notes.
+          </p>
+        `;
+
+
+    const article =
+      document.createElement("article");
+
+    article.className =
+      "note-card";
+
+
+    article.innerHTML = `
+
+      <div class="note-head">
+
+        <div class="min-w-0">
+
+          <div class="note-title">
+            ${escapeHTML(title)}
+          </div>
+
+          <div class="note-meta">
+            ${escapeHTML(curGrade)}
+            •
+            ${escapeHTML(curSub)}
+          </div>
+
+          ${
+            description
+              ? `
+                <div class="note-description">
+                  ${escapeHTML(description)}
+                </div>
+              `
+              : ""
+          }
+
+        </div>
+
+      </div>
+
+
+      <div class="note-actions">
+
+        <button
+          class="note-btn primary"
+          onclick="toggleNote('${id}')"
+        >
+          📖 Read Notes
+        </button>
+
+        <button
+          class="note-btn ai"
+          onclick="goAI('${escapeAttribute(title)}')"
+        >
+          🤖 Ask AI
+        </button>
+
+        <button
+          class="note-btn audio"
+          onclick="speakText(\`${escapeForTemplate(
+            content || somaContent || description || title
+          )}\`)"
+        >
+          🔊 Listen
+        </button>
+
+      </div>
+
+
+      <div
+        id="${id}"
+        class="note-content hidden"
+      >
+
+        <div class="modern-note">
+
+          ${contentHTML}
+
+        </div>
+
+
+        ${
+          somaContent
+            ? `
+              <div class="definition-box">
+
+                <b>✨ SomaHub Enrichment</b>
+
+                <div class="mt-1">
+                  ${renderNoteText(somaContent)}
+                </div>
+
+              </div>
+            `
+            : ""
+        }
+
+
+        ${
+          diagram
+            ? `
+              <div class="mt-4">
+
+                <h3>
+                  🎨 Diagram
+                </h3>
+
+                <img
+                  src="${escapeAttributeURL(diagram)}"
+                  class="w-full rounded-xl border border-slate-200"
+                  alt="Learning diagram"
+                >
+
+              </div>
+            `
+            : ""
+        }
+
+
+        <div class="mt-4 flex flex-wrap gap-2">
+
+          ${
+            original !== "#"
+              ? `
+                <a
+                  href="${escapeAttributeURL(original)}"
+                  target="_blank"
+                  rel="noopener"
+                  class="note-btn primary"
+                >
+                  📄 Original
+                </a>
+              `
+              : ""
+          }
+
+
+          ${
+            somaPDF !== "#"
+              ? `
+                <a
+                  href="${escapeAttributeURL(somaPDF)}"
+                  target="_blank"
+                  rel="noopener"
+                  class="note-btn ai"
+                >
+                  ✨ SomaHub PDF
+                </a>
+              `
+              : ""
+          }
+
+
+          ${
+            video
+              ? `
+                <a
+                  href="${escapeAttributeURL(video)}"
+                  target="_blank"
+                  rel="noopener"
+                  class="note-btn video"
+                >
+                  📺 Video
+                </a>
+              `
+              : ""
+          }
+
+        </div>
+
+
+        ${
+          audio
+            ? `
+              <div class="mt-4">
+
+                <h3>
+                  🎧 Audio Lesson
+                </h3>
+
+                <audio
+                  controls
+                  src="${escapeAttributeURL(audio)}"
+                  class="w-full"
+                ></audio>
+
+              </div>
+            `
+            : ""
+        }
+
+
+        <div class="ai-box">
+
+          <div class="ai-box-title">
+            ✨ Make this topic smarter
+          </div>
+
+          <div class="ai-box-text">
+            Ask SomaHub AI to explain the topic,
+            simplify it, create revision questions,
+            provide examples or prepare it for teaching.
+          </div>
+
+          <button
+            onclick="goAI('${escapeAttribute(title)}')"
+            class="mt-3 bg-white text-[#172554] rounded-full px-4 py-2 text-[9px] font-black"
+          >
+            🤖 Open AI Tutor
+          </button>
+
+        </div>
+
+      </div>
+
+    `;
+
+
+    list.appendChild(article);
+
+  });
+
+}
+
+
+/* =========================================================
+   TOGGLE NOTE
+========================================================= */
+
+function toggleNote(id){
+
+  const el =
+    document.getElementById(id);
+
+  if(!el) return;
+
+  el.classList.toggle("hidden");
+
+}
+
+
+/* =========================================================
+   ESCAPE TEMPLATE STRING
+========================================================= */
+
+function escapeForTemplate(value){
+
+  return String(value || "")
+    .replace(/\\/g,"\\\\")
+    .replace(/`/g,"\\`")
+    .replace(/\$\{/g,"\\${");
+
+}
+
+
+/* =========================================================
+   SAFE URL
+========================================================= */
+
+function escapeAttributeURL(value){
+
+  const url =
+    String(value || "");
+
+  if(
+    !/^https?:\/\//i.test(url) &&
+    !url.startsWith("/")
+  ){
+
+    return "#";
+
+  }
+
+  return escapeHTML(url);
+
+}
+
+
+/* =========================================================
+   SEARCH / FILTER EXISTING
+========================================================= */
+
+function filterResources(items){
+
+  const input =
+    document.getElementById("searchIn");
+
+  const search =
+    String(
+      input?.value || ""
+    )
+    .trim()
+    .toLowerCase();
+
+
+  if(!search){
+
+    return items;
+
+  }
+
+
+  return items.filter(item=>{
+
+    const text =
+      JSON.stringify(item)
+        .toLowerCase();
+
+    return text.includes(search);
+
+  });
+
+}
+
+
+/* =========================================================
+   LOAD NOTES
+========================================================= */
 
 async function loadNotes(){
- let FB=window.FB, search=searchIn.value.toLowerCase(), list=document.getElementById('notesList');
- list.innerHTML=`<div class="bg-white border-2 border-black rounded-xl p-4 text-center"><p class="font-black text-[11px]">📚 Loading ${curGrade} - ${curSub}...</p></div>`;
- try{
-  let q=FB.query(FB.collection(FB.db,"resources"),FB.where("grade","==",curGrade),FB.where("subject","==",curSub),FB.where("type","==","Notes"));
-  let snap=await FB.getDocs(q); let filtered=[];
-  snap.forEach(d=>{let n=d.data(); let txt=((n.title||'')+(n.subject||'')+(n.description||'')).toLowerCase(); if(!search||txt.includes(search)) filtered.push({id:d.id,...n});});
-  if(filtered.length===0){
-   list.innerHTML=`<div class="bg-[#ffcc1a] border-2 border-black rounded-xl p-2.5"><p class="font-black text-[11px]">✨ SomaHub AI Notes - ${curGrade} ${curSub}</p><p class="text-[9px]">Source: Design + Schemes + Notes + FAQs + Gemini</p></div>
-   <div class="bg-white border-2 border-black rounded-xl p-4"><p class="font-black text-[11px] text-center">AI generating from KICD Foundation...</p><div class="flex gap-1.5 mt-3"><button class="flex-1 bg-white border-2 border-black rounded-full py-2 text-[9px] font-black">📥 Download</button><button class="flex-1 bg-orange-500 text-white border-2 border-black rounded-full py-2 text-[9px] font-black">▶️ Listen</button><button class="flex-1 bg-red-600 text-white border-2 border-black rounded-full py-2 text-[9px] font-black">📺 Video</button></div><button onclick="goAI('${curSub}')" class="mt-3 w-full bg-black text-white rounded-full py-3 font-black text-[11px]">🤖 Ask AI Tutor - ${curSub} →</button></div>`;
-   return;
+
+  const list =
+    document.getElementById("notesList");
+
+
+  updateTitle();
+
+
+  list.innerHTML = `
+
+    <div class="loading">
+
+      <div class="spinner"></div>
+
+      <p class="mt-3 text-[11px] font-black text-slate-600">
+        Loading ${escapeHTML(curGrade)}
+        •
+        ${escapeHTML(curSub)}
+      </p>
+
+      <p class="mt-1 text-[9px] text-slate-400">
+        Checking SomaHub resources...
+      </p>
+
+    </div>
+
+  `;
+
+
+  try{
+
+    await loadAllSources();
+
+
+    let resources =
+      filterResources(
+        currentSources.resources
+      );
+
+
+    renderExistingNotes(
+      resources
+    );
+
+
+    /*
+      If absolutely no resource exists,
+      automatically ask AI to generate notes.
+    */
+
+    if(
+      !currentSources.resources.length
+    ){
+
+      setTimeout(()=>{
+
+        generateModernNotes();
+
+      },250);
+
+    }
+
+  }catch(error){
+
+    console.error(error);
+
+    showAIError(
+      "Unable to load SomaHub resources. " +
+      "You can still try AI generation."
+    );
+
   }
-  list.innerHTML=`<div class="bg-[#ffcc1a] border-2 border-black rounded-xl p-2.5"><p class="font-black text-[11px]">✨ ${filtered.length} SomaHub Notes • ${curGrade} • ${curSub}</p></div>`;
-  filtered.forEach(n=>{
-   const originalBlob=n.originalBlobUrl||n.fileUrl||'#'; const somaBlob=n.somaHubBlobUrl||'#'; const diagram=n.diagramUrl||''; const audio=n.audioUrl||''; const video=n.videoUrl||'#';
-   list.innerHTML+=`<div class="bg-white border-2 border-black rounded-xl p-3 shadow-[2px_2px_0_0_#000]">
-   <p class="font-black text-[12px]">${n.title}</p><p class="text-[9px] text-gray-500 mt-1">${n.grade} • ${n.subject} - Learning Area</p>
-   <p class="text-[10px] text-gray-600 mt-1 line-clamp-2">${n.description||''}</p>
-   <div class="mt-3 flex gap-2"><button onclick="document.getElementById('d-${n.id}').classList.toggle('hidden')" class="flex-1 bg-black text-white rounded-full py-2.5 font-black text-[10px]">📖 Read SomaHub Notes</button><button onclick="goAI('${(n.title||'').replace(/'/g,'')}')" class="bg-[#4a86ff] text-white border-2 border-black rounded-full px-4 py-2.5 font-black text-[10px]">🤖 Ask AI</button></div>
-   <div id="d-${n.id}" class="hidden mt-3">
-     <!-- TABS: Download / Listen / Video - WELL ORGANIZED AS BEFORE -->
-     <div class="flex gap-1.5 mb-2">
-       <button onclick="openTab('d-${n.id}','download')" class="flex-1 bg-black text-white border-2 border-black rounded-full py-2 font-black text-[9px]">📥 Download</button>
-       <button onclick="openTab('d-${n.id}','listen')" class="flex-1 bg-orange-500 text-white border-2 border-black rounded-full py-2 font-black text-[9px]">▶️ Listen</button>
-       <button onclick="openTab('d-${n.id}','video')" class="flex-1 bg-red-600 text-white border-2 border-black rounded-full py-2 font-black text-[9px]">📺 Video</button>
-     </div>
-     <div id="d-${n.id}-download" class="tab bg-[#f6f6f7] border-2 border-black rounded-xl p-2.5 space-y-2">
-       <div class="flex gap-1.5"><a href="${originalBlob}" target="_blank" class="flex-1 bg-white border-2 border-black rounded-full py-2.5 text-center font-black text-[9px]">📄 Original PDF</a><a href="${somaBlob}" target="_blank" class="flex-1 bg-[#0ea5e9] text-white border-2 border-black rounded-full py-2.5 text-center font-black text-[9px]">✨ SomaHub PDF + Diagrams</a></div>
-       <div class="bg-white border border-black rounded-lg p-2 text-[11px] whitespace-pre-wrap max-h-[180px] overflow-auto">${n.content||n.description||''}</div>
-       ${diagram?`<img src="${diagram}" class="w-full rounded-xl border-2 border-black"/>`:''}
-       <div class="bg-[#e0f2ff] border border-black rounded-lg p-2 text-[11px]"><b>✨ SomaHub Modern (International > Cambridge):</b><br/>${n.somahubContent||'Enriched from KICD Design + Schemes + FAQs - colored, audio-visual.'}</div>
-     </div>
-     <div id="d-${n.id}-listen" class="tab hidden bg-[#fff7ed] border-2 border-black rounded-xl p-3 text-center">
-       ${audio?`<audio controls src="${audio}" class="w-full"></audio>`:`<p class="text-[10px]">🎧 Audio not yet generated - Ask AI to generate</p>`}
-       <div class="flex gap-1.5 mt-2"><button class="flex-1 bg-orange-500 text-white border-2 border-black rounded-full py-2 font-black text-[9px]">▶️ Listen EN</button><button class="flex-1 bg-green-600 text-white border-2 border-black rounded-full py-2 font-black text-[9px]">▶️ Sikiliza SW</button></div>
-       <p class="text-[9px] text-gray-600 mt-2">Reads SomaHub notes with expression - English + Swahili</p>
-     </div>
-     <div id="d-${n.id}-video" class="tab hidden bg-[#fef2f2] border-2 border-black rounded-xl p-3 text-center">
-       ${video && video!=='#'?`<iframe src="${video}" class="w-full h-[180px] rounded-xl border-2 border-black"></iframe>`:`<p class="text-[10px]">📺 Video demo not yet uploaded</p>`}
-       <a href="${video}" target="_blank" class="mt-2 block bg-red-600 text-white border-2 border-black rounded-full py-2 font-black text-[9px]">▶️ Watch Full Video</a>
-     </div>
-   </div></div>`;
-  });
- }catch(e){console.error(e); list.innerHTML=`<p class="text-center text-[10px] bg-white border-2 border-black rounded-xl p-3">Error - check internet</p>`;}
+
 }
-setTimeout(()=>{let FB=window.FB; let p=new URLSearchParams(location.search); if(p.get('search')) searchIn.value=p.get('search'); FB.onAuthStateChanged(FB.auth, async(u)=>{if(u){let s=await FB.getDoc(FB.doc(FB.db,"users",u.uid)); if(s.exists()){let d=s.data(); shkeB.innerText=d.indexNumber||"SHKE"; curGrade=d.grade||"Grade 4";}} loadNotes();});},500);
-searchIn.addEventListener('keypress',e=>{if(e.key==='Enter') loadNotes();});
+
+
+/* =========================================================
+   SCROLL
+========================================================= */
+
+function scrollToNotes(){
+
+  setTimeout(()=>{
+
+    document
+      .getElementById("notesList")
+      .scrollIntoView({
+        behavior:"smooth",
+        block:"start"
+      });
+
+  },100);
+
+}
+
+
+/* =========================================================
+   AUTH + INITIAL LOAD
+========================================================= */
+
+setTimeout(()=>{
+
+  const FB =
+    window.FB;
+
+  if(!FB){
+
+    document
+      .getElementById("notesList")
+      .innerHTML = `
+
+        <div class="empty">
+
+          <div class="empty-icon">
+            ⚠️
+          </div>
+
+          <div class="empty-title">
+            Firebase is unavailable
+          </div>
+
+          <div class="empty-text">
+            Please refresh the page and try again.
+          </div>
+
+        </div>
+
+      `;
+
+    return;
+
+  }
+
+
+  const params =
+    new URLSearchParams(
+      location.search
+    );
+
+
+  const search =
+    params.get("search");
+
+
+  if(search){
+
+    document.getElementById(
+      "searchIn"
+    ).value = search;
+
+    document.getElementById(
+      "mobileSearchIn"
+    ).value = search;
+
+  }
+
+
+  FB.onAuthStateChanged(
+    FB.auth,
+    async user=>{
+
+      if(user){
+
+        try{
+
+          const snap =
+            await FB.getDoc(
+              FB.doc(
+                FB.db,
+                "users",
+                user.uid
+              )
+            );
+
+
+          if(snap.exists()){
+
+            const data =
+              snap.data() || {};
+
+
+            document.getElementById(
+              "shkeB"
+            ).textContent =
+              data.indexNumber ||
+              "SHKE";
+
+
+            if(data.grade){
+
+              curGrade =
+                data.grade;
+
+            }
+
+          }
+
+        }catch(error){
+
+          console.warn(
+            "User profile unavailable:",
+            error
+          );
+
+        }
+
+      }
+
+
+      createFilters();
+
+      updateTitle();
+
+      loadNotes();
+
+    }
+
+  );
+
+},350);
+
+
+/* =========================================================
+   SEARCH ENTER
+========================================================= */
+
+document
+  .getElementById("searchIn")
+  .addEventListener(
+    "keydown",
+    event=>{
+
+      if(event.key === "Enter"){
+
+        loadNotes();
+
+      }
+
+    }
+  );
+
+
+document
+  .getElementById("mobileSearchIn")
+  .addEventListener(
+    "keydown",
+    event=>{
+
+      if(event.key === "Enter"){
+
+        syncMobileSearch();
+
+      }
+
+    }
+  );
+
+
+/* =========================================================
+   STOP SPEECH WHEN PAGE LEAVES
+========================================================= */
+
+window.addEventListener(
+  "beforeunload",
+  ()=>{
+
+    if("speechSynthesis" in window){
+
+      window.speechSynthesis.cancel();
+
+    }
+
+  }
+);
+
 </script>
-</body></html>
+
+</body>
+</html>
