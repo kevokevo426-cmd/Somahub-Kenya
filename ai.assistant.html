@@ -8,132 +8,163 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;800&display=swap" rel="stylesheet">
 <style>
-*{box-sizing:border-box}html,body{margin:0;padding:0;height:100%;font-family:'Nunito',Inter,sans-serif;background:#f7f7f8}body{overflow:hidden}#app{height:100dvh;display:flex;flex-direction:column}#chat{scroll-behavior:smooth}#chat::-webkit-scrollbar{width:6px}#chat::-webkit-scrollbar-thumb{background:#c7c7c7;border-radius:20px}textarea{resize:none}.message-in{animation:in.2s ease-out}@keyframes in{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}.typing-dot{width:6px;height:6px;background:#555;border-radius:50%;animation:typing 1.2s infinite}.photo-message{max-width:280px;border-radius:12px}.ai-response{font-size:13.5px;line-height:1.7}.safe-bottom{padding-bottom:max(8px,env(safe-area-inset-bottom))}
+*{box-sizing:border-box}html,body{margin:0;padding:0;height:100%;font-family:'Nunito',sans-serif;background:#f5f5f5}body{overflow:hidden}#app{height:100dvh;display:flex;flex-direction:column}
+#chat::-webkit-scrollbar{width:0px}
+.ai-card{background:#fff;border:1px solid #e5e7eb;border-radius:16px;padding:14px 16px;line-height:1.6;font-size:13.5px;color:#111}
+.ai-card h3{font-weight:800;font-size:13px;margin:14px 0 6px;color:#1a1a6c;text-transform:uppercase;letter-spacing:0.3px}
+.ai-card p{margin:6px 0}
+.ai-card ul{margin:6px 0 6px 18px;list-style:disc}
+.ai-card ol{margin:6px 0 6px 18px;list-style:decimal}
+.ai-card.formula{background:#f8fafc;border:1px dashed #cbd5e1;border-radius:8px;padding:8px 10px;margin:8px 0;font-family:monospace;font-size:12px;text-align:center}
+.message-in{animation:in.18s ease-out}@keyframes in{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+@media print{.no-print{display:none!important} body{background:#fff}.ai-card{border:none;box-shadow:none}}
 </style>
 </head>
 <body>
 <div id="app">
 
-<!-- SMALL TOP BAR - FITS WELL -->
-<header class="bg-white border-b border-[#e5e5e5] shrink-0 sticky top-0 z-20">
-<div class="max-w-4xl mx-auto px-2.5 py-2 flex items-center justify-between gap-1">
-<div class="flex items-center gap-1.5 min-w-0">
-<img src="/logo.png" onerror="this.style.display='none'" class="w-7 h-7 rounded-full bg-white object-cover shrink-0 border">
-<div class="leading-none min-w-0">
-<p class="font-extrabold text-[11px] text-[#1a1a6c] truncate">SomaHub Tutor</p>
-<p class="text-[8px] text-gray-500 flex items-center gap-1"><span class="w-1.5 h-1.5 bg-green-500 rounded-full inline-block"></span><span id="statusTxt">Online</span> • <span id="langShow">EN</span></p>
-</div>
-</div>
-<div class="flex items-center gap-1 shrink-0">
-<button id="langToggle" onclick="toggleLang()" class="h-6 px-2 rounded-full bg-[#1a1a6c] text-white text-[8px] font-bold">🌐 EN</button>
-<select id="grade" class="h-6 bg-gray-100 rounded-full px-2 text-[9px] font-bold outline-none border-0 max-w-[72px]"><option>Playground</option><option>PP1</option><option>PP2</option><option>Grade 1</option><option>Grade 2</option><option>Grade 3</option><option>Grade 4</option><option>Grade 5</option><option>Grade 6</option><option selected>Grade 7</option><option>Grade 8</option><option>Grade 9</option><option>Grade 10</option></select>
-<button onclick="openHistory()" class="w-6 h-6 rounded-full bg-black text-white flex items-center justify-center text-[10px]" title="History"><i class="fa-regular fa-clock"></i></button>
-</div>
-</div>
+<header class="bg-white border-b shrink-0 h-11 flex items-center px-2.5 justify-between">
+<div class="flex items-center gap-2"><img src="/logo.png" onerror="this.src='https://i.pravatar.cc/100'" class="w-7 h-7 rounded-full"><div class="leading-none"><p class="font-black text-[11px] text-[#1a1a6c]">SomaHub Tutor</p><p class="text-[8px] text-green-600">● Online • Auto EN/SW</p></div></div>
+<div class="flex items-center gap-1"><select id="grade" class="h-6 bg-gray-100 rounded-full px-2 text-[9px] font-bold outline-none max-w-[70px]"><option>Playground</option><option>PP1</option><option>PP2</option><option>G1</option><option>G2</option><option>G3</option><option>G4</option><option>G5</option><option>G6</option><option selected>Grade 7</option><option>G8</option><option>G9</option><option>G10</option></select><button onclick="openHistory()" class="w-6 h-6 rounded-full bg-black text-white text-[10px] flex items-center justify-center"><i class="fa-regular fa-clock"></i></button></div>
 </header>
 
-<main id="chat" class="flex-1 overflow-y-auto">
-<div class="max-w-4xl mx-auto px-3 py-4 pb-40">
-<div id="welcome" class="flex flex-col items-center text-center py-8">
-<div class="w-14 h-14 rounded-full bg-black text-white flex items-center justify-center text-xl">🎓</div>
-<h2 class="text-xl font-extrabold mt-3">How can I help you learn?</h2>
-<p class="text-gray-500 text-xs mt-1 max-w-[280px]">Ask a question, upload work, create homework. Auto EN/SW like Meta AI.</p>
-</div>
-<div id="messages"></div>
-</div>
-</main>
+<main id="chat" class="flex-1 overflow-y-auto"><div class="max-w-3xl mx-auto px-3 py-4 pb-36"><div id="messages"></div></div></main>
 
-<!-- WHATSAPP STYLE TYPING AREA -->
-<footer class="fixed bottom-0 left-0 right-0 bg-[#f0f0f0] border-t border-[#e5e5e5] safe-bottom z-20">
-<div class="max-w-4xl mx-auto px-2 py-2">
-<div id="photoPreviewBox" class="hidden mb-2"><div class="bg-white rounded-xl p-2 border flex items-center gap-2"><img id="photoPreview" class="w-12 h-12 rounded-lg object-cover"><span id="fileName" class="text-[10px] flex-1 truncate"></span><button onclick="removeSelectedPhoto()" class="w-6 h-6 bg-black text-white rounded-full text-[10px]">✕</button></div></div>
-<div id="errorBox" class="hidden mb-2 bg-red-50 text-red-600 text-[11px] px-3 py-1.5 rounded-full text-center"></div>
+<footer class="fixed bottom-0 left-0 right-0 bg-[#efeae2] border-t px-2 py-2 z-20">
+<div class="max-w-3xl mx-auto">
+<div id="previewBox" class="hidden mb-2 bg-white rounded-xl p-2 flex items-center gap-2 border"><img id="previewImg" class="w-10 h-10 rounded object-cover hidden"><i id="previewDocIcon" class="fa-solid fa-file text-gray-400 hidden"></i><span id="previewName" class="text-[10px] flex-1 truncate"></span><button onclick="clearAttach()" class="w-5 h-5 bg-black text-white rounded-full text-[9px]">✕</button></div>
+<div id="errorBox" class="hidden bg-red-50 text-red-600 text-[11px] px-3 py-1 rounded-full mb-2 text-center"></div>
 
-<div class="flex items-end gap-1">
-<div class="flex-1 bg-white rounded-[24px] border flex items-end px-1 py-1 shadow-sm">
-<button onclick="document.getElementById('photoInput').click()" class="w-8 h-8 rounded-full hover:bg-gray-100 flex items-center justify-center shrink-0"><i class="fa-solid fa-paperclip text-gray-500 text-[13px]"></i></button>
-<input id="photoInput" type="file" accept="image/*" capture="environment" class="hidden" onchange="handlePhoto(this)">
-<textarea id="msg" rows="1" placeholder="Message..." class="flex-1 bg-transparent border-0 outline-none text-[13px] px-2 py-1.5 min-h-[22px] max-h-[90px] resize-none"></textarea>
-<button id="voiceBtn" onclick="toggleVoice()" class="w-8 h-8 rounded-full hover:bg-gray-100 flex items-center justify-center shrink-0"><i class="fa-solid fa-microphone text-gray-500 text-[13px]"></i></button>
+<div class="flex items-end gap-1.5">
+<div class="flex-1 bg-white rounded-[26px] px-1.5 py-1 flex items-end gap-0.5 shadow-sm border">
+<button onclick="document.getElementById('docInput').click()" class="w-8 h-8 rounded-full hover:bg-gray-100 flex items-center justify-center shrink-0" title="Attach document"><i class="fa-solid fa-paperclip text-gray-500 text-[13px]"></i></button>
+<button onclick="document.getElementById('imgInput').click()" class="w-8 h-8 rounded-full hover:bg-gray-100 flex items-center justify-center shrink-0" title="Image"><i class="fa-solid fa-image text-gray-500 text-[13px]"></i></button>
+<button onclick="document.getElementById('camInput').click()" class="w-8 h-8 rounded-full hover:bg-gray-100 flex items-center justify-center shrink-0" title="Take photo"><i class="fa-solid fa-camera text-gray-500 text-[13px]"></i></button>
+<textarea id="msg" rows="1" placeholder="Message..." class="flex-1 bg-transparent outline-none text-[13px] px-2 py-2 min-h-[20px] max-h-[90px] resize-none"></textarea>
 </div>
-<button id="sendBtn" onclick="sendMsg()" class="w-9 h-9 rounded-full bg-[#25d366] text-white flex items-center justify-center shadow shrink-0"><i class="fa-solid fa-paper-plane text-[12px]"></i></button>
+<button id="voiceBtn" onclick="toggleVoice()" class="w-9 h-9 rounded-full bg-[#075e54] text-white flex items-center justify-center shrink-0 shadow"><i class="fa-solid fa-microphone text-[12px]"></i></button>
+<button id="sendBtn" onclick="sendMsg()" class="w-9 h-9 rounded-full bg-[#25d366] text-white flex items-center justify-center shrink-0 shadow"><i class="fa-solid fa-paper-plane text-[11px]"></i></button>
 </div>
-<p id="listeningText" class="hidden text-[9px] text-red-500 text-center mt-1 animate-pulse">● Listening SW/EN...</p>
+<p id="listenTxt" class="hidden text-[9px] text-red-500 text-center mt-1 animate-pulse">● Listening...</p>
 </div>
 </footer>
 </div>
 
-<div id="historyDrawer" class="fixed inset-0 z-50 bg-[#fffaf5] hidden flex-col"><div class="flex items-center justify-between p-3 border-b bg-white"><button onclick="closeHistory()" class="px-2">←</button><b class="text-[13px]">History</b><button onclick="clearHistory()" class="text-[9px] text-gray-500">Delete</button></div><div id="historyList" class="flex-1 overflow-auto p-3"></div></div>
+<div id="historyDrawer" class="fixed inset-0 z-50 bg-white hidden flex-col"><div class="p-3 border-b flex justify-between items-center"><button onclick="closeHistory()">← Back</button><b class="text-[12px]">History</b><button onclick="clearHistory()" class="text-[9px] text-gray-500">Delete</button></div><div id="historyList" class="flex-1 overflow-auto p-3"></div></div>
+
+<input id="docInput" type="file" class="hidden" accept=".pdf,.doc,.docx,.txt" onchange="handleDoc(this)">
+<input id="imgInput" type="file" class="hidden" accept="image/*" onchange="handlePhoto(this)">
+<input id="camInput" type="file" class="hidden" accept="image/*" capture="environment" onchange="handlePhoto(this)">
 
 <script>
 const PROXY="/api/gemini";
-let grade="Grade 7", lang="EN", mode="student", uploadedPhoto="", uploadedMimeType="image/jpeg", isThinking=false, recognition=null, listening=false;
-let chatHistory=[];
-const chat=document.getElementById("chat"), messages=document.getElementById("messages"), msg=document.getElementById("msg"), welcome=document.getElementById("welcome");
-const SW=["habari","mambo","nisaidie","hesabu","hisabati","sayansi","kiswahili","shule","mwalimu","asante","eleza","soma","darasa","mtihani","kazi"];
-function detectLang(t){ if(!t) return null; const l=t.toLowerCase(); if(SW.some(k=>l.includes(k))) return "SW"; return null; }
-function toggleLang(){ lang=lang==="EN"?"SW":"EN"; document.getElementById("langToggle").textContent="🌐 "+lang; document.getElementById("langShow").textContent=lang; }
-document.getElementById("grade").addEventListener("change",e=>{ grade=e.target.value; });
-msg.addEventListener("input",()=>{ msg.style.height="20px"; msg.style.height=Math.min(msg.scrollHeight,90)+"px"; const d=detectLang(msg.value); if(d&&d!==lang&&msg.value.length>3){ lang=d; document.getElementById("langToggle").textContent="🌐 "+lang; document.getElementById("langShow").textContent=lang; }});
+let grade="Grade 7", uploadedPhoto="", uploadedMime="", uploadedDocName="", isThinking=false, recognition=null, listening=false, chatHistory=[];
+const chat=document.getElementById("chat"), messages=document.getElementById("messages"), msg=document.getElementById("msg");
+const SW=["habari","mambo","nisaidie","hesabu","hisabati","sayansi","kiswahili","shule","mwalimu","asante","eleza","soma","darasa"];
 
-// VOICE LIKE META AI
-(function(){ const SR=window.SpeechRecognition||window.webkitSpeechRecognition; if(!SR) return; recognition=new SR(); recognition.onstart=()=>{ listening=true; document.getElementById("listeningText").classList.remove("hidden"); }; recognition.onend=()=>{ listening=false; document.getElementById("listeningText").classList.add("hidden"); }; recognition.onresult=(e)=>{ msg.value=e.results[0][0].transcript; msg.dispatchEvent(new Event('input')); }; })();
-function toggleVoice(){ if(!recognition){ alert("Use Chrome"); return; } if(listening){ recognition.stop(); return; } recognition.lang=lang==="SW"?"sw-KE":"en-KE"; recognition.start(); }
+function detectLang(t){ if(!t) return "EN"; const l=t.toLowerCase(); return SW.some(k=>l.includes(k))?"SW":"EN"; }
+document.getElementById("grade").addEventListener("change",e=>grade=e.target.value);
+msg.addEventListener("input",()=>{ msg.style.height="20px"; msg.style.height=Math.min(msg.scrollHeight,90)+"px"; });
 
-function handlePhoto(input){ const file=input.files[0]; if(!file) return; const url=URL.createObjectURL(file); const img=new Image(); img.onload=()=>{ const c=document.createElement("canvas"); let w=img.width,h=img.height; const max=1200; if(w>max||h>max){ const r=Math.min(max/w,max/h); w=Math.round(w*r); h=Math.round(h*r);} c.width=w; c.height=h; c.getContext("2d").drawImage(img,0,0,w,h); uploadedPhoto=c.toDataURL("image/jpeg",0.7); uploadedMimeType="image/jpeg"; document.getElementById("photoPreview").src=uploadedPhoto; document.getElementById("photoPreviewBox").classList.remove("hidden"); document.getElementById("fileName").textContent=file.name; URL.revokeObjectURL(url); chat.scrollTop=chat.scrollHeight; }; img.src=url; input.value=""; }
-function removeSelectedPhoto(){ uploadedPhoto=""; document.getElementById("photoPreviewBox").classList.add("hidden"); }
-function showError(m){ const b=document.getElementById("errorBox"); b.textContent=m; b.classList.remove("hidden"); setTimeout(()=>b.classList.add("hidden"),5000); }
-function escapeHTML(t){ return String(t).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
-function addUserText(t){ const d=document.createElement("div"); d.className="flex justify-end mb-3 message-in"; d.innerHTML=`<div class="max-w-[80%] bg-[#075e54] text-white rounded-2xl rounded-br-sm px-3 py-2 text-[13px]">${escapeHTML(t)}</div>`; messages.appendChild(d); chatHistory.push({role:"user", content:t}); }
-function addUserPhoto(p){ const d=document.createElement("div"); d.className="flex justify-end mb-3 message-in"; d.innerHTML=`<div class="bg-[#075e54] rounded-2xl p-1"><img src="${p}" class="photo-message"></div>`; messages.appendChild(d); }
-function addThinking(){ const d=document.createElement("div"); d.id="thinking"; d.className="flex justify-start mb-3 message-in"; d.innerHTML=`<div class="flex gap-2 items-end"><div class="w-6 h-6 rounded-full bg-black text-white flex items-center justify-center text-[10px] shrink-0">🎓</div><div class="bg-white border rounded-2xl rounded-bl-sm px-3 py-2"><div class="flex gap-1"><span class="typing-dot"></span><span class="typing-dot"></span></div></div></div>`; messages.appendChild(d); chat.scrollTop=chat.scrollHeight; }
-function addAIMessage(t){ const d=document.createElement("div"); d.className="flex justify-start mb-3 message-in"; d.innerHTML=`<div class="flex gap-2 max-w-[88%] items-end"><div class="w-6 h-6 rounded-full bg-black text-white flex items-center justify-center text-[10px] shrink-0">🎓</div><div class="bg-white border rounded-2xl rounded-bl-sm px-3 py-2 shadow-sm"><div class="ai-response text-[13px]">${t.replace(/\n/g,"<br>")}</div><div class="mt-1 flex gap-2 text-[9px] text-gray-400"><button onclick="navigator.clipboard.writeText(\`${t.replace(/`/g,'').replace(/\n/g,' ')}\`)">Copy</button><button onclick="speechSynthesis.speak(new SpeechSynthesisUtterance(\`${t.replace(/`/g,'').slice(0,300)}\`))">Listen</button></div></div></div>`; messages.appendChild(d); chatHistory.push({role:"assistant", content:t}); }
-function saveHistory(title){ const h=JSON.parse(localStorage.getItem("somahub_history")||"[]"); h.unshift({id:Date.now().toString(), title:title.slice(0,60), time:new Date().toISOString(), grade, lang}); localStorage.setItem("somahub_history", JSON.stringify(h.slice(0,200))); }
-function openHistory(){ document.getElementById("historyDrawer").classList.remove("hidden"); document.getElementById("historyDrawer").classList.add("flex"); const h=JSON.parse(localStorage.getItem("somahub_history")||"[]"); const list=document.getElementById("historyList"); list.innerHTML=h.length?"":'<p class="text-center text-gray-400 mt-20 text-xs">No history</p>'; h.forEach(it=>{ const div=document.createElement("div"); div.className="flex justify-between items-center py-2 border-b"; div.innerHTML=`<div><p class="text-[12px] font-bold">${escapeHTML(it.title)}</p><p class="text-[9px] text-gray-500">${it.grade} • ${it.lang}</p></div><button onclick="deleteHistory('${it.id}')" class="w-5 h-5 bg-black text-white rounded-full text-[9px]">×</button>`; list.appendChild(div); }); }
+// VOICE NOTE
+(function(){ const SR=window.SpeechRecognition||window.webkitSpeechRecognition; if(!SR) return; recognition=new SR(); recognition.onstart=()=>{ listening=true; document.getElementById("listenTxt").classList.remove("hidden"); }; recognition.onend=()=>{ listening=false; document.getElementById("listenTxt").classList.add("hidden"); }; recognition.onresult=(e)=>{ msg.value=e.results[0][0].transcript; msg.dispatchEvent(new Event('input')); }; })();
+function toggleVoice(){ if(!recognition){ alert("Use Chrome"); return; } if(listening){ recognition.stop(); return; } recognition.lang=detectLang(msg.value)==="SW"?"sw-KE":"en-KE"; recognition.start(); }
+
+function handlePhoto(i){ const f=i.files[0]; if(!f) return; const r=new FileReader(); r.onload=()=>{ const img=new Image(); img.onload=()=>{ const c=document.createElement("canvas"); let w=img.width,h=img.height; const m=1000; if(w>m||h>m){ const sc=Math.min(m/w,m/h); w=Math.round(w*sc); h=Math.round(h*sc);} c.width=w; c.height=h; c.getContext("2d").drawImage(img,0,0,w,h); uploadedPhoto=c.toDataURL("image/jpeg",0.7); uploadedMime="image/jpeg"; document.getElementById("previewImg").src=uploadedPhoto; document.getElementById("previewImg").classList.remove("hidden"); document.getElementById("previewDocIcon").classList.add("hidden"); document.getElementById("previewName").textContent=f.name; document.getElementById("previewBox").classList.remove("hidden"); }; img.src=r.result; }; r.readAsDataURL(f); i.value=""; }
+function handleDoc(i){ const f=i.files[0]; if(!f) return; uploadedDocName=f.name; uploadedPhoto=""; document.getElementById("previewImg").classList.add("hidden"); document.getElementById("previewDocIcon").classList.remove("hidden"); document.getElementById("previewName").textContent=f.name; document.getElementById("previewBox").classList.remove("hidden"); i.value=""; }
+function clearAttach(){ uploadedPhoto=""; uploadedMime=""; uploadedDocName=""; document.getElementById("previewBox").classList.add("hidden"); }
+function showError(m){ const b=document.getElementById("errorBox"); b.textContent=m; b.classList.remove("hidden"); setTimeout(()=>b.classList.add("hidden"),4000); }
+
+// PROFESSIONAL FORMATTER
+function formatResponse(t){
+  let html=String(t)
+   .replace(/\$\$([\s\S]*?)\$\$/g,(m,c)=>`<div class="formula">${c.trim()}</div>`)
+   .replace(/\*\*(.*?)\*\*/g,'<b>$1</b>')
+   .replace(/^### (.*)$/gm,'<h3>$1</h3>')
+   .replace(/\*\*(\d+)\.\s*Topic.*?\*\*/gi,'<h3>1. Topic / Strand</h3>')
+   .replace(/\*\*(\d+)\.\s*Explanation.*?\*\*/gi,'<h3>2. Explanation</h3>')
+   .replace(/\*\*(\d+)\.\s*Answer.*?\*\*/gi,'<h3>3. Answer</h3>')
+   .replace(/\*\*(\d+)\.\s*Key Point.*?\*\*/gi,'<h3>4. Key Point</h3>')
+   .replace(/\*\*Photo\*\*.*?\*\* Light.*?\*\*Synthesis\*\*.*?(?=To make)/gs,'')
+   .replace(/\n---\n/g,'<hr class="my-3">')
+   .split('\n').map(l=>{
+      l=l.trim(); if(!l) return '';
+      if(l.startsWith('<h3')||l.startsWith('<div')||l.startsWith('<hr')) return l;
+      if(/^\d+\.\s/.test(l)) return `<p>${l}</p>`;
+      if(l.startsWith('- ')||l.startsWith('* ')) return `<ul><li>${l.slice(2)}</li></ul>`;
+      return `<p>${l}</p>`;
+    }).join('');
+  html=html.replace(/<\/ul><ul>/g,'');
+  html=html.replace(/<p><\/p>/g,'');
+  return html;
+}
+
+function addUser(t){ const d=document.createElement("div"); d.className="flex justify-end mb-2 message-in"; d.innerHTML=`<div class="max-w-[78%] bg-[#dcf8c6] rounded-xl rounded-br-sm px-3 py-2 text-[12.5px] shadow-sm">${t.replace(/</g,'&lt;')}</div>`; messages.appendChild(d); chatHistory.push({role:"user",content:t}); }
+function addUserPhoto(p){ const d=document.createElement("div"); d.className="flex justify-end mb-2"; d.innerHTML=`<div class="bg-[#dcf8c6] rounded-xl p-1"><img src="${p}" class="max-w-[180px] rounded-lg"></div>`; messages.appendChild(d); }
+function addThinking(){ const d=document.createElement("div"); d.id="thinking"; d.className="flex gap-1.5 mb-2"; d.innerHTML=`<div class="w-5 h-5 rounded-full bg-black text-white flex items-center justify-center text-[8px]">🎓</div><div class="bg-white border rounded-xl px-3 py-2 text-[11px] text-gray-500">Thinking...</div>`; messages.appendChild(d); chat.scrollTop=chat.scrollHeight; }
+function addAI(t){
+  const id='ai_'+Date.now();
+  const clean=t.replace(/`+/g,'');
+  const d=document.createElement("div"); d.className="flex gap-1.5 mb-3 message-in items-start";
+  d.innerHTML=`<div class="w-5 h-5 rounded-full bg-black text-white flex items-center justify-center text-[8px] shrink-0 mt-1">🎓</div>
+  <div class="flex-1">
+    <div id="${id}" class="ai-card">${formatResponse(t)}</div>
+    <div class="flex gap-1.5 mt-1.5 no-print">
+      <button onclick="copyCard('${id}')" class="h-6 px-2.5 bg-white border rounded-full text-[9px] font-bold flex items-center gap-1"><i class="fa-regular fa-copy"></i> Copy</button>
+      <button onclick="listenCard('${id}')" class="h-6 px-2.5 bg-white border rounded-full text-[9px] font-bold flex items-center gap-1"><i class="fa-solid fa-volume-high"></i> Listen</button>
+      <button onclick="downloadCard('${id}')" class="h-6 px-2.5 bg-white border rounded-full text-[9px] font-bold flex items-center gap-1"><i class="fa-solid fa-download"></i> Download</button>
+      <button onclick="printCard('${id}')" class="h-6 px-2.5 bg-black text-white rounded-full text-[9px] font-bold flex items-center gap-1"><i class="fa-solid fa-print"></i> Print</button>
+    </div>
+  </div>`;
+  messages.appendChild(d); chatHistory.push({role:"assistant",content:t}); chat.scrollTop=chat.scrollHeight;
+}
+function copyCard(id){ const el=document.getElementById(id); navigator.clipboard.writeText(el.innerText); }
+function listenCard(id){ const txt=document.getElementById(id).innerText; const u=new SpeechSynthesisUtterance(txt.slice(0,800)); u.lang=detectLang(txt)==="SW"?"sw-KE":"en-KE"; speechSynthesis.speak(u); }
+function downloadCard(id){ const txt=document.getElementById(id).innerText; const blob=new Blob([txt],{type:'text/plain'}); const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='SomaHub-'+Date.now()+'.txt'; a.click(); }
+function printCard(id){ const content=document.getElementById(id).innerHTML; const w=window.open('','_blank'); w.document.write(`<html><head><title>SomaHub</title><style>body{font-family:Arial;padding:20px;line-height:1.6;font-size:13px} h3{color:#1a1a6c}</style></head><body>${content}<script>window.print()<\/script></body></html>`); w.document.close(); }
+
+function saveH(t){ const h=JSON.parse(localStorage.getItem("sh")||"[]"); h.unshift({id:Date.now(),title:t.slice(0,50),time:new Date().toISOString(),grade}); localStorage.setItem("sh",JSON.stringify(h.slice(0,100))); }
+function openHistory(){ document.getElementById("historyDrawer").classList.remove("hidden"); document.getElementById("historyDrawer").classList.add("flex"); const h=JSON.parse(localStorage.getItem("sh")||"[]"); const l=document.getElementById("historyList"); l.innerHTML=h.length?'':"<p class='text-center text-gray-400 mt-20 text-xs'>No history</p>"; h.forEach(it=>{ const div=document.createElement("div"); div.className="py-2 border-b flex justify-between"; div.innerHTML=`<div><p class="text-[11px] font-bold">${it.title}</p><p class="text-[8px] text-gray-500">${it.grade}</p></div><button onclick="delH('${it.id}')" class="text-[10px]">×</button>`; l.appendChild(div); }); }
 function closeHistory(){ document.getElementById("historyDrawer").classList.add("hidden"); }
-function deleteHistory(id){ let h=JSON.parse(localStorage.getItem("somahub_history")||"[]"); h=h.filter(x=>x.id!==id); localStorage.setItem("somahub_history", JSON.stringify(h)); openHistory(); }
-function clearHistory(){ if(confirm("Delete all?")){ localStorage.removeItem("somahub_history"); openHistory(); } }
+function delH(id){ let h=JSON.parse(localStorage.getItem("sh")||"[]"); h=h.filter(x=>x.id!=id); localStorage.setItem("sh",JSON.stringify(h)); openHistory(); }
+function clearHistory(){ if(confirm("Delete?")){ localStorage.removeItem("sh"); openHistory(); } }
 
 async function sendMsg(){
   const text=msg.value.trim(); if(!text &&!uploadedPhoto) return; if(isThinking) return;
-  welcome.classList.add("hidden"); if(text) addUserText(text); if(uploadedPhoto) addUserPhoto(uploadedPhoto);
-  saveHistory(text||"Photo"); const q=text||"Please explain this image";
-  msg.value=""; msg.style.height="20px"; const keepPhoto=uploadedPhoto; const keepMime=uploadedMimeType; removeSelectedPhoto();
+  if(text) addUser(text); if(uploadedPhoto) addUserPhoto(uploadedPhoto);
+  saveH(text||uploadedDocName||"Photo"); const q=text||"Explain this image";
+  const lang=detectLang(text);
+  msg.value=""; msg.style.height="20px"; const keepPhoto=uploadedPhoto; const keepMime=uploadedMime||"image/jpeg"; clearAttach();
   addThinking(); isThinking=true;
 
-  // === PAYLOAD EXACTLY AS YOUR BACKEND EXPECTS ===
   const payload={
-    question: (lang==="SW"? "[Jibu kwa Kiswahili sanifu rahisi kwa "+grade+"] ":"[Answer in simple English for "+grade+"] ") + q,
+    question: (lang==="SW"?"[Jibu kwa Kiswahili rahisi] ":"[Answer in simple English] ") + q + " | Grade: "+grade,
     originalQuestion: q,
     grade: grade,
-    role: lang==="SW"?"Mwanafunzi":"Student",
+    role: "Student",
     task: lang,
-    mode: mode,
-    subject: "",
-    topic: "",
-    strand: "",
-    questionCount: "",
-    totalMarks: "",
-    shke: "",
-    knowledge: [],
+    mode: "student",
     history: chatHistory.slice(-6),
-    photo: keepPhoto || "",
-    mimeType: keepMime || "image/jpeg",
+    photo: keepPhoto,
+    mimeType: keepMime,
     provider: "auto"
   };
 
   try{
     const res=await fetch(PROXY,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(payload)});
-    const data=await res.json();
-    document.getElementById("thinking")?.remove();
-    if(!res.ok){ throw new Error(data.error||"Server error"); }
-    const reply=data.answer || data.reply || data.text || "";
+    const data=await res.json(); document.getElementById("thinking")?.remove();
+    if(!res.ok) throw new Error(data.error||"Server error");
+    const reply=data.answer || data.reply || "";
     if(!reply) throw new Error("Empty answer");
-    addAIMessage(reply);
+    addAI(reply);
   }catch(e){
     document.getElementById("thinking")?.remove();
     showError(e.message);
-    addAIMessage(lang==="SW"?"Samahani, kuna hitilafu ya server. Angalia /api/gemini iko sawa.":"Sorry, server error. Please check /api/gemini. Error: "+e.message);
+    if(e.message.includes("No AI provider")||e.message.includes("API keys")){
+      addAI("**Server Config Error**\n\nYour Vercel env is missing API keys. Go to Vercel → Settings → Environment Variables → Add:\n\n1. GEMINI_API_KEY = your gemini key\n2. OPENAI_API_KEY = your openai key\n\nThen Redeploy. This error is from your backend, not frontend.");
+    }else{
+      addAI("Samahani, kuna hitilafu: "+e.message);
+    }
   }
   isThinking=false; chat.scrollTop=chat.scrollHeight;
 }
