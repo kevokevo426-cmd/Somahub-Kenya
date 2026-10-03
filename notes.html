@@ -60,9 +60,9 @@ button{
   display:none!important;
 }
 
-/* ================================
-   TOP COLOUR BAR
-================================ */
+/* =========================================================
+   COLOUR BAR
+========================================================= */
 
 .colour-bar{
   width:100%;
@@ -74,9 +74,9 @@ button{
   flex:1;
 }
 
-/* ================================
+/* =========================================================
    HEADER
-================================ */
+========================================================= */
 
 .header{
   position:sticky;
@@ -160,9 +160,9 @@ button{
   font-weight:900;
 }
 
-/* ================================
+/* =========================================================
    PAGE
-================================ */
+========================================================= */
 
 .page{
   width:100%;
@@ -178,9 +178,9 @@ button{
   align-items:start;
 }
 
-/* ================================
-   FILTER PANEL
-================================ */
+/* =========================================================
+   SIDEBAR
+========================================================= */
 
 .sidebar{
   position:sticky;
@@ -207,39 +207,6 @@ button{
   line-height:1.5;
   font-weight:700;
   margin-top:4px;
-}
-
-.search-row{
-  display:flex;
-  gap:7px;
-  margin-top:13px;
-}
-
-.search-input{
-  min-width:0;
-  flex:1;
-  border:1px solid #dbe2ea;
-  background:#f8fafc;
-  border-radius:12px;
-  padding:10px 11px;
-  outline:none;
-  font-size:10px;
-  font-weight:700;
-}
-
-.search-input:focus{
-  border-color:#4a86ff;
-  box-shadow:0 0 0 3px rgba(74,134,255,.09);
-}
-
-.search-btn{
-  border:0;
-  background:#111827;
-  color:#fff;
-  border-radius:12px;
-  padding:0 13px;
-  font-size:9px;
-  font-weight:900;
 }
 
 .filter-title{
@@ -272,7 +239,6 @@ button{
   background:#172554;
   color:#fff;
   border-color:#172554;
-  box-shadow:0 3px 8px rgba(23,37,84,.16);
 }
 
 .subject-grid{
@@ -285,9 +251,9 @@ button{
   padding:9px 10px;
 }
 
-/* ================================
+/* =========================================================
    MOBILE FILTER
-================================ */
+========================================================= */
 
 .mobile-filter-button{
   display:none;
@@ -297,13 +263,21 @@ button{
   display:none;
 }
 
-/* ================================
-   HERO
-================================ */
+.mobile-filters.open{
+  display:block;
+}
+
+/* =========================================================
+   MAIN
+========================================================= */
 
 .main{
   min-width:0;
 }
+
+/* =========================================================
+   HERO
+========================================================= */
 
 .hero{
   background:
@@ -352,11 +326,7 @@ button{
 .generate-btn{
   border:0;
   color:#fff;
-  background:linear-gradient(
-    135deg,
-    #263b99,
-    #4a86ff
-  );
+  background:linear-gradient(135deg,#263b99,#4a86ff);
   border-radius:14px;
   padding:12px 17px;
   font-size:10px;
@@ -369,6 +339,10 @@ button{
   opacity:.65;
   cursor:not-allowed;
 }
+
+/* =========================================================
+   STATUS
+========================================================= */
 
 .note-status{
   display:flex;
@@ -399,9 +373,92 @@ button{
   color:#1d4ed8;
 }
 
-/* ================================
-   NOTES LIST
-================================ */
+.status-pill.resource{
+  background:#fff7ed;
+  border-color:#fed7aa;
+  color:#c2410c;
+}
+
+/* =========================================================
+   LEARNING AREA LIST
+========================================================= */
+
+.learning-area-panel{
+  margin-top:16px;
+}
+
+.learning-area-heading{
+  color:#172554;
+  font-size:17px;
+  font-weight:900;
+  margin-bottom:4px;
+}
+
+.learning-area-subheading{
+  color:#64748b;
+  font-size:10px;
+  line-height:1.6;
+  font-weight:700;
+  margin-bottom:14px;
+}
+
+.learning-area-grid{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:12px;
+}
+
+.learning-card{
+  border:1px solid #e2e8f0;
+  background:#fff;
+  border-radius:19px;
+  padding:16px;
+  text-align:left;
+  box-shadow:0 4px 16px rgba(15,23,42,.045);
+  transition:.18s;
+}
+
+.learning-card:hover{
+  transform:translateY(-2px);
+  box-shadow:0 8px 22px rgba(15,23,42,.08);
+}
+
+.learning-icon{
+  width:42px;
+  height:42px;
+  border-radius:13px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:#eff6ff;
+  font-size:21px;
+}
+
+.learning-name{
+  color:#172554;
+  font-size:13px;
+  line-height:1.3;
+  font-weight:900;
+  margin-top:10px;
+}
+
+.learning-desc{
+  color:#64748b;
+  font-size:9px;
+  line-height:1.5;
+  margin-top:4px;
+}
+
+.learning-arrow{
+  color:#2563eb;
+  font-size:10px;
+  font-weight:900;
+  margin-top:11px;
+}
+
+/* =========================================================
+   NOTES
+========================================================= */
 
 .notes-list{
   display:grid;
@@ -465,6 +522,11 @@ button{
   color:#fff;
 }
 
+.note-btn.green{
+  background:#059669;
+  color:#fff;
+}
+
 .note-btn.red{
   background:#dc2626;
   color:#fff;
@@ -484,16 +546,16 @@ button{
 
 .note-text h2{
   color:#172554;
-  font-size:18px;
+  font-size:19px;
   font-weight:900;
-  margin:0 0 9px;
+  margin:0 0 10px;
 }
 
 .note-text h3{
   color:#2563eb;
-  font-size:13px;
+  font-size:14px;
   font-weight:900;
-  margin:16px 0 6px;
+  margin:17px 0 7px;
 }
 
 .note-text p{
@@ -515,16 +577,6 @@ button{
   color:#713f12;
   border-radius:5px;
   padding:1px 4px;
-  font-weight:900;
-}
-
-.topic{
-  color:#dc2626;
-  font-weight:900;
-}
-
-.explanation{
-  color:#2563eb;
   font-weight:900;
 }
 
@@ -552,9 +604,125 @@ button{
   margin:10px 0;
 }
 
-/* ================================
-   VISUAL CARDS
-================================ */
+.topic{
+  color:#dc2626;
+  font-weight:900;
+}
+
+.explanation{
+  color:#2563eb;
+  font-weight:900;
+}
+
+/* =========================================================
+   NOTE SEARCH
+========================================================= */
+
+.note-search-box{
+  background:#f8fafc;
+  border:1px solid #dbe2ea;
+  border-radius:15px;
+  padding:10px;
+  margin-bottom:15px;
+}
+
+.note-search-title{
+  color:#172554;
+  font-size:10px;
+  font-weight:900;
+  margin-bottom:7px;
+}
+
+.note-search-input{
+  width:100%;
+  border:1px solid #dbe2ea;
+  background:#fff;
+  border-radius:11px;
+  padding:10px;
+  outline:none;
+  font-size:10px;
+  font-weight:700;
+}
+
+.note-search-input:focus{
+  border-color:#4a86ff;
+}
+
+/* =========================================================
+   MEDIA
+========================================================= */
+
+.media-section{
+  margin-top:20px;
+}
+
+.media-heading{
+  color:#172554;
+  font-size:14px;
+  font-weight:900;
+  margin-bottom:9px;
+}
+
+.diagram-grid,
+.video-grid{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:10px;
+}
+
+.diagram-card,
+.video-card{
+  background:#fff;
+  border:1px solid #dbe2ea;
+  border-radius:15px;
+  overflow:hidden;
+}
+
+.diagram-card img{
+  width:100%;
+  max-height:260px;
+  object-fit:contain;
+  background:#f8fafc;
+}
+
+.diagram-caption{
+  padding:10px;
+  color:#475569;
+  font-size:9px;
+  line-height:1.5;
+  font-weight:800;
+}
+
+.video-card{
+  padding:12px;
+}
+
+.video-icon{
+  font-size:26px;
+}
+
+.video-title{
+  color:#172554;
+  font-size:10px;
+  font-weight:900;
+  margin-top:6px;
+}
+
+.video-btn{
+  display:inline-block;
+  margin-top:8px;
+  background:#dc2626;
+  color:#fff;
+  text-decoration:none;
+  border-radius:999px;
+  padding:8px 12px;
+  font-size:8px;
+  font-weight:900;
+}
+
+/* =========================================================
+   VISUAL LEARNING
+========================================================= */
 
 .visual-heading{
   color:#2563eb;
@@ -594,20 +762,16 @@ button{
   margin-top:3px;
 }
 
-/* ================================
-   AI FOOTER BOX
-================================ */
+/* =========================================================
+   AI BOX
+========================================================= */
 
 .ai-info{
   margin-top:16px;
   border-radius:17px;
   padding:14px;
   color:#fff;
-  background:linear-gradient(
-    135deg,
-    #172554,
-    #263b99
-  );
+  background:linear-gradient(135deg,#172554,#263b99);
 }
 
 .ai-info-title{
@@ -622,95 +786,9 @@ button{
   margin-top:4px;
 }
 
-/* ================================
-   LOADING
-================================ */
-
-.loading{
-  background:#fff;
-  border:1px solid #e2e8f0;
-  border-radius:18px;
-  padding:28px;
-  text-align:center;
-}
-
-.spinner{
-  width:27px;
-  height:27px;
-  margin:auto;
-  border:3px solid #dbeafe;
-  border-top-color:#263b99;
-  border-radius:50%;
-  animation:spin .7s linear infinite;
-}
-
-@keyframes spin{
-  to{
-    transform:rotate(360deg);
-  }
-}
-
-/* ================================
-   EMPTY
-================================ */
-
-.empty{
-  background:#fff;
-  border:1px dashed #cbd5e1;
-  border-radius:19px;
-  padding:28px 18px;
-  text-align:center;
-}
-
-.empty-icon{
-  font-size:35px;
-}
-
-.empty-title{
-  color:#172554;
-  font-size:14px;
-  font-weight:900;
-  margin-top:7px;
-}
-
-.empty-text{
-  color:#64748b;
-  font-size:10px;
-  line-height:1.6;
-  margin-top:5px;
-}
-
-/* ================================
-   TOAST
-================================ */
-
-.toast{
-  position:fixed;
-  left:50%;
-  bottom:20px;
-  transform:translate(-50%,20px);
-  background:#111827;
-  color:#fff;
-  padding:10px 15px;
-  border-radius:999px;
-  font-size:9px;
-  font-weight:900;
-  opacity:0;
-  pointer-events:none;
-  transition:.2s;
-  z-index:100;
-  max-width:90%;
-  text-align:center;
-}
-
-.toast.show{
-  opacity:1;
-  transform:translate(-50%,0);
-}
-
-/* ================================
+/* =========================================================
    QUESTION BOX
-================================ */
+========================================================= */
 
 .question-box{
   margin-top:16px;
@@ -744,9 +822,95 @@ button{
   border-color:#4a86ff;
 }
 
-/* ================================
-   RESPONSIVE
-================================ */
+/* =========================================================
+   LOADING
+========================================================= */
+
+.loading{
+  background:#fff;
+  border:1px solid #e2e8f0;
+  border-radius:18px;
+  padding:28px;
+  text-align:center;
+}
+
+.spinner{
+  width:27px;
+  height:27px;
+  margin:auto;
+  border:3px solid #dbeafe;
+  border-top-color:#263b99;
+  border-radius:50%;
+  animation:spin .7s linear infinite;
+}
+
+@keyframes spin{
+  to{
+    transform:rotate(360deg);
+  }
+}
+
+/* =========================================================
+   EMPTY
+========================================================= */
+
+.empty{
+  background:#fff;
+  border:1px dashed #cbd5e1;
+  border-radius:19px;
+  padding:28px 18px;
+  text-align:center;
+}
+
+.empty-icon{
+  font-size:35px;
+}
+
+.empty-title{
+  color:#172554;
+  font-size:14px;
+  font-weight:900;
+  margin-top:7px;
+}
+
+.empty-text{
+  color:#64748b;
+  font-size:10px;
+  line-height:1.6;
+  margin-top:5px;
+}
+
+/* =========================================================
+   TOAST
+========================================================= */
+
+.toast{
+  position:fixed;
+  left:50%;
+  bottom:20px;
+  transform:translate(-50%,20px);
+  background:#111827;
+  color:#fff;
+  padding:10px 15px;
+  border-radius:999px;
+  font-size:9px;
+  font-weight:900;
+  opacity:0;
+  pointer-events:none;
+  transition:.2s;
+  z-index:100;
+  max-width:90%;
+  text-align:center;
+}
+
+.toast.show{
+  opacity:1;
+  transform:translate(-50%,0);
+}
+
+/* =========================================================
+   MOBILE
+========================================================= */
 
 @media(max-width:900px){
 
@@ -775,10 +939,6 @@ button{
     font-size:10px;
     font-weight:900;
     margin-bottom:10px;
-  }
-
-  .mobile-filters.open{
-    display:block;
   }
 
   .mobile-filters{
@@ -848,6 +1008,15 @@ button{
     margin-top:12px;
   }
 
+  .learning-area-grid{
+    grid-template-columns:1fr;
+  }
+
+  .diagram-grid,
+  .video-grid{
+    grid-template-columns:1fr;
+  }
+
   .note-header{
     padding:13px;
   }
@@ -904,8 +1073,6 @@ import {
   getDocs,
   query,
   where,
-  orderBy,
-  limit,
   serverTimestamp
 }
 from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
@@ -940,11 +1107,8 @@ const app =
 
 window.FB = {
 
-  auth:
-    getAuth(app),
-
-  db:
-    getFirestore(app),
+  auth:getAuth(app),
+  db:getFirestore(app),
 
   doc,
   getDoc,
@@ -954,8 +1118,6 @@ window.FB = {
   getDocs,
   query,
   where,
-  orderBy,
-  limit,
   serverTimestamp,
   onAuthStateChanged
 
@@ -968,20 +1130,21 @@ window.FB = {
 
 <body>
 
-
-<!-- TOP COLOURS -->
+<!-- =======================================================
+     COLOUR BAR
+======================================================= -->
 
 <div class="colour-bar">
-
   <span style="background:#ff8a2a"></span>
   <span style="background:#2ac5a0"></span>
   <span style="background:#4a86ff"></span>
   <span style="background:#ffcc1a"></span>
-
 </div>
 
 
-<!-- HEADER -->
+<!-- =======================================================
+     HEADER
+======================================================= -->
 
 <header class="header">
 
@@ -1031,7 +1194,9 @@ window.FB = {
 </header>
 
 
-<!-- PAGE -->
+<!-- =======================================================
+     PAGE
+======================================================= -->
 
 <main class="page">
 
@@ -1063,23 +1228,6 @@ window.FB = {
       Find Your Notes
     </div>
 
-    <div class="search-row">
-
-      <input
-        id="mobileSearch"
-        class="search-input"
-        placeholder="Search a topic..."
-      >
-
-      <button
-        class="search-btn"
-        onclick="mobileSearch()"
-      >
-        Go
-      </button>
-
-    </div>
-
     <div class="filter-title">
       Grade
     </div>
@@ -1089,53 +1237,27 @@ window.FB = {
       class="grade-grid"
     ></div>
 
-    <div class="filter-title">
-      Learning Area
-    </div>
-
-    <div
-      id="mobileSubjects"
-      class="subject-grid"
-    ></div>
-
   </div>
 
 
   <div class="layout">
 
 
-    <!-- SIDEBAR -->
+    <!-- ===================================================
+         SIDEBAR
+    =================================================== -->
 
     <aside class="sidebar">
 
       <div class="filter-panel">
 
         <div class="panel-title">
-          📚 Find Learning Notes
+          📚 Choose Grade
         </div>
 
         <div class="panel-subtitle">
-          Choose a grade and learning area.
+          Select a grade to see its learning areas.
         </div>
-
-
-        <div class="search-row">
-
-          <input
-            id="searchInput"
-            class="search-input"
-            placeholder="Search topic..."
-          >
-
-          <button
-            class="search-btn"
-            onclick="loadNotes()"
-          >
-            Go
-          </button>
-
-        </div>
-
 
         <div class="filter-title">
           Grade
@@ -1146,22 +1268,14 @@ window.FB = {
           class="grade-grid"
         ></div>
 
-
-        <div class="filter-title">
-          Learning Area
-        </div>
-
-        <div
-          id="subjects"
-          class="subject-grid"
-        ></div>
-
       </div>
 
     </aside>
 
 
-    <!-- MAIN -->
+    <!-- ===================================================
+         MAIN
+    =================================================== -->
 
     <section class="main">
 
@@ -1178,21 +1292,23 @@ window.FB = {
               id="pageTitle"
               class="hero-title"
             >
-              Grade 4 English Notes
+              Grade 4 Learning Areas
             </h1>
 
-            <p class="hero-description">
-              Clear, detailed and learner-friendly notes
-              generated and continuously improved by
-              SomaHub AI.
+            <p
+              id="heroDescription"
+              class="hero-description"
+            >
+              Choose a learning area to read notes,
+              listen to explanations, view diagrams,
+              watch related videos and search the notes.
             </p>
 
           </div>
 
-
           <button
             id="generateButton"
-            class="generate-btn"
+            class="generate-btn hidden"
             onclick="generateNotes()"
           >
             ✨ Generate Notes
@@ -1207,7 +1323,7 @@ window.FB = {
         >
 
           <span class="status-pill">
-            🤖 AI-powered
+            📚 Learning Resources
           </span>
 
         </div>
@@ -1215,29 +1331,50 @@ window.FB = {
       </section>
 
 
-      <!-- NOTES -->
+      <!-- =================================================
+           LEARNING AREAS
+      ================================================= -->
+
+      <section
+        id="learningAreaPanel"
+        class="learning-area-panel"
+      >
+
+        <div class="learning-area-heading">
+          📚 Grade 4 Learning Areas
+        </div>
+
+        <div class="learning-area-subheading">
+          Select a learning area to open its notes.
+          There are no download buttons here.
+        </div>
+
+        <div
+          id="learningAreaGrid"
+          class="learning-area-grid"
+        ></div>
+
+      </section>
+
+
+      <!-- =================================================
+           NOTES
+      ================================================= -->
 
       <div
         id="notesList"
-        class="notes-list"
+        class="notes-list hidden"
+      ></div>
+
+
+      <!-- =================================================
+           QUESTION BOX
+      ================================================= -->
+
+      <section
+        id="questionBox"
+        class="question-box hidden"
       >
-
-        <div class="loading">
-
-          <div class="spinner"></div>
-
-          <p class="mt-3 text-[11px] font-black">
-            Loading your notes...
-          </p>
-
-        </div>
-
-      </div>
-
-
-      <!-- QUESTION BOX -->
-
-      <section class="question-box">
 
         <div class="question-title">
           💬 Ask about this topic
@@ -1246,23 +1383,29 @@ window.FB = {
         <textarea
           id="questionInput"
           class="question-input"
-          placeholder="Ask a question you don't understand. Your question can help improve these notes."
+          placeholder="Ask something you don't understand..."
         ></textarea>
-
 
         <div class="flex gap-2 mt-2">
 
           <button
+            id="askButton"
             onclick="askQuestion()"
             class="note-btn blue"
           >
             🤖 Ask AI
           </button>
 
+          <button
+            onclick="backToLearningAreas()"
+            class="note-btn dark"
+          >
+            ← Learning Areas
+          </button>
+
         </div>
 
       </section>
-
 
     </section>
 
@@ -1292,18 +1435,26 @@ const PROXY =
 let curGrade =
   "Grade 4";
 
+
 let curSub =
-  "English";
+  "";
 
 
 let currentNote =
   null;
 
+
 let currentGenerated =
   "";
 
+
+let currentResources =
+  [];
+
+
 let currentUser =
   null;
+
 
 let speaking =
   false;
@@ -1334,96 +1485,181 @@ const grades = [
 
 
 /* =========================================================
-   SUBJECTS
+   LEARNING AREAS
 ========================================================= */
 
 const subjects = [
 
-  ["Language Activities","Language Activities"],
+  ["Language Activities","🗣️"],
 
-  ["Mathematical Activities",
-   "Mathematical Activities"],
+  ["Mathematical Activities","🔢"],
 
-  ["Environmental Activities",
-   "Environmental Activities"],
+  ["Environmental Activities","🌍"],
 
-  ["Psychomotor and Creative Activities",
-   "Psychomotor & Creative"],
+  ["Psychomotor and Creative Activities","🎨"],
 
-  ["English","English"],
+  ["English","📖"],
 
-  ["Kiswahili","Kiswahili"],
+  ["Kiswahili","📚"],
 
-  ["Mathematics","Mathematics"],
+  ["Mathematics","➗"],
 
-  ["Science and Technology",
-   "Science & Technology"],
+  ["Science and Technology","🔬"],
 
-  ["Agriculture and Nutrition",
-   "Agric & Nutrition"],
+  ["Agriculture and Nutrition","🌱"],
 
-  ["Social Studies","Social Studies"],
+  ["Social Studies","🌍"],
 
-  ["CRE","CRE"],
+  ["CRE","✝️"],
 
-  ["IRE","IRE"],
+  ["IRE","☪️"],
 
-  ["HRE","HRE"],
+  ["HRE","🕊️"],
 
-  ["Creative Arts","Creative Arts"],
+  ["Creative Arts","🎨"],
 
-  ["Pre-Technical Studies",
-   "Pre-Technical"],
+  ["Pre-Technical Studies","🔧"],
 
-  ["Computer Science",
-   "💻 ICT / Computer"],
+  ["Computer Science","💻"],
 
-  ["Foreign Language",
-   "🌐 Foreign Language"],
+  ["Foreign Language","🌐"],
 
-  ["Life Skills","Life Skills"]
+  ["Life Skills","🧠"]
 
 ];
 
 
 /* =========================================================
-   COLLECTION NAMES
+   GRADE-SPECIFIC LEARNING AREAS
 ========================================================= */
 
-const POSSIBLE_COLLECTIONS = {
+const GRADE_SUBJECTS = {
 
-  designs:[
-    "curriculumDesigns",
-    "designs"
+  "Grade 1":[
+    "Language Activities",
+    "Mathematical Activities",
+    "Environmental Activities",
+    "Psychomotor and Creative Activities"
   ],
 
-  admin:[
-    "adminNotes",
-    "notes"
+  "Grade 2":[
+    "English",
+    "Kiswahili",
+    "Mathematics",
+    "Environmental Activities",
+    "CRE",
+    "Creative Arts",
+    "Life Skills"
   ],
 
-  schemes:[
-    "schemes",
-    "schemesOfWork"
+  "Grade 3":[
+    "English",
+    "Kiswahili",
+    "Mathematics",
+    "Environmental Activities",
+    "CRE",
+    "Creative Arts",
+    "Life Skills"
   ],
 
-  teacher:[
-    "teacherQuestions"
+  "Grade 4":[
+    "English",
+    "Kiswahili",
+    "Mathematics",
+    "Science and Technology",
+    "Agriculture and Nutrition",
+    "Social Studies",
+    "CRE",
+    "Creative Arts",
+    "Pre-Technical Studies"
   ],
 
-  learner:[
-    "learnerQuestions"
+  "Grade 5":[
+    "English",
+    "Kiswahili",
+    "Mathematics",
+    "Science and Technology",
+    "Agriculture and Nutrition",
+    "Social Studies",
+    "CRE",
+    "Creative Arts",
+    "Pre-Technical Studies"
   ],
 
-  questions:[
-    "questions"
+  "Grade 6":[
+    "English",
+    "Kiswahili",
+    "Mathematics",
+    "Science and Technology",
+    "Agriculture and Nutrition",
+    "Social Studies",
+    "CRE",
+    "Creative Arts",
+    "Pre-Technical Studies",
+    "Life Skills"
+  ],
+
+  "Grade 7":[
+    "English",
+    "Kiswahili",
+    "Mathematics",
+    "Integrated Science",
+    "Agriculture",
+    "Social Studies",
+    "CRE",
+    "Creative Arts",
+    "Pre-Technical Studies",
+    "Computer Science",
+    "Life Skills"
+  ],
+
+  "Grade 8":[
+    "English",
+    "Kiswahili",
+    "Mathematics",
+    "Integrated Science",
+    "Agriculture",
+    "Social Studies",
+    "CRE",
+    "Creative Arts",
+    "Pre-Technical Studies",
+    "Computer Science",
+    "Life Skills"
+  ],
+
+  "Grade 9":[
+    "English",
+    "Kiswahili",
+    "Mathematics",
+    "Integrated Science",
+    "Agriculture",
+    "Social Studies",
+    "CRE",
+    "Creative Arts",
+    "Pre-Technical Studies",
+    "Computer Science",
+    "Life Skills"
+  ],
+
+  "Grade 10":[
+    "English",
+    "Kiswahili",
+    "Mathematics",
+    "Biology",
+    "Chemistry",
+    "Physics",
+    "Agriculture",
+    "Geography",
+    "History and Government",
+    "CRE",
+    "Computer Science"
   ]
 
 };
 
 
 /* =========================================================
-   ESCAPE
+   ESCAPE HTML
 ========================================================= */
 
 function escapeHTML(value){
@@ -1468,7 +1704,46 @@ function toast(message){
 
 
 /* =========================================================
-   FILTERS
+   SUBJECT ICON
+========================================================= */
+
+function subjectIcon(subject){
+
+  const found =
+    subjects.find(
+      item=>item[0]===subject
+    );
+
+  return found
+    ? found[1]
+    : "📘";
+
+}
+
+
+/* =========================================================
+   GET SUBJECTS FOR CURRENT GRADE
+========================================================= */
+
+function getSubjectsForGrade(){
+
+  if(
+    GRADE_SUBJECTS[curGrade]
+  ){
+
+    return GRADE_SUBJECTS[curGrade];
+
+  }
+
+  return subjects.map(
+    item=>item[0]
+  );
+
+}
+
+
+/* =========================================================
+   CREATE GRADE FILTERS
 ========================================================= */
 
 function createFilters(){
@@ -1481,83 +1756,42 @@ function createFilters(){
     document.getElementById("mobileGrades")
   );
 
-  renderSubjects(
-    document.getElementById("subjects")
-  );
-
-  renderSubjects(
-    document.getElementById("mobileSubjects")
-  );
-
 }
 
+
+/* =========================================================
+   RENDER GRADES
+========================================================= */
 
 function renderGrades(container){
 
   if(!container)
     return;
 
-  container.innerHTML =
-    "";
+  container.innerHTML = "";
 
-  grades.forEach(g=>{
-
-    const btn =
-      document.createElement("button");
-
-    btn.className =
-      "grade-btn " +
-      (
-        g===curGrade
-          ? "active"
-          : ""
-      );
-
-    btn.textContent =
-      g
-        .replace("Grade ","G")
-        .replace("Playgroup","Play");
-
-    btn.onclick =
-      ()=>{
-        setGrade(g);
-      };
-
-    container.appendChild(btn);
-
-  });
-
-}
-
-
-function renderSubjects(container){
-
-  if(!container)
-    return;
-
-  container.innerHTML =
-    "";
-
-  subjects.forEach(
-    ([value,label])=>{
+  grades.forEach(
+    grade=>{
 
       const btn =
         document.createElement("button");
 
       btn.className =
-        "subject-btn " +
+        "grade-btn " +
         (
-          value===curSub
+          grade===curGrade
             ? "active"
             : ""
         );
 
       btn.textContent =
-        label;
+        grade
+          .replace("Grade ","G")
+          .replace("Playgroup","Play");
 
       btn.onclick =
         ()=>{
-          setSubject(value);
+          setGrade(grade);
         };
 
       container.appendChild(btn);
@@ -1569,7 +1803,67 @@ function renderSubjects(container){
 
 
 /* =========================================================
-   GRADE / SUBJECT
+   RENDER LEARNING AREAS
+========================================================= */
+
+function renderLearningAreas(){
+
+  const grid =
+    document.getElementById(
+      "learningAreaGrid"
+    );
+
+  const list =
+    getSubjectsForGrade();
+
+  grid.innerHTML = "";
+
+  list.forEach(
+    subject=>{
+
+      const card =
+        document.createElement("button");
+
+      card.className =
+        "learning-card";
+
+      card.onclick =
+        ()=>{
+          openSubject(subject);
+        };
+
+      card.innerHTML = `
+
+        <div class="learning-icon">
+          ${escapeHTML(
+            subjectIcon(subject)
+          )}
+        </div>
+
+        <div class="learning-name">
+          ${escapeHTML(subject)}
+        </div>
+
+        <div class="learning-desc">
+          Notes • Audio • Diagrams • Videos • Search
+        </div>
+
+        <div class="learning-arrow">
+          Open learning area →
+        </div>
+
+      `;
+
+      grid.appendChild(card);
+
+    }
+  );
+
+}
+
+
+/* =========================================================
+   SET GRADE
 ========================================================= */
 
 function setGrade(grade){
@@ -1577,41 +1871,21 @@ function setGrade(grade){
   curGrade =
     grade;
 
-  currentNote =
-    null;
-
-  createFilters();
-
-  updateTitle();
-
-  loadNotes();
-
-}
-
-
-function setSubject(subject){
-
   curSub =
-    subject;
+    "";
 
   currentNote =
     null;
 
+  currentGenerated =
+    "";
+
+  currentResources =
+    [];
+
   createFilters();
 
-  updateTitle();
-
-  loadNotes();
-
-}
-
-
-function updateTitle(){
-
-  document.getElementById(
-    "pageTitle"
-  ).textContent =
-    `${curGrade} ${curSub} Notes`;
+  showLearningAreas();
 
 }
 
@@ -1641,22 +1915,59 @@ function toggleMobileFilters(){
 }
 
 
-function mobileSearch(){
+/* =========================================================
+   SHOW LEARNING AREAS
+========================================================= */
+
+function showLearningAreas(){
 
   document.getElementById(
-    "searchInput"
-  ).value =
-    document.getElementById(
-      "mobileSearch"
-    ).value;
+    "pageTitle"
+  ).textContent =
+    `${curGrade} Learning Areas`;
 
-  loadNotes();
+  document.getElementById(
+    "heroDescription"
+  ).textContent =
+    "Choose a learning area to read notes, listen to explanations, view diagrams, watch related videos and search the notes.";
+
+  document.getElementById(
+    "learningAreaPanel"
+  ).classList.remove("hidden");
+
+  document.getElementById(
+    "notesList"
+  ).classList.add("hidden");
+
+  document.getElementById(
+    "questionBox"
+  ).classList.add("hidden");
+
+  document.getElementById(
+    "generateButton"
+  ).classList.add("hidden");
+
+  document.getElementById(
+    "noteStatus"
+  ).innerHTML = `
+
+    <span class="status-pill">
+      📚 ${escapeHTML(curGrade)}
+    </span>
+
+    <span class="status-pill">
+      Choose a Learning Area
+    </span>
+
+  `;
+
+  renderLearningAreas();
 
 }
 
 
 /* =========================================================
-   NOTE DOCUMENT ID
+   NOTE ID
 ========================================================= */
 
 function noteId(){
@@ -1673,7 +1984,7 @@ function noteId(){
 
 
 /* =========================================================
-   FETCH SAVED AI NOTE
+   GET SAVED AI NOTE
 ========================================================= */
 
 async function getSavedNote(){
@@ -1719,77 +2030,6 @@ async function getSavedNote(){
 
 
 /* =========================================================
-   GET OPTIONAL COLLECTION
-========================================================= */
-
-async function getOptionalCollection(
-  collectionName
-){
-
-  try{
-
-    const FB =
-      window.FB;
-
-    const snap =
-      await FB.getDocs(
-        FB.collection(
-          FB.db,
-          collectionName
-        )
-      );
-
-    const results = [];
-
-    snap.forEach(docSnap=>{
-
-      const data =
-        docSnap.data() || {};
-
-      const text =
-        JSON.stringify(data)
-          .toLowerCase();
-
-      const gradeMatch =
-        text.includes(
-          curGrade.toLowerCase()
-        );
-
-      const subjectMatch =
-        text.includes(
-          curSub.toLowerCase()
-        );
-
-      if(
-        gradeMatch ||
-        subjectMatch
-      ){
-
-        results.push({
-          id:docSnap.id,
-          ...data
-        });
-
-      }
-
-    });
-
-    return results.slice(0,25);
-
-  }catch(error){
-
-    /*
-      Missing optional collection is completely okay.
-    */
-
-    return [];
-
-  }
-
-}
-
-
-/* =========================================================
    GET RESOURCES
 ========================================================= */
 
@@ -1823,18 +2063,25 @@ async function getResources(){
 
     const results = [];
 
-    snap.forEach(d=>{
+    snap.forEach(
+      d=>{
 
-      results.push({
-        id:d.id,
-        ...d.data()
-      });
+        results.push({
+          id:d.id,
+          ...d.data()
+        });
 
-    });
+      }
+    );
 
     return results;
 
   }catch(error){
+
+    console.warn(
+      "Resources unavailable:",
+      error
+    );
 
     return [];
 
@@ -1844,7 +2091,7 @@ async function getResources(){
 
 
 /* =========================================================
-   TEXT FROM OBJECT
+   TEXT FROM RESOURCE
 ========================================================= */
 
 function objectText(item){
@@ -1854,494 +2101,817 @@ function objectText(item){
 
   return [
 
-    item.title,
-
-    item.topic,
-
-    item.description,
-
-    item.summary,
-
     item.content,
-
+    item.somahubContent,
     item.notes,
-
     item.text,
-
     item.body,
-
-    item.somahubContent
+    item.summary,
+    item.description
 
   ]
-  .filter(Boolean)
-  .join("\n");
+  .filter(
+    value =>
+      value !== undefined &&
+      value !== null &&
+      String(value).trim()
+  )
+  .map(
+    value =>
+      String(value)
+  )
+  .join("\n\n");
 
 }
 
 
 /* =========================================================
-   BUILD CONTEXT
+   MEDIA URL
 ========================================================= */
 
-async function collectContext(){
+function mediaValues(item){
 
-  const resources =
-    await getResources();
+  if(!item)
+    return {
+      diagrams:[],
+      videos:[]
+    };
 
+  const diagrams = [
 
-  const [
-    designs,
-    admin,
-    schemes,
-    teacherQuestions,
-    learnerQuestions,
-    questions
-  ] =
-    await Promise.all([
+    item.diagramUrl,
+    item.diagram,
+    item.imageUrl,
+    item.image,
+    item.photoUrl
 
-      getOptionalCollection(
-        "curriculumDesigns"
-      ),
-
-      getOptionalCollection(
-        "adminNotes"
-      ),
-
-      getOptionalCollection(
-        "schemesOfWork"
-      ),
-
-      getOptionalCollection(
-        "teacherQuestions"
-      ),
-
-      getOptionalCollection(
-        "learnerQuestions"
-      ),
-
-      getOptionalCollection(
-        "questions"
-      )
-
-    ]);
+  ]
+  .filter(Boolean);
 
 
-  let source = "";
+  const videos = [
+
+    item.videoUrl,
+    item.video,
+    item.youtubeUrl,
+    item.youtube
+
+  ]
+  .filter(Boolean);
 
 
-  function add(
-    title,
-    items,
-    limitChars
+  if(
+    Array.isArray(item.videoLinks)
   ){
 
-    if(!items.length)
-      return;
-
-    let text =
-      `\n\n### ${title}\n`;
-
-    for(const item of items){
-
-      const itemText =
-        objectText(item);
-
-      if(
-        !itemText
-      )
-        continue;
-
-      if(
-        text.length +
-        itemText.length >
-        limitChars
-      )
-        break;
-
-      text +=
-        "\n" +
-        itemText;
-
-    }
-
-    source +=
-      text;
+    videos.push(
+      ...item.videoLinks
+    );
 
   }
 
 
-  add(
-    "EXISTING RESOURCES",
-    resources,
-    6000
-  );
-
-
-  add(
-    "CURRICULUM DESIGNS",
-    designs,
-    4000
-  );
-
-
-  add(
-    "ADMIN NOTES",
-    admin,
-    4000
-  );
-
-
-  add(
-    "SCHEMES OF WORK",
-    schemes,
-    4000
-  );
-
-
-  add(
-    "TEACHER QUESTIONS",
-    teacherQuestions,
-    3500
-  );
-
-
-  add(
-    "LEARNER QUESTIONS",
-    learnerQuestions,
-    3500
-  );
-
-
-  add(
-    "OTHER QUESTIONS",
-    questions,
-    2500
-  );
-
-
   return {
-
-    resources,
-
-    designs,
-
-    admin,
-
-    schemes,
-
-    teacherQuestions,
-
-    learnerQuestions,
-
-    questions,
-
-    source
-
+    diagrams,
+    videos
   };
 
 }
 
 
 /* =========================================================
-   CREATE AI PROMPT
+   OPEN SUBJECT
 ========================================================= */
 
-function createPrompt(
-  context,
-  existingNote,
-  updateMode=false
-){
+async function openSubject(subject){
 
-  let existing =
-    existingNote?.content ||
+  curSub =
+    subject;
+
+  currentNote =
+    null;
+
+  currentGenerated =
     "";
 
+  currentResources =
+    [];
 
-  if(updateMode){
+  document.getElementById(
+    "learningAreaPanel"
+  ).classList.add("hidden");
 
-    return `
+  document.getElementById(
+    "notesList"
+  ).classList.remove("hidden");
 
-You are SomaHub AI Teacher.
+  document.getElementById(
+    "questionBox"
+  ).classList.remove("hidden");
 
-UPDATE an existing set of learning notes.
+  document.getElementById(
+    "generateButton"
+  ).classList.remove("hidden");
 
-GRADE:
-${curGrade}
+  document.getElementById(
+    "pageTitle"
+  ).textContent =
+    `${curGrade} ${curSub}`;
 
-LEARNING AREA:
-${curSub}
+  document.getElementById(
+    "heroDescription"
+  ).textContent =
+    "Read, listen, search, view diagrams and watch related learning videos.";
+
+  document.getElementById(
+    "notesList"
+  ).innerHTML = `
+
+    <div class="loading">
+
+      <div class="spinner"></div>
+
+      <p class="mt-3 text-[11px] font-black">
+        Opening ${escapeHTML(curSub)}...
+      </p>
+
+    </div>
+
+  `;
+
+  try{
+
+    /*
+      IMPORTANT:
+      Existing resources are checked FIRST.
+      This means students can still read existing
+      notes even when Gemini/OpenAI has reached quota.
+    */
+
+    currentResources =
+      await getResources();
 
 
-EXISTING SAVED NOTES:
+    if(
+      currentResources.length
+    ){
 
-${existing}
+      renderResourceNotes(
+        currentResources
+      );
+
+      return;
+
+    }
 
 
-NEW INFORMATION AND QUESTIONS:
+    /*
+      If no resource exists, check saved AI notes.
+    */
 
-${context.source}
+    const saved =
+      await getSavedNote();
 
 
-TASK:
+    if(saved){
 
-Improve the existing notes using the useful new
-questions and information.
+      currentNote =
+        saved;
 
-DO NOT throw away good existing explanations.
+      currentGenerated =
+        saved.content || "";
 
-Keep correct information.
+      renderSavedNote(
+        saved
+      );
 
-Add explanations for concepts learners or teachers
-are repeatedly asking about.
+      return;
 
-Add examples where questions show that learners are
-having difficulty.
+    }
 
-Add clarification for common misunderstandings.
 
-Improve revision questions where appropriate.
+    /*
+      Nothing saved yet.
+    */
 
-Do not mention that the notes were updated by AI.
+    showNoNotesYet();
 
-Do not mention databases, PDFs, Firestore or sources
-to the learner.
+  }catch(error){
 
-The final result should look like a polished textbook
-section written for ${curGrade}.
+    console.error(error);
 
-Use this structure:
-
-# Topic
-# Strand / Sub-strand
-# Learning Objectives
-# Introduction
-# Key Terms
-# Main Explanation
-# Visual Learning
-# Examples
-# Activity
-# Common Mistakes
-# Revision Points
-# Check Your Understanding
-# Answers
-
-Use simple Kenyan classroom-friendly English.
-
-Highlight important concepts naturally.
-
-Return ONLY the finished notes.
-
-`;
+    showNoNotesYet();
 
   }
-
-
-  return `
-
-You are SomaHub AI Teacher for SomaHub Kenya.
-
-Create a COMPLETE modern learning lesson.
-
-GRADE:
-${curGrade}
-
-LEARNING AREA:
-${curSub}
-
-
-IMPORTANT:
-
-There may be no PDF.
-
-There may be no teacher notes.
-
-There may be no scheme of work.
-
-There may be no curriculum design.
-
-THAT DOES NOT MATTER.
-
-You MUST generate useful notes using your own
-curriculum knowledge.
-
-If additional SomaHub material is provided below,
-use it to improve the notes.
-
-Never tell the learner that a PDF is missing.
-
-Never ask the learner to upload a PDF before
-generating the lesson.
-
-If no topic is explicitly specified, choose a suitable
-important topic for this grade and learning area.
-
-
-ADDITIONAL SOMAHUB INFORMATION:
-
-${context.source || "No additional material. Use your own curriculum knowledge."}
-
-
-CREATE:
-
-# Topic
-
-# Strand / Sub-strand
-
-# Learning Objectives
-
-# Introduction
-
-# Key Terms
-
-# Main Explanation
-
-# Visual Learning
-
-# Examples
-
-# Activity
-
-# Common Mistakes
-
-# Revision Points
-
-# Check Your Understanding
-
-# Answers
-
-
-REQUIREMENTS:
-
-- Detailed but easy to understand.
-- Suitable for ${curGrade}.
-- Useful to learners and teachers.
-- Use Kenyan classroom examples where appropriate.
-- Highlight important keywords.
-- Explain concepts step by step.
-- Give worked examples where appropriate.
-- Give revision points.
-- Include questions and answers.
-- For Mathematics include calculations and worked examples.
-- For Science explain processes clearly.
-- For English explain grammar and give examples.
-- For Social Studies connect concepts to real life.
-- For practical subjects include activities.
-- Explain difficult ideas in simple language.
-- Create visual descriptions that can be turned into diagrams.
-- Do not invent citations.
-- Do not use citation brackets.
-- Do not use line-number brackets.
-- Do not mention unavailable PDFs.
-- Do not mention internal systems.
-- Return only the finished notes.
-
-`;
 
 }
 
 
 /* =========================================================
-   SAVE AI NOTES
+   RESOURCE NOTES
 ========================================================= */
 
-async function saveAINote(
-  content,
-  extra={}
-){
+function renderResourceNotes(resources){
 
-  const FB =
-    window.FB;
+  const list =
+    document.getElementById(
+      "notesList"
+    );
 
-  const ref =
-    FB.doc(
-      FB.db,
-      "aiNotes",
-      noteId()
+  let html = "";
+
+  resources.forEach(
+    (resource,index)=>{
+
+      const content =
+        objectText(resource);
+
+      const title =
+        resource.title ||
+        `${curSub} ${curGrade} Notes`;
+
+      const media =
+        mediaValues(resource);
+
+      if(content){
+
+        currentGenerated +=
+          "\n\n" +
+          content;
+
+      }
+
+      html += `
+
+        <article
+          class="note-card"
+        >
+
+          <div class="note-header">
+
+            <div class="note-title">
+              📖 ${escapeHTML(title)}
+            </div>
+
+            <div class="note-meta">
+              ${escapeHTML(curGrade)}
+              •
+              ${escapeHTML(curSub)}
+            </div>
+
+          </div>
+
+
+          <div class="note-buttons">
+
+            <button
+              class="note-btn orange"
+              onclick="speakCurrentNotes()"
+            >
+              🔊 Listen
+            </button>
+
+            <button
+              class="note-btn blue"
+              onclick="focusNoteSearch()"
+            >
+              🔎 Search
+            </button>
+
+            <button
+              class="note-btn green"
+              onclick="scrollToMedia()"
+            >
+              🖼️ Diagrams
+            </button>
+
+            <button
+              class="note-btn dark"
+              onclick="goAI()"
+            >
+              🤖 Ask AI Tutor
+            </button>
+
+          </div>
+
+
+          <div class="note-body">
+
+            <div class="note-search-box">
+
+              <div class="note-search-title">
+                🔎 Search within these notes
+              </div>
+
+              <input
+                id="noteSearch${index}"
+                class="note-search-input"
+                placeholder="Type a word or topic..."
+                oninput="searchWithinNote(this.value)"
+              >
+
+              <div
+                id="searchResult"
+                class="text-[9px] text-slate-500 mt-2 font-bold"
+              ></div>
+
+            </div>
+
+
+            <div
+              id="noteContent"
+              class="note-text searchable-note"
+            >
+
+              ${
+                content
+                  ? renderNoteText(content)
+                  : `
+                    <div class="empty">
+                      <div class="empty-icon">
+                        📘
+                      </div>
+                      <div class="empty-title">
+                        This resource has no text content
+                      </div>
+                    </div>
+                  `
+              }
+
+            </div>
+
+
+            ${renderMedia(media,resource)}
+
+          </div>
+
+        </article>
+
+      `;
+
+    }
+  );
+
+
+  list.innerHTML =
+    html;
+
+
+  updateStatusResource();
+
+}
+
+
+/* =========================================================
+   RENDER MEDIA
+========================================================= */
+
+function renderMedia(media,resource){
+
+  let html = "";
+
+
+  if(
+    media.diagrams.length
+  ){
+
+    html += `
+
+      <div
+        id="mediaArea"
+        class="media-section"
+      >
+
+        <div class="media-heading">
+          🖼️ Diagrams & Visual Learning
+        </div>
+
+        <div class="diagram-grid">
+
+    `;
+
+
+    media.diagrams.forEach(
+      url=>{
+
+        html += `
+
+          <div class="diagram-card">
+
+            <img
+              src="${escapeHTML(url)}"
+              alt="Learning diagram"
+              loading="lazy"
+              onerror="this.parentElement.style.display='none'"
+            >
+
+            <div class="diagram-caption">
+              Learning diagram for
+              ${escapeHTML(curSub)}
+            </div>
+
+          </div>
+
+        `;
+
+      }
     );
 
 
-  const old =
-    await FB.getDoc(ref);
+    html += `
+        </div>
+      </div>
+    `;
+
+  }
 
 
-  const oldData =
-    old.exists()
-      ? old.data()
-      : {};
+  if(
+    media.videos.length
+  ){
+
+    html += `
+
+      <div class="media-section">
+
+        <div class="media-heading">
+          🎬 Related Learning Videos
+        </div>
+
+        <div class="video-grid">
+
+    `;
 
 
-  const version =
-    Number(
-      oldData.version || 0
-    ) + 1;
+    media.videos.forEach(
+      (url,index)=>{
+
+        html += `
+
+          <div class="video-card">
+
+            <div class="video-icon">
+              🎬
+            </div>
+
+            <div class="video-title">
+              ${escapeHTML(
+                resource.videoTitle ||
+                `Related ${curSub} Video ${index+1}`
+              )}
+            </div>
+
+            <a
+              href="${escapeHTML(url)}"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="video-btn"
+            >
+              ▶ Watch Video
+            </a>
+
+          </div>
+
+        `;
+
+      }
+    );
 
 
-  const data = {
+    html += `
+        </div>
+      </div>
+    `;
 
-    grade:
-      curGrade,
-
-    subject:
-      curSub,
-
-    content:
-      content,
-
-    version:
-      version,
-
-    updatedAt:
-      FB.serverTimestamp(),
-
-    lastUpdatedByAI:
-      true,
-
-    questionCount:
-      Number(
-        extra.questionCount ||
-        oldData.questionCount ||
-        0
-      ),
-
-    sourcePdfName:
-      extra.sourcePdfName ||
-      oldData.sourcePdfName ||
-      "",
-
-    sourcePdfUrl:
-      extra.sourcePdfUrl ||
-      oldData.sourcePdfUrl ||
-      "",
-
-    createdAt:
-      oldData.createdAt ||
-      FB.serverTimestamp()
-
-  };
+  }
 
 
-  await FB.setDoc(
-    ref,
-    data,
-    {
-      merge:true
-    }
-  );
+  /*
+    AI visual cards can also be extracted from
+    the text when no real image is available.
+  */
+
+  const content =
+    objectText(resource);
 
 
-  return {
-    ...data,
-    version
-  };
+  html += `
+
+    <div class="media-section">
+
+      <div class="visual-heading">
+        🎨 Visual Learning
+      </div>
+
+      <div class="visual-grid">
+
+        ${extractVisualCards(content)}
+
+      </div>
+
+    </div>
+
+  `;
+
+
+  return html;
 
 }
 
 
 /* =========================================================
-   GENERATE NEW NOTES
+   STATUS RESOURCE
+========================================================= */
+
+function updateStatusResource(){
+
+  document.getElementById(
+    "noteStatus"
+  ).innerHTML = `
+
+    <span class="status-pill resource">
+      📚 SomaHub Resource
+    </span>
+
+    <span class="status-pill saved">
+      ✓ Available
+    </span>
+
+    <span class="status-pill">
+      🔊 Audio
+    </span>
+
+    <span class="status-pill">
+      🔎 Search
+    </span>
+
+  `;
+
+}
+
+
+/* =========================================================
+   SAVED AI NOTE
+========================================================= */
+
+function renderSavedNote(note){
+
+  const list =
+    document.getElementById(
+      "notesList"
+    );
+
+  const content =
+    note.content || "";
+
+  currentGenerated =
+    content;
+
+
+  const visualCards =
+    extractVisualCards(
+      content
+    );
+
+
+  const version =
+    note.version || 1;
+
+
+  list.innerHTML = `
+
+    <article class="note-card">
+
+      <div class="note-header">
+
+        <div class="note-title">
+
+          ✨ ${escapeHTML(curGrade)}
+          ${escapeHTML(curSub)}
+          Learning Notes
+
+        </div>
+
+        <div class="note-meta">
+
+          SomaHub AI
+          • Version ${version}
+
+        </div>
+
+      </div>
+
+
+      <div class="note-buttons">
+
+        <button
+          class="note-btn orange"
+          onclick="speakCurrentNotes()"
+        >
+          🔊 Listen
+        </button>
+
+        <button
+          class="note-btn blue"
+          onclick="focusNoteSearch()"
+        >
+          🔎 Search
+        </button>
+
+        <button
+          class="note-btn green"
+          onclick="scrollToVisuals()"
+        >
+          🖼️ Diagrams
+        </button>
+
+        <button
+          class="note-btn dark"
+          onclick="goAI()"
+        >
+          🤖 Ask AI Tutor
+        </button>
+
+        <button
+          class="note-btn red"
+          onclick="generateNotes()"
+        >
+          🔄 Refresh
+        </button>
+
+      </div>
+
+
+      <div class="note-body">
+
+        <div class="note-search-box">
+
+          <div class="note-search-title">
+            🔎 Search within these notes
+          </div>
+
+          <input
+            id="noteSearch"
+            class="note-search-input"
+            placeholder="Search a word or topic..."
+            oninput="searchWithinNote(this.value)"
+          >
+
+          <div
+            id="searchResult"
+            class="text-[9px] text-slate-500 mt-2 font-bold"
+          ></div>
+
+        </div>
+
+
+        <div
+          id="noteContent"
+          class="note-text searchable-note"
+        >
+
+          ${renderNoteText(content)}
+
+        </div>
+
+
+        <div
+          id="mediaArea"
+          class="media-section"
+        >
+
+          <div class="visual-heading">
+            🎨 Visual Learning
+          </div>
+
+          <div class="visual-grid">
+
+            ${visualCards}
+
+          </div>
+
+        </div>
+
+
+        <div class="ai-info">
+
+          <div class="ai-info-title">
+            ✨ SomaHub Smart Notes
+          </div>
+
+          <div class="ai-info-text">
+            These notes can be improved from useful
+            learner and teacher questions over time.
+          </div>
+
+        </div>
+
+      </div>
+
+    </article>
+
+  `;
+
+
+  document.getElementById(
+    "noteStatus"
+  ).innerHTML = `
+
+    <span class="status-pill saved">
+      ✓ Saved Notes
+    </span>
+
+    <span class="status-pill">
+      🤖 AI Generated
+    </span>
+
+  `;
+
+}
+
+
+/* =========================================================
+   NO NOTES YET
+========================================================= */
+
+function showNoNotesYet(){
+
+  const list =
+    document.getElementById(
+      "notesList"
+    );
+
+
+  list.innerHTML = `
+
+    <div class="empty">
+
+      <div class="empty-icon">
+        📚
+      </div>
+
+      <div class="empty-title">
+        No saved notes yet
+      </div>
+
+      <div class="empty-text">
+        There are no existing notes for
+        ${escapeHTML(curGrade)}
+        ${escapeHTML(curSub)}
+        yet.
+        You can ask SomaHub AI to create them.
+      </div>
+
+      <button
+        onclick="generateNotes()"
+        class="mt-4 bg-[#263b99] text-white rounded-full px-5 py-2.5 text-[10px] font-black"
+      >
+        ✨ Generate Notes
+      </button>
+
+    </div>
+
+  `;
+
+
+  document.getElementById(
+    "generateButton"
+  ).classList.remove("hidden");
+
+
+  document.getElementById(
+    "noteStatus"
+  ).innerHTML = `
+
+    <span class="status-pill">
+      📚 No saved notes
+    </span>
+
+    <span class="status-pill">
+      🤖 AI available
+    </span>
+
+  `;
+
+}
+
+
+/* =========================================================
+   GENERATE NOTES
 ========================================================= */
 
 async function generateNotes(){
+
+  if(!curSub){
+
+    toast(
+      "Choose a learning area first."
+    );
+
+    return;
+
+  }
+
 
   const button =
     document.getElementById(
@@ -2362,6 +2932,9 @@ async function generateNotes(){
     "⏳ Creating...";
 
 
+  list.classList.remove("hidden");
+
+
   list.innerHTML = `
 
     <div class="loading">
@@ -2369,7 +2942,7 @@ async function generateNotes(){
       <div class="spinner"></div>
 
       <p class="mt-3 text-[11px] font-black">
-        SomaHub AI is creating your notes...
+        SomaHub AI is creating the notes...
       </p>
 
       <p class="mt-1 text-[9px] text-slate-400">
@@ -2383,20 +2956,73 @@ async function generateNotes(){
 
   try{
 
-    const context =
-      await collectContext();
+    const prompt = `
 
+You are SomaHub AI Teacher.
 
-    const saved =
-      await getSavedNote();
+Create complete, learner-friendly learning notes.
 
+Grade:
+${curGrade}
 
-    const prompt =
-      createPrompt(
-        context,
-        saved,
-        false
-      );
+Learning Area:
+${curSub}
+
+Create notes suitable for the Kenyan CBC/CBE
+learning level.
+
+Include:
+
+# Topic
+
+# Strand / Sub-strand
+
+# Learning Objectives
+
+# Introduction
+
+# Key Terms
+
+# Main Explanation
+
+# Examples
+
+# Activities
+
+# Common Mistakes
+
+# Revision Points
+
+# Check Your Understanding
+
+# Answers
+
+Also include useful visual learning descriptions
+using this format when appropriate:
+
+VISUAL CARD:
+Icon: 📘
+Title: ...
+What to see: ...
+Remember: ...
+
+Requirements:
+
+- Use simple classroom-friendly English.
+- Be detailed but easy to understand.
+- Use examples suitable for ${curGrade}.
+- For Mathematics show worked calculations.
+- For Science explain processes clearly.
+- For Agriculture explain practical applications.
+- For English explain grammar with examples.
+- For Social Studies use Kenyan examples where appropriate.
+- For practical learning areas include activities.
+- Do not mention unavailable PDFs.
+- Do not mention internal databases.
+- Do not invent citations.
+- Return only the finished notes.
+
+`;
 
 
     const response =
@@ -2417,7 +3043,7 @@ async function generateNotes(){
               prompt,
 
             originalQuestion:
-              `Generate ${curGrade} ${curSub} notes`,
+              `Generate ${curGrade} ${curSub} learning notes`,
 
             grade:
               curGrade,
@@ -2426,7 +3052,7 @@ async function generateNotes(){
               "Student/Teacher",
 
             task:
-              "Generate saved SomaHub learning notes",
+              "Generate learning notes",
 
             mode:
               "notes",
@@ -2434,16 +3060,13 @@ async function generateNotes(){
             provider:
               "auto",
 
+            language:
+              "English",
+
             history:[],
 
-            repository:
-              "kevokevo426-cmd/Somahub-Kenya",
-
             source:
-              "SomaHub Notes",
-
-            useSomaHubFiles:
-              true
+              "SomaHub Notes"
 
           })
 
@@ -2489,18 +3112,76 @@ async function generateNotes(){
       cleanAIText(answer);
 
 
-    const savedNote =
-      await saveAINote(
-        currentGenerated
+    const FB =
+      window.FB;
+
+
+    const ref =
+      FB.doc(
+        FB.db,
+        "aiNotes",
+        noteId()
       );
 
 
+    const old =
+      await FB.getDoc(ref);
+
+
+    const oldData =
+      old.exists()
+        ? old.data()
+        : {};
+
+
+    const version =
+      Number(
+        oldData.version || 0
+      ) + 1;
+
+
+    const noteData = {
+
+      grade:
+        curGrade,
+
+      subject:
+        curSub,
+
+      content:
+        currentGenerated,
+
+      version:
+        version,
+
+      lastUpdatedByAI:
+        true,
+
+      updatedAt:
+        FB.serverTimestamp(),
+
+      createdAt:
+        oldData.createdAt ||
+        FB.serverTimestamp()
+
+    };
+
+
+    await FB.setDoc(
+      ref,
+      noteData,
+      {
+        merge:true
+      }
+    );
+
+
     currentNote =
-      savedNote;
+      noteData;
 
 
     renderSavedNote(
-      savedNote
+      noteData
     );
 
 
@@ -2511,12 +3192,48 @@ async function generateNotes(){
 
   }catch(error){
 
-    console.error(error);
-
-    showError(
-      error.message ||
-      "Unable to generate notes."
+    console.error(
+      "Generate notes error:",
+      error
     );
+
+
+    list.innerHTML = `
+
+      <div class="empty">
+
+        <div class="empty-icon">
+          ⚠️
+        </div>
+
+        <div class="empty-title">
+          Notes could not be generated
+        </div>
+
+        <div class="empty-text">
+          ${
+            escapeHTML(
+              error.message ||
+              "The AI provider is currently unavailable."
+            )
+          }
+        </div>
+
+        <p class="text-[9px] text-slate-400 mt-3">
+          Your existing SomaHub resources are not affected.
+          Try again when the AI provider is available.
+        </p>
+
+        <button
+          onclick="generateNotes()"
+          class="mt-4 bg-[#263b99] text-white rounded-full px-5 py-2.5 text-[10px] font-black"
+        >
+          🔄 Try Again
+        </button>
+
+      </div>
+
+    `;
 
   }finally{
 
@@ -2532,548 +3249,18 @@ async function generateNotes(){
 
 
 /* =========================================================
-   UPDATE NOTES FROM QUESTIONS
-========================================================= */
-
-async function updateNotesFromQuestions(
-  savedNote
-){
-
-  if(!savedNote)
-    return;
-
-
-  try{
-
-    const context =
-      await collectContext();
-
-
-    const questionText =
-      [
-
-        ...context.teacherQuestions,
-        ...context.learnerQuestions,
-        ...context.questions
-
-      ]
-      .map(objectText)
-      .filter(Boolean)
-      .join("\n");
-
-
-    if(!questionText)
-      return;
-
-
-    const lastQuestionTime =
-      savedNote.lastQuestionUpdate || 0;
-
-
-    /*
-      Prevent unnecessary regeneration.
-
-      If the saved note already has a newer question
-      update, leave it alone.
-    */
-
-
-    const prompt =
-      createPrompt(
-        {
-          ...context,
-          source:
-            questionText
-        },
-        savedNote,
-        true
-      );
-
-
-    const response =
-      await fetch(
-        PROXY,
-        {
-
-          method:"POST",
-
-          headers:{
-            "Content-Type":
-              "application/json"
-          },
-
-          body:JSON.stringify({
-
-            question:
-              prompt,
-
-            originalQuestion:
-              `Update ${curGrade} ${curSub} notes using new questions`,
-
-            grade:
-              curGrade,
-
-            role:
-              "Student/Teacher",
-
-            task:
-              "Update saved learning notes",
-
-            mode:
-              "notes_update",
-
-            provider:
-              "auto",
-
-            history:[],
-
-            repository:
-              "kevokevo426-cmd/Somahub-Kenya",
-
-            source:
-              "SomaHub Question Learning",
-
-            useSomaHubFiles:
-              true
-
-          })
-
-        }
-      );
-
-
-    if(!response.ok)
-      return;
-
-
-    const data =
-      await response.json()
-        .catch(
-          ()=>({})
-        );
-
-
-    const answer =
-      data.answer ||
-      data.text ||
-      data.response ||
-      data.output ||
-      "";
-
-
-    if(!answer)
-      return;
-
-
-    const updated =
-      cleanAIText(answer);
-
-
-    const saved =
-      await saveAINote(
-        updated,
-        {
-          questionCount:
-            Number(
-              savedNote.questionCount ||
-              0
-            ) +
-            context.teacherQuestions.length +
-            context.learnerQuestions.length +
-            context.questions.length
-        }
-      );
-
-
-    /*
-      Mark the note as having processed
-      the current question batch.
-    */
-
-    const FB =
-      window.FB;
-
-
-    await FB.updateDoc(
-      FB.doc(
-        FB.db,
-        "aiNotes",
-        noteId()
-      ),
-      {
-        lastQuestionUpdate:
-          Date.now(),
-
-        autoUpdated:
-          true
-      }
-    );
-
-
-    currentNote =
-      saved;
-
-    currentGenerated =
-      updated;
-
-
-    renderSavedNote(
-      saved
-    );
-
-
-    toast(
-      "🔄 Notes automatically improved from questions."
-    );
-
-
-  }catch(error){
-
-    /*
-      Auto-update must never stop the notes page.
-    */
-
-    console.warn(
-      "Automatic note update skipped:",
-      error
-    );
-
-  }
-
-}
-
-
-/* =========================================================
-   LOAD NOTES
-========================================================= */
-
-async function loadNotes(){
-
-  const list =
-    document.getElementById(
-      "notesList"
-    );
-
-
-  updateTitle();
-
-
-  list.innerHTML = `
-
-    <div class="loading">
-
-      <div class="spinner"></div>
-
-      <p class="mt-3 text-[11px] font-black">
-        Checking your saved notes...
-      </p>
-
-    </div>
-
-  `;
-
-
-  try{
-
-    /*
-      FIRST:
-      Load saved AI notes.
-
-      This avoids calling Gemini every time.
-    */
-
-    const saved =
-      await getSavedNote();
-
-
-    if(saved){
-
-      currentNote =
-        saved;
-
-      currentGenerated =
-        saved.content ||
-        "";
-
-
-      renderSavedNote(
-        saved
-      );
-
-
-      /*
-        Then quietly check whether new teacher
-        or learner questions can improve it.
-      */
-
-      setTimeout(
-        ()=>{
-          updateNotesFromQuestions(
-            saved
-          );
-        },
-        1000
-      );
-
-
-      return;
-
-    }
-
-
-    /*
-      No saved notes.
-
-      Gemini creates them from its own knowledge.
-    */
-
-    await generateNotes();
-
-
-  }catch(error){
-
-    console.error(error);
-
-    showError(
-      "Unable to load notes."
-    );
-
-  }
-
-}
-
-
-/* =========================================================
-   RENDER SAVED NOTE
-========================================================= */
-
-function renderSavedNote(note){
-
-  const list =
-    document.getElementById(
-      "notesList"
-    );
-
-
-  const content =
-    note.content ||
-    "";
-
-
-  const visualCards =
-    extractVisualCards(
-      content
-    );
-
-
-  const version =
-    note.version ||
-    1;
-
-
-  const updated =
-    note.updatedAt?.toDate
-      ? note.updatedAt
-          .toDate()
-          .toLocaleDateString()
-      : "Recently";
-
-
-  list.innerHTML = `
-
-    <article class="note-card">
-
-      <div class="note-header">
-
-        <div class="note-title">
-
-          ✨ ${escapeHTML(curGrade)}
-          ${escapeHTML(curSub)}
-          Learning Notes
-
-        </div>
-
-        <div class="note-meta">
-
-          SomaHub AI
-          • Version ${version}
-          • Updated ${escapeHTML(updated)}
-
-        </div>
-
-      </div>
-
-
-      <div class="note-buttons">
-
-        <button
-          class="note-btn orange"
-          onclick="speakCurrentNotes()"
-        >
-          🔊 Listen
-        </button>
-
-
-        <button
-          class="note-btn blue"
-          onclick="scrollToVisuals()"
-        >
-          🎨 Visual Learning
-        </button>
-
-
-        <button
-          class="note-btn dark"
-          onclick="goAI()"
-        >
-          🤖 Ask AI Tutor
-        </button>
-
-
-        <button
-          class="note-btn red"
-          onclick="generateNotes()"
-        >
-          🔄 Refresh Notes
-        </button>
-
-      </div>
-
-
-      <div class="note-body">
-
-        <div class="note-text">
-
-          ${renderNoteText(content)}
-
-        </div>
-
-
-        <div id="visualArea">
-
-          <div class="visual-heading">
-            🎨 Visual Learning
-          </div>
-
-          <div class="visual-grid">
-
-            ${visualCards}
-
-          </div>
-
-        </div>
-
-
-        <div class="ai-info">
-
-          <div class="ai-info-title">
-            ✨ SomaHub Smart Notes
-          </div>
-
-          <div class="ai-info-text">
-            These notes are saved for future learners.
-            As useful questions from teachers and learners
-            accumulate, SomaHub AI can improve explanations,
-            examples and revision sections.
-          </div>
-
-        </div>
-
-      </div>
-
-    </article>
-
-  `;
-
-
-  updateStatus(note);
-
-}
-
-
-/* =========================================================
-   STATUS
-========================================================= */
-
-function updateStatus(note){
-
-  const status =
-    document.getElementById(
-      "noteStatus"
-    );
-
-
-  status.innerHTML = `
-
-    <span class="status-pill saved">
-      ✓ Saved Notes
-    </span>
-
-    <span class="status-pill">
-      🤖 AI Generated
-    </span>
-
-    ${
-      note.autoUpdated
-        ? `
-          <span class="status-pill updated">
-            🔄 Improved from Questions
-          </span>
-        `
-        : ""
-    }
-
-  `;
-
-}
-
-
-/* =========================================================
    CLEAN AI TEXT
 ========================================================= */
 
 function cleanAIText(text){
 
-  let value =
-    String(text || "");
-
-
-  value =
-    value.replace(
-      /【[^】]*】/g,
-      ""
-    );
-
-
-  value =
-    value.replace(
-      /\[Source:[^\]]*\]/gi,
-      ""
-    );
-
-
-  value =
-    value.replace(
-      /\[Line[^\]]*\]/gi,
-      ""
-    );
-
-
-  value =
-    value.replace(
-      /\[Citation[^\]]*\]/gi,
-      ""
-    );
-
-
-  value =
-    value.replace(
-      /^[-_=]{5,}$/gm,
-      ""
-    );
-
-
-  return value.trim();
+  return String(text || "")
+    .replace(/【[^】]*】/g,"")
+    .replace(/\[Source:[^\]]*\]/gi,"")
+    .replace(/\[Line[^\]]*\]/gi,"")
+    .replace(/\[Citation[^\]]*\]/gi,"")
+    .replace(/^[-_=]{5,}$/gm,"")
+    .trim();
 
 }
 
@@ -3135,22 +3322,23 @@ function highlightKeywords(text){
     escapeHTML(text);
 
 
-  KEYWORDS.forEach(word=>{
+  KEYWORDS.forEach(
+    word=>{
 
-    const regex =
-      new RegExp(
-        `\\b(${word})\\b`,
-        "gi"
-      );
+      const regex =
+        new RegExp(
+          `\\b(${word})\\b`,
+          "gi"
+        );
 
+      result =
+        result.replace(
+          regex,
+          `<span class="key-word">$1</span>`
+        );
 
-    result =
-      result.replace(
-        regex,
-        `<span class="key-word">$1</span>`
-      );
-
-  });
+    }
+  );
 
 
   return result;
@@ -3165,9 +3353,7 @@ function highlightKeywords(text){
 function formatInline(text){
 
   let result =
-    highlightKeywords(
-      text
-    );
+    highlightKeywords(text);
 
 
   result =
@@ -3190,7 +3376,7 @@ function formatInline(text){
 
 
 /* =========================================================
-   RENDER NOTE
+   RENDER NOTE TEXT
 ========================================================= */
 
 function renderNoteText(text){
@@ -3203,9 +3389,7 @@ function renderNoteText(text){
     clean.split(/\r?\n/);
 
 
-  let html =
-    "";
-
+  let html = "";
 
   let ul =
     false;
@@ -3218,19 +3402,16 @@ function renderNoteText(text){
 
     if(ul){
 
-      html +=
-        "</ul>";
+      html += "</ul>";
 
       ul =
         false;
 
     }
 
-
     if(ol){
 
-      html +=
-        "</ol>";
+      html += "</ol>";
 
       ol =
         false;
@@ -3240,282 +3421,266 @@ function renderNoteText(text){
   }
 
 
-  lines.forEach(raw=>{
+  lines.forEach(
+    raw=>{
 
-    let line =
-      raw.trim();
+      let line =
+        raw.trim();
 
 
-    if(!line){
+      if(!line){
+
+        closeLists();
+
+        return;
+
+      }
+
+
+      if(
+        /^#\s+/.test(line)
+      ){
+
+        closeLists();
+
+        line =
+          line.replace(
+            /^#\s+/,
+            ""
+          );
+
+        html +=
+          `<h2>${highlightKeywords(line)}</h2>`;
+
+        return;
+
+      }
+
+
+      if(
+        /^#{2,3}\s+/.test(line)
+      ){
+
+        closeLists();
+
+        line =
+          line.replace(
+            /^#{2,3}\s+/,
+            ""
+          );
+
+        html +=
+          `<h3>${highlightKeywords(line)}</h3>`;
+
+        return;
+
+      }
+
+
+      if(
+        /^[-*•]\s+/.test(line)
+      ){
+
+        if(ol){
+
+          html += "</ol>";
+
+          ol =
+            false;
+
+        }
+
+        if(!ul){
+
+          html += "<ul>";
+
+          ul =
+            true;
+
+        }
+
+        line =
+          line.replace(
+            /^[-*•]\s+/,
+            ""
+          );
+
+        html +=
+          `<li>${formatInline(line)}</li>`;
+
+        return;
+
+      }
+
+
+      if(
+        /^\d+[.)]\s+/.test(line)
+      ){
+
+        if(ul){
+
+          html += "</ul>";
+
+          ul =
+            false;
+
+        }
+
+        if(!ol){
+
+          html += "<ol>";
+
+          ol =
+            true;
+
+        }
+
+        line =
+          line.replace(
+            /^\d+[.)]\s+/,
+            ""
+          );
+
+        html +=
+          `<li>${formatInline(line)}</li>`;
+
+        return;
+
+      }
+
 
       closeLists();
 
-      return;
 
-    }
+      if(
+        /^topic\s*:/i.test(line)
+      ){
 
-
-    if(
-      /^#\s+/.test(line)
-    ){
-
-      closeLists();
-
-      line =
-        line.replace(
-          /^#\s+/,
-          ""
-        );
-
-
-      html +=
-        `<h2>${highlightKeywords(line)}</h2>`;
-
-      return;
-
-    }
-
-
-    if(
-      /^#{2,3}\s+/.test(line)
-    ){
-
-      closeLists();
-
-      line =
-        line.replace(
-          /^#{2,3}\s+/,
-          ""
-        );
-
-
-      html +=
-        `<h3>${highlightKeywords(line)}</h3>`;
-
-      return;
-
-    }
-
-
-    if(
-      /^[-*•]\s+/.test(line)
-    ){
-
-      if(ol){
+        const value =
+          line.replace(
+            /^topic\s*:/i,
+            ""
+          ).trim();
 
         html +=
-          "</ol>";
+          `<p class="topic">
+            Topic: ${formatInline(value)}
+          </p>`;
 
-        ol =
-          false;
+        return;
 
       }
 
 
-      if(!ul){
+      if(
+        /^strand\s*:/i.test(line)
+      ){
+
+        const value =
+          line.replace(
+            /^strand\s*:/i,
+            ""
+          ).trim();
 
         html +=
-          "<ul>";
+          `<p class="topic">
+            Strand: ${formatInline(value)}
+          </p>`;
 
-        ul =
-          true;
+        return;
 
       }
 
 
-      line =
-        line.replace(
-          /^[-*•]\s+/,
-          ""
-        );
+      if(
+        /^definition\s*:/i.test(line)
+      ){
 
-
-      html +=
-        `<li>${formatInline(line)}</li>`;
-
-      return;
-
-    }
-
-
-    if(
-      /^\d+[.)]\s+/.test(line)
-    ){
-
-      if(ul){
+        const value =
+          line.replace(
+            /^definition\s*:/i,
+            ""
+          ).trim();
 
         html +=
-          "</ul>";
+          `<div class="definition">
+            <b>Definition</b>
+            <p>${formatInline(value)}</p>
+          </div>`;
 
-        ul =
-          false;
+        return;
 
       }
 
 
-      if(!ol){
+      if(
+        /^example\s*:/i.test(line)
+      ){
+
+        const value =
+          line.replace(
+            /^example\s*:/i,
+            ""
+          ).trim();
 
         html +=
-          "<ol>";
+          `<div class="example">
+            <b>Example</b>
+            <p>${formatInline(value)}</p>
+          </div>`;
 
-        ol =
-          true;
+        return;
 
       }
 
 
-      line =
-        line.replace(
-          /^\d+[.)]\s+/,
-          ""
-        );
+      if(
+        /^important\s*:/i.test(line)
+      ){
+
+        const value =
+          line.replace(
+            /^important\s*:/i,
+            ""
+          ).trim();
+
+        html +=
+          `<div class="important">
+            <b>Important</b>
+            <p>${formatInline(value)}</p>
+          </div>`;
+
+        return;
+
+      }
+
+
+      if(
+        /^explanation\s*:/i.test(line)
+      ){
+
+        const value =
+          line.replace(
+            /^explanation\s*:/i,
+            ""
+          ).trim();
+
+        html +=
+          `<div class="explanation">
+            Explanation
+          </div>
+          <p>${formatInline(value)}</p>`;
+
+        return;
+
+      }
 
 
       html +=
-        `<li>${formatInline(line)}</li>`;
-
-      return;
+        `<p>${formatInline(line)}</p>`;
 
     }
-
-
-    closeLists();
-
-
-    if(
-      /^topic\s*:/i.test(line)
-    ){
-
-      const value =
-        line.replace(
-          /^topic\s*:/i,
-          ""
-        ).trim();
-
-
-      html +=
-        `<p class="topic">
-          Topic: ${formatInline(value)}
-        </p>`;
-
-      return;
-
-    }
-
-
-    if(
-      /^strand\s*:/i.test(line)
-    ){
-
-      const value =
-        line.replace(
-          /^strand\s*:/i,
-          ""
-        ).trim();
-
-
-      html +=
-        `<p class="topic">
-          Strand: ${formatInline(value)}
-        </p>`;
-
-      return;
-
-    }
-
-
-    if(
-      /^explanation\s*:/i.test(line)
-    ){
-
-      const value =
-        line.replace(
-          /^explanation\s*:/i,
-          ""
-        ).trim();
-
-
-      html +=
-        `<div class="explanation">
-          Explanation:
-        </div>
-        <p>${formatInline(value)}</p>`;
-
-      return;
-
-    }
-
-
-    if(
-      /^definition\s*:/i.test(line)
-    ){
-
-      const value =
-        line.replace(
-          /^definition\s*:/i,
-          ""
-        ).trim();
-
-
-      html +=
-        `<div class="definition">
-          <b>Definition</b>
-          <p>${formatInline(value)}</p>
-        </div>`;
-
-      return;
-
-    }
-
-
-    if(
-      /^example\s*:/i.test(line)
-    ){
-
-      const value =
-        line.replace(
-          /^example\s*:/i,
-          ""
-        ).trim();
-
-
-      html +=
-        `<div class="example">
-          <b>Example</b>
-          <p>${formatInline(value)}</p>
-        </div>`;
-
-      return;
-
-    }
-
-
-    if(
-      /^important\s*:/i.test(line)
-    ){
-
-      const value =
-        line.replace(
-          /^important\s*:/i,
-          ""
-        ).trim();
-
-
-      html +=
-        `<div class="important">
-          <b>Important</b>
-          <p>${formatInline(value)}</p>
-        </div>`;
-
-      return;
-
-    }
-
-
-    html +=
-      `<p>${formatInline(line)}</p>`;
-
-  });
+  );
 
 
   closeLists();
@@ -3534,9 +3699,7 @@ function extractVisualCards(text){
 
   const blocks =
     String(text || "")
-      .split(
-        /VISUAL CARD:/gi
-      )
+      .split(/VISUAL CARD:/gi)
       .slice(1,7);
 
 
@@ -3655,20 +3818,21 @@ function extractVisualCards(text){
 
 
 /* =========================================================
-   VISUAL SCROLL
+   SEARCH WITHIN NOTES
 ========================================================= */
 
-function scrollToVisuals(){
+function focusNoteSearch(){
 
-  const area =
-    document.getElementById(
-      "visualArea"
+  const input =
+    document.querySelector(
+      ".note-search-input"
     );
 
+  if(input){
 
-  if(area){
+    input.focus();
 
-    area.scrollIntoView({
+    input.scrollIntoView({
       behavior:"smooth",
       block:"center"
     });
@@ -3679,12 +3843,175 @@ function scrollToVisuals(){
 
 
 /* =========================================================
+   SEARCH
+========================================================= */
+
+function searchWithinNote(term){
+
+  const result =
+    document.getElementById(
+      "searchResult"
+    );
+
+
+  const content =
+    currentGenerated ||
+    currentResources
+      .map(objectText)
+      .join("\n");
+
+
+  const cleanTerm =
+    String(term || "")
+      .trim()
+      .toLowerCase();
+
+
+  if(!cleanTerm){
+
+    if(result)
+      result.textContent =
+        "";
+
+    return;
+
+  }
+
+
+  const text =
+    cleanAIText(content)
+      .replace(/\s+/g," ");
+
+
+  const lower =
+    text.toLowerCase();
+
+
+  const position =
+    lower.indexOf(
+      cleanTerm
+    );
+
+
+  if(position < 0){
+
+    if(result){
+
+      result.textContent =
+        `❌ "${term}" was not found in these notes.`;
+
+    }
+
+    return;
+
+  }
+
+
+  const start =
+    Math.max(
+      0,
+      position - 100
+    );
+
+
+  const end =
+    Math.min(
+      text.length,
+      position +
+      cleanTerm.length +
+      180
+    );
+
+
+  const snippet =
+    text.substring(
+      start,
+      end
+    );
+
+
+  if(result){
+
+    result.innerHTML =
+      `🔎 Found: <b>${escapeHTML(
+        snippet
+      )}</b>`;
+
+  }
+
+
+  const noteContent =
+    document.getElementById(
+      "noteContent"
+    );
+
+
+  if(noteContent){
+
+    noteContent.scrollIntoView({
+      behavior:"smooth",
+      block:"center"
+    });
+
+  }
+
+}
+
+
+/* =========================================================
+   SCROLL MEDIA
+========================================================= */
+
+function scrollToMedia(){
+
+  const area =
+    document.getElementById(
+      "mediaArea"
+    );
+
+  if(area){
+
+    area.scrollIntoView({
+      behavior:"smooth",
+      block:"center"
+    });
+
+  }else{
+
+    toast(
+      "No separate diagram is attached to this resource."
+    );
+
+  }
+
+}
+
+
+/* =========================================================
+   VISUAL SCROLL
+========================================================= */
+
+function scrollToVisuals(){
+
+  scrollToMedia();
+
+}
+
+
+/* =========================================================
    SPEECH
 ========================================================= */
 
 function speakCurrentNotes(){
 
-  if(!currentGenerated){
+  const text =
+    currentGenerated ||
+    currentResources
+      .map(objectText)
+      .join("\n");
+
+
+  if(!text){
 
     toast(
       "No notes are available to read."
@@ -3700,7 +4027,7 @@ function speakCurrentNotes(){
   ){
 
     toast(
-      "Audio reading is not supported here."
+      "Audio reading is not supported on this browser."
     );
 
     return;
@@ -3724,31 +4051,27 @@ function speakCurrentNotes(){
   }
 
 
-  const text =
-    cleanAIText(
-      currentGenerated
-    )
-    .replace(
-      /[#*_]/g,
-      " "
-    )
-    .replace(
-      /\s+/g,
-      " "
-    );
+  const clean =
+    cleanAIText(text)
+      .replace(/[#*_]/g," ")
+      .replace(/\s+/g," ");
 
 
   const utterance =
     new SpeechSynthesisUtterance(
-      text
+      clean
     );
 
 
   utterance.lang =
-    "en-KE";
+    curSub === "Kiswahili"
+      ? "sw-KE"
+      : "en-KE";
+
 
   utterance.rate =
-    .96;
+    .95;
+
 
   utterance.pitch =
     1;
@@ -3816,8 +4139,8 @@ async function askQuestion(){
 
 
   const button =
-    document.querySelector(
-      ".question-box button"
+    document.getElementById(
+      "askButton"
     );
 
 
@@ -3828,32 +4151,30 @@ async function askQuestion(){
     "⏳ Asking...";
 
 
+  /*
+    Save question as a learning question.
+
+    We do NOT automatically rewrite the notes here.
+    This prevents every question from consuming AI quota.
+  */
+
   try{
 
     const FB =
       window.FB;
 
 
-    /*
-      Save the question first.
-
-      This means the question becomes part of the
-      future learning data.
-    */
-
-    const collectionName =
-      currentUser
-        ? "learnerQuestions"
-        : "questions";
-
-
-    await FB.setDoc(
+    const questionRef =
       FB.doc(
         FB.collection(
           FB.db,
-          collectionName
+          "knowledge_gaps"
         )
-      ),
+      );
+
+
+    await FB.setDoc(
+      questionRef,
       {
 
         grade:
@@ -3865,32 +4186,52 @@ async function askQuestion(){
         question:
           question,
 
-        userType:
-          "learner",
+        source:
+          currentUser
+            ? "learner"
+            : "guest",
 
-        userId:
+        sourceUserId:
           currentUser?.uid ||
           "",
+
+        status:
+          "pending",
+
+        incorporated:
+          false,
 
         createdAt:
           FB.serverTimestamp(),
 
-        processed:
-          false
+        timesAsked:
+          1
 
       }
     );
 
+  }catch(error){
 
     /*
-      Ask AI immediately.
+      Saving a question must never stop the
+      learner from asking the AI.
     */
+
+    console.warn(
+      "Knowledge gap save skipped:",
+      error
+    );
+
+  }
+
+
+  try{
 
     const prompt = `
 
 You are SomaHub AI Teacher.
 
-Answer this question clearly.
+Answer this learner question.
 
 Grade:
 ${curGrade}
@@ -3905,12 +4246,11 @@ Use simple classroom-friendly language.
 
 Explain the answer step by step.
 
-If this is a multiple-choice question,
-explain why the other options are wrong.
+If the question is multiple choice,
+explain why the correct option is correct
+and why the other options are wrong.
 
 `;
-
-
 
     const response =
       await fetch(
@@ -3947,13 +4287,15 @@ explain why the other options are wrong.
             provider:
               "auto",
 
+            language:
+              curSub === "Kiswahili"
+                ? "Kiswahili"
+                : "English",
+
             history:[],
 
-            repository:
-              "kevokevo426-cmd/Somahub-Kenya",
-
             source:
-              "SomaHub Learner Question"
+              "SomaHub Notes Question"
 
           })
 
@@ -3968,31 +4310,37 @@ explain why the other options are wrong.
         );
 
 
-    const answer =
-      data.answer ||
-      data.text ||
-      data.response ||
-      "";
-
-
     if(!response.ok){
 
       throw new Error(
         data.error ||
-        "AI could not answer."
+        "AI could not answer the question."
       );
 
     }
 
 
-    if(answer){
+    const answer =
+      data.answer ||
+      data.text ||
+      data.response ||
+      data.output ||
+      "";
 
-      showQuestionAnswer(
-        question,
-        answer
+
+    if(!answer){
+
+      throw new Error(
+        "The AI returned no answer."
       );
 
     }
+
+
+    showQuestionAnswer(
+      question,
+      answer
+    );
 
 
     input.value =
@@ -4000,17 +4348,21 @@ explain why the other options are wrong.
 
 
     toast(
-      "Question saved. It can help improve the notes."
+      "✓ Question answered and saved for future learning."
     );
 
 
   }catch(error){
 
-    console.error(error);
+    console.error(
+      "Question error:",
+      error
+    );
+
 
     toast(
       error.message ||
-      "Unable to answer question."
+      "The AI provider is currently unavailable. Your question was saved for future learning."
     );
 
   }finally{
@@ -4071,7 +4423,7 @@ function showQuestionAnswer(
       <div class="note-text">
 
         <div class="explanation">
-          Explanation
+          🤖 SomaHub Tutor
         </div>
 
         ${renderNoteText(answer)}
@@ -4097,7 +4449,7 @@ function showQuestionAnswer(
 
 
 /* =========================================================
-   ASK AI TUTOR
+   AI TUTOR
 ========================================================= */
 
 function goAI(){
@@ -4118,43 +4470,29 @@ function goAI(){
 
 
 /* =========================================================
-   ERROR
+   BACK TO LEARNING AREAS
 ========================================================= */
 
-function showError(message){
+function backToLearningAreas(){
 
-  const list =
-    document.getElementById(
-      "notesList"
-    );
+  curSub =
+    "";
 
+  currentNote =
+    null;
 
-  list.innerHTML = `
+  currentGenerated =
+    "";
 
-    <div class="empty">
+  currentResources =
+    [];
 
-      <div class="empty-icon">
-        ⚠️
-      </div>
+  showLearningAreas();
 
-      <div class="empty-title">
-        We couldn't create the notes
-      </div>
-
-      <div class="empty-text">
-        ${escapeHTML(message)}
-      </div>
-
-      <button
-        onclick="generateNotes()"
-        class="mt-4 bg-[#263b99] text-white rounded-full px-5 py-2.5 text-[10px] font-black"
-      >
-        🔄 Try Again
-      </button>
-
-    </div>
-
-  `;
+  window.scrollTo({
+    top:0,
+    behavior:"smooth"
+  });
 
 }
 
@@ -4163,174 +4501,158 @@ function showError(message){
    AUTHENTICATION
 ========================================================= */
 
-setTimeout(()=>{
+setTimeout(
+  ()=>{
 
-  const FB =
-    window.FB;
-
-
-  if(!FB){
-
-    showError(
-      "Firebase could not be loaded."
-    );
-
-    return;
-
-  }
+    const FB =
+      window.FB;
 
 
-  const params =
-    new URLSearchParams(
-      location.search
-    );
+    if(!FB){
+
+      toast(
+        "Firebase could not be loaded."
+      );
+
+      return;
+
+    }
 
 
-  const requestedGrade =
-    params.get("grade");
+    const params =
+      new URLSearchParams(
+        location.search
+      );
 
 
-  const requestedSubject =
-    params.get("subject");
+    const requestedGrade =
+      params.get("grade");
 
 
-  if(
-    requestedGrade &&
-    grades.includes(
-      requestedGrade
-    )
-  ){
-
-    curGrade =
-      requestedGrade;
-
-  }
+    const requestedSubject =
+      params.get("subject");
 
 
-  if(
-    requestedSubject
-  ){
+    if(
+      requestedGrade &&
+      grades.includes(
+        requestedGrade
+      )
+    ){
 
-    curSub =
-      requestedSubject;
+      curGrade =
+        requestedGrade;
 
-  }
-
-
-  FB.onAuthStateChanged(
-    FB.auth,
-    async user=>{
-
-      currentUser =
-        user || null;
+    }
 
 
-      if(user){
+    if(
+      requestedSubject
+    ){
 
-        try{
+      curSub =
+        requestedSubject;
 
-          const profile =
-            await FB.getDoc(
-              FB.doc(
-                FB.db,
-                "users",
-                user.uid
-              )
-            );
+    }
 
 
-          if(profile.exists()){
+    FB.onAuthStateChanged(
+      FB.auth,
+      async user=>{
 
-            const data =
-              profile.data() || {};
-
-
-            document.getElementById(
-              "userBadge"
-            ).textContent =
-              data.indexNumber ||
-              "SHKE";
+        currentUser =
+          user || null;
 
 
-            if(
-              data.grade &&
-              !requestedGrade
-            ){
+        if(user){
 
-              curGrade =
-                data.grade;
+          try{
+
+            const profile =
+              await FB.getDoc(
+                FB.doc(
+                  FB.db,
+                  "users",
+                  user.uid
+                )
+              );
+
+
+            if(profile.exists()){
+
+              const data =
+                profile.data() || {};
+
+
+              document.getElementById(
+                "userBadge"
+              ).textContent =
+                data.indexNumber ||
+                "SHKE";
+
+
+              if(
+                data.grade &&
+                !requestedGrade
+              ){
+
+                curGrade =
+                  data.grade;
+
+              }
 
             }
 
+          }catch(error){
+
+            console.warn(
+              "Profile unavailable:",
+              error
+            );
+
           }
 
-        }catch(error){
+        }
 
-          console.warn(
-            "Profile unavailable:",
-            error
-          );
+
+        createFilters();
+
+
+        /*
+          If a subject was supplied in the URL,
+          open it directly.
+
+          Otherwise show the learning areas.
+        */
+
+        if(
+          curSub &&
+          getSubjectsForGrade()
+            .includes(curSub)
+        ){
+
+          openSubject(curSub);
+
+        }else{
+
+          curSub =
+            "";
+
+          showLearningAreas();
 
         }
 
       }
 
+    );
 
-      createFilters();
-
-      updateTitle();
-
-      loadNotes();
-
-    }
-
-  );
-
-},400);
+  },
+  400
+);
 
 
 /* =========================================================
-   SEARCH
-========================================================= */
-
-document
-  .getElementById("searchInput")
-  .addEventListener(
-    "keydown",
-    event=>{
-
-      if(
-        event.key === "Enter"
-      ){
-
-        loadNotes();
-
-      }
-
-    }
-  );
-
-
-document
-  .getElementById("mobileSearch")
-  .addEventListener(
-    "keydown",
-    event=>{
-
-      if(
-        event.key === "Enter"
-      ){
-
-        mobileSearch();
-
-      }
-
-    }
-  );
-
-
-/* =========================================================
-   STOP AUDIO ON EXIT
+   STOP AUDIO WHEN LEAVING
 ========================================================= */
 
 window.addEventListener(
@@ -4351,5 +4673,4 @@ window.addEventListener(
 </script>
 
 </body>
-
 </html>
