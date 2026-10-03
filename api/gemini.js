@@ -12,14 +12,23 @@
 // • SomaHub knowledge/context support
 // • Conversation history
 // • English / Kiswahili support
+// • AI homework generation
+// • AI exam generation
+// • Structured question JSON
+// • Original "twisted" questions
 // ============================================================
 
 
+// ============================================================
+// MODELS
+// ============================================================
+
 const MODELS = {
-  // No API call
+
+  // No AI call
   greeting: "soma-greeting",
 
-  // Gemini models
+  // Gemini
   light:
     process.env.GEMINI_MODEL_LITE ||
     "gemini-3.5-flash-lite",
@@ -44,6 +53,7 @@ const MODELS = {
 // ============================================================
 
 function sendJSON(res, status, data) {
+
   res.status(status);
 
   res.setHeader(
@@ -71,6 +81,7 @@ function sendJSON(res, status, data) {
 
 
 function cleanText(value, max = 12000) {
+
   if (value == null) return "";
 
   return String(value)
@@ -80,6 +91,7 @@ function cleanText(value, max = 12000) {
 
 
 function isQuotaError(error) {
+
   const message =
     String(error?.message || "").toLowerCase();
 
@@ -100,6 +112,7 @@ function isQuotaError(error) {
 
 
 function isModelError(error) {
+
   const message =
     String(error?.message || "").toLowerCase();
 
@@ -134,7 +147,7 @@ function publicProviderError(error) {
 
 
 // ============================================================
-// LANGUAGE / INTENT
+// LANGUAGE
 // ============================================================
 
 const SW_WORDS = [
@@ -158,7 +171,12 @@ const SW_WORDS = [
   "nini",
   "vipi",
   "kwa nini",
-  "naomba"
+  "naomba",
+  "nomino",
+  "sentensi",
+  "methali",
+  "kiwakilishi",
+  "kitenzi"
 ];
 
 
@@ -178,6 +196,10 @@ function detectLang(text) {
 }
 
 
+// ============================================================
+// INTENT
+// ============================================================
+
 function detectIntent(question) {
 
   const q =
@@ -186,7 +208,8 @@ function detectIntent(question) {
   const t =
     q.toLowerCase();
 
-  // Greetings
+
+  // Greeting
   if (
     /^(hello|hi|hey|habari|mambo|niaje|sasa|good morning|good afternoon|good evening|hallo)\b/
       .test(t) &&
@@ -235,19 +258,46 @@ function detectIntent(question) {
   }
 
 
-  // Exam / complex educational work
+  // Homework generation
   if (
-    /(set exam|create exam|make an exam|mark this|mark my work|total marks|solve.*exam|kcpe|kcse|kbsea|assessment|paper 1|paper 2)/
+    /(create homework|make homework|generate homework|give me homework|set homework|my homework|homework questions|generate questions)/i
+      .test(t)
+  ) {
+    return "homework";
+  }
+
+
+  // Exam generation
+  if (
+    /(set exam|create exam|make an exam|generate exam|create paper|make paper|assessment paper|weekly exam|revision paper)/i
+      .test(t)
+  ) {
+    return "exam";
+  }
+
+
+  // Marking / assessment
+  if (
+    /(mark this|mark my work|marking scheme|marking guide|total marks|grade my work)/i
       .test(t)
   ) {
     return "smart";
   }
 
 
-  // Long or reasoning-heavy questions
+  // Complex educational work
+  if (
+    /(solve.*exam|kcpe|kcse|kbsea|assessment|paper 1|paper 2)/i
+      .test(t)
+  ) {
+    return "smart";
+  }
+
+
+  // Long / reasoning-heavy
   if (
     q.length > 800 ||
-    /(explain deeply|step by step working|proof|derive|detailed explanation|show all working)/
+    /(explain deeply|step by step working|proof|derive|detailed explanation|show all working)/i
       .test(t)
   ) {
     return "smart";
@@ -256,7 +306,7 @@ function detectIntent(question) {
 
   // Images
   if (
-    /(photo|image|picture|picha|attached|attachment)/
+    /(photo|image|picture|picha|attached|attachment)/i
       .test(t)
   ) {
     return "flash";
@@ -268,7 +318,221 @@ function detectIntent(question) {
 
 
 // ============================================================
-// HUMAN-FRIENDLY PROMPT
+// SOMAHUB QUESTION GENERATION PROMPT
+// ============================================================
+
+function buildQuestionPrompt(data, type = "homework") {
+
+  const {
+    grade = "Grade 7",
+    role = "Student",
+    subject = "General",
+    topic = "",
+    strand = "",
+    questionCount = type === "exam" ? 20 : 5,
+    marks = type === "exam" ? 40 : 10,
+    language = "EN",
+    knowledge = [],
+    history = []
+  } = data;
+
+
+  const safeGrade =
+    cleanText(grade, 50);
+
+  const safeSubject =
+    cleanText(subject, 100);
+
+  const safeStrand =
+    cleanText(strand, 150);
+
+  const safeTopic =
+    cleanText(topic, 150);
+
+
+  let prompt = `
+
+You are SomaHub AI Teacher.
+
+Create ORIGINAL Kenyan curriculum learning questions.
+
+This is NOT a request to copy questions from a source.
+
+You must understand the supplied SomaHub learning material and then
+"twist and own" the knowledge by creating NEW questions using your
+own wording and different examples.
+
+LEARNER DETAILS
+Grade: ${safeGrade}
+Role: ${cleanText(role, 50)}
+Subject: ${safeSubject}
+Topic: ${safeTopic}
+Strand: ${safeStrand}
+Language: ${cleanText(language, 20)}
+
+NUMBER OF QUESTIONS:
+${Number(questionCount) || 5}
+
+TOTAL MARKS:
+${Number(marks) || 10}
+
+
+IMPORTANT:
+
+1. Questions must match the learner's grade.
+2. Questions must match the subject.
+3. Questions must match the strand/topic where supplied.
+4. Use Kenyan school context where appropriate.
+5. Do not copy sentences from supplied resources.
+6. Create fresh examples.
+7. Mix question styles where suitable.
+8. Make questions clear enough for a learner to understand.
+9. Do not make Grade 4 questions unnecessarily difficult.
+10. Do not make Grade 9 questions too simple.
+11. For Mathematics, provide the correct answer and acceptable equivalent answers.
+12. For English/Kiswahili, provide acceptable answers where appropriate.
+13. For open-ended questions, provide a concise marking answer.
+14. Include marks for every question.
+15. Do not include explanations outside the JSON.
+16. Return ONLY valid JSON.
+`;
+
+
+  if (type === "exam") {
+
+    prompt += `
+
+THIS IS A WEEKLY EXAM / ASSESSMENT.
+
+Create a balanced assessment.
+
+Use a mixture of:
+- Multiple choice
+- Short answer
+- Structured questions
+
+Ensure the total marks are appropriate.
+
+`;
+  } else {
+
+    prompt += `
+
+THIS IS DAILY HOMEWORK.
+
+Keep it learner-friendly and practical.
+
+`;
+  }
+
+
+  if (
+    Array.isArray(knowledge) &&
+    knowledge.length > 0
+  ) {
+
+    prompt += `
+
+SOMAHUB MASTER LEARNING RESOURCES:
+
+`;
+
+    knowledge
+      .slice(0, 15)
+      .forEach((item, index) => {
+
+        if (!item) return;
+
+        const path =
+          cleanText(
+            item.path ||
+            item.name ||
+            `Resource ${index + 1}`,
+            200
+          );
+
+        const content =
+          cleanText(
+            item.content ||
+            item.somahubContent ||
+            "",
+            7000
+          );
+
+        if (!content) return;
+
+        prompt += `
+
+--- ${path} ---
+
+${content}
+`;
+      });
+  }
+
+
+  if (
+    Array.isArray(history) &&
+    history.length > 0
+  ) {
+
+    prompt += `
+
+RECENT LEARNING CONTEXT:
+
+`;
+
+    history
+      .slice(-6)
+      .forEach(item => {
+
+        if (!item) return;
+
+        prompt +=
+          `${cleanText(item.role || "user", 30)}: ` +
+          `${cleanText(item.content || "", 2000)}\n`;
+      });
+  }
+
+
+  prompt += `
+
+RETURN EXACTLY THIS JSON STRUCTURE:
+
+{
+  "questions": [
+    {
+      "question": "Question text",
+      "options": ["Option A", "Option B", "Option C", "Option D"],
+      "answer": "Correct answer",
+      "acceptedAnswers": ["Correct answer"],
+      "marks": 2,
+      "type": "mcq",
+      "strand": "${safeStrand || "General"}",
+      "explanation": "Short explanation"
+    }
+  ]
+}
+
+RULES FOR OPTIONS:
+
+- MCQ questions must have exactly 4 options.
+- The correct answer must appear in options.
+- Non-MCQ questions may use an empty options array.
+- Never put the answer outside the JSON.
+- Do not use markdown.
+- Do not wrap the JSON in backticks.
+- Do not add commentary before or after the JSON.
+
+`;
+
+
+  return prompt;
+}
+
+
+// ============================================================
+// NORMAL AI PROMPT
 // ============================================================
 
 function buildPrompt(data) {
@@ -317,7 +581,6 @@ ${cleanText(originalQuestion, 6000)}
   }
 
 
-  // SomaHub knowledge
   if (
     Array.isArray(knowledge) &&
     knowledge.length > 0
@@ -344,7 +607,9 @@ SOMAHUB LEARNING RESOURCES:
 
         const content =
           cleanText(
-            item.content || "",
+            item.content ||
+            item.somahubContent ||
+            "",
             7000
           );
 
@@ -360,7 +625,6 @@ ${content}
   }
 
 
-  // Recent conversation
   if (
     Array.isArray(history) &&
     history.length > 0
@@ -413,10 +677,10 @@ TEACHING RULES:
 13. If the question mixes English and Kiswahili, you may naturally mix them where helpful.
 14. Keep answers readable on a phone.
 15. For simple questions, avoid unnecessarily long explanations.
+16. Never invent information from a resource that was not supplied.
 
 You are a learning assistant, not a search engine.
 `;
-
 
   return prompt;
 }
@@ -433,7 +697,6 @@ function cleanBase64Photo(photo) {
   let value =
     String(photo).trim();
 
-  // Correctly remove data URL prefix
   value =
     value.replace(
       /^data:[^;]+;base64,/i,
@@ -458,6 +721,7 @@ async function callGemini({
   const apiKey =
     process.env.GEMINI_API_KEY;
 
+
   if (!apiKey) {
 
     const error =
@@ -465,7 +729,8 @@ async function callGemini({
         "GEMINI_API_KEY not configured"
       );
 
-    error.provider = "Gemini";
+    error.provider =
+      "Gemini";
 
     throw error;
   }
@@ -485,30 +750,44 @@ async function callGemini({
 
     if (!base64) {
 
-      throw new Error(
-        "Image contains no usable data"
-      );
+      const error =
+        new Error(
+          "Image contains no usable data"
+        );
+
+      error.provider =
+        "Gemini";
+
+      throw error;
     }
 
 
-    // Prevent excessively large uploads
     if (base64.length > 4500000) {
 
-      throw new Error(
-        "Image is too large. Please upload a smaller photo."
-      );
+      const error =
+        new Error(
+          "Image is too large. Please upload a smaller photo."
+        );
+
+      error.provider =
+        "Gemini";
+
+      throw error;
     }
 
 
     parts.push({
+
       inlineData: {
+
         mimeType:
           String(
             mimeType ||
             "image/jpeg"
           ).toLowerCase(),
 
-        data: base64
+        data:
+          base64
       }
     });
   }
@@ -518,23 +797,21 @@ async function callGemini({
     `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(modelId)}:generateContent`;
 
 
-  /*
-   * Gemini 3.x:
-   * Keep generationConfig minimal.
-   * Do not send unsupported temperature/topP/topK
-   * settings to newer Gemini 3 models.
-   */
-
   const requestBody = {
+
     contents: [
+
       {
         role: "user",
         parts
       }
+
     ],
 
     generationConfig: {
-      maxOutputTokens: 5000
+
+      maxOutputTokens:
+        5000
     }
   };
 
@@ -543,9 +820,11 @@ async function callGemini({
     await fetch(
       url,
       {
+
         method: "POST",
 
         headers: {
+
           "Content-Type":
             "application/json",
 
@@ -554,7 +833,9 @@ async function callGemini({
         },
 
         body:
-          JSON.stringify(requestBody)
+          JSON.stringify(
+            requestBody
+          )
       }
     );
 
@@ -564,6 +845,7 @@ async function callGemini({
 
 
   let data;
+
 
   try {
 
@@ -607,7 +889,9 @@ async function callGemini({
 
   const answer =
     data?.candidates?.[0]?.content?.parts
-      ?.map(part => part?.text || "")
+      ?.map(part =>
+        part?.text || ""
+      )
       .join("")
       .trim();
 
@@ -627,9 +911,14 @@ async function callGemini({
 
 
   return {
+
     answer,
-    provider: "Gemini",
-    model: modelId
+
+    provider:
+      "Gemini",
+
+    model:
+      modelId
   };
 }
 
@@ -648,6 +937,7 @@ async function callOpenAI({
   const apiKey =
     process.env.OPENAI_API_KEY;
 
+
   if (!apiKey) {
 
     const error =
@@ -663,10 +953,15 @@ async function callOpenAI({
 
 
   const content = [
+
     {
-      type: "input_text",
-      text: String(prompt || "")
+      type:
+        "input_text",
+
+      text:
+        String(prompt || "")
     }
+
   ];
 
 
@@ -675,24 +970,39 @@ async function callOpenAI({
     const base64 =
       cleanBase64Photo(photo);
 
+
     if (!base64) {
 
-      throw new Error(
-        "Image contains no usable data"
-      );
+      const error =
+        new Error(
+          "Image contains no usable data"
+        );
+
+      error.provider =
+        "OpenAI";
+
+      throw error;
     }
 
 
     if (base64.length > 4500000) {
 
-      throw new Error(
-        "Image is too large. Please upload a smaller photo."
-      );
+      const error =
+        new Error(
+          "Image is too large. Please upload a smaller photo."
+        );
+
+      error.provider =
+        "OpenAI";
+
+      throw error;
     }
 
 
     content.push({
-      type: "input_image",
+
+      type:
+        "input_image",
 
       image_url:
         `data:${String(
@@ -707,9 +1017,12 @@ async function callOpenAI({
     await fetch(
       "https://api.openai.com/v1/responses",
       {
-        method: "POST",
+
+        method:
+          "POST",
 
         headers: {
+
           "Content-Type":
             "application/json",
 
@@ -719,16 +1032,23 @@ async function callOpenAI({
 
         body:
           JSON.stringify({
-            model: modelId,
+
+            model:
+              modelId,
 
             input: [
+
               {
-                role: "user",
+                role:
+                  "user",
+
                 content
               }
+
             ],
 
-            max_output_tokens: 5000
+            max_output_tokens:
+              5000
           })
       }
     );
@@ -739,6 +1059,7 @@ async function callOpenAI({
 
 
   let data;
+
 
   try {
 
@@ -784,7 +1105,6 @@ async function callOpenAI({
     data?.output_text;
 
 
-  // Defensive fallback for Responses API output
   if (
     !answer &&
     Array.isArray(data?.output)
@@ -792,14 +1112,17 @@ async function callOpenAI({
 
     answer =
       data.output
+
         .flatMap(item =>
           Array.isArray(item?.content)
             ? item.content
             : []
         )
+
         .map(part =>
           part?.text || ""
         )
+
         .join("\n")
         .trim();
   }
@@ -820,10 +1143,361 @@ async function callOpenAI({
 
 
   return {
+
     answer,
-    provider: "OpenAI",
-    model: modelId
+
+    provider:
+      "OpenAI",
+
+    model:
+      modelId
   };
+}
+
+
+// ============================================================
+// JSON EXTRACTION
+// ============================================================
+
+function extractJSON(text) {
+
+  if (!text) return null;
+
+
+  let value =
+    String(text).trim();
+
+
+  // Remove markdown code fences
+  value =
+    value
+      .replace(/^```json\s*/i, "")
+      .replace(/^```\s*/i, "")
+      .replace(/\s*```$/i, "")
+      .trim();
+
+
+  try {
+
+    return JSON.parse(value);
+
+  } catch {}
+
+
+  // Find JSON object
+  const first =
+    value.indexOf("{");
+
+  const last =
+    value.lastIndexOf("}");
+
+
+  if (
+    first >= 0 &&
+    last > first
+  ) {
+
+    try {
+
+      return JSON.parse(
+        value.slice(
+          first,
+          last + 1
+        )
+      );
+
+    } catch {}
+  }
+
+
+  // Find JSON array
+  const arrayFirst =
+    value.indexOf("[");
+
+  const arrayLast =
+    value.lastIndexOf("]");
+
+
+  if (
+    arrayFirst >= 0 &&
+    arrayLast > arrayFirst
+  ) {
+
+    try {
+
+      return JSON.parse(
+        value.slice(
+          arrayFirst,
+          arrayLast + 1
+        )
+      );
+
+    } catch {}
+  }
+
+
+  return null;
+}
+
+
+// ============================================================
+// NORMALIZE GENERATED QUESTIONS
+// ============================================================
+
+function normalizeQuestions(data) {
+
+  let list = [];
+
+
+  if (
+    Array.isArray(data)
+  ) {
+
+    list =
+      data;
+
+  } else if (
+    Array.isArray(data?.questions)
+  ) {
+
+    list =
+      data.questions;
+
+  } else if (
+    Array.isArray(data?.items)
+  ) {
+
+    list =
+      data.items;
+  }
+
+
+  return list
+
+    .map((item, index) => {
+
+      if (!item) return null;
+
+
+      const q =
+        cleanText(
+          item.question ||
+          item.q ||
+          item.text ||
+          "",
+          2000
+        );
+
+
+      if (!q) return null;
+
+
+      let options =
+        item.options ||
+        item.choices ||
+        [];
+
+
+      if (!Array.isArray(options)) {
+        options = [];
+      }
+
+
+      options =
+        options
+          .map(x =>
+            cleanText(x, 500)
+          )
+          .filter(Boolean)
+          .slice(0, 4);
+
+
+      const answer =
+        cleanText(
+          item.answer ||
+          item.correctAnswer ||
+          item.correct ||
+          "",
+          1000
+        );
+
+
+      let acceptedAnswers =
+        item.acceptedAnswers ||
+        item.acceptableAnswers ||
+        [];
+
+
+      if (
+        !Array.isArray(
+          acceptedAnswers
+        )
+      ) {
+
+        acceptedAnswers =
+          [];
+      }
+
+
+      acceptedAnswers =
+        acceptedAnswers
+          .map(x =>
+            cleanText(x, 500)
+          )
+          .filter(Boolean);
+
+
+      if (
+        answer &&
+        !acceptedAnswers.some(
+          x =>
+            x.toLowerCase() ===
+            answer.toLowerCase()
+        )
+      ) {
+
+        acceptedAnswers.unshift(
+          answer
+        );
+      }
+
+
+      const marks =
+        Number(item.marks) > 0
+          ? Number(item.marks)
+          : options.length
+            ? 1
+            : 2;
+
+
+      return {
+
+        id:
+          item.id ||
+          `q-${Date.now()}-${index}`,
+
+        q,
+
+        question:
+          q,
+
+        options,
+
+        answer,
+
+        acceptedAnswers,
+
+        marks,
+
+        type:
+          item.type ||
+          (
+            options.length
+              ? "mcq"
+              : "short_answer"
+          ),
+
+        strand:
+          cleanText(
+            item.strand ||
+            item.topic ||
+            "",
+            200
+          ),
+
+        explanation:
+          cleanText(
+            item.explanation ||
+            "",
+            1500
+          )
+      };
+
+    })
+
+    .filter(Boolean);
+}
+
+
+// ============================================================
+// HUMAN RESPONSES
+// ============================================================
+
+function humanResponse(
+  intent,
+  language,
+  grade
+) {
+
+  if (intent === "greeting") {
+
+    return language === "SW"
+
+      ? `Habari! 👋 Karibu SomaHub Tutor!
+
+Niko tayari kukusaidia na masomo ya ${grade}.
+
+Uliza chochote kuhusu hesabu, sayansi, Kiingereza, Kiswahili, homework au mtihani.
+
+Tuanze! 🎓`
+
+      : `Hello! 👋 Welcome to SomaHub Tutor!
+
+I'm ready to help you with ${grade} work.
+
+Ask me about mathematics, science, English, homework, exams or any topic you're learning.
+
+Let's learn! 🎓`;
+  }
+
+
+  if (intent === "thanks") {
+
+    return language === "SW"
+
+      ? "Karibu sana! 😊 Uliza tena wakati wowote ukihitaji msaada."
+
+      : "You're most welcome! 😊 Ask me anytime you need help.";
+  }
+
+
+  if (intent === "bye") {
+
+    return language === "SW"
+
+      ? "Kwaheri! 👋 Soma kwa bidii na urudi tena wakati wowote."
+
+      : "Goodbye! 👋 Keep learning and come back anytime.";
+  }
+
+
+  if (intent === "smalltalk") {
+
+    return language === "SW"
+
+      ? "Mimi ni SomaHub Tutor 🎓. Niko hapa kukusaidia kuelewa masomo, kufanya homework, kutatua maswali na kujifunza kwa urahisi."
+
+      : "I'm SomaHub Tutor 🎓, your learning assistant. I can explain topics, solve questions, help with homework, mark work and create revision materials.";
+  }
+
+
+  if (intent === "help") {
+
+    return `I can help you with:
+
+1. 📚 Explain school topics
+2. 🔢 Solve mathematics with working
+3. 📝 Mark your work
+4. 📖 Create homework
+5. 📄 Create exams and assessments
+6. 📷 Read and explain photos
+7. 🌍 English and Kiswahili learning
+
+Just type your question or upload a photo.`;
+  }
+
+
+  return null;
 }
 
 
@@ -831,9 +1505,15 @@ async function callOpenAI({
 // MAIN HANDLER
 // ============================================================
 
-export default async function handler(req, res) {
+export default async function handler(
+  req,
+  res
+) {
 
+  // ==========================================================
   // CORS
+  // ==========================================================
+
   res.setHeader(
     "Access-Control-Allow-Origin",
     "*"
@@ -850,8 +1530,13 @@ export default async function handler(req, res) {
   );
 
 
+  // ==========================================================
   // OPTIONS
-  if (req.method === "OPTIONS") {
+  // ==========================================================
+
+  if (
+    req.method === "OPTIONS"
+  ) {
 
     return res
       .status(204)
@@ -863,13 +1548,17 @@ export default async function handler(req, res) {
   // HEALTH CHECK
   // ==========================================================
 
-  if (req.method === "GET") {
+  if (
+    req.method === "GET"
+  ) {
 
     return sendJSON(
       res,
       200,
       {
-        ok: true,
+
+        ok:
+          true,
 
         service:
           "SomaHub AI Teacher",
@@ -899,23 +1588,51 @@ export default async function handler(req, res) {
         fallbackProvider:
           "OpenAI",
 
-        models: MODELS
+        features: [
+
+          "chat",
+
+          "homework_generation",
+
+          "exam_generation",
+
+          "image_support",
+
+          "conversation_history",
+
+          "somahub_knowledge",
+
+          "english",
+
+          "kiswahili",
+
+          "quota_aware_routing"
+
+        ],
+
+        models:
+          MODELS
       }
     );
   }
 
 
   // ==========================================================
-  // ONLY POST
+  // POST ONLY
   // ==========================================================
 
-  if (req.method !== "POST") {
+  if (
+    req.method !== "POST"
+  ) {
 
     return sendJSON(
       res,
       405,
       {
-        ok: false,
+
+        ok:
+          false,
+
         error:
           "Method not allowed"
       }
@@ -925,9 +1642,17 @@ export default async function handler(req, res) {
 
   try {
 
+    // ========================================================
+    // BODY
+    // ========================================================
+
     let body =
       typeof req.body === "string"
-        ? JSON.parse(req.body || "{}")
+
+        ? JSON.parse(
+            req.body || "{}"
+          )
+
         : req.body || {};
 
 
@@ -935,6 +1660,7 @@ export default async function handler(req, res) {
       !body ||
       typeof body !== "object"
     ) {
+
       body = {};
     }
 
@@ -946,13 +1672,44 @@ export default async function handler(req, res) {
       );
 
 
-    if (!question) {
+    // ========================================================
+    // ALLOW STRUCTURED TASKS WITHOUT A NORMAL QUESTION
+    // ========================================================
+
+    const requestedTask =
+      String(
+        body.task ||
+        body.mode ||
+        ""
+      ).toLowerCase();
+
+
+    const isHomeworkRequest =
+      requestedTask.includes(
+        "homework"
+      );
+
+
+    const isExamRequest =
+      requestedTask.includes(
+        "exam"
+      );
+
+
+    if (
+      !question &&
+      !isHomeworkRequest &&
+      !isExamRequest
+    ) {
 
       return sendJSON(
         res,
         400,
         {
-          ok: false,
+
+          ok:
+            false,
+
           error:
             "Please enter a question."
         }
@@ -960,63 +1717,94 @@ export default async function handler(req, res) {
     }
 
 
+    const actualQuestion =
+      question ||
+      (
+        isHomeworkRequest
+
+          ? "Generate homework."
+
+          : "Generate an exam."
+      );
+
+
     // ========================================================
     // INTENT
     // ========================================================
 
-    const intent =
-      detectIntent(question);
+    let intent =
+      detectIntent(
+        actualQuestion
+      );
+
+
+    if (isHomeworkRequest) {
+      intent = "homework";
+    }
+
+
+    if (isExamRequest) {
+      intent = "exam";
+    }
 
 
     const language =
-      detectLang(question);
+      detectLang(
+        actualQuestion
+      );
+
+
+    const grade =
+      cleanText(
+        body.grade ||
+        "Grade 7",
+        50
+      );
 
 
     // ========================================================
     // HUMAN RESPONSES
-    // These consume ZERO AI quota.
+    // ZERO AI QUOTA
     // ========================================================
 
-    if (intent === "greeting") {
-
-      const grade =
-        cleanText(
-          body.grade ||
-          "Grade 7",
-          50
-        );
-
+    if (
+      [
+        "greeting",
+        "thanks",
+        "bye",
+        "smalltalk",
+        "help"
+      ].includes(intent)
+    ) {
 
       const answer =
-        language === "SW"
-
-          ? `Habari! 👋 Karibu SomaHub Tutor!
-
-Niko tayari kukusaidia na masomo ya ${grade}.
-
-Uliza chochote kuhusu hesabu, sayansi, Kiingereza, Kiswahili, homework au mtihani.
-
-Nikoje kukusaidia leo?`
-
-          : `Hello! 👋 Welcome to SomaHub Tutor!
-
-I'm ready to help you with ${grade} work.
-
-Ask me about mathematics, science, English, homework, exams or any topic you're learning.
-
-How can I help you today?`;
+        humanResponse(
+          intent,
+          language,
+          grade
+        );
 
 
       return sendJSON(
         res,
         200,
         {
-          ok: true,
+
+          ok:
+            true,
+
           answer,
-          provider: "SomaHub",
-          model: MODELS.greeting,
+
+          provider:
+            "SomaHub",
+
+          model:
+            MODELS.greeting,
+
           intent,
+
           language,
+
           hasImage:
             Boolean(body.photo)
         }
@@ -1024,140 +1812,32 @@ How can I help you today?`;
     }
 
 
-    if (intent === "thanks") {
-
-      return sendJSON(
-        res,
-        200,
-        {
-          ok: true,
-
-          answer:
-            language === "SW"
-
-              ? "Karibu sana! 😊 Uliza tena wakati wowote ukihitaji msaada."
-
-              : "You're most welcome! 😊 Ask me anytime you need help.",
-
-          provider:
-            "SomaHub",
-
-          model:
-            MODELS.greeting,
-
-          intent,
-          language
-        }
-      );
-    }
-
-
-    if (intent === "bye") {
-
-      return sendJSON(
-        res,
-        200,
-        {
-          ok: true,
-
-          answer:
-            language === "SW"
-
-              ? "Kwaheri! 👋 Soma kwa bidii na urudi tena wakati wowote."
-
-              : "Goodbye! 👋 Keep learning and come back anytime.",
-
-          provider:
-            "SomaHub",
-
-          model:
-            MODELS.greeting,
-
-          intent,
-          language
-        }
-      );
-    }
-
-
-    if (intent === "smalltalk") {
-
-      return sendJSON(
-        res,
-        200,
-        {
-          ok: true,
-
-          answer:
-            language === "SW"
-
-              ? "Mimi ni SomaHub Tutor 🎓. Niko hapa kukusaidia kuelewa masomo, kufanya homework, kutatua maswali na kujifunza kwa urahisi. Unaweza kuniuliza swali lolote."
-
-              : "I'm SomaHub Tutor 🎓, your learning assistant. I can explain topics, solve questions, help with homework, mark work and create revision materials. What would you like to learn?",
-
-          provider:
-            "SomaHub",
-
-          model:
-            MODELS.greeting,
-
-          intent,
-          language
-        }
-      );
-    }
-
-
-    if (intent === "help") {
-
-      return sendJSON(
-        res,
-        200,
-        {
-          ok: true,
-
-          answer:
-            `I can help you with:
-
-1. 📚 Explain school topics
-2. 🔢 Solve mathematics with working
-3. 📝 Mark your work
-4. 📖 Create homework and revision questions
-5. 📄 Create exams and assessments
-6. 📷 Read and explain photos of work
-7. 🌍 English and Kiswahili learning
-
-Just type your question or upload a photo.`,
-
-          provider:
-            "SomaHub",
-
-          model:
-            MODELS.greeting,
-
-          intent,
-          language
-        }
-      );
-    }
-
-
     // ========================================================
-    // AUTOMATIC MODEL SELECTION
+    // MODEL SELECTION
     // ========================================================
 
     let chosenModel =
       MODELS.flash;
 
 
-    if (intent === "smart") {
+    if (
+      intent === "smart" ||
+      intent === "exam"
+    ) {
 
       chosenModel =
         MODELS.smart;
 
     } else if (
+      intent === "homework"
+    ) {
+
+      chosenModel =
+        MODELS.flash;
+
+    } else if (
       intent === "normal" &&
-      question.length < 100
+      actualQuestion.length < 100
     ) {
 
       chosenModel =
@@ -1165,7 +1845,7 @@ Just type your question or upload a photo.`,
     }
 
 
-    // Images should use the vision-capable main model.
+    // Images use the main model
     if (body.photo) {
 
       chosenModel =
@@ -1174,145 +1854,286 @@ Just type your question or upload a photo.`,
 
 
     // ========================================================
-    // BUILD PROMPT
+    // QUESTION / EXAM GENERATION
+    // ========================================================
+
+    let prompt;
+
+
+    if (
+      intent === "homework" ||
+      intent === "exam"
+    ) {
+
+      prompt =
+        buildQuestionPrompt(
+          {
+            ...body,
+
+            grade,
+
+            language:
+              language,
+
+            questionCount:
+              Number(
+                body.questionCount ||
+                (
+                  intent === "exam"
+                    ? 20
+                    : 5
+                )
+              ),
+
+            marks:
+              Number(
+                body.marks ||
+                (
+                  intent === "exam"
+                    ? 40
+                    : 10
+                )
+              )
+          },
+
+          intent === "exam"
+            ? "exam"
+            : "homework"
+        );
+
+    } else {
+
+      // ======================================================
+      // NORMAL CHAT
+      // ======================================================
+
+      prompt =
+        buildPrompt(
+          {
+            ...body,
+
+            question:
+              actualQuestion,
+
+            task:
+              language
+          }
+        );
+    }
+
+
+    // ========================================================
+    // COMMON PAYLOAD
     // ========================================================
 
     const payload = {
+
       ...body,
-      question
+
+      question:
+        actualQuestion,
+
+      grade,
+
+      language,
+
+      intent
     };
 
 
-    const prompt =
-      buildPrompt(payload);
-
+    // ========================================================
+    // PROVIDER ROUTING
+    //
+    // Gemini first.
+    //
+    // If Gemini reaches quota, do NOT waste another Gemini
+    // request on another model.
+    //
+    // Go directly to OpenAI.
+    // ========================================================
 
     const errors = [];
 
 
     // ========================================================
-    // GEMINI ATTEMPT
-    // ========================================================
-
-    let geminiQuotaExceeded =
-      false;
-
-
-    try {
-
-      const result =
-        await callGemini({
-          prompt,
-          photo: body.photo,
-          mimeType: body.mimeType,
-          modelId: chosenModel
-        });
-
-
-      return sendJSON(
-        res,
-        200,
-        {
-          ok: true,
-          ...result,
-          hasImage:
-            Boolean(body.photo),
-          intent,
-          language
-        }
-      );
-
-
-    } catch (error) {
-
-      geminiQuotaExceeded =
-        isQuotaError(error);
-
-
-      errors.push({
-        provider:
-          "Gemini",
-
-        model:
-          chosenModel,
-
-        error:
-          publicProviderError(error),
-
-        quota:
-          geminiQuotaExceeded
-      });
-    }
-
-
-    // ========================================================
-    // IMPORTANT:
-    // If Gemini hit quota/rate limits, DO NOT waste another
-    // Gemini request using a second model.
-    // Go directly to OpenAI.
+    // GEMINI
     // ========================================================
 
     if (
-      !geminiQuotaExceeded &&
-      chosenModel !== MODELS.flash
+      process.env.GEMINI_API_KEY
     ) {
 
       try {
 
         const result =
           await callGemini({
+
             prompt,
-            photo: body.photo,
-            mimeType: body.mimeType,
-            modelId: MODELS.flash
+
+            photo:
+              body.photo,
+
+            mimeType:
+              body.mimeType,
+
+            modelId:
+              chosenModel
           });
 
 
-        return sendJSON(
-          res,
-          200,
-          {
-            ok: true,
+        // ====================================================
+        // STRUCTURED HOMEWORK / EXAM
+        // ====================================================
 
-            ...result,
+        if (
+          intent === "homework" ||
+          intent === "exam"
+        ) {
 
-            hasImage:
-              Boolean(body.photo),
+          const parsed =
+            extractJSON(
+              result.answer
+            );
 
-            intent,
-            language,
 
-            fallbackFrom:
-              chosenModel
+          const questions =
+            normalizeQuestions(
+              parsed
+            );
+
+
+          if (
+            questions.length > 0
+          ) {
+
+            return sendJSON(
+              res,
+              200,
+              {
+
+                ok:
+                  true,
+
+                answer:
+                  result.answer,
+
+                questions,
+
+                provider:
+                  result.provider,
+
+                model:
+                  result.model,
+
+                intent,
+
+                language,
+
+                grade,
+
+                type:
+                  intent === "exam"
+                    ? "exam"
+                    : "homework",
+
+                source:
+                  "AI + SomaHub knowledge",
+
+                original:
+                  true
+              }
+            );
           }
-        );
+
+
+          // If AI returned invalid JSON,
+          // continue to fallback instead of
+          // giving broken homework to frontend.
+
+          errors.push({
+
+            provider:
+              "Gemini",
+
+            error:
+              "AI returned invalid question JSON"
+          });
+
+
+        } else {
+
+          return sendJSON(
+            res,
+            200,
+            {
+
+              ok:
+                true,
+
+              answer:
+                result.answer,
+
+              provider:
+                result.provider,
+
+              model:
+                result.model,
+
+              intent,
+
+              language,
+
+              grade,
+
+              hasImage:
+                Boolean(body.photo)
+            }
+          );
+        }
 
 
       } catch (error) {
 
-        const quota =
-          isQuotaError(error);
-
-
         errors.push({
+
           provider:
             "Gemini",
 
-          model:
-            MODELS.flash,
-
           error:
-            publicProviderError(error),
+            publicProviderError(
+              error
+            ),
 
-          quota
+          quota:
+            isQuotaError(
+              error
+            ),
+
+          modelError:
+            isModelError(
+              error
+            )
         });
 
 
-        if (quota) {
-          geminiQuotaExceeded =
-            true;
-        }
+        // ====================================================
+        // IMPORTANT:
+        //
+        // If Gemini quota is exhausted, we DO NOT try another
+        // Gemini model. We immediately move to OpenAI.
+        // ====================================================
       }
+
+    } else {
+
+      errors.push({
+
+        provider:
+          "Gemini",
+
+        error:
+          "GEMINI_API_KEY not configured"
+      });
     }
 
 
@@ -1320,138 +2141,239 @@ Just type your question or upload a photo.`,
     // OPENAI FALLBACK
     // ========================================================
 
-    try {
+    if (
+      process.env.OPENAI_API_KEY
+    ) {
 
-      const result =
-        await callOpenAI({
-          prompt,
-          photo: body.photo,
-          mimeType: body.mimeType,
-          modelId: MODELS.fallback
+      try {
+
+        const result =
+          await callOpenAI({
+
+            prompt,
+
+            photo:
+              body.photo,
+
+            mimeType:
+              body.mimeType,
+
+            modelId:
+              MODELS.fallback
+          });
+
+
+        // ====================================================
+        // STRUCTURED HOMEWORK / EXAM
+        // ====================================================
+
+        if (
+          intent === "homework" ||
+          intent === "exam"
+        ) {
+
+          const parsed =
+            extractJSON(
+              result.answer
+            );
+
+
+          const questions =
+            normalizeQuestions(
+              parsed
+            );
+
+
+          if (
+            questions.length > 0
+          ) {
+
+            return sendJSON(
+              res,
+              200,
+              {
+
+                ok:
+                  true,
+
+                answer:
+                  result.answer,
+
+                questions,
+
+                provider:
+                  result.provider,
+
+                model:
+                  result.model,
+
+                intent,
+
+                language,
+
+                grade,
+
+                type:
+                  intent === "exam"
+                    ? "exam"
+                    : "homework",
+
+                source:
+                  "OpenAI fallback + SomaHub knowledge",
+
+                original:
+                  true
+              }
+            );
+          }
+
+
+          errors.push({
+
+            provider:
+              "OpenAI",
+
+            error:
+              "AI returned invalid question JSON"
+          });
+
+
+        } else {
+
+          return sendJSON(
+            res,
+            200,
+            {
+
+              ok:
+                true,
+
+              answer:
+                result.answer,
+
+              provider:
+                result.provider,
+
+              model:
+                result.model,
+
+              intent,
+
+              language,
+
+              grade,
+
+              hasImage:
+                Boolean(body.photo)
+            }
+          );
+        }
+
+
+      } catch (error) {
+
+        errors.push({
+
+          provider:
+            "OpenAI",
+
+          error:
+            publicProviderError(
+              error
+            ),
+
+          quota:
+            isQuotaError(
+              error
+            ),
+
+          modelError:
+            isModelError(
+              error
+            )
         });
 
+      }
 
-      return sendJSON(
-        res,
-        200,
-        {
-          ok: true,
-
-          ...result,
-
-          hasImage:
-            Boolean(body.photo),
-
-          intent,
-          language,
-
-          fallbackFrom:
-            "Gemini"
-        }
-      );
-
-
-    } catch (error) {
+    } else {
 
       errors.push({
+
         provider:
           "OpenAI",
 
-        model:
-          MODELS.fallback,
-
         error:
-          publicProviderError(error),
-
-        quota:
-          isQuotaError(error)
+          "OPENAI_API_KEY not configured"
       });
     }
 
 
     // ========================================================
-    // ALL PROVIDERS FAILED
+    // BOTH PROVIDERS FAILED
     // ========================================================
 
-    const geminiError =
-      errors.find(
+    const quotaOnly =
+      errors.length > 0 &&
+      errors.every(
         item =>
-          item.provider === "Gemini"
+          item.quota === true
       );
-
-    const openaiError =
-      errors.find(
-        item =>
-          item.provider === "OpenAI"
-      );
-
-
-    let userMessage =
-      "No AI provider is currently available.";
-
-
-    if (
-      geminiError?.quota &&
-      openaiError?.quota
-    ) {
-
-      userMessage =
-        "SomaHub AI is temporarily unavailable because the available AI usage limits have been reached. Please try again later.";
-
-    } else if (
-      geminiError?.quota &&
-      !openaiError
-    ) {
-
-      userMessage =
-        "Gemini usage limit has been reached. SomaHub is trying its fallback provider.";
-
-    } else if (
-      openaiError?.quota &&
-      !geminiError
-    ) {
-
-      userMessage =
-        "The OpenAI fallback is currently unavailable because its usage limit has been reached.";
-
-    } else {
-
-      userMessage =
-        "No AI provider is currently available. Please try again shortly.";
-    }
 
 
     return sendJSON(
       res,
       503,
       {
-        ok: false,
+
+        ok:
+          false,
 
         error:
-          userMessage,
+          quotaOnly
 
-        providers:
-          errors,
+            ? "All configured AI providers are currently at their usage limit."
+
+            : "No AI provider is currently available.",
 
         intent,
-        language
+
+        grade,
+
+        details:
+          errors
       }
     );
 
 
   } catch (error) {
 
+    console.error(
+      "SomaHub AI API error:",
+      error
+    );
+
+
     return sendJSON(
       res,
       500,
       {
-        ok: false,
+
+        ok:
+          false,
 
         error:
-          String(
-            error?.message ||
-            "Unexpected server error"
-          ).slice(0,800)
+          "SomaHub AI could not process this request.",
+
+        details:
+          process.env.NODE_ENV ===
+          "development"
+
+            ? String(
+                error?.message ||
+                error
+              )
+
+            : undefined
       }
     );
   }
