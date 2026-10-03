@@ -1,9 +1,28 @@
-<!DOCTYPE html><html lang="en">
+<!DOCTYPE html>
+<html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>SomaHub Tutor</title><script src="https://cdn.tailwindcss.com"></script><link rel="stylesheet"
-href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"><link href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800;900&display=swap"
-rel="stylesheet"><style>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+
+<title>SomaHub Tutor</title>
+
+<script src="https://cdn.tailwindcss.com"></script>
+
+<link
+  rel="stylesheet"
+  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+>
+
+<link
+  href="https://fonts.googleapis.com/css2?family=Nunito:wght@500;600;700;800;900&display=swap"
+  rel="stylesheet"
+>
+
+<style>
+
+/* =========================================================
+   GLOBAL
+========================================================= */
 
 *{
   box-sizing:border-box;
@@ -16,7 +35,8 @@ body{
   width:100%;
   height:100%;
   font-family:'Nunito',sans-serif;
-  background:#f4f7fb;
+  background:#f4f7fc;
+  color:#172033;
 }
 
 body{
@@ -33,32 +53,31 @@ button{
   -webkit-tap-highlight-color:transparent;
 }
 
-/* APP */
-
 #app{
-  width:100%;
   height:100dvh;
-  min-height:100dvh;
+  min-height:100vh;
   display:flex;
   flex-direction:column;
-  overflow:hidden;
 }
 
-/* HEADER */
+
+/* =========================================================
+   HEADER
+========================================================= */
 
 .top-header{
-  height:60px;
-  min-height:60px;
+  height:68px;
+  min-height:68px;
   background:#ffffff;
-  border-bottom:1px solid #e7ebf2;
+  border-bottom:1px solid #e8edf5;
   display:flex;
   align-items:center;
   justify-content:space-between;
-  padding:0 14px;
+  padding:0 clamp(12px,3vw,32px);
   z-index:10;
 }
 
-.brand{
+.brand-area{
   display:flex;
   align-items:center;
   gap:10px;
@@ -66,78 +85,89 @@ button{
 }
 
 .logo{
-  width:38px;
-  height:38px;
-  border-radius:12px;
+  width:44px;
+  height:44px;
+  border-radius:50%;
   object-fit:cover;
-  border:1px solid #e5e7eb;
-  background:#eef2ff;
+  border:2px solid #e8eef8;
+  background:white;
   flex-shrink:0;
 }
 
+.brand-text{
+  min-width:0;
+}
+
 .brand-title{
-  font-size:15px;
+  margin:0;
+  color:#243b8f;
+  font-size:clamp(15px,2vw,20px);
+  line-height:1.05;
   font-weight:900;
-  color:#25358a;
-  line-height:1.1;
+  white-space:nowrap;
 }
 
 .online{
-  margin-top:2px;
-  font-size:9px;
-  font-weight:800;
-  color:#16a34a;
+  margin-top:3px;
   display:flex;
   align-items:center;
-  gap:4px;
+  gap:5px;
+  color:#159447;
+  font-size:10px;
+  font-weight:800;
 }
 
 .online-dot{
-  width:7px;
-  height:7px;
+  width:8px;
+  height:8px;
   border-radius:50%;
   background:#22c55e;
-  display:inline-block;
+  box-shadow:0 0 0 3px #dcfce7;
 }
 
 .header-actions{
   display:flex;
   align-items:center;
-  gap:7px;
+  gap:8px;
 }
 
 .grade-select{
-  height:34px;
-  border:1px solid #e3e7ef;
-  background:#f6f8fc;
-  color:#25358a;
-  border-radius:18px;
-  padding:0 11px;
-  font-size:11px;
+  height:40px;
+  min-width:125px;
+  padding:0 14px;
+  border-radius:22px;
+  border:1px solid #e1e7f0;
+  background:#f7f9fd;
+  color:#263b7d;
+  font-size:13px;
   font-weight:800;
   outline:none;
-  max-width:125px;
 }
 
 .history-btn{
-  width:34px;
-  height:34px;
+  width:40px;
+  height:40px;
   border:0;
   border-radius:50%;
-  background:#25358a;
+  background:#263d99;
   color:white;
   display:flex;
   align-items:center;
   justify-content:center;
-  cursor:pointer;
+  font-size:14px;
+  box-shadow:0 5px 14px rgba(38,61,153,.18);
 }
 
-/* CHAT */
+
+/* =========================================================
+   CHAT
+========================================================= */
 
 #chat{
   flex:1;
   min-height:0;
   overflow-y:auto;
+  overflow-x:hidden;
   -webkit-overflow-scrolling:touch;
   scroll-behavior:smooth;
 }
@@ -147,448 +177,68 @@ button{
 }
 
 #chat::-webkit-scrollbar-thumb{
-  background:#cbd5e1;
+  background:#d7deea;
   border-radius:20px;
 }
 
 .chat-container{
-  width:100%;
-  max-width:900px;
-  margin:0 auto;
-  padding:20px 16px 150px;
+  width:min(100%,1050px);
+  margin:auto;
+  padding:
+    clamp(20px,4vw,45px)
+    clamp(12px,3vw,28px)
+    150px;
 }
 
-/* WELCOME */
+
+/* =========================================================
+   WELCOME
+========================================================= */
 
 #welcome{
+  text-align:center;
   display:flex;
   flex-direction:column;
   align-items:center;
-  text-align:center;
-  padding:35px 10px 20px;
+  padding:
+    clamp(20px,5vw,60px)
+    10px
+    20px;
 }
 
 .welcome-icon{
-  width:78px;
-  height:78px;
-  border-radius:24px;
+  width:92px;
+  height:92px;
+  border-radius:30px;
   display:flex;
   align-items:center;
   justify-content:center;
-  font-size:34px;
-  background:linear-gradient(135deg,#25358a,#4f67d8);
-  box-shadow:0 10px 25px rgba(37,53,138,.20);
+  font-size:42px;
+  background:linear-gradient(145deg,#4058c5,#243a96);
+  box-shadow:0 15px 35px rgba(39,61,154,.20);
+  margin-bottom:18px;
 }
 
 .welcome-title{
-  margin-top:16px;
-  font-size:23px;
+  margin:0;
+  color:#243b8f;
+  font-size:clamp(25px,4vw,38px);
+  line-height:1.15;
   font-weight:900;
-  color:#25358a;
 }
 
 .welcome-text{
-  margin-top:7px;
-  max-width:430px;
-  font-size:13px;
-  line-height:1.55;
-  color:#64748b;
-}
-
-/* QUICK QUESTIONS */
-
-.quick-grid{
-  width:100%;
   max-width:600px;
-  display:grid;
-  grid-template-columns:repeat(2,1fr);
-  gap:10px;
-  margin-top:22px;
+  margin:10px auto 0;
+  color:#68758a;
+  font-size:clamp(13px,1.8vw,16px);
+  line-height:1.6;
 }
 
-.quick-btn{
-  min-height:65px;
-  padding:12px;
-  background:#ffffff;
-  border:1px solid #e3e8f1;
-  border-radius:15px;
-  text-align:left;
-  font-size:12px;
-  font-weight:800;
-  color:#26334f;
-  cursor:pointer;
-  transition:.15s ease;
-  box-shadow:0 3px 10px rgba(15,23,42,.04);
-}
 
-.quick-btn:hover{
-  transform:translateY(-1px);
-  border-color:#aebcf0;
-  box-shadow:0 6px 18px rgba(37,53,138,.09);
-}
-
-.quick-btn:active{
-  transform:scale(.98);
-}
-
-/* USER MESSAGE */
-
-.user-row{
-  display:flex;
-  justify-content:flex-end;
-  margin-bottom:10px;
-}
-
-.user-bubble{
-  max-width:min(78%,620px);
-  background:#dff7c8;
-  color:#17321b;
-  border-radius:18px 18px 5px 18px;
-  padding:10px 14px;
-  font-size:13.5px;
-  line-height:1.5;
-  box-shadow:0 2px 7px rgba(15,23,42,.05);
-}
-
-/* AI */
-
-.ai-row{
-  display:flex;
-  align-items:flex-start;
-  gap:9px;
-  margin-bottom:15px;
-}
-
-.ai-avatar{
-  width:30px;
-  height:30px;
-  min-width:30px;
-  border-radius:10px;
-  background:linear-gradient(135deg,#25358a,#4f67d8);
-  color:white;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-size:14px;
-  margin-top:2px;
-}
-
-.ai-content{
-  flex:1;
-  min-width:0;
-}
-
-.ai-card{
-  background:#ffffff;
-  border:1px solid #e3e8f1;
-  border-radius:6px 17px 17px 17px;
-  padding:14px 16px;
-  line-height:1.65;
-  font-size:13.5px;
-  color:#182033;
-  box-shadow:0 3px 12px rgba(15,23,42,.045);
-  overflow-wrap:anywhere;
-}
-
-.ai-card h3{
-  font-weight:900;
-  font-size:12px;
-  margin:13px 0 7px;
-  color:#25358a;
-  text-transform:uppercase;
-}
-
-.ai-card p{
-  margin:6px 0;
-}
-
-.ai-card ul{
-  margin:7px 0 7px 18px;
-  list-style:disc;
-}
-
-.ai-card ol{
-  margin:7px 0 7px 18px;
-  list-style:decimal;
-}
-
-/* MESSAGE ACTIONS */
-
-.message-actions{
-  display:flex;
-  flex-wrap:wrap;
-  gap:5px;
-  margin-top:7px;
-}
-
-.message-action{
-  height:29px;
-  padding:0 10px;
-  border-radius:15px;
-  background:white;
-  border:1px solid #e1e6ef;
-  color:#334155;
-  font-size:10px;
-  font-weight:800;
-  cursor:pointer;
-}
-
-.message-action.primary{
-  background:#25358a;
-  color:white;
-  border-color:#25358a;
-}
-
-/* THINKING */
-
-.thinking{
-  display:flex;
-  align-items:center;
-  gap:8px;
-  margin-bottom:12px;
-}
-
-.thinking-avatar{
-  width:30px;
-  height:30px;
-  border-radius:10px;
-  background:#25358a;
-  color:white;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-size:13px;
-}
-
-.thinking-box{
-  background:white;
-  border:1px solid #e5e7eb;
-  border-radius:15px;
-  padding:8px 14px;
-  color:#64748b;
-  font-size:12px;
-}
-
-/* FOOTER */
-
-.footer{
-  flex-shrink:0;
-  background:#ffffff;
-  border-top:1px solid #e4e8ef;
-  padding:8px 10px;
-  padding-bottom:max(8px,env(safe-area-inset-bottom));
-  z-index:20;
-  box-shadow:0 -4px 15px rgba(15,23,42,.035);
-}
-
-.footer-inner{
-  width:100%;
-  max-width:900px;
-  margin:auto;
-}
-
-/* ATTACHMENT */
-
-.preview{
-  margin-bottom:7px;
-  background:#f8fafc;
-  border:1px solid #e2e8f0;
-  border-radius:12px;
-  padding:7px;
-  display:flex;
-  align-items:center;
-  gap:8px;
-}
-
-.preview-img{
-  width:40px;
-  height:40px;
-  border-radius:8px;
-  object-fit:cover;
-}
-
-.preview-name{
-  flex:1;
-  min-width:0;
-  overflow:hidden;
-  text-overflow:ellipsis;
-  white-space:nowrap;
-  font-size:11px;
-  color:#475569;
-}
-
-.preview-close{
-  width:25px;
-  height:25px;
-  border:0;
-  border-radius:50%;
-  background:#25358a;
-  color:white;
-  font-size:10px;
-}
-
-/* ERROR */
-
-.error-box{
-  background:#fff1f2;
-  color:#dc2626;
-  border:1px solid #fecdd3;
-  font-size:11px;
-  padding:6px 12px;
-  border-radius:15px;
-  text-align:center;
-  margin-bottom:7px;
-}
-
-/* INPUT */
-
-.input-row{
-  display:flex;
-  align-items:flex-end;
-  gap:7px;
-}
-
-.input-box{
-  flex:1;
-  min-width:0;
-  min-height:46px;
-  background:#f7f9fc;
-  border:1px solid #dfe5ee;
-  border-radius:24px;
-  padding:3px 6px;
-  display:flex;
-  align-items:flex-end;
-  gap:1px;
-}
-
-.tool-btn{
-  width:37px;
-  height:37px;
-  min-width:37px;
-  border:0;
-  border-radius:50%;
-  background:transparent;
-  color:#64748b;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  cursor:pointer;
-}
-
-.tool-btn:hover{
-  background:#eaf0ff;
-  color:#25358a;
-}
-
-#msg{
-  flex:1;
-  min-width:0;
-  min-height:22px;
-  max-height:105px;
-  resize:none;
-  border:0;
-  outline:none;
-  background:transparent;
-  padding:10px 5px;
-  font-size:14px;
-  line-height:1.4;
-  color:#172033;
-}
-
-#msg::placeholder{
-  color:#94a3b8;
-}
-
-.circle-action{
-  width:44px;
-  height:44px;
-  min-width:44px;
-  border:0;
-  border-radius:50%;
-  color:white;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  cursor:pointer;
-  box-shadow:0 4px 10px rgba(15,23,42,.12);
-}
-
-.voice{
-  background:#25358a;
-}
-
-.send{
-  background:#22c55e;
-}
-
-.listen-text{
-  font-size:10px;
-  color:#ef4444;
-  text-align:center;
-  margin-top:3px;
-}
-
-/* HISTORY */
-
-.history{
-  position:fixed;
-  inset:0;
-  z-index:100;
-  background:#f8fafc;
-  display:none;
-  flex-direction:column;
-}
-
-.history.show{
-  display:flex;
-}
-
-.history-header{
-  height:60px;
-  min-height:60px;
-  background:white;
-  border-bottom:1px solid #e5e7eb;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  padding:0 15px;
-}
-
-.history-title{
-  font-size:14px;
-  font-weight:900;
-  color:#25358a;
-}
-
-.history-back{
-  border:0;
-  background:transparent;
-  color:#25358a;
-  font-weight:800;
-}
-
-.history-delete{
-  border:0;
-  background:transparent;
-  color:#64748b;
-  font-size:11px;
-}
-
-.history-list{
-  flex:1;
-  overflow:auto;
-  padding:12px;
-}
-
-.history-item{
-  background:white;
-  border:1px solid #e5e7eb;
-  border-radius:12px;
-  padding:11px;
-  margin-bottom:8px;
-}
-
-/* ANIMATION */
+/* =========================================================
+   MESSAGES
+========================================================= */
 
 .message-in{
   animation:messageIn .18s ease-out;
@@ -605,446 +255,1107 @@ button{
   }
 }
 
-/* TABLET */
-
-@media(min-width:600px){
-
-  .top-header{
-    height:64px;
-    padding:0 24px;
-  }
-
-  .brand-title{
-    font-size:16px;
-  }
-
-  .chat-container{
-    padding-left:28px;
-    padding-right:28px;
-  }
-
-  #welcome{
-    padding-top:55px;
-  }
-
-  .welcome-icon{
-    width:88px;
-    height:88px;
-    font-size:38px;
-  }
-
-  .welcome-title{
-    font-size:27px;
-  }
-
-  .welcome-text{
-    font-size:14px;
-  }
-
-  .quick-btn{
-    min-height:72px;
-    font-size:13px;
-  }
-
-  .ai-card{
-    font-size:14px;
-    padding:16px 18px;
-  }
-
+.user-row{
+  display:flex;
+  justify-content:flex-end;
+  margin-bottom:12px;
 }
 
-/* LAPTOP / DESKTOP */
-
-@media(min-width:1024px){
-
-  body{
-    background:#eef2f7;
-  }
-
-  #app{
-    max-width:1180px;
-    margin:0 auto;
-    background:#f8fafc;
-    box-shadow:0 0 35px rgba(15,23,42,.08);
-  }
-
-  .top-header{
-    padding:0 28px;
-  }
-
-  .chat-container{
-    max-width:900px;
-    padding-top:28px;
-    padding-bottom:165px;
-  }
-
-  #welcome{
-    padding-top:70px;
-  }
-
-  .welcome-title{
-    font-size:29px;
-  }
-
-  .footer{
-    padding-left:25px;
-    padding-right:25px;
-  }
-
-  .input-box{
-    min-height:50px;
-  }
-
-  .circle-action{
-    width:46px;
-    height:46px;
-    min-width:46px;
-  }
-
+.user-bubble{
+  max-width:min(78%,680px);
+  background:#dff8c8;
+  color:#17321d;
+  border-radius:20px 20px 5px 20px;
+  padding:11px 15px;
+  font-size:14px;
+  line-height:1.5;
+  box-shadow:0 3px 10px rgba(0,0,0,.04);
+  white-space:pre-wrap;
+  overflow-wrap:anywhere;
 }
 
-/* VERY SMALL PHONES */
+.photo-bubble{
+  background:#dff8c8;
+  border-radius:18px 18px 5px 18px;
+  padding:5px;
+  max-width:260px;
+}
 
-@media(max-width:370px){
+.photo-bubble img{
+  width:100%;
+  max-height:300px;
+  object-fit:contain;
+  border-radius:13px;
+}
+
+
+/* =========================================================
+   AI MESSAGE
+========================================================= */
+
+.ai-row{
+  display:flex;
+  align-items:flex-start;
+  gap:9px;
+  margin-bottom:18px;
+}
+
+.ai-avatar{
+  width:34px;
+  height:34px;
+  min-width:34px;
+  border-radius:12px;
+  background:linear-gradient(145deg,#4058c5,#263b95);
+  color:white;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:16px;
+  box-shadow:0 5px 12px rgba(38,59,149,.18);
+}
+
+.ai-content{
+  min-width:0;
+  flex:1;
+  max-width:820px;
+}
+
+.ai-card{
+  background:white;
+  border:1px solid #e5eaf2;
+  border-radius:5px 20px 20px 20px;
+  padding:16px clamp(14px,2.5vw,22px);
+  color:#111827;
+  font-size:clamp(13.5px,1.7vw,15px);
+  line-height:1.7;
+  box-shadow:0 5px 18px rgba(29,43,77,.055);
+  overflow-wrap:anywhere;
+}
+
+.ai-card p{
+  margin:7px 0;
+}
+
+.ai-card ul{
+  margin:7px 0 7px 20px;
+  padding:0;
+  list-style:disc;
+}
+
+.ai-card ol{
+  margin:7px 0 7px 20px;
+  padding:0;
+  list-style:decimal;
+}
+
+.ai-card li{
+  margin:4px 0;
+}
+
+
+/* Topic / Strand */
+
+.ai-topic{
+  color:#dc2626 !important;
+  font-weight:900;
+  font-size:14px;
+  margin-top:0 !important;
+  margin-bottom:5px !important;
+}
+
+.ai-strand{
+  color:#dc2626 !important;
+  font-weight:800;
+  font-size:13px;
+  margin-top:2px !important;
+  margin-bottom:10px !important;
+}
+
+
+/* Explanation */
+
+.ai-explanation{
+  color:#2563eb !important;
+  font-weight:800;
+  font-size:14px;
+  margin-top:10px !important;
+  margin-bottom:5px !important;
+}
+
+
+/* Detailed answer stays black */
+
+.ai-detail{
+  color:#111827;
+}
+
+
+/* Formula */
+
+.ai-formula{
+  background:#f7f9fc;
+  border:1px dashed #cbd5e1;
+  border-radius:10px;
+  padding:9px 12px;
+  margin:10px 0;
+  text-align:center;
+  font-family:monospace;
+  color:#172033;
+}
+
+
+/* MCQ */
+
+.choice-block{
+  margin:10px 0;
+  padding:10px 12px;
+  border-radius:11px;
+  background:#f8fafc;
+  border:1px solid #e7ebf2;
+}
+
+.choice-correct{
+  border-left:4px solid #16a34a;
+  background:#f0fdf4;
+}
+
+.choice-wrong{
+  border-left:4px solid #ef4444;
+  background:#fff7f7;
+}
+
+.choice-label{
+  font-weight:900;
+}
+
+.correct-label{
+  color:#15803d;
+}
+
+.wrong-label{
+  color:#dc2626;
+}
+
+
+/* =========================================================
+   ACTION BUTTONS
+========================================================= */
+
+.ai-actions{
+  display:flex;
+  flex-wrap:wrap;
+  gap:6px;
+  margin-top:8px;
+}
+
+.ai-action{
+  height:30px;
+  padding:0 11px;
+  border:1px solid #e2e7ef;
+  border-radius:16px;
+  background:white;
+  color:#445066;
+  font-size:10px;
+  font-weight:800;
+  cursor:pointer;
+}
+
+.ai-action:hover{
+  background:#f5f7fb;
+}
+
+.ai-action.dark{
+  background:#253a91;
+  border-color:#253a91;
+  color:white;
+}
+
+
+/* =========================================================
+   QUICK STATUS
+========================================================= */
+
+.answer-status{
+  display:flex;
+  align-items:center;
+  gap:7px;
+  color:#778399;
+  font-size:10px;
+  font-weight:700;
+  margin:3px 0 10px 43px;
+}
+
+.status-dot{
+  width:6px;
+  height:6px;
+  border-radius:50%;
+  background:#3b82f6;
+  animation:pulseDot 1s infinite;
+}
+
+@keyframes pulseDot{
+  0%,100%{
+    opacity:.3;
+    transform:scale(.8);
+  }
+  50%{
+    opacity:1;
+    transform:scale(1);
+  }
+}
+
+
+/* =========================================================
+   FOOTER / INPUT
+========================================================= */
+
+.input-footer{
+  flex-shrink:0;
+  background:rgba(247,249,253,.97);
+  border-top:1px solid #e2e7ef;
+  padding:
+    8px
+    max(10px,env(safe-area-inset-right))
+    max(9px,env(safe-area-inset-bottom))
+    max(10px,env(safe-area-inset-left));
+  backdrop-filter:blur(12px);
+  z-index:20;
+}
+
+.input-container{
+  width:min(100%,1050px);
+  margin:auto;
+}
+
+
+/* Attachment preview */
+
+.preview-box{
+  display:flex;
+  align-items:center;
+  gap:9px;
+  background:white;
+  border:1px solid #e1e7ef;
+  border-radius:14px;
+  padding:7px 9px;
+  margin-bottom:7px;
+}
+
+.preview-image{
+  width:40px;
+  height:40px;
+  border-radius:9px;
+  object-fit:cover;
+}
+
+.preview-icon{
+  width:40px;
+  height:40px;
+  border-radius:9px;
+  background:#f1f5f9;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  color:#64748b;
+}
+
+.preview-name{
+  flex:1;
+  min-width:0;
+  font-size:11px;
+  color:#4b5563;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+
+.preview-close{
+  width:28px;
+  height:28px;
+  border:0;
+  border-radius:50%;
+  background:#f1f5f9;
+  color:#64748b;
+}
+
+
+/* Error */
+
+#errorBox{
+  background:#fff1f2;
+  color:#dc2626;
+  border:1px solid #fecdd3;
+  border-radius:12px;
+  padding:7px 11px;
+  font-size:11px;
+  margin-bottom:7px;
+  text-align:center;
+}
+
+
+/* Input row */
+
+.input-row{
+  display:flex;
+  align-items:flex-end;
+  gap:7px;
+}
+
+.message-box{
+  flex:1;
+  min-width:0;
+  min-height:50px;
+  max-height:130px;
+  display:flex;
+  align-items:flex-end;
+  gap:2px;
+  background:white;
+  border:1px solid #dfe5ee;
+  border-radius:27px;
+  padding:5px 7px;
+  box-shadow:0 4px 16px rgba(32,49,87,.06);
+}
+
+.attach-button{
+  width:39px;
+  height:39px;
+  min-width:39px;
+  border:0;
+  border-radius:50%;
+  background:transparent;
+  color:#69778d;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:16px;
+}
+
+.attach-button:hover{
+  background:#f1f4f8;
+}
+
+#msg{
+  flex:1;
+  min-width:0;
+  min-height:39px;
+  max-height:115px;
+  resize:none;
+  border:0;
+  outline:none;
+  background:transparent;
+  color:#172033;
+  font-size:14px;
+  line-height:1.45;
+  padding:9px 6px;
+}
+
+#msg::placeholder{
+  color:#9aa5b5;
+}
+
+
+/* Voice */
+
+.voice-button,
+.send-button{
+  width:50px;
+  height:50px;
+  min-width:50px;
+  border:0;
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  color:white;
+  box-shadow:0 6px 16px rgba(0,0,0,.13);
+  transition:
+    transform .12s,
+    box-shadow .12s,
+    background .12s;
+}
+
+.voice-button{
+  background:#263c96;
+}
+
+.send-button{
+  background:#20bd67;
+}
+
+.voice-button:active,
+.send-button:active{
+  transform:scale(.93);
+}
+
+.voice-button.recording{
+  background:#dc2626;
+  animation:recordPulse 1s infinite;
+}
+
+@keyframes recordPulse{
+  0%,100%{
+    box-shadow:0 0 0 0 rgba(220,38,38,.25);
+  }
+  50%{
+    box-shadow:0 0 0 10px rgba(220,38,38,0);
+  }
+}
+
+
+/* Listening text */
+
+.listen-text{
+  text-align:center;
+  color:#dc2626;
+  font-size:10px;
+  font-weight:800;
+  margin-top:3px;
+}
+
+
+/* =========================================================
+   HISTORY
+========================================================= */
+
+.history-drawer{
+  position:fixed;
+  inset:0;
+  z-index:100;
+  background:#f8faff;
+  display:none;
+  flex-direction:column;
+}
+
+.history-drawer.open{
+  display:flex;
+}
+
+.history-header{
+  height:60px;
+  flex-shrink:0;
+  background:white;
+  border-bottom:1px solid #e4e9f1;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:0 15px;
+}
+
+.history-list{
+  flex:1;
+  overflow:auto;
+  padding:12px;
+}
+
+.history-item{
+  background:white;
+  border:1px solid #e4e9f1;
+  border-radius:13px;
+  padding:12px;
+  margin-bottom:8px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+}
+
+
+/* =========================================================
+   TABLET
+========================================================= */
+
+@media (min-width:600px){
 
   .top-header{
-    padding:0 8px;
-  }
-
-  .brand{
-    gap:7px;
+    height:74px;
+    min-height:74px;
   }
 
   .logo{
-    width:34px;
-    height:34px;
+    width:48px;
+    height:48px;
   }
 
-  .brand-title{
-    font-size:13px;
+  .welcome-icon{
+    width:105px;
+    height:105px;
   }
 
-  .online{
-    font-size:8px;
+  .message-box{
+    min-height:56px;
   }
 
-  .grade-select{
-    max-width:92px;
-    padding:0 7px;
-    font-size:10px;
+  .voice-button,
+  .send-button{
+    width:54px;
+    height:54px;
+    min-width:54px;
   }
+}
 
-  .history-btn{
-    width:32px;
-    height:32px;
-  }
+
+/* =========================================================
+   LAPTOP / DESKTOP
+========================================================= */
+
+@media (min-width:900px){
 
   .chat-container{
-    padding-left:9px;
-    padding-right:9px;
+    padding-bottom:170px;
   }
 
-  .tool-btn{
-    width:32px;
-    min-width:32px;
+  .input-footer{
+    padding-top:10px;
   }
 
-  .circle-action{
-    width:40px;
-    min-width:40px;
-    height:40px;
+  .message-box{
+    min-height:58px;
+  }
+
+  .attach-button{
+    width:42px;
+    height:42px;
   }
 
   #msg{
-    font-size:13px;
+    min-height:42px;
   }
 
-  .quick-btn{
-    font-size:10px;
-    padding:9px;
+  .voice-button,
+  .send-button{
+    width:56px;
+    height:56px;
+    min-width:56px;
+  }
+}
+
+
+/* =========================================================
+   SMALL PHONES
+========================================================= */
+
+@media (max-width:430px){
+
+  .top-header{
+    height:64px;
+    min-height:64px;
+    padding:0 10px;
+  }
+
+  .logo{
+    width:40px;
+    height:40px;
+  }
+
+  .brand-title{
+    font-size:15px;
+  }
+
+  .online{
+    font-size:9px;
+  }
+
+  .grade-select{
+    min-width:102px;
+    height:38px;
+    padding:0 10px;
+    font-size:12px;
+  }
+
+  .history-btn{
+    width:38px;
+    height:38px;
+  }
+
+  .welcome-icon{
+    width:78px;
+    height:78px;
+    border-radius:24px;
+    font-size:35px;
+  }
+
+  .welcome-title{
+    font-size:25px;
+  }
+
+  .welcome-text{
+    font-size:12.5px;
+  }
+
+  .ai-card{
+    font-size:13.5px;
+    padding:13px;
+  }
+
+  .ai-avatar{
+    width:31px;
+    height:31px;
+    min-width:31px;
   }
 
   .user-bubble{
-    max-width:85%;
+    max-width:84%;
+  }
+
+  .attach-button{
+    width:35px;
+    min-width:35px;
+    height:35px;
+  }
+
+  #msg{
+    font-size:13.5px;
+    padding-left:4px;
+    padding-right:4px;
+  }
+
+  .voice-button,
+  .send-button{
+    width:47px;
+    height:47px;
+    min-width:47px;
   }
 
 }
 
-/* REDUCE MOTION */
 
-@media(prefers-reduced-motion:reduce){
+/* =========================================================
+   VERY SMALL PHONES
+========================================================= */
 
-  *,
-  *::before,
-  *::after{
-    animation:none!important;
-    transition:none!important;
-    scroll-behavior:auto!important;
+@media (max-width:360px){
+
+  .brand-title{
+    font-size:14px;
   }
 
+  .grade-select{
+    min-width:90px;
+  }
+
+  .history-btn{
+    width:36px;
+    height:36px;
+  }
+
+  .header-actions{
+    gap:5px;
+  }
+
+  .message-box{
+    gap:0;
+  }
+
+  .attach-button{
+    width:32px;
+    min-width:32px;
+    font-size:14px;
+  }
+
+  .voice-button,
+  .send-button{
+    width:43px;
+    height:43px;
+    min-width:43px;
+  }
 }
 
-</style></head><body><div id="app"><!-- HEADER --><header class="top-header">  <div class="brand"><img
-  src="/logo.png"
-  onerror="this.src='https://i.pravatar.cc/100'"
-  class="logo"
-  alt="SomaHub">
+</style>
+</head>
 
-<div>
-  <div class="brand-title">SomaHub Tutor</div>
 
-  <div class="online">
-    <span class="online-dot"></span>
-    Online • Auto EN/SW
+<body>
+
+<div id="app">
+
+<!-- =======================================================
+     HEADER
+======================================================= -->
+
+<header class="top-header">
+
+  <div class="brand-area">
+
+    <img
+      src="/logo.png"
+      class="logo"
+      alt="SomaHub"
+      onerror="this.src='https://i.pravatar.cc/100'"
+    >
+
+    <div class="brand-text">
+
+      <p class="brand-title">
+        SomaHub Tutor
+      </p>
+
+      <div class="online">
+        <span class="online-dot"></span>
+        Online • Auto EN/SW
+      </div>
+
+    </div>
+
   </div>
+
+
+  <div class="header-actions">
+
+    <select
+      id="grade"
+      class="grade-select"
+      aria-label="Select grade"
+    >
+      <option>Playground</option>
+      <option>PP1</option>
+      <option>PP2</option>
+      <option>Grade 1</option>
+      <option>Grade 2</option>
+      <option>Grade 3</option>
+      <option>Grade 4</option>
+      <option>Grade 5</option>
+      <option>Grade 6</option>
+      <option selected>Grade 7</option>
+      <option>Grade 8</option>
+      <option>Grade 9</option>
+      <option>Grade 10</option>
+    </select>
+
+
+    <button
+      class="history-btn"
+      onclick="openHistory()"
+      aria-label="History"
+    >
+      <i class="fa-regular fa-clock"></i>
+    </button>
+
+  </div>
+
+</header>
+
+
+<!-- =======================================================
+     CHAT
+======================================================= -->
+
+<main id="chat">
+
+  <div class="chat-container">
+
+    <!-- WELCOME -->
+
+    <div id="welcome">
+
+      <div class="welcome-icon">
+        🎓
+      </div>
+
+      <h1 class="welcome-title">
+        How can I help you learn?
+      </h1>
+
+      <p class="welcome-text">
+        Ask me anything about your school work,
+        upload a homework photo, or speak your question.
+        SomaHub Tutor understands English and Kiswahili.
+      </p>
+
+    </div>
+
+
+    <!-- MESSAGES -->
+
+    <div id="messages"></div>
+
+  </div>
+
+</main>
+
+
+<!-- =======================================================
+     INPUT FOOTER
+======================================================= -->
+
+<footer class="input-footer">
+
+  <div class="input-container">
+
+
+    <!-- ATTACHMENT PREVIEW -->
+
+    <div
+      id="previewBox"
+      class="preview-box"
+      style="display:none"
+    >
+
+      <img
+        id="previewImg"
+        class="preview-image"
+        style="display:none"
+        alt="Preview"
+      >
+
+      <div
+        id="previewDocIcon"
+        class="preview-icon"
+        style="display:none"
+      >
+        <i class="fa-solid fa-file-lines"></i>
+      </div>
+
+      <span
+        id="previewName"
+        class="preview-name"
+      ></span>
+
+      <button
+        class="preview-close"
+        onclick="clearAttach()"
+        aria-label="Remove attachment"
+      >
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+
+    </div>
+
+
+    <!-- ERROR -->
+
+    <div
+      id="errorBox"
+      style="display:none"
+    ></div>
+
+
+    <!-- INPUT -->
+
+    <div class="input-row">
+
+
+      <div class="message-box">
+
+
+        <!-- DOCUMENT -->
+
+        <button
+          class="attach-button"
+          onclick="document.getElementById('docInput').click()"
+          aria-label="Attach document"
+        >
+          <i class="fa-solid fa-paperclip"></i>
+        </button>
+
+
+        <!-- IMAGE -->
+
+        <button
+          class="attach-button"
+          onclick="document.getElementById('imgInput').click()"
+          aria-label="Choose image"
+        >
+          <i class="fa-solid fa-image"></i>
+        </button>
+
+
+        <!-- CAMERA -->
+
+        <button
+          class="attach-button"
+          onclick="document.getElementById('camInput').click()"
+          aria-label="Take photo"
+        >
+          <i class="fa-solid fa-camera"></i>
+        </button>
+
+
+        <!-- TEXT -->
+
+        <textarea
+          id="msg"
+          rows="1"
+          placeholder="Ask SomaHub..."
+          autocomplete="off"
+          spellcheck="true"
+        ></textarea>
+
+      </div>
+
+
+      <!-- HOLD TO SPEAK -->
+
+      <button
+        id="voiceBtn"
+        class="voice-button"
+        aria-label="Hold to speak"
+        title="Hold to speak"
+      >
+        <i class="fa-solid fa-microphone"></i>
+      </button>
+
+
+      <!-- SEND -->
+
+      <button
+        id="sendBtn"
+        class="send-button"
+        onclick="sendMsg()"
+        aria-label="Send"
+      >
+        <i class="fa-solid fa-paper-plane"></i>
+      </button>
+
+    </div>
+
+
+    <!-- LISTENING -->
+
+    <div
+      id="listenTxt"
+      class="listen-text"
+      style="display:none"
+    >
+      ● Listening... release when finished
+    </div>
+
+  </div>
+
+</footer>
+
 </div>
 
-  </div>  <div class="header-actions"><select id="grade" class="grade-select">
 
-  <option>Playground</option>
-  <option>PP1</option>
-  <option>PP2</option>
-  <option>Grade 1</option>
-  <option>Grade 2</option>
-  <option>Grade 3</option>
-  <option>Grade 4</option>
-  <option>Grade 5</option>
-  <option>Grade 6</option>
-  <option selected>Grade 7</option>
-  <option>Grade 8</option>
-  <option>Grade 9</option>
-  <option>Grade 10</option>
-
-</select>
-
-<button
-  onclick="openHistory()"
-  class="history-btn"
-  aria-label="History">
-
-  <i class="fa-regular fa-clock"></i>
-
-</button>
-
-  </div></header><!-- CHAT --><main id="chat">  <div class="chat-container"><!-- WELCOME -->
-
-<div id="welcome">
-
-  <div class="welcome-icon">
-    🎓
-  </div>
-
-  <div class="welcome-title">
-    How can I help you learn?
-  </div>
-
-  <div class="welcome-text">
-    Ask a question, upload homework, or say Habari.
-    SomaHub Tutor understands English and Kiswahili.
-  </div>
-
-  <div class="quick-grid">
-
-    <button
-      onclick="quickAsk('What is photosynthesis?')"
-      class="quick-btn">
-      🌱 What is photosynthesis?
-    </button>
-
-    <button
-      onclick="quickAsk('Nisaidie hesabu darasa la 7')"
-      class="quick-btn">
-      🔢 Nisaidie hesabu
-    </button>
-
-    <button
-      onclick="quickAsk('Explain matter for Grade 7')"
-      class="quick-btn">
-      🧪 What is matter?
-    </button>
-
-    <button
-      onclick="quickAsk('Mark my work')"
-      class="quick-btn">
-      ✅ Mark my work
-    </button>
-
-  </div>
-
-</div>
-
-<div id="messages"></div>
-
-  </div></main><!-- FOOTER --><footer class="footer">  <div class="footer-inner"><!-- PREVIEW -->
-
-<div id="previewBox" class="preview hidden">
-
-  <img
-    id="previewImg"
-    class="preview-img hidden"
-    alt="Preview">
-
-  <i
-    id="previewDocIcon"
-    class="fa-solid fa-file text-gray-400 hidden">
-  </i>
-
-  <span id="previewName" class="preview-name"></span>
-
-  <button
-    onclick="clearAttach()"
-    class="preview-close">
-    ✕
-  </button>
-
-</div>
-
-
-<!-- ERROR -->
+<!-- =======================================================
+     HISTORY DRAWER
+======================================================= -->
 
 <div
-  id="errorBox"
-  class="error-box hidden">
-</div>
+  id="historyDrawer"
+  class="history-drawer"
+>
 
-
-<!-- INPUT -->
-
-<div class="input-row">
-
-  <div class="input-box">
+  <div class="history-header">
 
     <button
-      onclick="document.getElementById('docInput').click()"
-      class="tool-btn"
-      aria-label="Attach document">
-
-      <i class="fa-solid fa-paperclip"></i>
-
+      onclick="closeHistory()"
+      class="text-sm font-extrabold text-[#263b8f]"
+    >
+      <i class="fa-solid fa-arrow-left mr-1"></i>
+      Back
     </button>
+
+    <b class="text-sm">
+      Learning History
+    </b>
 
     <button
-      onclick="document.getElementById('imgInput').click()"
-      class="tool-btn"
-      aria-label="Choose image">
-
-      <i class="fa-solid fa-image"></i>
-
+      onclick="clearHistory()"
+      class="text-xs font-bold text-gray-500"
+    >
+      Delete All
     </button>
-
-    <button
-      onclick="document.getElementById('camInput').click()"
-      class="tool-btn"
-      aria-label="Take photo">
-
-      <i class="fa-solid fa-camera"></i>
-
-    </button>
-
-    <textarea
-      id="msg"
-      rows="1"
-      placeholder="Ask SomaHub Tutor..."
-      autocomplete="off">
-    </textarea>
 
   </div>
 
 
-  <button
-    id="voiceBtn"
-    onclick="toggleVoice()"
-    class="circle-action voice"
-    aria-label="Voice">
-
-    <i class="fa-solid fa-microphone"></i>
-
-  </button>
-
-
-  <button
-    id="sendBtn"
-    onclick="sendMsg()"
-    class="circle-action send"
-    aria-label="Send">
-
-    <i class="fa-solid fa-paper-plane"></i>
-
-  </button>
-
-</div>
-
-
-<div
-  id="listenTxt"
-  class="listen-text hidden">
-  ● Listening SW/EN...
-</div>
-
-  </div></footer></div><!-- HISTORY --><div id="historyDrawer" class="history">  <div class="history-header"><button
-  onclick="closeHistory()"
-  class="history-back">
-
-  ← Back
-
-</button>
-
-<div class="history-title">
-  Learning History
-</div>
-
-<button
-  onclick="clearHistory()"
-  class="history-delete">
-
-  Delete All
-
-</button>
-
-  </div>  <div
+  <div
     id="historyList"
-    class="history-list">
-  </div></div><!-- FILE INPUTS --><input
-id="docInput"
-type="file"
-class="hidden"
-accept=".pdf,.doc,.docx,.txt"
-onchange="handleDoc(this)">
+    class="history-list"
+  ></div>
+
+</div>
+
+
+<!-- =======================================================
+     FILE INPUTS
+======================================================= -->
 
 <input
-id="imgInput"
-type="file"
-class="hidden"
-accept="image/*"
-onchange="handlePhoto(this)">
+  id="docInput"
+  type="file"
+  class="hidden"
+  accept=".pdf,.doc,.docx,.txt"
+  onchange="handleDoc(this)"
+>
 
 <input
-id="camInput"
-type="file"
-class="hidden"
-accept="image/*"
-capture="environment"
-onchange="handlePhoto(this)">
+  id="imgInput"
+  type="file"
+  class="hidden"
+  accept="image/*"
+  onchange="handlePhoto(this)"
+>
+
+<input
+  id="camInput"
+  type="file"
+  class="hidden"
+  accept="image/*"
+  capture="environment"
+  onchange="handlePhoto(this)"
+>
+
 
 <script>
 
-const PROXY="/api/gemini";
+/* =========================================================
+   API
+========================================================= */
 
-let grade="Grade 7";
-let uploadedPhoto="";
-let uploadedMime="";
-let uploadedDocName="";
-let isThinking=false;
-let recognition=null;
-let listening=false;
-let chatHistory=[];
+const PROXY = "/api/gemini";
 
-const chat=document.getElementById("chat");
-const messages=document.getElementById("messages");
-const msg=document.getElementById("msg");
-const welcome=document.getElementById("welcome");
 
-const SW=[
+/* =========================================================
+   STATE
+========================================================= */
+
+let grade = "Grade 7";
+
+let uploadedPhoto = "";
+let uploadedMime = "";
+let uploadedDocName = "";
+
+let isThinking = false;
+
+let recognition = null;
+let listening = false;
+let recognitionStarted = false;
+
+let chatHistory = [];
+
+let speechQueue = [];
+
+let currentSpeech = null;
+
+
+/* =========================================================
+   ELEMENTS
+========================================================= */
+
+const chat =
+  document.getElementById("chat");
+
+const messages =
+  document.getElementById("messages");
+
+const msg =
+  document.getElementById("msg");
+
+const welcome =
+  document.getElementById("welcome");
+
+const voiceBtn =
+  document.getElementById("voiceBtn");
+
+const listenTxt =
+  document.getElementById("listenTxt");
+
+
+/* =========================================================
+   LANGUAGE
+========================================================= */
+
+const SW = [
   "habari",
   "mambo",
   "nisaidie",
@@ -1058,984 +1369,2324 @@ const SW=[
   "eleza",
   "soma",
   "darasa",
-  "mtihani"
+  "mtihani",
+  "swali",
+  "masomo",
+  "tafadhali",
+  "nini",
+  "vipi",
+  "kwa nini"
 ];
 
-function detectLang(t){
 
-  if(!t) return "EN";
+function detectLang(text){
 
-  const l=t.toLowerCase();
+  if(!text){
+    return "EN";
+  }
 
-  return SW.some(k=>l.includes(k))
+  const value =
+    String(text).toLowerCase();
+
+  return SW.some(
+    word => value.includes(word)
+  )
     ? "SW"
     : "EN";
 }
 
 
-document.getElementById("grade")
-.addEventListener("change",e=>{
+/* =========================================================
+   GRADE
+========================================================= */
 
-  grade=e.target.value;
+document
+  .getElementById("grade")
+  .addEventListener(
+    "change",
+    function(e){
 
-});
-
-
-msg.addEventListener("input",()=>{
-
-  msg.style.height="auto";
-
-  msg.style.height=
-    Math.min(msg.scrollHeight,105)+"px";
-
-});
+      grade =
+        e.target.value;
+    }
+  );
 
 
-function quickAsk(t){
+/* =========================================================
+   TEXTAREA AUTO RESIZE
+========================================================= */
 
-  msg.value=t;
+function resizeTextarea(){
 
-  msg.dispatchEvent(new Event("input"));
+  msg.style.height = "auto";
 
-  sendMsg();
-
+  msg.style.height =
+    Math.min(
+      msg.scrollHeight,
+      115
+    ) + "px";
 }
 
 
-/* VOICE */
+msg.addEventListener(
+  "input",
+  resizeTextarea
+);
+
+
+/*
+  Enter = new paragraph.
+  Ctrl + Enter / Android send button = send.
+*/
+msg.addEventListener(
+  "keydown",
+  function(e){
+
+    if(
+      e.key === "Enter" &&
+      (e.ctrlKey || e.metaKey)
+    ){
+
+      e.preventDefault();
+
+      sendMsg();
+    }
+  }
+);
+
+
+/* =========================================================
+   HOLD-TO-SPEAK
+========================================================= */
 
 (function(){
 
-  const SR=
-    window.SpeechRecognition||
+  const SR =
+    window.SpeechRecognition ||
     window.webkitSpeechRecognition;
 
-  if(!SR) return;
 
-  recognition=new SR();
+  if(!SR){
 
-  recognition.onstart=()=>{
+    voiceBtn.title =
+      "Speech recognition is not available in this browser";
 
-    listening=true;
+    return;
+  }
 
-    document
-      .getElementById("listenTxt")
-      .classList.remove("hidden");
 
-  };
+  recognition =
+    new SR();
 
-  recognition.onend=()=>{
 
-    listening=false;
+  recognition.continuous = true;
 
-    document
-      .getElementById("listenTxt")
-      .classList.add("hidden");
+  recognition.interimResults = true;
 
-  };
+  recognition.maxAlternatives = 1;
 
-  recognition.onresult=(e)=>{
 
-    msg.value=
-      e.results[0][0].transcript;
+  let finalTranscript = "";
 
-    msg.dispatchEvent(
-      new Event("input")
+
+  recognition.onstart = function(){
+
+    listening = true;
+
+    recognitionStarted = true;
+
+    voiceBtn.classList.add(
+      "recording"
     );
 
+    voiceBtn.innerHTML =
+      '<i class="fa-solid fa-stop"></i>';
+
+    listenTxt.style.display =
+      "block";
   };
+
+
+  recognition.onresult =
+    function(event){
+
+      let interim = "";
+
+
+      for(
+        let i = event.resultIndex;
+        i < event.results.length;
+        i++
+      ){
+
+        const transcript =
+          event.results[i][0].transcript;
+
+
+        if(
+          event.results[i].isFinal
+        ){
+
+          finalTranscript +=
+            transcript + " ";
+
+        }else{
+
+          interim += transcript;
+        }
+      }
+
+
+      const current =
+        finalTranscript +
+        interim;
+
+
+      /*
+       * Voice text goes into the input.
+       * It is NOT sent automatically.
+       */
+
+      msg.value =
+        current.trim();
+
+      resizeTextarea();
+    };
+
+
+  recognition.onerror =
+    function(event){
+
+      if(
+        event.error !== "aborted" &&
+        event.error !== "no-speech"
+      ){
+
+        showError(
+          "Voice input: " +
+          event.error
+        );
+      }
+
+      stopListeningUI();
+    };
+
+
+  recognition.onend =
+    function(){
+
+      /*
+       * Some mobile browsers automatically
+       * stop recognition. Do not restart here
+       * because the user controls recording.
+       */
+
+      stopListeningUI();
+    };
+
+
+  function beginVoice(){
+
+    if(listening){
+      return;
+    }
+
+
+    finalTranscript =
+      msg.value
+        ? msg.value.trim() + " "
+        : "";
+
+
+    recognition.lang =
+      detectLang(msg.value) === "SW"
+        ? "sw-KE"
+        : "en-KE";
+
+
+    try{
+
+      recognition.start();
+
+    }catch(error){
+
+      /*
+       * Browser may report "already started".
+       */
+
+      stopListeningUI();
+    }
+  }
+
+
+  function endVoice(){
+
+    if(
+      recognition &&
+      listening
+    ){
+
+      try{
+        recognition.stop();
+      }catch(e){}
+    }
+  }
+
+
+  function stopListeningUI(){
+
+    listening = false;
+
+    recognitionStarted = false;
+
+    voiceBtn.classList.remove(
+      "recording"
+    );
+
+    voiceBtn.innerHTML =
+      '<i class="fa-solid fa-microphone"></i>';
+
+    listenTxt.style.display =
+      "none";
+  }
+
+
+  /*
+   * Pointer events work for both
+   * touch screens and mouse.
+   */
+
+  voiceBtn.addEventListener(
+    "pointerdown",
+    function(e){
+
+      e.preventDefault();
+
+      beginVoice();
+    }
+  );
+
+
+  voiceBtn.addEventListener(
+    "pointerup",
+    function(e){
+
+      e.preventDefault();
+
+      endVoice();
+    }
+  );
+
+
+  voiceBtn.addEventListener(
+    "pointercancel",
+    function(){
+
+      endVoice();
+    }
+  );
+
+
+  voiceBtn.addEventListener(
+    "pointerleave",
+    function(e){
+
+      /*
+       * On desktop, releasing outside
+       * the button stops recording.
+       */
+
+      if(
+        e.pointerType === "mouse" &&
+        listening
+      ){
+
+        endVoice();
+      }
+    }
+  );
 
 })();
 
 
-function toggleVoice(){
+/* =========================================================
+   PHOTO
+========================================================= */
 
-  if(!recognition){
+function handlePhoto(input){
 
-    alert("Voice input works best in Chrome.");
+  const file =
+    input.files?.[0];
 
+  if(!file){
     return;
-
   }
 
-  if(listening){
 
-    recognition.stop();
-
-    return;
-
-  }
-
-  recognition.lang=
-    detectLang(msg.value)==="SW"
-      ? "sw-KE"
-      : "en-KE";
-
-  recognition.start();
-
-}
+  const reader =
+    new FileReader();
 
 
-/* PHOTO */
+  reader.onload =
+    function(){
 
-function handlePhoto(i){
+      const image =
+        new Image();
 
-  const f=i.files[0];
 
-  if(!f) return;
+      image.onload =
+        function(){
 
-  const r=new FileReader();
+          const canvas =
+            document.createElement(
+              "canvas"
+            );
 
-  r.onload=()=>{
 
-    const img=new Image();
+          let width =
+            image.width;
 
-    img.onload=()=>{
+          let height =
+            image.height;
 
-      const c=document.createElement("canvas");
 
-      let w=img.width;
-      let h=img.height;
+          /*
+           * Keep images reasonably small
+           * for fast mobile uploads.
+           */
 
-      const m=1000;
+          const max =
+            1100;
 
-      if(w>m||h>m){
 
-        const sc=
-          Math.min(m/w,m/h);
+          if(
+            width > max ||
+            height > max
+          ){
 
-        w=Math.round(w*sc);
-        h=Math.round(h*sc);
+            const scale =
+              Math.min(
+                max / width,
+                max / height
+              );
 
-      }
+            width =
+              Math.round(
+                width * scale
+              );
 
-      c.width=w;
-      c.height=h;
+            height =
+              Math.round(
+                height * scale
+              );
+          }
 
-      c.getContext("2d")
-        .drawImage(img,0,0,w,h);
 
-      uploadedPhoto=
-        c.toDataURL("image/jpeg",0.7);
+          canvas.width =
+            width;
 
-      uploadedMime="image/jpeg";
+          canvas.height =
+            height;
 
-      document
-        .getElementById("previewImg")
-        .src=uploadedPhoto;
 
-      document
-        .getElementById("previewImg")
-        .classList.remove("hidden");
+          const ctx =
+            canvas.getContext(
+              "2d"
+            );
 
-      document
-        .getElementById("previewDocIcon")
-        .classList.add("hidden");
 
-      document
-        .getElementById("previewName")
-        .textContent=f.name;
+          ctx.drawImage(
+            image,
+            0,
+            0,
+            width,
+            height
+          );
 
-      document
-        .getElementById("previewBox")
-        .classList.remove("hidden");
 
+          uploadedPhoto =
+            canvas.toDataURL(
+              "image/jpeg",
+              0.72
+            );
+
+
+          uploadedMime =
+            "image/jpeg";
+
+
+          document
+            .getElementById(
+              "previewImg"
+            )
+            .src =
+            uploadedPhoto;
+
+
+          document
+            .getElementById(
+              "previewImg"
+            )
+            .style.display =
+            "block";
+
+
+          document
+            .getElementById(
+              "previewDocIcon"
+            )
+            .style.display =
+            "none";
+
+
+          document
+            .getElementById(
+              "previewName"
+            )
+            .textContent =
+            file.name;
+
+
+          document
+            .getElementById(
+              "previewBox"
+            )
+            .style.display =
+            "flex";
+        };
+
+
+      image.src =
+        reader.result;
     };
 
-    img.src=r.result;
 
-  };
+  reader.readAsDataURL(file);
 
-  r.readAsDataURL(f);
-
-  i.value="";
-
+  input.value = "";
 }
 
 
-/* DOCUMENT */
+/* =========================================================
+   DOCUMENT
+========================================================= */
 
-function handleDoc(i){
+function handleDoc(input){
 
-  const f=i.files[0];
+  const file =
+    input.files?.[0];
 
-  if(!f) return;
+  if(!file){
+    return;
+  }
 
-  uploadedDocName=f.name;
 
-  uploadedPhoto="";
+  uploadedDocName =
+    file.name;
 
-  document
-    .getElementById("previewImg")
-    .classList.add("hidden");
+  uploadedPhoto = "";
 
-  document
-    .getElementById("previewDocIcon")
-    .classList.remove("hidden");
+  uploadedMime = "";
 
-  document
-    .getElementById("previewName")
-    .textContent=f.name;
 
   document
-    .getElementById("previewBox")
-    .classList.remove("hidden");
+    .getElementById(
+      "previewImg"
+    )
+    .style.display =
+    "none";
 
-  i.value="";
 
+  document
+    .getElementById(
+      "previewDocIcon"
+    )
+    .style.display =
+    "flex";
+
+
+  document
+    .getElementById(
+      "previewName"
+    )
+    .textContent =
+    file.name;
+
+
+  document
+    .getElementById(
+      "previewBox"
+    )
+    .style.display =
+    "flex";
+
+
+  input.value = "";
 }
 
 
-/* CLEAR ATTACHMENT */
+/* =========================================================
+   CLEAR ATTACHMENT
+========================================================= */
 
 function clearAttach(){
 
-  uploadedPhoto="";
-  uploadedMime="";
-  uploadedDocName="";
+  uploadedPhoto = "";
+
+  uploadedMime = "";
+
+  uploadedDocName = "";
+
 
   document
-    .getElementById("previewBox")
-    .classList.add("hidden");
-
+    .getElementById(
+      "previewBox"
+    )
+    .style.display =
+    "none";
 }
 
 
-/* ERROR */
+/* =========================================================
+   ERROR
+========================================================= */
 
-function showError(m){
+function showError(message){
 
-  const b=
-    document.getElementById("errorBox");
+  const box =
+    document.getElementById(
+      "errorBox"
+    );
 
-  b.textContent=m;
 
-  b.classList.remove("hidden");
+  box.textContent =
+    String(message || "Something went wrong.");
+
+
+  box.style.display =
+    "block";
+
 
   setTimeout(
-    ()=>b.classList.add("hidden"),
-    4000
-  );
+    function(){
 
+      box.style.display =
+        "none";
+
+    },
+    5000
+  );
 }
 
 
-/* RESPONSE FORMAT */
+/* =========================================================
+   CLEAN AI TEXT
+========================================================= */
 
-function formatResponse(t){
+function cleanAIText(text){
 
-  let html=String(t)
+  let value =
+    String(text || "");
 
-    .replace(
+
+  /*
+   * Remove common decorative line brackets
+   * and box characters.
+   */
+
+  value =
+    value
+      .replace(/【/g,"")
+      .replace(/】/g,"")
+      .replace(/〔/g,"")
+      .replace(/〕/g,"")
+      .replace(/^\s*[\[\]]\s*$/gm,"")
+      .replace(/^\s*[-_=]{3,}\s*$/gm,"");
+
+
+  /*
+   * Remove markdown heading symbols.
+   */
+
+  value =
+    value.replace(
+      /^#{1,6}\s*/gm,
+      ""
+    );
+
+
+  return value.trim();
+}
+
+
+/* =========================================================
+   FORMAT AI RESPONSE
+========================================================= */
+
+function formatResponse(text){
+
+  let source =
+    cleanAIText(text);
+
+
+  /*
+   * Protect formulas first.
+   */
+
+  const formulas = [];
+
+
+  source =
+    source.replace(
       /\$\$([\s\S]*?)\$\$/g,
-      (m,c)=>
-        `<div style="
-        background:#f8fafc;
-        border:1px dashed #cbd5e1;
-        border-radius:8px;
-        padding:8px;
-        text-align:center;
-        margin:8px 0;
-        font-family:monospace;
-        font-size:12px
-        ">${c.trim()}</div>`
-    )
+      function(_, formula){
 
-    .replace(
+        const id =
+          formulas.length;
+
+        formulas.push(
+          formula.trim()
+        );
+
+        return `@@FORMULA_${id}@@`;
+      }
+    );
+
+
+  /*
+   * Escape HTML.
+   */
+
+  source =
+    source
+      .replace(/&/g,"&amp;")
+      .replace(/</g,"&lt;")
+      .replace(/>/g,"&gt;");
+
+
+  /*
+   * Bold markdown.
+   */
+
+  source =
+    source.replace(
       /\*\*(.*?)\*\*/g,
-      "<b>$1</b>"
-    )
+      "<strong>$1</strong>"
+    );
 
-    .replace(
-      /^### (.*)$/gm,
-      "<h3>$1</h3>"
-    )
 
-    .split("\n")
+  /*
+   * Process lines.
+   */
 
-    .map(l=>{
+  const lines =
+    source.split(/\r?\n/);
 
-      l=l.trim();
 
-      if(!l) return "";
+  let html = "";
 
-      if(
-        l.startsWith("<h3")||
-        l.startsWith("<div")
-      ) return l;
+  let listMode = false;
 
-      if(/^\d+\.\s/.test(l))
-        return `<p>${l}</p>`;
 
-      if(
-        l.startsWith("- ")||
-        l.startsWith("* ")
-      )
-        return `<ul><li>${l.slice(2)}</li></ul>`;
+  function closeList(){
 
-      return `<p>${l}</p>`;
+    if(listMode){
 
-    })
+      html += "</ul>";
 
-    .join("");
+      listMode = false;
+    }
+  }
 
-  html=html.replace(
-    /<\/ul><ul>/g,
-    ""
+
+  lines.forEach(function(raw){
+
+    let line =
+      raw.trim();
+
+
+    if(!line){
+
+      closeList();
+
+      return;
+    }
+
+
+    /*
+     * TOPIC
+     */
+
+    let topic =
+      line.match(
+        /^(topic|subject)\s*:\s*(.*)$/i
+      );
+
+
+    if(topic){
+
+      closeList();
+
+      html +=
+        `<p class="ai-topic">Topic: ${topic[2]}</p>`;
+
+      return;
+    }
+
+
+    /*
+     * STRAND
+     */
+
+    let strand =
+      line.match(
+        /^(strand|sub[- ]?strand)\s*:\s*(.*)$/i
+      );
+
+
+    if(strand){
+
+      closeList();
+
+      html +=
+        `<p class="ai-strand">Strand: ${strand[2]}</p>`;
+
+      return;
+    }
+
+
+    /*
+     * EXPLANATION
+     */
+
+    let explanation =
+      line.match(
+        /^(explanation|explain|answer explanation)\s*:\s*(.*)$/i
+      );
+
+
+    if(explanation){
+
+      closeList();
+
+      html +=
+        `<p class="ai-explanation">Explanation: ${explanation[2]}</p>`;
+
+      return;
+    }
+
+
+    /*
+     * CHOICE CORRECT
+     */
+
+    if(
+      /^(correct answer|answer)\s*:/i.test(line)
+    ){
+
+      closeList();
+
+      html +=
+        `<div class="choice-block choice-correct">
+          <span class="choice-label correct-label">
+            ✓ ${line}
+          </span>
+        </div>`;
+
+      return;
+    }
+
+
+    /*
+     * WHY WRONG
+     */
+
+    if(
+      /^(why|reason|incorrect|wrong choice|why wrong)/i.test(line) &&
+      /(wrong|incorrect|not correct)/i.test(line)
+    ){
+
+      closeList();
+
+      html +=
+        `<div class="choice-block choice-wrong">
+          <span class="choice-label wrong-label">
+            ✗ ${line}
+          </span>
+        </div>`;
+
+      return;
+    }
+
+
+    /*
+     * Bullet
+     */
+
+    if(
+      /^[-•*]\s+/.test(line)
+    ){
+
+      if(!listMode){
+
+        html += "<ul>";
+
+        listMode = true;
+      }
+
+
+      html +=
+        `<li>${line.replace(
+          /^[-•*]\s+/,
+          ""
+        )}</li>`;
+
+      return;
+    }
+
+
+    /*
+     * Numbered item
+     */
+
+    if(
+      /^\d+[\.\)]\s+/.test(line)
+    ){
+
+      closeList();
+
+      html +=
+        `<p class="ai-detail">${line}</p>`;
+
+      return;
+    }
+
+
+    /*
+     * Multiple-choice choices
+     */
+
+    if(
+      /^[A-D][\.\)]\s+/i.test(line)
+    ){
+
+      closeList();
+
+      const letter =
+        line.charAt(0).toUpperCase();
+
+
+      const isCorrect =
+        /✓|correct/i.test(line);
+
+
+      const isWrong =
+        /✗|wrong|incorrect/i.test(line);
+
+
+      const cls =
+        isCorrect
+          ? "choice-correct"
+          : isWrong
+            ? "choice-wrong"
+            : "";
+
+
+      html +=
+        `<div class="choice-block ${cls}">
+          <span class="choice-label">
+            ${letter}.
+          </span>
+          ${line.slice(2).trim()}
+        </div>`;
+
+      return;
+    }
+
+
+    /*
+     * Formula placeholder
+     */
+
+    if(
+      /^@@FORMULA_\d+@@$/.test(line)
+    ){
+
+      closeList();
+
+      const index =
+        Number(
+          line.match(/\d+/)[0]
+        );
+
+
+      html +=
+        `<div class="ai-formula">
+          ${escapeHTML(formulas[index] || "")}
+        </div>`;
+
+      return;
+    }
+
+
+    /*
+     * Normal detailed text
+     */
+
+    closeList();
+
+    html +=
+      `<p class="ai-detail">${line}</p>`;
+  });
+
+
+  closeList();
+
+
+  /*
+   * Remove empty paragraphs.
+   */
+
+  html =
+    html.replace(
+      /<p class="ai-detail"><\/p>/g,
+      ""
+    );
+
+
+  /*
+   * Restore formulas if they were
+   * embedded inside paragraphs.
+   */
+
+  formulas.forEach(
+    function(formula,index){
+
+      html =
+        html.replace(
+          `@@FORMULA_${index}@@`,
+          `<div class="ai-formula">${escapeHTML(formula)}</div>`
+        );
+    }
   );
 
-  html=html.replace(
-    /<p><\/p>/g,
-    ""
-  );
 
   return html;
-
 }
 
 
-/* USER MESSAGE */
+/* =========================================================
+   ESCAPE HTML
+========================================================= */
 
-function addUser(t){
+function escapeHTML(value){
 
-  welcome.classList.add("hidden");
+  return String(value || "")
+    .replace(/&/g,"&amp;")
+    .replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;")
+    .replace(/"/g,"&quot;")
+    .replace(/'/g,"&#039;");
+}
 
-  const d=
-    document.createElement("div");
 
-  d.className=
+/* =========================================================
+   USER MESSAGE
+========================================================= */
+
+function addUser(text){
+
+  welcome.style.display =
+    "none";
+
+
+  const row =
+    document.createElement(
+      "div"
+    );
+
+
+  row.className =
     "user-row message-in";
 
-  d.innerHTML=`
 
-    <div class="user-bubble">
-      ${t.replace(/</g,"&lt;")}
-    </div>
+  const bubble =
+    document.createElement(
+      "div"
+    );
 
-  `;
 
-  messages.appendChild(d);
+  bubble.className =
+    "user-bubble";
+
+
+  bubble.textContent =
+    text;
+
+
+  row.appendChild(
+    bubble
+  );
+
+
+  messages.appendChild(
+    row
+  );
+
 
   chatHistory.push({
     role:"user",
-    content:t
+    content:text
   });
 
-  chat.scrollTop=
-    chat.scrollHeight;
 
+  scrollBottom();
 }
 
 
-/* USER PHOTO */
+/* =========================================================
+   USER PHOTO
+========================================================= */
 
-function addUserPhoto(p){
+function addUserPhoto(photo){
 
-  welcome.classList.add("hidden");
+  welcome.style.display =
+    "none";
 
-  const d=
-    document.createElement("div");
 
-  d.className=
-    "user-row";
+  const row =
+    document.createElement(
+      "div"
+    );
 
-  d.innerHTML=`
 
-    <div class="user-bubble"
-         style="padding:5px">
+  row.className =
+    "user-row message-in";
 
-      <img
-        src="${p}"
-        style="
-        max-width:220px;
-        max-height:300px;
-        border-radius:13px;
-        display:block;
-        object-fit:contain;
-        ">
 
-    </div>
+  const bubble =
+    document.createElement(
+      "div"
+    );
 
-  `;
 
-  messages.appendChild(d);
+  bubble.className =
+    "photo-bubble";
 
+
+  const image =
+    document.createElement(
+      "img"
+    );
+
+
+  image.src =
+    photo;
+
+
+  image.alt =
+    "Uploaded homework";
+
+
+  bubble.appendChild(
+    image
+  );
+
+
+  row.appendChild(
+    bubble
+  );
+
+
+  messages.appendChild(
+    row
+  );
+
+
+  scrollBottom();
 }
 
 
-/* THINKING */
+/* =========================================================
+   SMALL RESPONSE STATUS
+========================================================= */
 
-function addThinking(){
+function addStatus(){
 
-  const d=
-    document.createElement("div");
+  const existing =
+    document.getElementById(
+      "answerStatus"
+    );
 
-  d.id="thinking";
 
-  d.className="thinking";
+  if(existing){
+    return;
+  }
 
-  d.innerHTML=`
 
-    <div class="thinking-avatar">
-      🎓
-    </div>
+  const status =
+    document.createElement(
+      "div"
+    );
 
-    <div class="thinking-box">
-      Thinking...
-    </div>
 
-  `;
+  status.id =
+    "answerStatus";
 
-  messages.appendChild(d);
 
-  chat.scrollTop=
-    chat.scrollHeight;
+  status.className =
+    "answer-status message-in";
 
+
+  status.innerHTML =
+    `
+      <span class="status-dot"></span>
+      <span>SomaHub is preparing your answer...</span>
+    `;
+
+
+  messages.appendChild(
+    status
+  );
+
+
+  scrollBottom();
 }
 
 
-/* AI RESPONSE */
+/* =========================================================
+   REMOVE STATUS
+========================================================= */
 
-function addAI(t){
+function removeStatus(){
 
-  welcome.classList.add("hidden");
+  document
+    .getElementById(
+      "answerStatus"
+    )
+    ?.remove();
+}
 
-  const id=
-    "ai_"+Date.now();
 
-  const d=
-    document.createElement("div");
+/* =========================================================
+   AI MESSAGE
+========================================================= */
 
-  d.className=
+function addAI(text){
+
+  welcome.style.display =
+    "none";
+
+
+  removeStatus();
+
+
+  const id =
+    "ai_" +
+    Date.now() +
+    "_" +
+    Math.floor(
+      Math.random() * 1000
+    );
+
+
+  const row =
+    document.createElement(
+      "div"
+    );
+
+
+  row.className =
     "ai-row message-in";
 
-  d.innerHTML=`
 
-    <div class="ai-avatar">
-      🎓
-    </div>
+  const avatar =
+    document.createElement(
+      "div"
+    );
 
-    <div class="ai-content">
 
-      <div id="${id}" class="ai-card">
-        ${formatResponse(t)}
-      </div>
+  avatar.className =
+    "ai-avatar";
 
-      <div class="message-actions">
 
-        <button
-          onclick="copyCard('${id}')"
-          class="message-action">
+  avatar.textContent =
+    "🎓";
 
-          <i class="fa-regular fa-copy"></i>
-          Copy
 
-        </button>
+  const content =
+    document.createElement(
+      "div"
+    );
 
-        <button
-          onclick="listenCard('${id}')"
-          class="message-action">
 
-          <i class="fa-solid fa-volume-high"></i>
-          Listen
+  content.className =
+    "ai-content";
 
-        </button>
 
-        <button
-          onclick="downloadCard('${id}')"
-          class="message-action">
+  const card =
+    document.createElement(
+      "div"
+    );
 
-          <i class="fa-solid fa-download"></i>
-          Download
 
-        </button>
+  card.id =
+    id;
 
-        <button
-          onclick="printCard('${id}')"
-          class="message-action primary">
 
-          <i class="fa-solid fa-print"></i>
-          Print
+  card.className =
+    "ai-card";
 
-        </button>
 
-      </div>
+  card.innerHTML =
+    formatResponse(text);
 
-    </div>
 
-  `;
+  const actions =
+    document.createElement(
+      "div"
+    );
 
-  messages.appendChild(d);
+
+  actions.className =
+    "ai-actions";
+
+
+  actions.innerHTML =
+    `
+      <button class="ai-action"
+        onclick="copyCard('${id}')">
+        <i class="fa-regular fa-copy"></i>
+        Copy
+      </button>
+
+      <button class="ai-action"
+        onclick="listenCard('${id}')">
+        <i class="fa-solid fa-volume-high"></i>
+        Listen
+      </button>
+
+      <button class="ai-action"
+        onclick="downloadCard('${id}')">
+        <i class="fa-solid fa-download"></i>
+        Download
+      </button>
+
+      <button class="ai-action dark"
+        onclick="printCard('${id}')">
+        <i class="fa-solid fa-print"></i>
+        Print
+      </button>
+    `;
+
+
+  content.appendChild(
+    card
+  );
+
+  content.appendChild(
+    actions
+  );
+
+
+  row.appendChild(
+    avatar
+  );
+
+  row.appendChild(
+    content
+  );
+
+
+  messages.appendChild(
+    row
+  );
+
 
   chatHistory.push({
     role:"assistant",
-    content:t
+    content:text
   });
 
-  chat.scrollTop=
-    chat.scrollHeight;
 
+  scrollBottom();
 }
 
 
-/* COPY */
+/* =========================================================
+   COPY
+========================================================= */
 
-function copyCard(id){
+async function copyCard(id){
 
-  navigator.clipboard.writeText(
-    document.getElementById(id).innerText
-  );
+  const element =
+    document.getElementById(id);
 
+
+  if(!element){
+    return;
+  }
+
+
+  const text =
+    element.innerText;
+
+
+  try{
+
+    await navigator.clipboard.writeText(
+      text
+    );
+
+  }catch{
+
+    const area =
+      document.createElement(
+        "textarea"
+      );
+
+    area.value =
+      text;
+
+    document.body.appendChild(
+      area
+    );
+
+    area.select();
+
+    document.execCommand(
+      "copy"
+    );
+
+    area.remove();
+  }
 }
 
 
-/* LISTEN */
+/* =========================================================
+   FAST SPEAKER
+========================================================= */
 
 function listenCard(id){
 
-  const txt=
-    document.getElementById(id).innerText;
+  const element =
+    document.getElementById(id);
 
-  const u=
+
+  if(!element){
+    return;
+  }
+
+
+  /*
+   * Stop anything already speaking.
+   */
+
+  speechSynthesis.cancel();
+
+
+  const text =
+    element.innerText
+      .replace(/\n+/g," ")
+      .trim();
+
+
+  if(!text){
+    return;
+  }
+
+
+  /*
+   * Break long answers into smaller
+   * chunks so speech starts quickly.
+   */
+
+  speechQueue =
+    text
+      .match(
+        /[^.!?]+[.!?]+|[^.!?]+$/g
+      ) || [text];
+
+
+  speakNext();
+}
+
+
+function speakNext(){
+
+  if(!speechQueue.length){
+    currentSpeech = null;
+    return;
+  }
+
+
+  const part =
+    speechQueue.shift()
+      .trim();
+
+
+  if(!part){
+    speakNext();
+    return;
+  }
+
+
+  currentSpeech =
     new SpeechSynthesisUtterance(
-      txt.slice(0,800)
+      part
     );
 
-  u.lang=
-    detectLang(txt)==="SW"
+
+  currentSpeech.lang =
+    detectLang(part) === "SW"
       ? "sw-KE"
       : "en-KE";
 
-  speechSynthesis.speak(u);
 
+  currentSpeech.rate =
+    1.05;
+
+
+  currentSpeech.pitch =
+    1;
+
+
+  currentSpeech.onend =
+    function(){
+
+      speakNext();
+    };
+
+
+  currentSpeech.onerror =
+    function(){
+
+      currentSpeech = null;
+    };
+
+
+  speechSynthesis.speak(
+    currentSpeech
+  );
 }
 
 
-/* DOWNLOAD */
+/* =========================================================
+   DOWNLOAD
+========================================================= */
 
 function downloadCard(id){
 
-  const txt=
-    document.getElementById(id).innerText;
+  const element =
+    document.getElementById(id);
 
-  const blob=
-    new Blob([txt],{
-      type:"text/plain"
-    });
 
-  const a=
-    document.createElement("a");
+  if(!element){
+    return;
+  }
 
-  a.href=
-    URL.createObjectURL(blob);
 
-  a.download=
-    "SomaHub-"+Date.now()+".txt";
+  const text =
+    element.innerText;
 
-  a.click();
 
+  const blob =
+    new Blob(
+      [text],
+      {
+        type:"text/plain;charset=utf-8"
+      }
+    );
+
+
+  const url =
+    URL.createObjectURL(
+      blob
+    );
+
+
+  const link =
+    document.createElement(
+      "a"
+    );
+
+
+  link.href =
+    url;
+
+  link.download =
+    "SomaHub-Tutor-" +
+    Date.now() +
+    ".txt";
+
+
+  document.body.appendChild(
+    link
+  );
+
+  link.click();
+
+  link.remove();
+
+
+  setTimeout(
+    function(){
+      URL.revokeObjectURL(url);
+    },
+    1000
+  );
 }
 
 
-/* PRINT */
+/* =========================================================
+   PRINT
+========================================================= */
 
 function printCard(id){
 
-  const content=
-    document.getElementById(id).innerHTML;
+  const element =
+    document.getElementById(id);
 
-  const w=
-    window.open("","_blank");
 
-  if(!w){
-
-    alert("Please allow pop-ups to print.");
-
+  if(!element){
     return;
-
   }
 
-  w.document.write(`
 
+  const printWindow =
+    window.open(
+      "",
+      "_blank"
+    );
+
+
+  if(!printWindow){
+    showError(
+      "Please allow pop-ups to print."
+    );
+
+    return;
+  }
+
+
+  printWindow.document.write(
+    `
+    <!DOCTYPE html>
     <html>
-
     <head>
 
-      <title>SomaHub</title>
+      <title>SomaHub Tutor</title>
 
       <style>
 
         body{
-          font-family:Arial;
-          padding:20px;
+          font-family:Arial,sans-serif;
+          padding:25px;
+          color:#111827;
           line-height:1.7;
-          font-size:13px;
+          font-size:14px;
         }
 
-        h3{
-          color:#25358a;
+        .topic{
+          color:#dc2626;
+          font-weight:bold;
         }
 
-      </style></head>
+        .strand{
+          color:#dc2626;
+          font-weight:bold;
+        }
 
-<body>
+        .explanation{
+          color:#2563eb;
+          font-weight:bold;
+        }
 
-  ${content}
+        .formula{
+          background:#f5f7fa;
+          padding:10px;
+          margin:10px 0;
+          text-align:center;
+        }
 
-  <script>
-    window.print();
-  <\/script>
+      </style>
 
-</body>
+    </head>
 
-</html>
+    <body>
 
-`);
+      ${element.innerHTML}
 
-w.document.close();
+      <script>
+        window.onload=function(){
+          window.print();
+        };
+      <\/script>
 
+    </body>
+    </html>
+    `
+  );
+
+
+  printWindow.document.close();
 }
 
-/* SAVE HISTORY */
 
-function saveH(t){
+/* =========================================================
+   HISTORY SAVE
+========================================================= */
 
-const h=
-JSON.parse(
-localStorage.getItem("sh")||"[]"
-);
+function saveHistory(title){
 
-h.unshift({
-id:Date.now(),
-title:t.slice(0,50),
-time:new Date().toISOString(),
-grade
-});
+  try{
 
-localStorage.setItem(
-"sh",
-JSON.stringify(h.slice(0,100))
-);
+    const history =
+      JSON.parse(
+        localStorage.getItem(
+          "sh"
+        ) || "[]"
+      );
 
+
+    history.unshift({
+
+      id:Date.now(),
+
+      title:
+        String(
+          title ||
+          "Learning session"
+        ).slice(0,70),
+
+      time:
+        new Date().toISOString(),
+
+      grade
+
+    });
+
+
+    localStorage.setItem(
+      "sh",
+      JSON.stringify(
+        history.slice(0,100)
+      )
+    );
+
+  }catch(e){}
 }
 
-/* OPEN HISTORY */
+
+/* =========================================================
+   OPEN HISTORY
+========================================================= */
 
 function openHistory(){
 
-const drawer=
-document.getElementById("historyDrawer");
+  const drawer =
+    document.getElementById(
+      "historyDrawer"
+    );
 
-drawer.classList.add("show");
 
-const h=
-JSON.parse(
-localStorage.getItem("sh")||"[]"
-);
+  drawer.classList.add(
+    "open"
+  );
 
-const l=
-document.getElementById("historyList");
 
-if(!h.length){
+  const list =
+    document.getElementById(
+      "historyList"
+    );
 
-l.innerHTML=
-  `<p style="
-  text-align:center;
-  color:#94a3b8;
-  margin-top:70px;
-  font-size:12px;
-  ">
-  No learning history yet
-  </p>`;
 
-return;
+  let history = [];
 
+
+  try{
+
+    history =
+      JSON.parse(
+        localStorage.getItem(
+          "sh"
+        ) || "[]"
+      );
+
+  }catch(e){
+
+    history = [];
+  }
+
+
+  if(!history.length){
+
+    list.innerHTML =
+      `
+      <div class="text-center text-gray-400 mt-20 text-sm">
+        <i class="fa-regular fa-clock text-3xl mb-3"></i>
+        <p>No learning history yet.</p>
+      </div>
+      `;
+
+    return;
+  }
+
+
+  list.innerHTML = "";
+
+
+  history.forEach(
+    function(item){
+
+      const div =
+        document.createElement(
+          "div"
+        );
+
+
+      div.className =
+        "history-item";
+
+
+      const left =
+        document.createElement(
+          "div"
+        );
+
+
+      left.innerHTML =
+        `
+        <p class="font-extrabold text-sm text-gray-800">
+          ${escapeHTML(item.title)}
+        </p>
+
+        <p class="text-[10px] text-gray-500 mt-1">
+          ${escapeHTML(item.grade || "")}
+        </p>
+        `;
+
+
+      const button =
+        document.createElement(
+          "button"
+        );
+
+
+      button.className =
+        "text-gray-400 px-2";
+
+
+      button.innerHTML =
+        '<i class="fa-solid fa-trash"></i>';
+
+
+      button.onclick =
+        function(){
+
+          deleteHistoryItem(
+            item.id
+          );
+        };
+
+
+      div.appendChild(
+        left
+      );
+
+      div.appendChild(
+        button
+      );
+
+
+      list.appendChild(
+        div
+      );
+    }
+  );
 }
 
-l.innerHTML="";
 
-h.forEach(it=>{
-
-const div=
-  document.createElement("div");
-
-div.className=
-  "history-item";
-
-div.innerHTML=`
-
-  <div style="
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    gap:10px;
-  ">
-
-    <div style="min-width:0">
-
-      <div style="
-        font-size:12px;
-        font-weight:800;
-        color:#1e293b;
-        overflow:hidden;
-        text-overflow:ellipsis;
-        white-space:nowrap;
-      ">
-        ${it.title}
-      </div>
-
-      <div style="
-        font-size:9px;
-        color:#64748b;
-        margin-top:3px;
-      ">
-        ${it.grade}
-      </div>
-
-    </div>
-
-    <button
-      onclick="delH('${it.id}')"
-      style="
-      width:28px;
-      height:28px;
-      border:0;
-      border-radius:50%;
-      background:#f1f5f9;
-      color:#64748b;
-      "
-    >
-      ×
-    </button>
-
-  </div>
-
-`;
-
-l.appendChild(div);
-
-});
-
-}
-
-/* CLOSE HISTORY */
+/* =========================================================
+   CLOSE HISTORY
+========================================================= */
 
 function closeHistory(){
 
-document
-.getElementById("historyDrawer")
-.classList.remove("show");
-
+  document
+    .getElementById(
+      "historyDrawer"
+    )
+    .classList.remove(
+      "open"
+    );
 }
 
-/* DELETE HISTORY ITEM */
 
-function delH(id){
+/* =========================================================
+   DELETE HISTORY ITEM
+========================================================= */
 
-let h=
-JSON.parse(
-localStorage.getItem("sh")||"[]"
-);
+function deleteHistoryItem(id){
 
-h=
-h.filter(x=>x.id!=id);
+  let history =
+    JSON.parse(
+      localStorage.getItem(
+        "sh"
+      ) || "[]"
+    );
 
-localStorage.setItem(
-"sh",
-JSON.stringify(h)
-);
 
-openHistory();
+  history =
+    history.filter(
+      item =>
+        String(item.id) !==
+        String(id)
+    );
 
+
+  localStorage.setItem(
+    "sh",
+    JSON.stringify(history)
+  );
+
+
+  openHistory();
 }
 
-/* CLEAR HISTORY */
+
+/* =========================================================
+   CLEAR HISTORY
+========================================================= */
 
 function clearHistory(){
 
-if(
-confirm("Delete all learning history?")
-){
+  if(
+    !confirm(
+      "Delete all learning history?"
+    )
+  ){
 
-localStorage.removeItem("sh");
+    return;
+  }
 
-openHistory();
 
+  localStorage.removeItem(
+    "sh"
+  );
+
+
+  openHistory();
 }
 
+
+/* =========================================================
+   SCROLL
+========================================================= */
+
+function scrollBottom(){
+
+  requestAnimationFrame(
+    function(){
+
+      chat.scrollTop =
+        chat.scrollHeight;
+    }
+  );
 }
 
-/* SEND MESSAGE */
+
+/* =========================================================
+   SEND
+========================================================= */
 
 async function sendMsg(){
 
-const text=
-msg.value.trim();
+  /*
+   * Stop voice recording first.
+   */
 
-if(!text && !uploadedPhoto)
-return;
+  if(
+    recognition &&
+    listening
+  ){
 
-if(isThinking)
-return;
+    try{
+      recognition.stop();
+    }catch(e){}
+  }
 
-if(text)
-addUser(text);
 
-if(uploadedPhoto)
-addUserPhoto(uploadedPhoto);
+  const text =
+    msg.value.trim();
 
-saveH(
-text||
-uploadedDocName||
-"Photo"
-);
 
-const q=
-text||
-"Explain this image";
+  if(
+    !text &&
+    !uploadedPhoto
+  ){
 
-const lang=
-detectLang(text);
+    return;
+  }
 
-msg.value="";
 
-msg.style.height="22px";
+  if(isThinking){
 
-const keepPhoto=
-uploadedPhoto;
+    return;
+  }
 
-const keepMime=
-uploadedMime||
-"image/jpeg";
 
-clearAttach();
+  /*
+   * Display user's message.
+   */
 
-addThinking();
+  if(text){
 
-isThinking=true;
+    addUser(text);
+  }
 
-const payload={
 
-question:q,
+  if(uploadedPhoto){
 
-originalQuestion:q,
+    addUserPhoto(
+      uploadedPhoto
+    );
+  }
 
-grade:grade,
 
-role:"Student",
+  saveHistory(
+    text ||
+    uploadedDocName ||
+    "Photo question"
+  );
 
-task:lang,
 
-mode:"student",
+  const originalQuestion =
+    text ||
+    "Please explain this uploaded image.";
 
-history:
-  chatHistory.slice(-6),
 
-photo:keepPhoto,
+  /*
+   * Keep attachment before clearing.
+   */
 
-mimeType:keepMime,
+  const keepPhoto =
+    uploadedPhoto;
 
-provider:"auto"
 
-};
+  const keepMime =
+    uploadedMime ||
+    "image/jpeg";
 
-try{
 
-const res=
-  await fetch(
-    PROXY,
-    {
-      method:"POST",
-      headers:{
-        "Content-Type":
-          "application/json"
+  const keepDoc =
+    uploadedDocName;
+
+
+  /*
+   * Clear input immediately.
+   */
+
+  msg.value = "";
+
+  msg.style.height =
+    "auto";
+
+
+  clearAttach();
+
+
+  /*
+   * Prepare language.
+   */
+
+  const language =
+    detectLang(
+      originalQuestion
+    );
+
+
+  /*
+   * Tell the model how to structure
+   * educational answers.
+   *
+   * This is sent along with the actual
+   * question but the learner only sees
+   * the original question above.
+   */
+
+  let modelQuestion =
+    originalQuestion;
+
+
+  modelQuestion +=
+    `
+
+Teaching response preference:
+Answer naturally at the selected grade level.
+When appropriate, clearly identify the Topic and Strand.
+Give an Explanation followed by detailed text.
+For multiple-choice questions, identify the correct answer and explain briefly why each of the other choices is wrong.
+Do not use decorative brackets, box lines, or unnecessary separators.
+Keep the answer clear and readable on a phone.
+`;
+
+
+  /*
+   * Small status instead of a large
+   * Thinking bubble.
+   */
+
+  addStatus();
+
+
+  isThinking =
+    true;
+
+
+  /*
+   * Abort very long network hangs.
+   * Normal answers should return well
+   * before this.
+   */
+
+  const controller =
+    new AbortController();
+
+
+  const timeout =
+    setTimeout(
+      function(){
+
+        controller.abort();
+
       },
-      body:
-        JSON.stringify(payload)
+      60000
+    );
+
+
+  try{
+
+    const payload = {
+
+      question:
+        modelQuestion,
+
+      originalQuestion:
+        originalQuestion,
+
+      grade:
+        grade,
+
+      role:
+        "Student",
+
+      task:
+        language,
+
+      mode:
+        "student",
+
+      subject:
+        "",
+
+      topic:
+        "",
+
+      strand:
+        "",
+
+      history:
+        chatHistory.slice(-8),
+
+      photo:
+        keepPhoto,
+
+      mimeType:
+        keepMime,
+
+      provider:
+        "auto",
+
+      /*
+       * Extra metadata for future
+       * SomaHub frontend versions.
+       */
+
+      responseStyle:
+        "topic-strand-explanation-detailed",
+
+      explainWrongChoices:
+        true,
+
+      useSomaHubFiles:
+        true,
+
+      repository:
+        "kevokevo426-cmd/Somahub-Kenya"
+    };
+
+
+    const response =
+      await fetch(
+        PROXY,
+        {
+          method:"POST",
+
+          headers:{
+            "Content-Type":
+              "application/json"
+          },
+
+          body:
+            JSON.stringify(payload),
+
+          signal:
+            controller.signal
+        }
+      );
+
+
+    clearTimeout(
+      timeout
+    );
+
+
+    const raw =
+      await response.text();
+
+
+    let data;
+
+
+    try{
+
+      data =
+        JSON.parse(raw);
+
+    }catch{
+
+      throw new Error(
+        raw.slice(
+          0,
+          300
+        ) ||
+        "Invalid server response."
+      );
+    }
+
+
+    removeStatus();
+
+
+    if(!response.ok){
+
+      throw new Error(
+        data.error ||
+        "SomaHub could not answer right now."
+      );
+    }
+
+
+    const answer =
+      data.answer ||
+      data.reply ||
+      "";
+
+
+    if(!answer){
+
+      throw new Error(
+        "SomaHub returned an empty answer."
+      );
+    }
+
+
+    addAI(answer);
+
+
+  }catch(error){
+
+    clearTimeout(
+      timeout
+    );
+
+
+    removeStatus();
+
+
+    let message =
+      error?.message ||
+      "Something went wrong.";
+
+
+    if(
+      error?.name ===
+      "AbortError"
+    ){
+
+      message =
+        "The response took too long. Please try again.";
+    }
+
+
+    showError(
+      message
+    );
+
+
+    /*
+     * Keep error response short.
+     */
+
+    addAI(
+      language === "SW"
+        ? "Samahani, kuna hitilafu wakati wa kupata jibu. Tafadhali jaribu tena."
+        : "Sorry, I couldn't get the answer right now. Please try again."
+    );
+
+  }finally{
+
+    isThinking =
+      false;
+
+    scrollBottom();
+  }
+}
+
+
+/* =========================================================
+   INITIAL SETUP
+========================================================= */
+
+(function(){
+
+  /*
+   * Make sure textarea starts compact.
+   */
+
+  msg.style.height =
+    "auto";
+
+
+  /*
+   * Stop speech when leaving page.
+   */
+
+  window.addEventListener(
+    "beforeunload",
+    function(){
+
+      try{
+        speechSynthesis.cancel();
+      }catch(e){}
+
     }
   );
 
-const textRes=
-  await res.text();
+})();
 
-let data;
+</script>
 
-try{
-
-  data=
-    JSON.parse(textRes);
-
-}catch{
-
-  throw new Error(
-    textRes.slice(0,200)
-  );
-
-}
-
-document
-  .getElementById("thinking")
-  ?.remove();
-
-if(!res.ok)
-  throw new Error(
-    data.error||
-    "Server error"
-  );
-
-const reply=
-  data.answer||
-  data.reply||
-  "";
-
-if(!reply)
-  throw new Error(
-    "Empty answer"
-  );
-
-addAI(reply);
-
-}catch(e){
-
-document
-  .getElementById("thinking")
-  ?.remove();
-
-showError(e.message);
-
-addAI(
-  "Samahani, kuna hitilafu: "+
-  e.message
-);
-
-}
-
-isThinking=false;
-
-chat.scrollTop=
-chat.scrollHeight;
-
-}
-
-/* ENTER TO SEND */
-
-msg.addEventListener(
-"keydown",
-e=>{
-
-if(
-  e.key==="Enter" &&
-  !e.shiftKey
-){
-
-  e.preventDefault();
-
-  sendMsg();
-
-}
-
-}
-);
-
-</script></body>
+</body>
 </html>
