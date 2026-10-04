@@ -1,0 +1,54 @@
+<!-- FINE COPY - PRINT CLEAN - Add to your mark.essay.html -->
+<div id="fineCopyPrint" class="bg-white p-6 border-2 border-black rounded-[1.2rem] max-w-[420px] mx-auto">
+  <div class="text-center">
+    <img src="social-project-teamwork.png" class="w-full rounded-xl border-2 border-black mb-3"/>
+    <h1 class="font-black text-[16px] uppercase">Social Project</h1>
+    <p class="text-[10px] font-bold">Natasha Precious - Grade 7 Pink | 178 words</p>
+    <hr class="my-2 border-black border-2">
+  </div>
+  <div id="polishedTextClean" class="text-[12px] leading-7 font-serif whitespace-pre-wrap">
+The task seemed difficult until we decided to work together.
+
+It was a challenge at first because we kept on bickering and fighting so that each of us could say what we were thinking. I was trying to calm the group members down because we had less than twenty minutes to finish our project. We were making a windsock.
+
+Once they started calming down, we divided ourselves into three groups. One was in charge of cutting the thread, another handled the making of the sock itself, and the last one read the instructions on how to make the windsock. We cooperated very wonderfully.
+
+Once the three groups finished, we came together and connected the windsock. It was not as good as we had hoped, but it was better. We were competing with other groups which made a rain gauge, an anemometer and other instruments for measuring weather.
+
+When we were all done, we went and sat down on the chairs in front of the table. Our subject teacher came and judged us, and our group became second. Even if we didn't come first, we still had a chance to cooperate as a team.
+  </div>
+
+  <!-- IMAGERY KEY - PERSONIFICATION -->
+  <div class="mt-4 bg-[#fff7ed] border-2 border-black rounded-xl p-3">
+    <p class="font-black text-[11px]">🔑 LITERARY KEY 1: Personification</p>
+    <p class="text-[10px] mt-1">• <b>Wind as a person:</b> "the wind whispers through the sock" - wind given human action (whispering)</p>
+    <p class="text-[10px]">• <b>Animals Discussed:</b> Teamwork like ants / bees - "We worked like busy bees building our hive"</p>
+    <p class="text-[10px]">• <b>Imagery used:</b> Visual - colorful windsock dancing, Auditory - bickering voices calming, Tactile - cutting thread</p>
+  </div>
+
+  <!-- POEM MODE TOGGLE - If it's a poem -->
+  <div id="poemMode" class="hidden mt-3 bg-[#e0f2ff] border-2 border-black rounded-xl p-3">
+    <p class="font-black text-[11px]">🎵 POEM - MUSICAL VERSION</p>
+    <p class="text-[11px] italic leading-6 mt-2">The task was tough, we could not agree (A)<br/>Voices clashed like waves on the sea (A)<br/>Then we joined hands, we became one team (B)<br/>And built a sock that chased a dream (B)</p>
+    <p class="text-[9px] mt-2">Rhyme: AABB | Rhythm: 8 syllables | Alliteration: bickering, fighting</p>
+  </div>
+</div>
+
+<div class="flex gap-2 mt-3 max-w-[420px] mx-auto">
+  <button onclick="copyFine()" class="flex-1 bg-white border-2 border-black py-3 rounded-full font-black text-[11px]">📋 Copy</button>
+  <button onclick="downloadFine()" class="flex-1 bg-[#ffcc1a] border-2 border-black py-3 rounded-full font-black text-[11px]">⬇️ Download</button>
+  <button onclick="window.print()" class="flex-1 bg-black text-white border-2 border-black py-3 rounded-full font-black text-[11px]">🖨️ Print Clean</button>
+</div>
+
+<script>
+function copyFine(){ let t=document.getElementById('polishedTextClean').innerText; navigator.clipboard.writeText(t); alert('Fine copy copied - clean for pasting'); }
+function downloadFine(){
+  let text=document.getElementById('polishedTextClean').innerText;
+  let blob=new Blob([`SOCIAL PROJECT - Natasha Precious Grade 7\n\n${text}\n\nImagery: Personification - Wind whispers`], {type:'text/plain'});
+  let url=URL.createObjectURL(blob); let a=document.createElement('a'); a.href=url; a.download='Natasha_Social_Project_FineCopy.txt'; a.click();
+}
+</script>
+
+<style>
+@media print { body *{visibility:hidden;} #fineCopyPrint, #fineCopyPrint *{visibility:visible;} #fineCopyPrint{position:absolute; left:0; top:0; width:100%; border:none; } button{display:none;} }
+</style>
