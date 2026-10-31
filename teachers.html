@@ -1,103 +1,134 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
+<html><head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Teachers Hub - SomaHub Kenya</title>
+<title>Teachers - SomaHub - Full File</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;800;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <style>
 body{font-family:'Nunito',sans-serif;background:#f6f6f7}
-@keyframes m{0%{transform:translateX(100%)}100%{transform:translateX(-100%)}} .marquee{animation:m 22s linear infinite}
-.note-card{background:#fff;border:2.5px solid #000;border-radius:16px;padding:12px;display:flex;justify-content:space-between;align-items:center;box-shadow:3px 3px 0 0 #000;margin-bottom:8px}
-.bubble{border:2.5px solid #000;box-shadow:3px 3px 0 #000}
+@keyframes m{0%{transform:translateX(100%)}100%{transform:translateX(-100%)}}.marquee{animation:m 22s linear infinite}
+.note-card{background:#fff;border:2.5px solid #000;border-radius:16px;padding:10px 12px;display:flex;justify-content:space-between;align-items:center;height:58px;box-shadow:2px 2px 0 0 #000;margin-bottom:6px}
+.bubble{padding:10px 12px;border-radius:14px;border:2.5px solid #000;margin:8px 0;font-size:11px;line-height:1.6}
+.card{border:3px solid #000;border-radius:16px;padding:12px;box-shadow:4px 4px 0 0 #000;background:#fff}
 </style>
 </head>
-<body class="max-w-5xl mx-auto p-3">
-<!-- HEADER -->
-<div class="flex justify-between items-center bg-white border-2 border-black rounded-2xl p-3 bubble mb-3">
+<body class="max-w-[420px] mx-auto bg-[#f6f6f7]">
+
+<!-- HEADER Welcome -->
+<div class="bg-white p-3 flex justify-between items-center border-b-2 border-black">
   <div class="flex items-center gap-2">
-    <a href="/index.html" class="w-9 h-9 bg-yellow-300 border-2 border-black rounded-full flex items-center justify-center"><i class="fas fa-home text-xs"></i></a>
-    <div><h1 class="font-black text-base leading-none">SomaHub Teachers</h1><p class="text-[10px] font-bold text-gray-500">CBC Tools • Kenya</p></div>
+    <div class="w-10 h-10 rounded-full bg-white border-2 border-black flex items-center justify-center font-black text-green-600">SH</div>
+    <div>
+      <div class="font-black text-[16px] leading-none">Welcome, Mwalimu! 👩‍🏫</div>
+      <div class="text-[12px] font-bold text-gray-600">Alex mbugua • Grade 7,8,9</div>
+    </div>
   </div>
-  <a href="/panel.html" class="bg-black text-white px-3 py-2 rounded-xl text-xs font-black">Panel</a>
+  <div class="bg-yellow-400 border-2 border-black rounded-full px-3 py-1 font-black text-[12px] shadow-[2px_2px_0_0_#000]">SHKET00103</div>
 </div>
 
-<!-- MARQUEE -->
-<div class="bg-black text-white rounded-xl overflow-hidden mb-3 border-2 border-black">
-  <div class="marquee whitespace-nowrap py-2 text-xs font-bold">🔥 NEW: Mark Essay & Exam Marker now FREE with AI photo marking • CBC Grade 4-9 • Schemes & Lesson Plans updated • </div>
+<div class="bg-black text-white text-[11px] py-1 overflow-hidden"><div class="marquee whitespace-nowrap">🚀 SomaHub CBC • Schemes • Lesson Plans • Exams • Marking Tools • Refer & Earn • Tuition Jobs Available • </div></div>
+
+<!-- Quick Access -->
+<div class="p-3">
+  <div class="font-black text-[18px] mb-3 flex items-center gap-2">🚀 Quick Access - Full Tools</div>
+  <div class="grid grid-cols-2 gap-3">
+    
+    <a href="/notes.html" class="card">
+      <div class="font-black text-[14px]">📚 Notes</div>
+      <div class="text-[11px] text-gray-500 font-bold">PP1-G9</div>
+    </a>
+    
+    <a href="/exam.html" class="card">
+      <div class="font-black text-[14px]">📝 Exams</div>
+      <div class="text-[11px] text-gray-500 font-bold">Weekly/Monthly</div>
+    </a>
+    
+    <a href="/homework.html" class="card">
+      <div class="font-black text-[14px]">📓 Homework</div>
+      <div class="text-[11px] text-gray-500 font-bold">Daily 10 Marks</div>
+    </a>
+
+    <!-- REPLACED TEACHER TOOLS WITH 2 NEW TOOLS -->
+    <a href="/mark.essay.html" class="card bg-pink-100">
+      <div class="font-black text-[14px]">📝 Mark Essay</div>
+      <div class="text-[11px] text-gray-500 font-bold">Insha • Composition • KNEC</div>
+    </a>
+
+    <a href="/exam.marker.html" class="card bg-blue-100">
+      <div class="font-black text-[14px]">📊 Exam Marker</div>
+      <div class="text-[11px] text-gray-500 font-bold">Auto • Photo OK • CBC</div>
+    </a>
+
+    <a href="/schemes.html" class="card bg-blue-50">
+      <div class="font-black text-[14px]">📘 Schemes</div>
+      <div class="text-[11px] text-gray-500 font-bold">KICD Aligned</div>
+    </a>
+
+    <a href="/lesson-plan.html" class="card bg-yellow-50">
+      <div class="font-black text-[14px]">📄 Lesson Plan</div>
+      <div class="text-[11px] text-gray-500 font-bold">CBC Ready</div>
+    </a>
+
+    <a href="/curriculum-designs.html" class="card bg-pink-100">
+      <div class="font-black text-[14px]">📖 Designs</div>
+      <div class="text-[11px] text-gray-500 font-bold">Curriculum</div>
+    </a>
+
+    <a href="/ai-assistant.html" class="card bg-green-100">
+      <div class="font-black text-[14px]">🤖 AI Assistant</div>
+      <div class="text-[11px] text-gray-500 font-bold">Ask Anything</div>
+    </a>
+
+  </div>
+
+  <!-- Grade 7 Notes -->
+  <div class="card mt-4 flex justify-between items-center">
+    <div>
+      <div class="font-black text-[13px]">Grade 7 Notes - Maths Fractions</div>
+      <div class="text-[11px] text-gray-500 font-bold">Grade 7 • notes</div>
+    </div>
+    <a href="/notes.html" class="bg-black text-white px-5 py-2 rounded-full font-black text-[12px]">Open</a>
+  </div>
+
+  <!-- Referrals -->
+  <div class="card mt-4">
+    <div class="flex justify-between items-center mb-3">
+      <div class="font-black text-[14px]">🎁 Referrals</div>
+      <div class="bg-black text-white px-3 py-1 rounded-full text-[11px] font-black">0 pts</div>
+    </div>
+    <div class="grid grid-cols-2 gap-3 mb-3">
+      <div class="border-2 border-black rounded-xl p-2 bg-yellow-50">
+        <div class="text-[10px] font-black">YOUR CODE</div>
+        <div class="font-black text-[14px]">SHKET00103</div>
+      </div>
+      <div class="border-2 border-black rounded-xl p-2 bg-blue-50">
+        <div class="text-[10px] font-black">BALANCE</div>
+        <div class="font-black text-[14px]">0 pts = 0 KES</div>
+      </div>
+    </div>
+    <div class="border-2 border-black rounded-full p-2 flex items-center gap-2 bg-white">
+      <div class="flex-1 text-[11px] font-bold truncate">https://somahub-kenya.vercel.app/registration.html?ref=SHKET00103</div>
+      <button onclick="navigator.clipboard.writeText('https://somahub-kenya.vercel.app/registration.html?ref=SHKET00103');alert('Copied!')" class="bg-black text-white px-3 py-1 rounded-full text-[11px] font-black">Copy</button>
+    </div>
+  </div>
+
+  <!-- Tuition & Bonus -->
+  <div class="grid grid-cols-2 gap-3 mt-4">
+    <a href="/dashboard.html" class="card bg-black text-white text-center">
+      <div class="font-black text-[13px]">📊 Dashboard / Wallet</div>
+      <div class="text-[10px] mt-1">View Earnings • Bonus</div>
+    </a>
+    <a href="/tuition.html" class="card bg-green-500 text-white text-center">
+      <div class="font-black text-[13px]">💰 Tuition Jobs</div>
+      <div class="text-[10px] mt-1">Apply Now • Paid</div>
+    </a>
+  </div>
+
+  <!-- Chat Button -->
+  <a href="/chat.html" class="fixed bottom-5 right-5 w-14 h-14 bg-green-500 border-3 border-black rounded-full flex items-center justify-center shadow-[3px_3px_0_0_#000]"><i class="fas fa-comment-dots text-white text-xl"></i></a>
+
+  <div class="text-center mt-8 text-[10px] font-bold text-gray-400 pb-20">SomaHub Kenya • Mwalimu Dashboard • SHKET00103</div>
 </div>
 
-<!-- QUICK ACCESS -->
-<h2 class="font-black text-sm mb-2">Quick Access - Full Tools</h2>
-<div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-4">
-  
-  <!-- 1. MARK ESSAY - REPLACES OLD TEACHER TOOLS -->
-  <a href="/mark.essay.html" class="bg-pink-200 border-2 border-black rounded-2xl p-4 bubble hover:translate-y-[-2px] transition">
-    <div class="text-2xl mb-1">📝</div>
-    <div class="font-black text-sm">Mark Essay</div>
-    <div class="text-[11px] font-bold text-gray-700">Insha & Composition • KNEC Rubric</div>
-    <div class="mt-2 text-[10px] bg-black text-white inline-block px-2 py-1 rounded-full">NEW • Photo OK</div>
-  </a>
-
-  <!-- 2. EXAM MARKER - REPLACES OLD TEACHER TOOLS -->
-  <a href="/exam.marker.html" class="bg-blue-200 border-2 border-black rounded-2xl p-4 bubble hover:translate-y-[-2px] transition">
-    <div class="text-2xl mb-1">📊</div>
-    <div class="font-black text-sm">Exam Marker</div>
-    <div class="text-[11px] font-bold text-gray-700">Auto Mark • CBC • KCPE Style</div>
-    <div class="mt-2 text-[10px] bg-white border border-black inline-block px-2 py-1 rounded-full">AI • Fast</div>
-  </a>
-
-  <!-- 3. Schemes -->
-  <a href="/schemes.html" class="bg-yellow-200 border-2 border-black rounded-2xl p-4 bubble">
-    <div class="text-2xl mb-1">📚</div>
-    <div class="font-black text-sm">Schemes</div>
-    <div class="text-[11px] font-bold text-gray-700">Term 1-3 • All Grades</div>
-  </a>
-
-  <!-- 4. Lesson Plans -->
-  <a href="/lesson-plans.html" class="bg-green-200 border-2 border-black rounded-2xl p-4 bubble">
-    <div class="text-2xl mb-1">📖</div>
-    <div class="font-black text-sm">Lesson Plans</div>
-    <div class="text-[11px] font-bold text-gray-700">CBC Aligned</div>
-  </a>
-
-  <!-- 5. Notes -->
-  <a href="/notes.html" class="bg-purple-200 border-2 border-black rounded-2xl p-4 bubble">
-    <div class="text-2xl mb-1">📝</div>
-    <div class="font-black text-sm">Notes</div>
-    <div class="text-[11px] font-bold text-gray-700">Learner Notes</div>
-  </a>
-
-  <!-- 6. Exams -->
-  <a href="/exam.html" class="bg-orange-200 border-2 border-black rounded-2xl p-4 bubble">
-    <div class="text-2xl mb-1">📄</div>
-    <div class="font-black text-sm">Exams</div>
-    <div class="text-[11px] font-bold text-gray-700">Past Papers + Keys</div>
-  </a>
-
-  <!-- 7. Homework -->
-  <a href="/homework.html" class="bg-teal-200 border-2 border-black rounded-2xl p-4 bubble">
-    <div class="text-2xl mb-1">✏️</div>
-    <div class="font-black text-sm">Homework</div>
-    <div class="text-[11px] font-bold text-gray-700">AI Generate</div>
-  </a>
-
-  <!-- 8. AI Assistant -->
-  <a href="/ai.assistant.html" class="bg-black text-white border-2 border-black rounded-2xl p-4 bubble">
-    <div class="text-2xl mb-1">🤖</div>
-    <div class="font-black text-sm">AI Tutor</div>
-    <div class="text-[11px] font-bold text-gray-300">Ask SomaHub</div>
-  </a>
-</div>
-
-<!-- RECENT NOTES -->
-<div class="bg-white border-2 border-black rounded-2xl p-3 bubble">
-  <div class="flex justify-between items-center mb-2"><h3 class="font-black text-sm">Recent Uploads</h3><a href="/notes.html" class="text-xs font-black underline">View All</a></div>
-  <div class="note-card"><div><div class="font-black text-xs">Science - Grade 7 - Matter</div><div class="text-[10px] text-gray-500">28 days ago</div></div><i class="fas fa-chevron-right text-xs"></i></div>
-  <div class="note-card"><div><div class="font-black text-xs">Math - Grade 8 - Algebra</div><div class="text-[10px] text-gray-500">27 days ago</div></div><i class="fas fa-chevron-right text-xs"></i></div>
-</div>
-
-<div class="text-center mt-6 text-[10px] font-bold text-gray-400">SomaHub Kenya • Teachers Hub • v2026</div>
-</body>
-</html>
+</body></html>
