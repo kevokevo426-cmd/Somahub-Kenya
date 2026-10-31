@@ -1,6 +1,4 @@
-// api/gemini.js - SomaHub Tutor - TIMEOUT FIXED
-// Use ONE fast model, no loop
-
+// api/gemini.js - SomaHub - FINAL: Timeout fix + Gemini + OpenRouter FREE backup (photos work)
 export const config = { 
   api: { bodyParser: { sizeLimit: "5mb" } },
   maxDuration: 30
@@ -12,7 +10,6 @@ function sendJSON(res, status, obj) {
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.end(JSON.stringify(obj));
 }
-
 function cleanBase64Photo(photo) {
   if (!photo) return "";
   let s = String(photo).trim();
@@ -22,13 +19,11 @@ function cleanBase64Photo(photo) {
   }
   return s.replace(/\s/g, "");
 }
-
 function buildPrompt({ grade, role, question, task, history }) {
   const isSW = /habari|mambo|kiswahili|eleza|soma/i.test(question) || String(task).includes("SW");
   const hist = (history || []).slice(-4).map(h => `${h.role}: ${h.content}`).join("\n").slice(0,1500);
   return `You are SomaHub CBC Tutor Kenya. Grade: ${grade}. Lang: ${isSW ? "Kiswahili" : "English"}. History: ${hist}\nQ: ${question}\nAnswer concisely <250 words, CBC style. Topic: Explanation:`;
 }
-
 function localGreetingReply(q) {
   if (!q) return null;
   const t = q.toLowerCase().trim();
@@ -39,6 +34,55 @@ function localGreetingReply(q) {
   return null;
 }
 
+// Gemini call with 8s timeout
+async function callGemini({ key, prompt, photoB64, mime }) {
+  const model = "gemini-flash-lite-latest";
+  const parts = [{ text: prompt }];
+  if (photoB64) parts.push({ inlineData: { mimeType: mime || "image/jpeg", data: photoB64 } });
+  const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${key}`;
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 8000);
+  try {
+    const r = await fetch(url, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ contents: [{ role: "user", parts }], generationConfig: { temperature: 0.5, maxOutputTokens: 800 } }),
+      signal: controller.signal
+    });
+    clearTimeout(timeout);
+    const raw = await r.text();
+    let data; try { data = JSON.parse(raw); } catch { data = {}; }
+    if (!r.ok) throw new Error(`${r.status}: ${data?.error?.message || raw}`.slice(0,600));
+    const ans = data?.candidates?.[0]?.content?.parts?.[0]?.text;
+    if (!ans) throw new Error("Empty");
+    return ans;
+  } finally { clearTimeout(timeout); }
+}
+
+// OpenRouter FREE backup - supports photos
+async function callOpenRouter({ key, prompt, photoB64, mime }) {
+  const models = ["qwen/qwen2.5-vl-32b-instruct:free", "google/gemini-2.0-flash-exp:free"];
+  let lastErr = "";
+  for (const model of models) {
+    try {
+      const content = [{ type: "text", text: prompt }];
+      if (photoB64) content.push({ type: "image_url", image_url: { url: `data:${mime || "image/jpeg"};base64,${photoB64}` } });
+      const r = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "Authorization": `Bearer ${key}`, "HTTP-Referer": "https://somahub-kenya.vercel.app", "X-Title": "SomaHub" },
+        body: JSON.stringify({ model, messages: [{ role: "user", content }], max_tokens: 1000, temperature: 0.5 })
+      });
+      const raw = await r.text();
+      let data; try { data = JSON.parse(raw); } catch { data = {}; }
+      if (!r.ok) throw new Error(`${r.status} ${model}: ${data?.error?.message || raw}`.slice(0,600));
+      const ans = data?.choices?.[0]?.message?.content;
+      if (!ans) throw new Error("Empty OR");
+      return ans;
+    } catch (e) { lastErr = e.message; continue; }
+  }
+  throw new Error(lastErr);
+}
+
 export default async function handler(req, res) {
   if (req.method === "OPTIONS") {
     res.setHeader("Access-Control-Allow-Origin", "*");
@@ -47,7 +91,6 @@ export default async function handler(req, res) {
     return res.status(204).end();
   }
   if (req.method !== "POST") return sendJSON(res, 405, { error: "POST only" });
-
   try {
     const body = typeof req.body === "string" ? JSON.parse(req.body) : (req.body || {});
     const question = (body.question || body.prompt || "").toString().trim();
@@ -56,59 +99,31 @@ export default async function handler(req, res) {
     const task = body.task || "EN";
     const photoB64 = cleanBase64Photo(body.photo || "");
     const mime = body.mimeType || "image/jpeg";
-
     if (!question && !photoB64) return sendJSON(res, 400, { error: "No question" });
-
     const local = localGreetingReply(question);
     if (local && !photoB64) return sendJSON(res, 200, { answer: local });
 
     const prompt = buildPrompt({ grade, role: body.role, question: question || "Explain image", task, history });
     const geminiKey = (process.env.GEMINI_API_KEY || "").trim();
+    const orKey = (process.env.OPENROUTER_API_KEY || "").trim();
 
-    if (!geminiKey) return sendJSON(res, 500, { error: "Add GEMINI_API_KEY in Vercel > Settings > Env Vars" });
+    let lastErr = "";
 
-    // FIX: Use ONE fast model only, no loop - prevents timeout
-    const model = "gemini-flash-lite-latest"; // Fastest, works on free keys
-    
-    const parts = [{ text: prompt }];
-    if (photoB64) parts.push({ inlineData: { mimeType: mime, data: photoB64 } });
-
-    const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${geminiKey}`;
-    
-    const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 8000); // Abort at 8s to avoid Vercel 10s kill
-
-    const r = await fetch(url, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        contents: [{ role: "user", parts }],
-        generationConfig: { temperature: 0.5, maxOutputTokens: 800 } // smaller = faster
-      }),
-      signal: controller.signal
-    });
-    
-    clearTimeout(timeout);
-    const raw = await r.text();
-    let data; try { data = JSON.parse(raw); } catch { data = {}; }
-
-    if (!r.ok) {
-      const msg = data?.error?.message || raw;
-      console.log("Gemini error:", msg);
-      if (r.status === 429) return sendJSON(res, 429, { error: "AI is busy, try again in 30 sec", details: msg });
-      if (r.status === 404) return sendJSON(res, 500, { error: "Model not found, redeploy with new model name", details: msg });
-      return sendJSON(res, 500, { error: "model unavailable", details: msg.slice(0,500) });
+    if (geminiKey) {
+      try {
+        const ans = await callGemini({ key: geminiKey, prompt, photoB64, mime });
+        return sendJSON(res, 200, { answer: ans, model: "gemini" });
+      } catch (e) { lastErr = e.message; console.log("Gemini failed:", lastErr); }
     }
-
-    const answer = data?.candidates?.[0]?.content?.parts?.[0]?.text;
-    if (!answer) return sendJSON(res, 500, { error: "Empty answer", details: raw.slice(0,500) });
-
-    return sendJSON(res, 200, { answer, model });
-
+    if (orKey) {
+      try {
+        const ans = await callOpenRouter({ key: orKey, prompt, photoB64, mime });
+        return sendJSON(res, 200, { answer: ans, model: "openrouter-free" });
+      } catch (e) { lastErr += " | OR: " + e.message; console.log("OR failed:", e.message); }
+    }
+    return sendJSON(res, 500, { error: "All APIs failed", details: lastErr.slice(0,800) });
   } catch (e) {
-    if (e.name === 'AbortError') {
-      return sendJSON(res, 500, { error: "AI took too long, please ask shorter question" });
-    }
+    if (e.name === 'AbortError') return sendJSON(res, 500, { error: "AI took too long, try again" });
     console.error(e);
     return sendJSON(res, 500, { error: "Server error", details: String(e.message).slice(0,500) });
   }
