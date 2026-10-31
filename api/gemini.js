@@ -1,7 +1,8 @@
-// api/gemini.js - SomaHub Tutor FINAL FIX
-// Works with your ai.assistant.html frontend
-
-export const config = { api: { bodyParser: { sizeLimit: "12mb" } } };
+// api/gemini.js - SomaHub Tutor FINAL FIX v2 - Oct 2026 models
+export const config = { 
+  api: { bodyParser: { sizeLimit: "12mb" } },
+  maxDuration: 30 // FIX 1: Stop Vercel killing after 10s
+};
 
 function sendJSON(res, status, obj) {
   res.statusCode = status;
@@ -48,7 +49,6 @@ Explanation: ...
 `;
 }
 
-// Local greetings - no API call needed
 function localGreetingReply(q) {
   if (!q) return null;
   const t = q.toLowerCase().trim();
@@ -116,7 +116,6 @@ async function callOpenAI({ key, prompt, photoB64, mime }) {
       return ans;
     } catch (e) {
       lastErr = e.message;
-      console.log(`OpenAI ${m} failed:`, lastErr);
       continue;
     }
   }
@@ -144,7 +143,6 @@ export default async function handler(req, res) {
 
     if (!question && !photoRaw) return sendJSON(res, 400, { error: "No question or photo" });
 
-    // Fast local reply
     const local = localGreetingReply(question);
     if (local && !photoRaw) return sendJSON(res, 200, { answer: local });
 
@@ -154,16 +152,16 @@ export default async function handler(req, res) {
     const geminiKey = (process.env.GEMINI_API_KEY || "").trim();
     const openaiKey = (process.env.OPENAI_API_KEY || "").trim();
 
+    // FIX 2: NEW MODELS - old 1.5/2.0 are retired
     const GEMINI_MODELS = [
-      "gemini-1.5-flash",
-      "gemini-1.5-flash-8b",
-      "gemini-2.0-flash",
-      "gemini-2.0-flash-lite"
+      "gemini-2.5-flash-lite",      // Works for free keys
+      "gemini-flash-latest",        // Alias that always points to working model
+      "gemini-flash-lite-latest",
+      "gemini-2.5-flash"            // Last try if user has paid key
     ];
 
     let lastError = "";
 
-    // 1. Try Gemini
     if (geminiKey) {
       for (const model of GEMINI_MODELS) {
         try {
@@ -173,8 +171,13 @@ export default async function handler(req, res) {
         } catch (e) {
           lastError = e.message;
           console.log(`Gemini ${model} failed:`, lastError);
-          // If API key invalid, stop trying Gemini
-          if (/API_KEY_INVALID|API key not valid|PERMISSION_DENIED/i.test(lastError)) break;
+          
+          // FIX 3: Retry on quota error with wait
+          if (/429|RESOURCE_EXHAUSTED|quota/i.test(lastError)) {
+            await new Promise(r => setTimeout(r, 2000));
+          }
+          
+          if (/API_KEY_INVALID|PERMISSION_DENIED/i.test(lastError)) break;
           continue;
         }
       }
@@ -182,28 +185,25 @@ export default async function handler(req, res) {
       lastError = "No GEMINI_API_KEY in Vercel env";
     }
 
-    // 2. Try OpenAI fallback
     if (openaiKey) {
       try {
-        console.log("Trying OpenAI fallback");
         const ans = await callOpenAI({ key: openaiKey, prompt, photoB64, mime });
         return sendJSON(res, 200, { answer: ans, model: "openai-fallback" });
       } catch (e) {
         lastError += " | OpenAI: " + e.message;
-        console.log("OpenAI failed:", e.message);
       }
     }
 
-    // 3. All failed
     console.error("All models failed:", lastError);
     
-    // Return detailed error so you can see it (not just "model unavailable")
     return sendJSON(res, 500, { 
-      error: lastError.includes("429") || lastError.includes("quota") || lastError.includes("RESOURCE_EXHAUSTED")
-        ? "AI is busy, please try again in 30 seconds."
+      error: lastError.includes("404") && lastError.includes("not found")
+        ? "Model retired by Google. Code updated but needs redeploy."
+        : lastError.includes("429") || lastError.includes("quota")
+        ? "AI quota finished today. Admin add billing at aistudio.google.com or wait 1 hour"
         : "model unavailable",
       details: lastError.slice(0, 1000),
-      hint: !geminiKey ? "Add GEMINI_API_KEY in Vercel Settings > Env Vars" : "Check API key valid and not restricted"
+      hint: lastError.includes("404") ? "Redeploy with new models list" : "Add GEMINI_API_KEY in Vercel"
     });
 
   } catch (e) {
