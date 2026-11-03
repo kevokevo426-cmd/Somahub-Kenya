@@ -3,241 +3,230 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SI EXAM MARKER - Connected - Generic Any School</title>
+<title>EXAM MARKER - Load Scheme + Why</title>
 <style>
 :root{--green:#0F5D2F; --blue:#2563EB; --red:#DC2626; --yellow:#FEF3C7;}
 *{box-sizing:border-box;}
-body{font-family:'Segoe UI',Arial,sans-serif; background:#f3f4f6; margin:0; padding:10px; line-height:1.5;}
+body{font-family:'Nunito',sans-serif; background:#f3f4f6; margin:0; padding:10px;}
 .container{max-width:1100px; margin:auto;}
 .header{background:var(--green); color:white; padding:14px; border-radius:12px; text-align:center;}
-.header h1{margin:0; font-size:18px;}
-.header p{font-size:11px; margin-top:4px; opacity:0.9;}
+.header h1{margin:0; font-size:17px;}
 .card{background:white; border-radius:12px; padding:14px; margin-top:12px; box-shadow:0 3px 10px rgba(0,0,0,0.08);}
 label{font-weight:800; font-size:11px; display:block; margin:8px 0 4px; text-transform:uppercase;}
-input, textarea, select{width:100%; padding:9px; border:2px solid #ddd; border-radius:8px; font-size:12px; font-family:monospace;}
-textarea.scheme{border-color:var(--green); background:#f0fdf4; min-height:120px;}
-textarea.pupil{border-color:var(--blue); background:#EFF6FF; min-height:120px;}
+textarea{width:100%; padding:9px; border:2px solid #ddd; border-radius:8px; font-size:11px; font-family:monospace; min-height:140px;}
+.scheme{border-color:var(--green); background:#f0fdf4;}
+.pupil{border-color:var(--blue); background:#EFF6FF;}
 .grid2{display:grid; grid-template-columns:1fr 1fr; gap:12px;}
-.grid3{display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px;}
 .btn{background:var(--green); color:white; border:none; padding:12px; border-radius:8px; font-weight:800; width:100%; cursor:pointer; margin-top:8px; font-size:13px;}
-.btn-blue{background:var(--blue);}
-.btn-yellow{background:#F59E0B; color:black;}
-.qgrid{display:grid; grid-template-columns:repeat(auto-fill,minmax(210px,1fr)); gap:8px; margin-top:12px;}
-.qcard{padding:10px; border-radius:10px; border-left:5px solid #ddd; background:white; font-size:11px; box-shadow:0 1px 3px rgba(0,0,0,0.05);}
+.btn-blue{background:var(--blue);} .btn-yellow{background:#F59E0B; color:black;} .btn-gray{background:#111;}
+.qgrid{display:grid; grid-template-columns:1fr; gap:10px; margin-top:12px;}
+.qcard{padding:12px; border-radius:12px; border-left:6px solid #ddd; background:white; font-size:12px;}
 .qcard.correct{border-left-color:var(--blue); background:#EFF6FF;}
 .qcard.wrong{border-left-color:var(--red); background:#FEF2F2;}
-.badge{padding:2px 6px; border-radius:8px; color:white; font-size:8px; font-weight:800;}
+.badge{padding:2px 8px; border-radius:12px; color:white; font-size:9px; font-weight:800;}
 .badge-blue{background:var(--blue);}.badge-red{background:var(--red);}
-.badge-green{background:var(--green);}
+.explain{background:#fffbe6; border:1px dashed #d97706; padding:8px; border-radius:8px; margin-top:6px; font-size:11px;}
 .sumRow{display:flex; gap:8px; flex-wrap:wrap; margin-top:8px;}
 .sumBox{flex:1; min-width:110px; background:white; padding:10px; border-radius:10px; text-align:center; box-shadow:0 1px 4px rgba(0,0,0,0.06);}
+.dir{background:#f8fafc; border:2px dashed #000; padding:10px; border-radius:10px; font-size:11px; margin-top:10px; line-height:1.6;}
 .locked{background:var(--yellow); border:2px dashed #F59E0B; padding:8px; border-radius:8px; font-size:11px; text-align:center; font-weight:700;}
-@media print{.no-print{display:none;} body{background:white;}}
 </style>
 </head>
 <body>
 <div class="container">
 <div class="header">
-<h1>📘 SI.ASSISTANT + EXAM.MARKER - CONNECTED - GENERIC</h1>
-<p>For Any School | Creative Arts 009 Example Loaded | Emmanuel 6Violet + Abby 6V | Blue Tick ✅ Red Cross ❌ | Locked Q28=C ONLY Q15=A/B</p>
+<h1>📘 EXAM MARKER - WITH SCHEME LOADER + EXPLANATIONS</h1>
+<p>Load Scheme • Pupil Shading • Why Correct/Wrong • TOTAL + MEAN + POS</p>
 </div>
 
-<div class="card no-print">
-<div class="grid3">
-<div><label>School Name (Any School)</label><input id="school" value="GREEN EDGEWOOD"></div>
-<div><label>Subject / Paper</label><input id="subject" value="Creative Arts 009 - Q1-Q6"></div>
-<div><label>Class</label><input id="klass" value="Grade 6"></div>
+<div class="card">
+<div class="locked">🔒 RULES: Q28=C ONLY | Q15=A/B | Final shading counts</div>
+
+<!-- DIRECTIONS -->
+<div class="dir">
+<b>📖 DIRECTIONS - HOW TO USE:</b><br>
+<b>PLACE 1 - LOAD MARKING SCHEME (Teacher):</b><br>
+1. Type like <code>Q1=C - red yellow blue are primary</code> OR <code>1C - explanation</code><br>
+2. OR Click <b>📁 Load Scheme File</b> to upload .txt file from phone<br>
+3. OR Click <b>📸 Upload Scheme Photo</b> if from si.assistant.html<br>
+4. OR It auto-loads from <code>si.assistant.html</code> via localStorage if you saved there<br><br>
+<b>PLACE 2 - PUPIL ANSWERS:</b><br>
+1. Pupils write shading like <code>1C,2B,3C,4D</code> or <code>1A 2B 3C</code><br>
+2. One pupil per line for class marking<br>
+3. Click MARK - shows ✅ why correct, ❌ why wrong + correction<br>
 </div>
 
-<div class="locked" style="margin-top:10px;">
-🔒 LOCKED KEY: Q28 = C ONLY (A/B/D wrong) | Q15 = A/B both accepted | KNEC Erasure Rule: Final shading counts
-</div>
-
-<div class="grid2" style="margin-top:10px;">
+<div class="grid2" style="margin-top:12px;">
 <div>
-<label>🟢 PLACE 1: MARKING SCHEME - Where to place marking scheme (Teacher)</label>
-<textarea id="scheme" class="scheme">Q1=C - red, yellow, blue - primary colours
-Q2=B - Loise - Obokano - Abagusii lyre (large 8-string)
-Q3=C - teamwork - players working together
-Q4=D - Drums - percussion played with sticks
-Q5=D - Cutting and pasting different materials - collage
-Q6=B - Volleyball - team sport (needs 6 per side)
-Q7=A, Q8=A, Q9=C, Q10=A, Q11=B, Q12=D, Q13=B, Q14=C, Q15=A/B, Q16=C, Q17=B, Q18=D, Q19=A, Q20=C, Q21=A, Q22=C, Q23=B, Q24=C, Q25=D, Q26=A, Q27=C, Q28=C, Q29=B, Q30=D</textarea>
-<div style="font-size:10px; color:#555; margin-top:4px;">
-Example loaded: Creative Arts 009 full 30. You can change to any paper. Format: 1D, 2C or Q1=C. For dual write 15A/B. For C ONLY write 28C.
+<label>🟢 PLACE 1: MARKING SCHEME</label>
+<div style="display:flex; gap:6px; margin-bottom:6px;">
+<button class="btn btn-yellow" style="font-size:10px; padding:8px;" onclick="document.getElementById('loadSchemeFile').click()">📁 LOAD SCHEME FILE (.txt)</button>
+<button class="btn btn-gray" style="font-size:10px; padding:8px;" onclick="loadFromAI()">🔗 LOAD FROM si.assistant</button>
 </div>
-<label style="margin-top:8px;">Upload Marking Scheme Photo (Optional - from si.assistant)</label>
+<input type="file" id="loadSchemeFile" accept=".txt,.csv" style="display:none;" onchange="loadSchemeFromFile(event)">
+<textarea id="scheme" class="scheme">Q1=C - red, yellow, blue are primary colours
+Q2=B - Obokano is Abagusii 8-string lyre
+Q3=C - teamwork = working together
+Q4=D - Drums are percussion played with sticks
+Q5=D - Cutting & pasting = collage
+Q6=B - Volleyball = 6 per side team sport, Athletics is individual
+Q15=A/B - Both A and B accepted per KNEC
+Q28=C - Locked C ONLY</textarea>
+
+<label style="margin-top:8px;">📸 Upload Marking Scheme Photo (Optional)</label>
 <input type="file" id="schemePhoto" accept="image/*" onchange="previewScheme(event)">
 <img id="schemePreview" style="max-width:100%; margin-top:6px; border-radius:8px; display:none;">
+<div id="schemeOcrStatus" style="font-size:10px; color:var(--blue); margin-top:4px;"></div>
 </div>
 
 <div>
-<label>🔵 PLACE 2: PUPIL ANSWERS - Where pupils place shaded answers</label>
-<textarea id="shaded" class="pupil">PUPIL 1 - Emmanuel Mutun 6 Violet (1st photo) - Perfect:
-1C, 2B, 3C, 4D, 5D, 6B = 6/6 = 100% EE
-
-PUPIL 2 - Abby Wanjesh 6V (2nd photo) - One wrong:
-1C, 2B, 3C, 4D, 5D, 6A = 5/6 = 83% EE - Lost Q6 (shaded A Athletics, correct B Volleyball)
-
---- EXAMPLE FOR WHOLE CLASS (ENG 6Green) ---
-AIMEE WANGARI MWANIKI: 1D,2C,3B,4D,5B,6D,7B,8D,9C,10A,11B,12D,13C,14C,15A,16C,17B,18D,19A,20C,21A,22D,23B,24A,25D,26B,27C,28A,29A,30D = 23/30 77%
-</textarea>
-<label>Quick Select Example Pupil</label>
-<select id="quickPupil" onchange="loadQuick()">
-<option value="">-- Choose Example --</option>
-<option value="emmanuel">Emmanuel Mutun 6 Violet - 6/6 (100%) - From Photo 1</option>
-<option value="abby" selected>Abby Wanjesh 6V - 5/6 (83%) - From Photo 2</option>
-<option value="aimee">AIMEE WANGARI MWANIKI - ENG 6Green - 23/30 (77%)</option>
+<label>🔵 PLACE 2: PUPIL ANSWERS - Where to place shaded answers</label>
+<div style="display:flex; gap:6px; margin-bottom:6px;">
+<button class="btn btn-blue" style="font-size:10px; padding:8px;" onclick="document.getElementById('loadPupilFile').click()">📁 LOAD PUPIL FILE</button>
+</div>
+<input type="file" id="loadPupilFile" accept=".txt,.csv" style="display:none;" onchange="loadPupilFromFile(event)">
+<textarea id="shaded" class="pupil">1C, 2B, 3C, 4D, 5D, 6A
+1C, 2B, 3C, 4D, 5D, 6B</textarea>
+<label>Quick Demo</label>
+<select id="quick" onchange="loadQuick()" style="width:100%; padding:8px; border-radius:8px;">
+<option value="abby">Abby Wanjesh 6V - 5/6 (Lost Q6)</option>
+<option value="emmanuel">Emmanuel Mutun - 6/6 Perfect</option>
+<option value="aimee">AIMEE - 23/30 Example</option>
 </select>
-<div style="font-size:10px; color:#555; margin-top:4px;">
-For class marking: paste all pupils one per line, then click MARK ALL.
-</div>
 </div>
 </div>
 
-<div class="grid3">
-<button class="btn" onclick="markSingle()">🔍 MARK SINGLE PUPIL - ✅ ❌</button>
-<button class="btn btn-blue" onclick="markAll()">📊 MARK ALL CLASS - TOTAL + MEAN + POS</button>
-<button class="btn btn-yellow" onclick="window.print()">🖨️ PRINT A4 - Fits A4 Landscape</button>
+<div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-top:10px;">
+<button class="btn" onclick="markSingle()">🔍 MARK SINGLE - Show Why</button>
+<button class="btn btn-blue" onclick="markAll()">📊 MARK CLASS - TOTAL + MEAN + POS</button>
 </div>
+<button class="btn btn-yellow" onclick="window.print()" style="margin-top:6px;">🖨️ PRINT A4 Landscape</button>
 </div>
 
-<div class="card" id="resultCard" style="display:none;">
+<div class="card" id="result" style="display:none;">
 <div id="summary"></div>
 <div id="grid" class="qgrid"></div>
-<div id="classTable" style="margin-top:12px; overflow-x:auto;"></div>
+<div id="classTable"></div>
 </div>
-
-<div class="card no-print" style="font-size:11px;">
-<b>How this connects to si.assistant.html:</b><br>
-1. In si.assistant.html, after OCR you do: <code>localStorage.setItem('exam_marker_scheme', '1C,2B,3C,4D,5D,6B');</code><br>
-2. Open this file - it auto-reads scheme via localStorage.<br>
-3. This file already has your 2 photos marked: Emmanuel 6/6, Abby 5/6 (Abby lost Q6 - ticked A Athletics instead of B Volleyball).<br>
-4. For ENG 6Green, it has AIMEE 23/30 with locked Q28=C ONLY and Q15=A/B.<br>
-5. Teachers from different schools just change school name field - generic, fits A4 landscape for TOTAL + MEAN + SUBJECT POSITION by MEAN.
-</div>
-
 </div>
 
 <script>
-// AUTO LOAD from si.assistant.html
-window.addEventListener('DOMContentLoaded', ()=>{
-  let fromAI = localStorage.getItem('exam_marker_scheme');
-  let fromSchool = localStorage.getItem('exam_marker_school');
-  if(fromAI) document.getElementById('scheme').value = fromAI;
-  if(fromSchool) document.getElementById('school').value = fromSchool;
-});
+const EXPL = {
+1:{why:"Primary colours: Red, Yellow, Blue cannot be made by mixing. Green is secondary."},
+2:{why:"Obokano: Large 8-string lyre from Abagusii, played by elders."},
+3:{why:"Teamwork = players working together, supporting each other."},
+4:{why:"Drums = percussion instrument, hit with sticks/hands."},
+5:{why:"Collage = cutting and pasting different materials on surface."},
+6:{why:"Volleyball needs 6 players per side. Athletics is individual sport. So A is wrong."},
+15:{why:"KNEC marking allows both A and B as correct."},
+28:{why:"Locked to C ONLY per marking scheme instructions."}
+};
 
+function loadSchemeFromFile(e){
+  let file=e.target.files[0];
+  if(!file) return;
+  let r=new FileReader();
+  r.onload=function(){ document.getElementById('scheme').value=r.result; alert('Scheme loaded from file!'); };
+  r.readAsText(file);
+}
+function loadPupilFromFile(e){
+  let file=e.target.files[0];
+  if(!file) return;
+  let r=new FileReader();
+  r.onload=function(){ document.getElementById('shaded').value=r.result; alert('Pupil answers loaded!'); };
+  r.readAsText(file);
+}
+function loadFromAI(){
+  let s=localStorage.getItem('exam_marker_scheme');
+  let sch=localStorage.getItem('exam_marker_school');
+  if(s){ document.getElementById('scheme').value=s; document.getElementById('schemeOcrStatus').innerText='✅ Loaded from si.assistant.html'; }
+  else{ document.getElementById('schemeOcrStatus').innerText='❌ No scheme in localStorage. Save in si.assistant first.'; }
+}
 function previewScheme(e){
   let file=e.target.files[0];
   if(file){
     let url=URL.createObjectURL(file);
     let img=document.getElementById('schemePreview');
     img.src=url; img.style.display='block';
+    document.getElementById('schemeOcrStatus').innerText='Photo loaded - type scheme manually or OCR in si.assistant';
   }
 }
-
-function parse(txt){
-  let o={};
-  // Remove comments after - or =
-  let clean=txt.split('\n').map(l=>l.split('-')[0].split('=')[0]).join(',');
-  clean=txt; // keep full
-  let re=/(\d+)\s*([A-D\/]+)/gi, m;
-  while((m=re.exec(txt))!==null){
-    o[parseInt(m[1])]=m[2].toUpperCase();
-  }
+function parseScheme(txt){
+  let map={};
+  txt.split('\n').forEach(line=>{
+    line=line.trim(); if(!line) return;
+    let m=line.match(/Q?\s*(\d+)\s*[:=]?\s*([A-D](?:\/[A-D])?)/i);
+    if(m){
+      let num=parseInt(m[1]);
+      let ans=m[2].toUpperCase();
+      let expl=line.split('-').slice(1).join('-').trim() || (EXPL[num]?.why||'');
+      if(num===28) ans='C';
+      map[num]={ans, expl};
+    }
+  });
+  return map;
+}
+function parsePupil(txt){
+  let o={}; let re=/Q?\s*(\d+)\s*[:=]?\s*([A-D])/gi, m;
+  while((m=re.exec(txt))!==null){ o[parseInt(m[1])]=m[2].toUpperCase(); }
   return o;
 }
-
 function loadQuick(){
-  let v=document.getElementById('quickPupil').value;
+  let v=document.getElementById('quick').value;
   let sh=document.getElementById('shaded');
   if(v==='emmanuel') sh.value="1C, 2B, 3C, 4D, 5D, 6B";
   if(v==='abby') sh.value="1C, 2B, 3C, 4D, 5D, 6A";
   if(v==='aimee') sh.value="1D,2C,3B,4D,5B,6D,7B,8D,9C,10A,11B,12D,13C,14C,15A,16C,17B,18D,19A,20C,21A,22D,23B,24A,25D,26B,27C,28A,29A,30D";
   markSingle();
 }
-
-function getScheme(){
-  return parse(document.getElementById('scheme').value);
-}
-
 function markSingle(){
-  let scheme=getScheme();
-  let pupilTxt=document.getElementById('shaded').value.split('\n')[0];
-  let shaded=parse(pupilTxt);
-  let total=Object.keys(scheme).length||6;
-  let correct=0, wrongs=[], html='';
-  for(let i=1;i<=60;i++){
-    if(!scheme[i]) continue;
+  let scheme=parseScheme(document.getElementById('scheme').value);
+  let first=document.getElementById('shaded').value.split('\n').filter(l=>l.trim())[0]||'';
+  let shaded=parsePupil(first);
+  let keys=Object.keys(scheme).map(n=>parseInt(n)).sort((a,b)=>a-b);
+  if(first.split(',').length<=6) keys=keys.filter(k=>k<=6);
+  let total=keys.length, correct=0, html='';
+  keys.forEach(i=>{
     let k=scheme[i], s=shaded[i]||'-';
-    let ok = k.includes('/')? k.split('/').includes(s) : k===s;
-    if(ok) correct++; else wrongs.push('Q'+i);
+    let ok=k.ans.includes('/')? k.ans.split('/').includes(s) : k.ans===s;
+    if(i===28 && s!=='C') ok=false;
+    if(ok) correct++;
     let cls=ok?'correct':'wrong';
+    let badge=ok?'<span class="badge badge-blue">CORRECT</span>':'<span class="badge badge-red">WRONG</span>';
     let icon=ok?'✅':'❌';
-    let badge=ok?'<span class="badge badge-blue">BLUE TICK</span>':'<span class="badge badge-red">RED CROSS</span>';
-    let lockedTag = (i==28)? ' 🔒 C ONLY' : '';
-    html+=`<div class="qcard ${cls}"><b>Q${i}</b> ${badge}<br><span>${icon}</span> Scheme <b>${k}${lockedTag}</b> | Pupil <b>${s}</b>${!ok?`<br><small>Correct: ${k}</small>`:''}</div>`;
-  }
-  let perc= total? Math.round(correct/total*100):0;
-  let grade = perc>=80?'EE':perc>=60?'ME':perc>=40?'AE':'BE';
-  document.getElementById('resultCard').style.display='block';
-  document.getElementById('summary').innerHTML=`
-    <div style="text-align:center; font-weight:800;">
-      ${document.getElementById('school').value} - ${document.getElementById('subject').value}<br>
-      Pupil: ${pupilTxt.substring(0,80)}
-    </div>
-    <div class="sumRow">
-      <div class="sumBox"><b style="font-size:18px;">${correct}/${total}</b><br>Total</div>
-      <div class="sumBox"><b style="font-size:18px; color:var(--blue);">${perc}%</b><br>Percentage</div>
-      <div class="sumBox"><b style="font-size:18px;">${grade}</b><br>Grade</div>
-      <div class="sumBox"><b>${wrongs.length} wrong</b><br><span style="font-size:9px;">${wrongs.join(', ')}</span></div>
-    </div>`;
+    let correction=ok
+      ? `<div class="explain"><b>✅ Why Correct:</b> Shaded <b>${s}</b> = right.<br>${k.expl}</div>`
+      : `<div class="explain"><b>❌ Why Wrong:</b> Shaded <b>${s}</b> but correct is <b>${k.ans}</b>.<br><b>Correction:</b> ${k.expl}<br><b>Remember:</b> ${EXPL[i]?.why||k.expl}</div>`;
+    html+=`<div class="qcard ${cls}"><b>Q${i}</b> ${badge} ${icon} - Scheme <b>${k.ans}</b> | Pupil <b>${s}</b>${correction}</div>`;
+  });
+  let perc=Math.round(correct/total*100);
+  document.getElementById('result').style.display='block';
+  document.getElementById('summary').innerHTML=`<div style="text-align:center; font-weight:900;">${correct}/${total} = ${perc}% - ${perc>=80?'EE':perc>=60?'ME':'AE'}</div><div class="sumRow"><div class="sumBox"><b>${correct}/${total}</b><br>Score</div><div class="sumBox"><b>${perc}%</b><br>Percent</div></div>`;
   document.getElementById('grid').innerHTML=html;
   document.getElementById('classTable').innerHTML='';
 }
-
 function markAll(){
-  let scheme=getScheme();
+  let scheme=parseScheme(document.getElementById('scheme').value);
   let lines=document.getElementById('shaded').value.split('\n').filter(l=>l.trim());
   let rows=[];
-  lines.forEach(line=>{
-    let name=line.split(':')[0].split('=')[0].trim().substring(0,30);
-    let shaded=parse(line);
-    let total=Object.keys(scheme).length;
-    let correct=0;
-    for(let i in scheme){
-      let k=scheme[i], s=shaded[i];
-      if(!s) continue;
-      if(k.includes('/')? k.split('/').includes(s) : k===s) correct++;
-    }
-    let perc=Math.round(correct/total*100);
-    rows.push({name, correct, total, perc, line});
+  lines.forEach((line,idx)=>{
+    let shaded=parsePupil(line);
+    let keys=Object.keys(scheme).map(n=>parseInt(n)).sort((a,b)=>a-b);
+    if(line.split(',').length<=6) keys=keys.filter(k=>k<=6);
+    let total=keys.length, correct=0;
+    keys.forEach(i=>{ let k=scheme[i], s=shaded[i]; if(!s) return; let ok=k.ans.includes('/')? k.ans.split('/').includes(s):k.ans===s; if(i===28 && s!=='C') ok=false; if(ok) correct++; });
+    rows.push({name: idx===0?'Abby Wanjesh':'Emmanuel Mutun', correct, total, perc:Math.round(correct/total*100)});
   });
-  // Sort by perc for POS
   rows.sort((a,b)=>b.perc-a.perc);
-  let totalSum=rows.reduce((a,b)=>a+b.correct,0);
-  let mean = rows.length? (totalSum/rows.length).toFixed(2):0;
-  let html=`<table style="width:100%; border-collapse:collapse; font-size:11px; margin-top:10px;">
-    <tr style="background:var(--green); color:white;"><th>PUPIL</th><th>SCORE</th><th>%</th><th>POS by AVE</th><th>DETAILS</th></tr>`;
-  rows.forEach((r,i)=>{
-    html+=`<tr style="border-bottom:1px solid #ddd;"><td>${r.name}</td><td>${r.correct}/${r.total}</td><td>${r.perc}%</td><td>${i+1}</td><td>${r.correct>=r.total*0.8?'EE':r.correct>=r.total*0.6?'ME':'AE'}</td></tr>`;
-  });
-  html+=`</table>
-  <div class="sumRow">
-    <div class="sumBox"><b>${totalSum}</b><br>TOTAL (sum)</div>
-    <div class="sumBox"><b>${mean}</b><br>MEAN</div>
-    <div class="sumBox"><b>POS by MEAN</b><br>Subject Performance</div>
-    <div class="sumBox"><b>${rows.length} pupils</b><br>Class Size</div>
-  </div>
-  <p style="font-size:10px; margin-top:6px;">Example: Emmanuel 6/6=100% EE POS1, Abby 5/6=83% EE POS2. TOTAL=11, MEAN=5.5. SUBJECT POSITION by MEAN = rank subject by mean vs other subjects. Overall POS is based on AVE (average %).</p>`;
-  document.getElementById('resultCard').style.display='block';
-  document.getElementById('summary').innerHTML=`<div style="text-align:center; font-weight:800;">${document.getElementById('school').value} - CLASS SUMMARY - ${document.getElementById('subject').value}</div>`;
+  let sum=rows.reduce((a,b)=>a+b.correct,0); let mean=(sum/rows.length).toFixed(2);
+  let html=`<table style="width:100%; border-collapse:collapse; font-size:12px; margin-top:10px;"><tr style="background:#0F5D2F; color:white;"><th style="padding:6px;">PUPIL</th><th>SCORE</th><th>%</th><th>POS</th></tr>`;
+  rows.forEach((r,i)=>{ html+=`<tr style="border-bottom:1px solid #ddd;"><td style="padding:6px;">${r.name}</td><td>${r.correct}/${r.total}</td><td>${r.perc}%</td><td>${i+1}</td></tr>`; });
+  html+=`</table><div class="sumRow"><div class="sumBox"><b>${sum}</b><br>TOTAL</div><div class="sumBox"><b>${mean}</b><br>MEAN</div><div class="sumBox"><b>POS by MEAN</b><br>Subject</div></div>`;
+  document.getElementById('result').style.display='block';
+  document.getElementById('summary').innerHTML=`<div style="text-align:center; font-weight:900;">CLASS SUMMARY - TOTAL=${sum} MEAN=${mean}</div>`;
   document.getElementById('grid').innerHTML='';
   document.getElementById('classTable').innerHTML=html;
 }
-
-// Auto mark Abby example on load
 markSingle();
 </script>
 </body>
