@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html><head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Student - SomaHub - Composition Maker</title>
+<title>Student - SomaHub - Learner Dashboard</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;800;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -9,6 +9,7 @@
 body{font-family:'Nunito',sans-serif;background:#f6f6f7}
 @keyframes m{0%{transform:translateX(100%)}100%{transform:translateX(-100%)}}.marquee{animation:m 25s linear infinite}
 .bubble{padding:10px 12px;border-radius:14px;border:2.5px solid #000;margin:8px 0;font-size:11.5px;line-height:1.7;white-space:normal}
+.card{border:3px solid #000;border-radius:16px;padding:12px;box-shadow:4px 4px 0 0 #000;background:#fff}
 .knec-green{background:#dcfce7;border-left:6px solid #22c55e}
 .knec-yellow{background:#fef08a;border-left:6px solid #ffcc1a}
 .knec-blue{background:#e0f2ff;border-left:6px solid #4a86ff}
@@ -27,18 +28,34 @@ const app=initializeApp(cfg); window.FB={auth:getAuth(app),db:getFirestore(app),
 </head>
 <body class="flex justify-center"><div class="w-full max-w-[460px] bg-[#f6f6f7] min-h-screen pb-12">
 <div class="h-2 flex"><div class="flex-1 bg-[#ff8a2a]"></div><div class="flex-1 bg-[#2ac5a0]"></div><div class="flex-1 bg-[#4a86ff]"></div><div class="flex-1 bg-[#ffcc1a]"></div></div>
+
+<!-- STUDENT HEADER -->
 <div class="bg-white border-b-2 border-black sticky top-0 z-40">
 <div class="p-3 flex items-center gap-2">
 <div class="w-10 h-10 rounded-full border-2 border-black bg-[#4a86ff] flex items-center justify-center overflow-hidden"><img src="logo.png" class="w-full h-full object-cover" onerror="this.style.display='none'"></div>
-<div class="flex-1"><p class="font-black text-[14px] leading-none">Hi, <span id="firstName">Learner</span>! 🎒</p><p class="text-[10px] font-bold text-gray-600"><span id="gradeShow">Grade 6</span> • <span id="todayDate">Mon 28 Sept</span></p><p class="text-[8px] font-black opacity-60">Composition Maker + Clean Version</p></div>
+<div class="flex-1"><p class="font-black text-[14px] leading-none">Hi, <span id="firstName">Learner</span>! 🎒</p><p class="text-[10px] font-bold text-gray-600"><span id="gradeShow">Grade 6</span> • <span id="todayDate">Mon 28 Sept</span></p><p class="text-[8px] font-black opacity-60">Learner Dashboard • Composition Maker + Clean Version</p></div>
 <div class="bg-black text-white border-2 border-black px-3 py-1 rounded-full"><p id="indexShow" class="font-black text-[10px]">SHKE...</p></div>
 </div>
-<div class="bg-black text-white overflow-hidden whitespace-nowrap border-y-2 border-black h-8 flex items-center"><div class="marquee flex gap-8 text-[10px] font-black"><span>✨ NEW: Auto Clean Version - PP1 to Grade 9 - Full of Expressions!</span><span>📚 KNEC 20/20 Style</span></div></div>
+<div class="bg-black text-white overflow-hidden whitespace-nowrap border-y-2 border-black h-8 flex items-center"><div class="marquee flex gap-8 text-[10px] font-black"><span>✨ NEW: Auto Clean Version - PP1 to Grade 9 - Full of Expressions!</span><span>📚 KNEC 20/20 Style</span><span>🎁 Refer & Earn • Mark Essay • Exam Marker •</span></div></div>
 </div>
 
 <div class="p-3 space-y-3">
 
-<div class="bg-[#fffc8a] border-[2.5px] border-black rounded-[1.5rem] p-4 shadow-[4px_4px_0_0_#000]">
+<!-- QUICK ACCESS - STUDENT - NO Schemes, NO Lesson Plans -->
+<div class="font-black text-[16px]">🚀 Quick Access - Learner Tools</div>
+<div class="grid grid-cols-2 gap-3">
+  <a href="/notes.html" class="card"><div class="font-black text-[13px]">📚 Notes</div><div class="text-[10px] text-gray-500 font-bold">PP1-G9 • Read & Learn</div></a>
+  <a href="/exam.html" class="card"><div class="font-black text-[13px]">📝 Exams</div><div class="text-[10px] text-gray-500 font-bold">Practice Weekly</div></a>
+  <a href="/homework.html" class="card"><div class="font-black text-[13px]">📓 Homework</div><div class="text-[10px] text-gray-500 font-bold">Daily 10 Marks</div></a>
+  <a href="/mark.essay.html" class="card bg-pink-100"><div class="font-black text-[13px]">📝 Mark Essay</div><div class="text-[10px] text-gray-500 font-bold">Bold Mistake [Correction]</div></a>
+  <a href="/exam.marker.html" class="card bg-blue-100"><div class="font-black text-[13px]">📊 Exam Marker</div><div class="text-[10px] text-gray-500 font-bold">Check Your Answers</div></a>
+  <a href="#compMaker" class="card bg-purple-100"><div class="font-black text-[13px]">✍️ Composition Maker</div><div class="text-[10px] text-gray-500 font-bold">Clean Version 20/20</div></a>
+  <a href="/curriculum-designs.html" class="card bg-pink-100"><div class="font-black text-[13px]">📖 Designs</div><div class="text-[10px] text-gray-500 font-bold">Curriculum</div></a>
+  <a href="/ai-assistant.html" class="card bg-green-100"><div class="font-black text-[13px]">🤖 AI Assistant</div><div class="text-[10px] text-gray-500 font-bold">Ask Anything</div></a>
+</div>
+
+<!-- COMPOSITION MAKER PRO - STUDENT -->
+<div id="compMaker" class="bg-[#fffc8a] border-[2.5px] border-black rounded-[1.5rem] p-4 shadow-[4px_4px_0_0_#000]">
 <div class="flex justify-between items-center">
 <p class="font-black text-[14px]">✍️ Composition & Insha - Maker PRO</p>
 <span id="levelBadge" class="bg-black text-white px-2 py-1 rounded-full text-[7px] font-black">AUTO 3-LEVELS</span>
@@ -77,6 +94,24 @@ const app=initializeApp(cfg); window.FB={auth:getAuth(app),db:getFirestore(app),
 <button onclick="loadExample('g6')" class="bg-[#2ac5a0] text-white border-2 border-black rounded-full py-2 text-[8px] font-black">Grade 6 Medium</button>
 <button onclick="loadExample('g9')" class="bg-[#4a86ff] text-white border-2 border-black rounded-full py-2 text-[8px] font-black">Grade 9 Advanced</button>
 </div>
+</div>
+
+<!-- STUDENT REFERRALS + WALLET (Learner version) -->
+<div class="card">
+  <div class="flex justify-between items-center mb-3"><div class="font-black text-[14px]">🎁 Referrals - Learner</div><div class="bg-black text-white px-3 py-1 rounded-full text-[11px] font-black">0 pts</div></div>
+  <div class="grid grid-cols-2 gap-3 mb-3">
+    <div class="border-2 border-black rounded-xl p-2 bg-yellow-50"><div class="text-[10px] font-black">YOUR CODE</div><div class="font-black text-[14px]" id="refCode">SHKE...</div></div>
+    <div class="border-2 border-black rounded-xl p-2 bg-blue-50"><div class="text-[10px] font-black">BALANCE</div><div class="font-black text-[14px]">0 pts = 0 KES</div></div>
+  </div>
+  <div class="border-2 border-black rounded-full p-2 flex items-center gap-2 bg-white">
+    <div class="flex-1 text-[11px] font-bold truncate" id="refLink">https://somahub-kenya.vercel.app/registration.html?ref=SHKE</div>
+    <button onclick="navigator.clipboard.writeText(document.getElementById('refLink').innerText);alert('Copied!')" class="bg-black text-white px-3 py-1 rounded-full text-[11px] font-black">Copy</button>
+  </div>
+</div>
+
+<div class="grid grid-cols-2 gap-3">
+  <a href="/dashboard.html" class="card bg-black text-white text-center"><div class="font-black text-[13px]">📊 My Dashboard / Wallet</div><div class="text-[10px] mt-1">My Marks • Bonus</div></a>
+  <a href="/chat.html" class="card bg-green-500 text-white text-center"><div class="font-black text-[13px]">💬 Chat</div><div class="text-[10px] mt-1">Ask Teacher • Help</div></a>
 </div>
 
 </div>
@@ -129,36 +164,25 @@ async function markComposition(){
   isG9?
   "Grade 7-9 ADVANCED: 220-250 words, 4-5 paragraphs, advanced vocabulary: exquisite, resilient, compassionate, nostalgic, myriad, Use metaphors, similes, personification, idioms: heart of gold, apple of my eye, light at end of tunnel, show don't tell, sensory details, emotional depth, KNEC 20/20, mature conclusion" :
   "Grade 4-6 MEDIUM: 150-180 words, 4 paragraphs, good adjectives: kind-hearted, sparkling, delicious, brave, similes: as busy as bee, as bright as sun, as gentle as dove, simple idioms, 5 senses: I saw, heard, smelled, felt, tasted, clear flow";
-
   btn.innerText="⏳ Marking..."; btn.disabled=true;
   res.classList.remove('hidden'); res.innerHTML="<div class='p-4 text-center font-black'>⏳ Generating Clean Descriptive Version...<br><span class='text-[9px]'>"+levelGuide.slice(0,80)+"...</span></div>";
   try{
     let payload={
       question: `You are SomaHub KNEC Composition Marker & Rewriter. Grade: ${grade} Type: ${type} LevelGuide: ${levelGuide}
       Mark the learner work and MUST provide CLEAN DESCRIPTIVE VERSION.
-
       OUTPUT TEMPLATE - DO NOT SKIP ANY SECTION - USE BOLD HEADINGS:
-
       **Title: [Create beautiful title]**
-
       **⭐ Score: [Give /20 based on original but mention Clean Version is 20/20]**
-
       **✅ Strengths:** List 3 strengths from original
-
       **📝 Grammar & Vocabulary:** Show 2-3 grammar fixes
-
       **⚠️ Corrections:** List errors
-
       **✨ CLEAN VERSION - Full of Description & Expressions (Copy this for learning):**
       Write full clean version here following LevelGuide strictly:
       ${isPP? "PP1 example style: My Mother is nice. ❤️ She has a smile like sunshine ☀️. She cooks yummy chapati. I love her. She is my hero 🌟" : ""}
       ${!isPP &&!isG9? "Grade6 example: My Mother, My Heroine. My mother is kind-hearted... as bright as morning sun... busy as bee... sweet aroma... heart of gold... etc 150 words" : ""}
       ${isG9? "Grade9 example: The Day Etched in My Memory. Life is tapestry... exquisite... nostalgic... The azure waves of Indian Ocean whispered... resilient spirit... etc 230 words" : ""}
-
       **💡 Teacher Comment (Well Explained):** Explain how Clean Version improves original with descriptive words, expressions, senses - 4 sentences, very encouraging, mention specific improvement
-
       **👨‍🏫 Suggestions to Improve:** 4 practical steps with examples: e.g., Replace 'big' with 'enormous/huge', Use simile 'as brave as lion', Add senses, Read story books
-
       Original learner text: ${txt||"See photo"}`,
       grade: grade, mode:"mark" };
     if(compPhotoData) payload.photo=compPhotoData.split(',')[1];
@@ -174,7 +198,7 @@ async function markComposition(){
 }
 function copyComp(){ let t=document.getElementById('compResult').innerText; if(!t){showToast("No result"); return;} navigator.clipboard.writeText(t).then(()=>showToast("✅ CLEAN COPIED!")); }
 function clearComp(){ document.getElementById('compResult').classList.add('hidden'); document.getElementById('compActions').classList.add('hidden'); document.getElementById('compPreview').classList.add('hidden'); document.getElementById('compInput').value=''; compPhotoData=''; showToast("🔄 Cleared"); }
-setTimeout(()=>{ const FB=window.FB; FB.onAuthStateChanged(FB.auth, async(u)=>{ if(!u) return location.href='registration.html'; let s=await FB.getDoc(FB.doc(FB.db,"users",u.uid)); if(s.exists()){ let d=s.data(); firstName.innerText=d.firstName||"Learner"; gradeShow.innerText=d.grade||"Grade 6"; compGrade.value=d.grade||"Grade 6"; indexShow.innerText=d.indexNumber||"SHKE";
+setTimeout(()=>{ const FB=window.FB; FB.onAuthStateChanged(FB.auth, async(u)=>{ if(!u) return location.href='registration.html'; let s=await FB.getDoc(FB.doc(FB.db,"users",u.uid)); if(s.exists()){ let d=s.data(); firstName.innerText=d.firstName||"Learner"; gradeShow.innerText=d.grade||"Grade 6"; compGrade.value=d.grade||"Grade 6"; indexShow.innerText=d.indexNumber||"SHKE"; document.getElementById('refCode').innerText=d.indexNumber||"SHKE"; document.getElementById('refLink').innerText='https://somahub-kenya.vercel.app/registration.html?ref='+(d.indexNumber||"SHKE");
   let isPP=(d.grade||'').includes('PP')||['Grade 1','Grade 2','Grade 3'].includes(d.grade||'');
   let isG9=['Grade 7','Grade 8','Grade 9'].includes(d.grade||'');
   document.getElementById('levelBadge').innerText= isPP? "PP1-G3 • SIMPLE 🌈" : isG9? "G7-G9 • ADVANCED 📚" : "G4-G6 • MEDIUM ✨";
