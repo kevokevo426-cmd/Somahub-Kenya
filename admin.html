@@ -17,8 +17,8 @@ window.FB={db,collection,getDocs,doc,getDoc,updateDoc,deleteDoc,addDoc,serverTim
 <body class="bg-[#f7f7f5] text-[#111] min-h-screen">
 <header class="bg-white border-b sticky top-0 z-50">
 <div class="max-w-6xl mx-auto px-6 py-4 flex justify-between items-center">
-<div><h1 class="font-extrabold text-[18px] tracking-tight">SomaHub Admin</h1><p class="text-[10px] text-gray-500 -mt-1">Parent + Teacher can request homeschooling • SHKE + SHKET</p></div>
-<div class="flex gap-2">
+<div><h1 class="font-extrabold text-[18px] tracking-tight">SomaHub Admin</h1><p class="text-[10px] text-gray-500 -mt-1">Parent + Teacher can request homeschooling • SHKE + SHKET • Playgroup - Grade 10</p></div>
+<div class="flex gap-2 flex-wrap">
 <button onclick="showTab('resources')" id="btn-resources" class="bg-white border px-4 py-2 rounded-full text-[11px] font-bold">📚 Resources</button>
 <button onclick="showTab('ai')" id="btn-ai" class="bg-white border px-4 py-2 rounded-full text-[11px] font-bold">🤖 AI Brain</button>
 <button onclick="showTab('tuition')" id="btn-tuition" class="bg-black text-white px-4 py-2 rounded-full text-[11px] font-bold">🏠 Tuition <span id="tuitionCountTop" class="bg-[#ffcc1a] text-black px-1.5 rounded-full ml-1">0</span></button>
@@ -44,7 +44,14 @@ window.FB={db,collection,getDocs,doc,getDoc,updateDoc,deleteDoc,addDoc,serverTim
 </div>
 <input type="hidden" id="rType" value="Notes">
 <input id="rTitle" placeholder="Title — e.g. Grade 6 Fractions" class="w-full bg-[#f7f7f5] border p-4 rounded-2xl text-[13px] mb-3 outline-none">
-<div class="grid grid-cols-2 gap-3 mb-3"><select id="rGrade" class="bg-[#f7f7f5] border p-4 rounded-2xl text-[13px]"><option>Grade 6</option><option>Grade 7</option><option>Grade 8</option><option>Grade 5</option></select><select id="rSubject" class="bg-[#f7f7f5] border p-4 rounded-2xl text-[13px]"><option>Mathematics</option><option>English</option><option>Science</option></select></div>
+<div class="grid grid-cols-2 gap-3 mb-3">
+<select id="rGrade" onchange="updateSubjects('rGrade','rSubject')" class="bg-[#f7f7f5] border p-4 rounded-2xl text-[13px]">
+<option>Playgroup</option><option>PP1</option><option>PP2</option>
+<option>Grade 1</option><option>Grade 2</option><option>Grade 3</option><option>Grade 4</option><option>Grade 5</option>
+<option selected>Grade 6</option><option>Grade 7</option><option>Grade 8</option><option>Grade 9</option><option>Grade 10</option>
+</select>
+<select id="rSubject" class="bg-[#f7f7f5] border p-4 rounded-2xl text-[13px]"></select>
+</div>
 <input id="rUrl" placeholder="Drive / PDF / YouTube link" class="w-full bg-[#f7f7f5] border p-4 rounded-2xl text-[13px] mb-3 outline-none"><textarea id="rDesc" placeholder="Description..." class="w-full bg-[#f7f7f5] border p-4 rounded-2xl text-[13px] h-[80px] mb-3 outline-none"></textarea>
 <button onclick="addResource()" class="w-full bg-black text-white py-4 rounded-2xl font-bold text-[13px]">+ Add to <span id="showWhere">notes.html</span></button><p id="rMsg" class="text-[11px] text-center font-bold mt-2"></p>
 </div>
@@ -66,14 +73,21 @@ window.FB={db,collection,getDocs,doc,getDoc,updateDoc,deleteDoc,addDoc,serverTim
 <div class="flex gap-2 mt-3 hidden" id="camBtns"><button onclick="takePhoto()" class="flex-1 bg-[#ffcc1a] py-2.5 rounded-xl font-bold text-[12px]">📸 Capture</button><button onclick="closeCamera()" class="flex-1 bg-white border py-2.5 rounded-xl font-bold text-[12px]">Close</button></div>
 <img id="preview" class="hidden w-full mt-3 rounded-2xl border max-h-[300px] object-contain bg-white"><p id="photoStatus" class="text-[10px] mt-2"></p>
 </div>
-<div class="mt-5 space-y-3"><input id="aiTitle" placeholder="Title" class="w-full bg-[#f7f7f5] border p-4 rounded-2xl text-[13px]"><div class="grid grid-cols-3 gap-3"><select id="aiSubject" class="bg-[#f7f7f5] border p-3 rounded-2xl text-[12px]"><option>Mathematics</option><option>English</option></select><select id="aiGrade" class="bg-[#f7f7f5] border p-3 rounded-2xl text-[12px]"><option>Grade 6</option></select><select id="aiUse" class="bg-[#f7f7f5] border p-3 rounded-2xl text-[12px]"><option value="all">All</option><option value="exam">EXAM</option><option value="homework">HOMEWORK</option></select></div><textarea id="aiText" placeholder="Paste text..." class="w-full bg-[#f7f7f5] border p-4 rounded-2xl text-[13px] h-[100px]"></textarea><button onclick="addAiBrain()" class="w-full bg-[#ffcc1a] py-4 rounded-2xl font-bold text-[13px]">🧠 Feed to AI</button><p id="aiMsg" class="text-[11px] text-center"></p></div>
+<div class="mt-5 space-y-3"><input id="aiTitle" placeholder="Title" class="w-full bg-[#f7f7f5] border p-4 rounded-2xl text-[13px]">
+<div class="grid grid-cols-3 gap-3">
+<select id="aiSubject" class="bg-[#f7f7f5] border p-3 rounded-2xl text-[12px]"></select>
+<select id="aiGrade" onchange="updateSubjects('aiGrade','aiSubject')" class="bg-[#f7f7f5] border p-3 rounded-2xl text-[12px]">
+<option>Playgroup</option><option>PP1</option><option>PP2</option><option>Grade 1</option><option>Grade 2</option><option>Grade 3</option><option>Grade 4</option><option>Grade 5</option><option selected>Grade 6</option><option>Grade 7</option><option>Grade 8</option><option>Grade 9</option><option>Grade 10</option>
+</select>
+<select id="aiUse" class="bg-[#f7f7f5] border p-3 rounded-2xl text-[12px]"><option value="all">All</option><option value="exam">EXAM</option><option value="homework">HOMEWORK</option></select></div>
+<textarea id="aiText" placeholder="Paste text..." class="w-full bg-[#f7f7f5] border p-4 rounded-2xl text-[13px] h-[100px]"></textarea><button onclick="addAiBrain()" class="w-full bg-[#ffcc1a] py-4 rounded-2xl font-bold text-[13px]">🧠 Feed to AI</button><p id="aiMsg" class="text-[11px] text-center"></p></div>
 </div>
 </div>
 <div class="col-span-12 lg:col-span-5"><div class="bg-black text-white rounded-[24px] p-6"><h3 class="font-bold text-[13px]">🧠 AI Library</h3><div id="aiList" class="mt-4 space-y-3 max-h-[700px] overflow-y-auto"></div></div></div>
 </div>
 </div>
 
-<!-- TUITION - PARENT + TEACHER -->
+<!-- TUITION -->
 <div id="tab-tuition">
 <div class="max-w-4xl mx-auto bg-white rounded-[24px] border p-6 shadow-sm">
 <div class="flex justify-between items-center"><h2 class="font-extrabold text-[16px]">🏠 Homeschooling Requests — Parent + Teacher can request</h2><button onclick="loadTuition()" class="bg-black text-white px-4 py-2 rounded-full text-[11px] font-bold">🔄 Reload</button></div>
@@ -86,6 +100,33 @@ window.FB={db,collection,getDocs,doc,getDoc,updateDoc,deleteDoc,addDoc,serverTim
 
 <script>
 let currentType='Notes', allRes=[], photoBase64='', stream=null;
+
+// ===== CBC LEARNING AREAS - Playgroup to Grade 10 - CORRECTED: NO PE IN JUNIOR =====
+const LEARNING_AREAS = {
+  "Playgroup": ["Language Activities","Mathematical Activities","Environmental Activities","Creative Activities","Religious Activities","Movement & Music","Health & Nutrition","Play"],
+  "PP1": ["Language Activities","Mathematical Activities","Environmental Activities","Creative Activities","Religious Education - CRE / IRE / HRE","Movement Activities","Music"],
+  "PP2": ["Language Activities","Mathematical Activities","Environmental Activities","Creative Activities","Religious Education - CRE / IRE / HRE","Movement Activities","Music"],
+  "Grade 1": ["English","Kiswahili","Mathematics","Religious Education - CRE / IRE / HRE","Environmental Activities","Creative Activities - Art, Craft, Music","Movement & Physical Activities","Indigenous Language"],
+  "Grade 2": ["English","Kiswahili","Mathematics","Religious Education - CRE / IRE / HRE","Environmental Activities","Creative Activities - Art, Craft, Music","Movement & Physical Activities","Indigenous Language"],
+  "Grade 3": ["English","Kiswahili","Mathematics","Religious Education - CRE / IRE / HRE","Environmental Activities","Creative Activities - Art, Craft, Music","Movement & Physical Activities","Indigenous Language"],
+  "Grade 4": ["English","Kiswahili","Mathematics","Science & Technology","Social Studies","Religious Education - CRE / IRE / HRE","Creative Arts","Physical Education & Sports","Agriculture","Home Science","Foreign Languages - French","Foreign Languages - German"],
+  "Grade 5": ["English","Kiswahili","Mathematics","Science & Technology","Social Studies","Religious Education - CRE / IRE / HRE","Creative Arts","Physical Education & Sports","Agriculture","Home Science","Foreign Languages - French","Foreign Languages - German"],
+  "Grade 6": ["English","Kiswahili","Mathematics","Science & Technology","Social Studies","Religious Education - CRE / IRE / HRE","Creative Arts","Physical Education & Sports","Agriculture","Home Science","Foreign Languages - French","Foreign Languages - German"],
+  // JUNIOR - NO PE
+  "Grade 7": ["English","Kiswahili","Mathematics","Integrated Science","Social Studies","Religious Education - CRE / IRE / HRE","Pre-Technical Studies","Agriculture & Nutrition","Creative Arts & Sports","Health Education","Life Skills","Foreign Languages - French","Foreign Languages - German","Foreign Languages - Mandarin Chinese","Foreign Languages - Arabic","Indigenous Language","Computer Science"],
+  "Grade 8": ["English","Kiswahili","Mathematics","Integrated Science","Social Studies","Religious Education - CRE / IRE / HRE","Pre-Technical Studies","Agriculture & Nutrition","Creative Arts & Sports","Health Education","Life Skills","Foreign Languages - French","Foreign Languages - German","Foreign Languages - Mandarin Chinese","Foreign Languages - Arabic","Indigenous Language","Computer Science"],
+  "Grade 9": ["English","Kiswahili","Mathematics","Integrated Science","Social Studies","Religious Education - CRE / IRE / HRE","Pre-Technical Studies","Agriculture & Nutrition","Creative Arts & Sports","Health Education","Life Skills","Foreign Languages - French","Foreign Languages - German","Foreign Languages - Mandarin Chinese","Foreign Languages - Arabic","Indigenous Language","Computer Science"],
+  "Grade 10": ["English","Kiswahili","Mathematics","Biology","Chemistry","Physics","General Science","Social Studies / History","Geography","CRE / IRE / HRE","Agriculture","Business Studies","Computer Science","Home Science","Pre-Technical & Pre-Career","Creative Arts & Sports","Foreign Languages - French","Foreign Languages - German","Foreign Languages - Mandarin Chinese","Foreign Languages - Arabic"]
+};
+const ALL_AREAS = [...new Set(Object.values(LEARNING_AREAS).flat())];
+
+function updateSubjects(gradeId, subjId){
+  let grade = document.getElementById(gradeId).value;
+  let list = LEARNING_AREAS[grade] || ALL_AREAS;
+  let sel = document.getElementById(subjId);
+  sel.innerHTML = list.map(s=>`<option>${s}</option>`).join('');
+}
+
 function showTab(t){['resources','ai','tuition'].forEach(x=>{document.getElementById('tab-'+x).classList.add('hidden'); document.getElementById('btn-'+x).className='bg-white border px-4 py-2 rounded-full text-[11px] font-bold';}); document.getElementById('tab-'+t).classList.remove('hidden'); document.getElementById('btn-'+t).className='bg-black text-white px-4 py-2 rounded-full text-[11px] font-bold'; if(t=='resources') loadRes(); if(t=='ai') loadAi(); if(t=='tuition') loadTuition();}
 function setType(t){ currentType=t; document.getElementById('rType').value=t; document.getElementById('showWhere').innerText=t=='Notes'?'notes.html':t=='Design'?'curriculum-designs.html':t=='Exam'?'exam.html':t=='Homework'?'homework.html':t=='Scheme'?'schemes.html':'lesson-plans.html'; document.querySelectorAll('.typeBtn').forEach(b=>b.className='typeBtn bg-white border p-3 rounded-2xl text-left'); document.getElementById('t'+t).className='typeBtn bg-black text-white p-3 rounded-2xl text-left'; }
 async function openCamera(){ try{ stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:'environment'}}); let v=document.getElementById('video'); v.srcObject=stream; v.classList.remove('hidden'); document.getElementById('camBtns').classList.remove('hidden'); }catch(e){ alert(e.message); } }
@@ -93,10 +134,10 @@ function closeCamera(){ if(stream) stream.getTracks().forEach(t=>t.stop()); docu
 function takePhoto(){ let v=document.getElementById('video'); let c=document.getElementById('canvas'); c.width=v.videoWidth; c.height=v.videoHeight; c.getContext('2d').drawImage(v,0,0); photoBase64=c.toDataURL('image/jpeg',0.7); document.getElementById('preview').src=photoBase64; document.getElementById('preview').classList.remove('hidden'); closeCamera(); }
 function handleFile(i){ let f=i.files[0]; let r=new FileReader(); r.onload=e=>{ photoBase64=e.target.result; document.getElementById('preview').src=photoBase64; document.getElementById('preview').classList.remove('hidden'); }; r.readAsDataURL(f); }
 async function addResource(){ let FB=window.FB; let title=rTitle.value.trim(); if(!title) return; await FB.addDoc(FB.collection(FB.db,'resources'), {title, type:document.getElementById('rType').value, grade:rGrade.value, subject:rSubject.value, url:rUrl.value, description:rDesc.value, createdAt:FB.serverTimestamp()}); rMsg.innerText='✅ Added'; loadRes(); }
-async function loadRes(){ let FB=window.FB; let snap=await FB.getDocs(FB.collection(FB.db,'resources')); allRes=[]; snap.forEach(d=>allRes.push({id:d.id,...d.data()})); rList.innerHTML=''; allRes.slice(-20).reverse().forEach(r=>{ rList.innerHTML+=`<div class="bg-[#f7f7f5] p-3 rounded-2xl flex justify-between"><p class="font-bold text-[11px]">${r.title}</p><button onclick="delRes('${r.id}')" class="text-red-500 text-[10px]">Delete</button></div>`; }); }
+async function loadRes(){ let FB=window.FB; let snap=await FB.getDocs(FB.collection(FB.db,'resources')); allRes=[]; snap.forEach(d=>allRes.push({id:d.id,...d.data()})); rList.innerHTML=''; allRes.slice(-20).reverse().forEach(r=>{ rList.innerHTML+=`<div class="bg-[#f7f7f5] p-3 rounded-2xl flex justify-between"><p class="font-bold text-[11px]">${r.title} - ${r.grade} - ${r.subject||''}</p><button onclick="delRes('${r.id}')" class="text-red-500 text-[10px]">Delete</button></div>`; }); }
 async function delRes(id){ let FB=window.FB; await FB.deleteDoc(FB.doc(FB.db,'resources',id)); loadRes(); }
 async function addAiBrain(){ let FB=window.FB; await FB.addDoc(FB.collection(FB.db,'ai_brain'), {title:aiTitle.value, subject:aiSubject.value, grade:aiGrade.value, use:aiUse.value, text:aiText.value, photo:photoBase64, createdAt:FB.serverTimestamp()}); aiMsg.innerText='🧠 Fed'; photoBase64=''; document.getElementById('preview').classList.add('hidden'); loadAi(); }
-async function loadAi(){ let FB=window.FB; let snap=await FB.getDocs(FB.collection(FB.db,'ai_brain')); aiList.innerHTML=''; snap.forEach(d=>{ let m=d.data(); aiList.innerHTML+=`<div class="bg-white/10 p-3 rounded-2xl"><p class="text-[11px] font-bold">${m.title} ${m.use}</p>${m.photo?`<img src="${m.photo}" class="mt-2 rounded-xl max-h-[100px]">`:''}</div>`; }); }
+async function loadAi(){ let FB=window.FB; let snap=await FB.getDocs(FB.collection(FB.db,'ai_brain')); aiList.innerHTML=''; snap.forEach(d=>{ let m=d.data(); aiList.innerHTML+=`<div class="bg-white/10 p-3 rounded-2xl"><p class="text-[11px] font-bold">${m.title} - ${m.grade} - ${m.subject} - ${m.use}</p>${m.photo?`<img src="${m.photo}" class="mt-2 rounded-xl max-h-[100px]">`:''}</div>`; }); }
 
 async function loadTuition(){
  let FB=window.FB;
@@ -112,7 +153,6 @@ async function loadTuition(){
     let isTeacher = (r.requestedBy||'').toLowerCase()=='teacher' || r.teacherRequest==true;
     let line1 = isTeacher? `Teacher of <b>${r.teacherId? 'SHKET-'+r.teacherId.slice(-5):'SHKET...' } (${r.teacherName||'Teacher'})</b> is requesting for homeschooling.` : `Parent of <b>${r.shke||'SHKE...'}</b> is requesting for homeschooling.`;
     let line2 = isTeacher? `Teacher <b>${r.teacherId? 'SHKET-'+r.teacherId.slice(-5):''}</b> is requesting for homeschooling for student <b>${r.childName||r.shke||'Student'}</b> and parent <b>${r.shke||''}</b>` : `Parent of <b>${r.shke||'SHKE...'}</b> is requesting for homeschooling for student <b>${r.childName||r.shke||'Student'}</b> and teacher <b>${r.teacherId?'SHKET-'+r.teacherId.slice(-5):'Not assigned'}</b>`;
-
     list.innerHTML+=`
     <div class="border rounded-[20px] p-5">
       <div class="flex justify-between"><span class="${col} text-[9px] px-3 py-1 rounded-full font-bold">${(r.status||'pending').toUpperCase()} • ${isTeacher?'TEACHER REQUEST':'PARENT REQUEST'}</span><span class="text-[10px] text-gray-400">${r.id}</span></div>
@@ -139,7 +179,7 @@ async function rejectTuition(id){ let FB=window.FB; if(!confirm('Reject '+id+'?'
 function toggleAssign(id){ document.getElementById('assign-'+id).classList.toggle('hidden'); }
 async function doAssign(id){ let FB=window.FB; let tId=document.getElementById('tid-'+id).value.trim(); let tName=document.getElementById('tname-'+id).value.trim(); let td=await FB.getDoc(FB.doc(FB.db,'users',tId)); let em=td.exists()?td.data().email||'':''; await FB.updateDoc(FB.doc(FB.db,'homeschooling_requests',id), {status:'approved', teacherId:tId, teacherName:tName, teacherEmail:em}); loadTuition(); }
 async function loadCounts(){ let FB=window.FB; let snap=await FB.getDocs(FB.collection(FB.db,'users')); let sc=0,tc=0; snap.forEach(d=>{ let r=(d.data().role||'').toLowerCase(); if(r=='teacher') tc++; else sc++; }); document.getElementById('sCount').innerText=sc; document.getElementById('tCount2').innerText=tc; }
-setTimeout(()=>{ showTab('tuition'); loadCounts(); loadTuition(); },900);
+setTimeout(()=>{ updateSubjects('rGrade','rSubject'); updateSubjects('aiGrade','aiSubject'); showTab('tuition'); loadCounts(); loadTuition(); },900);
 </script>
 </body>
 </html>
