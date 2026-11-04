@@ -41,7 +41,7 @@ const app=initializeApp(cfg); window.FB={auth:getAuth(app),db:getFirestore(app),
 
 <div class="p-3 space-y-3">
 
-<!-- QUICK ACCESS - STUDENT - NO Schemes, NO Lesson Plans -->
+<!-- QUICK ACCESS - STUDENT - NO Schemes, NO Lesson Plans - FIXED LINKS -->
 <div class="font-black text-[16px]">🚀 Quick Access - Learner Tools</div>
 <div class="grid grid-cols-2 gap-3">
   <a href="/notes.html" class="card"><div class="font-black text-[13px]">📚 Notes</div><div class="text-[10px] text-gray-500 font-bold">PP1-G9 • Read & Learn</div></a>
@@ -51,7 +51,8 @@ const app=initializeApp(cfg); window.FB={auth:getAuth(app),db:getFirestore(app),
   <a href="/exam.marker.html" class="card bg-blue-100"><div class="font-black text-[13px]">📊 Exam Marker</div><div class="text-[10px] text-gray-500 font-bold">Check Your Answers</div></a>
   <a href="#compMaker" class="card bg-purple-100"><div class="font-black text-[13px]">✍️ Composition Maker</div><div class="text-[10px] text-gray-500 font-bold">Clean Version 20/20</div></a>
   <a href="/curriculum-designs.html" class="card bg-pink-100"><div class="font-black text-[13px]">📖 Designs</div><div class="text-[10px] text-gray-500 font-bold">Curriculum</div></a>
-  <a href="/ai-assistant.html" class="card bg-green-100"><div class="font-black text-[13px]">🤖 AI Assistant</div><div class="text-[10px] text-gray-500 font-bold">Ask Anything</div></a>
+  <!-- FIXED: was /ai-assistant.html -> now /ai.assistant.html (your real file) -->
+  <a href="/ai.assistant.html" class="card bg-green-100"><div class="font-black text-[13px]">🤖 AI Assistant</div><div class="text-[10px] text-gray-500 font-bold">Ask Anything</div></a>
 </div>
 
 <!-- COMPOSITION MAKER PRO - STUDENT -->
@@ -96,7 +97,7 @@ const app=initializeApp(cfg); window.FB={auth:getAuth(app),db:getFirestore(app),
 </div>
 </div>
 
-<!-- STUDENT REFERRALS + WALLET (Learner version) -->
+<!-- STUDENT REFERRALS + WALLET -->
 <div class="card">
   <div class="flex justify-between items-center mb-3"><div class="font-black text-[14px]">🎁 Referrals - Learner</div><div class="bg-black text-white px-3 py-1 rounded-full text-[11px] font-black">0 pts</div></div>
   <div class="grid grid-cols-2 gap-3 mb-3">
@@ -110,8 +111,10 @@ const app=initializeApp(cfg); window.FB={auth:getAuth(app),db:getFirestore(app),
 </div>
 
 <div class="grid grid-cols-2 gap-3">
-  <a href="/dashboard.html" class="card bg-black text-white text-center"><div class="font-black text-[13px]">📊 My Dashboard / Wallet</div><div class="text-[10px] mt-1">My Marks • Bonus</div></a>
-  <a href="/chat.html" class="card bg-green-500 text-white text-center"><div class="font-black text-[13px]">💬 Chat</div><div class="text-[10px] mt-1">Ask Teacher • Help</div></a>
+  <!-- FIXED: was /dashboard.html -> now /wallet.html (your real file) -->
+  <a href="/wallet.html" class="card bg-black text-white text-center"><div class="font-black text-[13px]">📊 My Dashboard / Wallet</div><div class="text-[10px] mt-1">My Marks • Bonus</div></a>
+  <!-- FIXED: was /chat.html -> now /care-chat.html (your real file) -->
+  <a href="/care-chat.html" class="card bg-green-500 text-white text-center"><div class="font-black text-[13px]">💬 Chat</div><div class="text-[10px] mt-1">Ask Teacher • Help</div></a>
 </div>
 
 </div>
