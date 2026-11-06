@@ -9,10 +9,10 @@
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-import { getFirestore, collection, getDocs, doc, getDoc, updateDoc, deleteDoc, addDoc, serverTimestamp, query, where } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+import { getFirestore, collection, getDocs, doc, getDoc, setDoc, updateDoc, deleteDoc, addDoc, serverTimestamp, query, where } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 const cfg={apiKey:"AIzaSyA93BNes3AmFyxIEgjSbvbIWqLyorLsuj8",authDomain:"somahubkenya-9e458.firebaseapp.com",projectId:"somahubkenya-9e458",storageBucket:"somahubkenya-9e458.firebasestorage.app",messagingSenderId:"615579085715",appId:"1:615579085715:web:28fca37ba498324bb49666"};
 const app=initializeApp(cfg); const db=getFirestore(app); const auth=getAuth(app);
-window.FB={db,collection,getDocs,doc,getDoc,updateDoc,deleteDoc,addDoc,serverTimestamp,query,where};
+window.FB={db,collection,getDocs,doc,getDoc,setDoc,updateDoc,deleteDoc,addDoc,serverTimestamp,query,where};
 onAuthStateChanged(auth,u=>{ if(!u) signInAnonymously(auth).catch(e=>console.log(e)); });
 </script>
 </head>
@@ -49,24 +49,39 @@ onAuthStateChanged(auth,u=>{ if(!u) signInAnonymously(auth).catch(e=>console.log
 </select>
 <select id="rSubject" class="bg-[#f7f7f5] border p-4 rounded-2xl text-[13px]"></select>
 </div>
-<input id="rUrl" placeholder="Drive / PDF / YouTube link - MUST paste link" class="w-full bg-[#f7f7f5] border p-4 rounded-2xl text-[13px] mb-3 outline-none"><textarea id="rDesc" placeholder="Description... e.g. Agriculture 8" class="w-full bg-[#f7f7f5] border p-4 rounded-2xl text-[13px] h-[80px] mb-3 outline-none"></textarea>
+<input id="rUrl" placeholder="Drive / PDF / YouTube link" class="w-full bg-[#f7f7f5] border p-4 rounded-2xl text-[13px] mb-3 outline-none"><textarea id="rDesc" placeholder="Description... e.g. Agriculture 8" class="w-full bg-[#f7f7f5] border p-4 rounded-2xl text-[13px] h-[80px] mb-3 outline-none"></textarea>
 <button onclick="addResource()" id="addBtn" class="w-full bg-black text-white py-4 rounded-2xl font-bold text-[13px]">+ Add to <span id="showWhere">notes.html</span></button><p id="rMsg" class="text-[11px] text-center font-bold mt-2"></p>
-<div id="viewBtnWrap" class="hidden mt-3"><a id="viewLink" href="/curriculum-designs.html" target="_blank" class="block text-center bg-[#ffcc1a] py-3 rounded-2xl font-bold text-[13px]">👀 VIEW IN DESIGN HTML →</a><p class="text-[10px] text-center mt-1 text-gray-500">Click to check if it reflects in curriculum-designs.html</p></div>
+<div id="viewBtnWrap" class="hidden mt-3"><a id="viewLink" href="/curriculum-designs.html" target="_blank" class="block text-center bg-[#ffcc1a] py-3 rounded-2xl font-bold text-[13px]">👀 VIEW IN DESIGN HTML →</a></div>
 </div>
-<div class="bg-white rounded-[24px] border p-6 mt-6">
-<h3 class="font-bold text-[13px]">👀 Preview - What will appear in Design HTML</h3>
-<p class="text-[10px] text-gray-500">This reads same Firestore collection as curriculum-designs.html - Type = Curriculum Design</p>
-<div class="flex gap-2 mt-3"><select id="previewFilter" onchange="loadPreview()" class="bg-[#f7f7f5] border p-2 rounded-xl text-[11px]"><option value="Curriculum Design">🎨 Design Only</option><option value="Notes">📘 Notes</option><option value="Exam">📝 Exam</option><option value="Homework">📝 Homework</option><option value="Scheme">🗂️ Scheme</option><option value="LessonPlan">📋 Lesson</option></select><button onclick="loadPreview()" class="bg-black text-white px-3 py-2 rounded-xl text-[11px] font-bold">🔄 Reload Preview</button></div>
-<div id="previewList" class="mt-4 space-y-2 max-h-[400px] overflow-y-auto"></div>
-</div>
-<div class="bg-white rounded-[24px] border p-6 mt-6"><h3 class="font-bold text-[13px]">Recent Resources - All Types</h3><div id="rList" class="mt-4 space-y-2 max-h-[400px] overflow-y-auto"></div></div>
+<div class="bg-white rounded-[24px] border p-6 mt-6"><h3 class="font-bold text-[13px]">👀 Preview - What will appear in Design HTML</h3><div class="flex gap-2 mt-3"><select id="previewFilter" onchange="loadPreview()" class="bg-[#f7f7f5] border p-2 rounded-xl text-[11px]"><option value="Curriculum Design">🎨 Design Only</option><option value="Notes">📘 Notes</option><option value="Exam">📝 Exam</option><option value="Homework">📝 Homework</option><option value="Scheme">🗂️ Scheme</option><option value="LessonPlan">📋 Lesson</option></select><button onclick="loadPreview()" class="bg-black text-white px-3 py-2 rounded-xl text-[11px] font-bold">🔄 Reload</button></div><div id="previewList" class="mt-4 space-y-2 max-h-[400px] overflow-y-auto"></div></div>
+<div class="bg-white rounded-[24px] border p-6 mt-6"><h3 class="font-bold text-[13px]">Recent Resources</h3><div id="rList" class="mt-4 space-y-2 max-h-[400px] overflow-y-auto"></div></div>
 </div>
 <div class="col-span-12 lg:col-span-5"><div class="grid grid-cols-2 gap-3"><div class="bg-white rounded-[20px] border p-5"><p class="text-[10px] text-gray-400">Students</p><p id="sCount" class="font-black text-[22px]">0</p></div><div class="bg-white rounded-[20px] border p-5"><p class="text-[10px] text-gray-400">Teachers</p><p id="tCount2" class="font-black text-[22px]">0</p></div></div></div>
 </div>
 </div>
+
+<!-- AI BRAIN + GEMINI KEY -->
 <div id="tab-ai" class="hidden">
 <div class="grid grid-cols-12 gap-6">
 <div class="col-span-12 lg:col-span-7">
+<!-- GEMINI KEY BOX - NEW - THIS IS WHAT DESIGN PAGE READS -->
+<div class="bg-black text-white rounded-[24px] p-6 mb-6">
+<h2 class="font-extrabold text-[16px]">🔑 Gemini API Key - For ALL AI in SomaHub</h2>
+<p class="text-[11px] text-gray-300">Design page, Exam, Homework all read this key from Firestore. Add once, works for all students.</p>
+<p id="geminiStatus" class="text-[11px] font-bold mt-2 bg-white/10 p-2 rounded-xl">⏳ Checking saved key...</p>
+<div class="flex gap-2 mt-3">
+<input id="geminiKeyInput" type="password" placeholder="Paste Gemini Key - AIza..." class="flex-1 bg-white text-black border p-3 rounded-xl text-[13px] outline-none">
+<button onclick="toggleGeminiKey()" class="bg-white text-black px-3 rounded-xl">👁️</button>
+</div>
+<div class="flex gap-2 mt-3">
+<button onclick="saveGeminiKey()" class="flex-1 bg-[#ffcc1a] text-black py-3 rounded-xl font-bold text-[13px]">💾 Save Gemini Key</button>
+<button onclick="testGeminiKey()" class="flex-1 bg-white text-black py-3 rounded-xl font-bold text-[13px]">🧪 Test Key</button>
+<button onclick="clearGeminiKey()" class="bg-red-500 text-white px-4 py-3 rounded-xl font-bold text-[13px]">Clear</button>
+</div>
+<a href="https://aistudio.google.com/app/apikey" target="_blank" class="block text-center text-[11px] underline mt-2 text-[#ffcc1a]">Get Free Key from Google AI Studio ↗</a>
+<p id="geminiTestResult" class="text-[11px] mt-2"></p>
+</div>
+
 <div class="bg-white rounded-[24px] border p-6">
 <h2 class="font-extrabold text-[16px]">🤖 Feed SomaHub AI Brain</h2><p class="text-[11px] text-gray-500">Take photo of textbook → AI uses for Exam/Homework</p>
 <div class="mt-5 bg-[#f7f7f5] p-4 rounded-2xl border-2 border-dashed">
@@ -90,16 +105,13 @@ onAuthStateChanged(auth,u=>{ if(!u) signInAnonymously(auth).catch(e=>console.log
 </div>
 <div id="tab-tuition">
 <div class="max-w-4xl mx-auto bg-white rounded-[24px] border p-6 shadow-sm">
-<div class="flex justify-between items-center"><h2 class="font-extrabold text-[16px]">🏠 Homeschooling Requests — Parent + Teacher can request</h2><button onclick="loadTuition()" class="bg-black text-white px-4 py-2 rounded-full text-[11px] font-bold">🔄 Reload</button></div>
-<p id="tStatus" class="text-[11px] mt-3 bg-[#f7f7f5] p-3 rounded-xl">Loading homeschooling_requests...</p>
-<div id="tList" class="mt-5 space-y-4"></div>
+<div class="flex justify-between items-center"><h2 class="font-extrabold text-[16px]">🏠 Homeschooling Requests</h2><button onclick="loadTuition()" class="bg-black text-white px-4 py-2 rounded-full text-[11px] font-bold">🔄 Reload</button></div>
+<p id="tStatus" class="text-[11px] mt-3 bg-[#f7f7f5] p-3 rounded-xl">Loading...</p><div id="tList" class="mt-5 space-y-4"></div>
 </div>
 </div>
 </div>
 <script>
 let currentType='Notes', allRes=[], photoBase64='', stream=null;
-// ===== FIX: Use EXACT names Design page expects =====
-// Design page uses "and" not "&" : Agriculture and Nutrition, Creative Arts and Sports, etc.
 const LEARNING_AREAS = {
   "Playgroup": ["Language Activities","Mathematical Activities","Environmental Activities","Creative Activities","Religious Activities","Movement and Music","Health and Nutrition","Play"],
   "PP1": ["Language Activities","Mathematical Activities","Environmental Activities","Creative Activities","Religious Education - CRE / IRE / HRE","Movement Activities","Music"],
@@ -117,94 +129,82 @@ const LEARNING_AREAS = {
 };
 const ALL_AREAS = [...new Set(Object.values(LEARNING_AREAS).flat())];
 function updateSubjects(gradeId, subjId){ let grade=document.getElementById(gradeId).value; let list=LEARNING_AREAS[grade]||ALL_AREAS; let sel=document.getElementById(subjId); sel.innerHTML=list.map(s=>`<option>${s}</option>`).join(''); }
-
-// FIXED MAP: Admin button -> Real file + Real Type that file filters for
 const TYPE_TO_FILE = { Notes:'notes.html', Design:'curriculum-designs.html', Exam:'exam.html', Homework:'homework.html', Scheme:'schemes.html', LessonPlan:'lesson-plans.html' };
-// FIXED: What Admin saves in Firestore must match what Design page searches for
 const TYPE_TO_SAVE = { Notes:'Notes', Design:'Curriculum Design', Exam:'Exam', Homework:'Homework', Scheme:'Scheme', LessonPlan:'LessonPlan' };
-const PREVIEW_TO_SAVE = { 'Curriculum Design':'Design', 'Notes':'Notes', 'Exam':'Exam', 'Homework':'Homework', 'Scheme':'Scheme', 'LessonPlan':'LessonPlan' };
-
-function showTab(t){['resources','ai','tuition'].forEach(x=>{document.getElementById('tab-'+x).classList.add('hidden'); document.getElementById('btn-'+x).className='bg-white border px-4 py-2 rounded-full text-[11px] font-bold';}); document.getElementById('tab-'+t).classList.remove('hidden'); document.getElementById('btn-'+t).className='bg-black text-white px-4 py-2 rounded-full text-[11px] font-bold'; if(t=='resources'){ loadRes(); loadPreview(); } if(t=='ai') loadAi(); if(t=='tuition') loadTuition();}
+function showTab(t){['resources','ai','tuition'].forEach(x=>{document.getElementById('tab-'+x).classList.add('hidden'); document.getElementById('btn-'+x).className='bg-white border px-4 py-2 rounded-full text-[11px] font-bold';}); document.getElementById('tab-'+t).classList.remove('hidden'); document.getElementById('btn-'+t).className='bg-black text-white px-4 py-2 rounded-full text-[11px] font-bold'; if(t=='resources'){ loadRes(); loadPreview(); } if(t=='ai'){ loadAi(); loadGeminiKey(); } if(t=='tuition') loadTuition();}
 function setType(t){ currentType=t; document.getElementById('rType').value=t; document.getElementById('showWhere').innerText=TYPE_TO_FILE[t]||'notes.html'; document.getElementById('previewFilter').value=TYPE_TO_SAVE[t]; loadPreview(); document.querySelectorAll('.typeBtn').forEach(b=>b.className='typeBtn bg-white border p-3 rounded-2xl text-left'); document.getElementById('t'+t).className='typeBtn bg-black text-white p-3 rounded-2xl text-left'; }
+
+// ===== GEMINI KEY - SAVED IN FIRESTORE settings/gemini - DESIGN PAGE READS THIS =====
+async function loadGeminiKey(){
+  let FB=window.FB;
+  try{
+    let d=await FB.getDoc(FB.doc(FB.db,'settings','gemini'));
+    if(d.exists() && d.data().key){
+      let k=d.data().key;
+      document.getElementById('geminiKeyInput').value=k;
+      document.getElementById('geminiStatus').innerText='✅ Key Saved • '+k.slice(0,6)+'...'+k.slice(-4)+' • Design page will now show REAL AI meaning';
+    } else {
+      document.getElementById('geminiStatus').innerText='❌ No Key Saved - Design page will show "Add Gemini key in admin.html"';
+    }
+  }catch(e){ document.getElementById('geminiStatus').innerText='❌ '+e.message; }
+}
+function toggleGeminiKey(){ let i=document.getElementById('geminiKeyInput'); i.type=i.type=='password'?'text':'password'; }
+async function saveGeminiKey(){
+  let FB=window.FB; let k=document.getElementById('geminiKeyInput').value.trim();
+  if(!k){ alert('Paste key first'); return; }
+  try{
+    // Save in 2 places so ANY design file version can read it
+    await FB.setDoc(FB.doc(FB.db,'settings','gemini'), {key:k, updatedAt:FB.serverTimestamp()});
+    await FB.setDoc(FB.doc(FB.db,'settings','ai'), {geminiKey:k, updatedAt:FB.serverTimestamp()});
+    document.getElementById('geminiStatus').innerText='✅ Key Saved • '+k.slice(0,6)+'...'+k.slice(-4)+' • Now open Design page - it will show REAL AI';
+    alert('✅ Gemini Key Saved!\n\nNow open curriculum-designs.html and search "Crop production" - it will show REAL AI meaning, not "Add Gemini key"');
+  }catch(e){ alert('❌ '+e.message); }
+}
+async function testGeminiKey(){
+  let k=document.getElementById('geminiKeyInput').value.trim();
+  if(!k){ alert('Paste key first'); return; }
+  document.getElementById('geminiTestResult').innerText='⏳ Testing key...';
+  try{
+    let r=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${k}`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({contents:[{parts:[{text:'Say hello in one word'}]}]})});
+    let d=await r.json();
+    if(d.error) throw new Error(d.error.message);
+    document.getElementById('geminiTestResult').innerText='✅ Key WORKS! AI said: '+(d.candidates?.[0]?.content?.parts?.[0]?.text||'Hello');
+  }catch(e){ document.getElementById('geminiTestResult').innerText='❌ Key FAILED: '+e.message; }
+}
+async function clearGeminiKey(){ let FB=window.FB; await FB.setDoc(FB.doc(FB.db,'settings','gemini'), {key:''}); await FB.setDoc(FB.doc(FB.db,'settings','ai'), {geminiKey:''}); document.getElementById('geminiKeyInput').value=''; document.getElementById('geminiStatus').innerText='❌ No Key Saved'; }
+
 async function openCamera(){ try{ stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:'environment'}}); let v=document.getElementById('video'); v.srcObject=stream; v.classList.remove('hidden'); document.getElementById('camBtns').classList.remove('hidden'); }catch(e){ alert(e.message); } }
 function closeCamera(){ if(stream) stream.getTracks().forEach(t=>t.stop()); document.getElementById('video').classList.add('hidden'); document.getElementById('camBtns').classList.add('hidden'); }
 function takePhoto(){ let v=document.getElementById('video'); let c=document.getElementById('canvas'); c.width=v.videoWidth; c.height=v.videoHeight; c.getContext('2d').drawImage(v,0,0); photoBase64=c.toDataURL('image/jpeg',0.7); document.getElementById('preview').src=photoBase64; document.getElementById('preview').classList.remove('hidden'); closeCamera(); }
 function handleFile(i){ let f=i.files[0]; let r=new FileReader(); r.onload=e=>{ photoBase64=e.target.result; document.getElementById('preview').src=photoBase64; document.getElementById('preview').classList.remove('hidden'); }; r.readAsDataURL(f); }
-
 async function addResource(){
-  let FB=window.FB;
-  let btn=document.getElementById('addBtn');
-  let title=document.getElementById('rTitle').value.trim();
-  let grade=document.getElementById('rGrade').value;
-  let subject=document.getElementById('rSubject').value;
-  let url=document.getElementById('rUrl').value.trim();
-  let desc=document.getElementById('rDesc').value.trim();
-  let typeBtn=document.getElementById('rType').value;
-  // FIX: Save BOTH names - Design page checks 'Curriculum Design', Preview checks 'Design'
-  // We save type='Curriculum Design' + type2='Design' + subject normalized with 'and'
-  let typeToSave = TYPE_TO_SAVE[typeBtn] || typeBtn;
-  let subjectFixed = subject.replace(/ & /g,' and ').replace(/&/g,'and');
+  let FB=window.FB; let btn=document.getElementById('addBtn');
+  let title=document.getElementById('rTitle').value.trim(); let grade=document.getElementById('rGrade').value; let subject=document.getElementById('rSubject').value; let url=document.getElementById('rUrl').value.trim(); let desc=document.getElementById('rDesc').value.trim(); let typeBtn=document.getElementById('rType').value;
+  let typeToSave = TYPE_TO_SAVE[typeBtn] || typeBtn; let subjectFixed = subject.replace(/ & /g,' and ').replace(/&/g,'and');
   if(!title){ document.getElementById('rMsg').innerText='❌ Write Title first'; document.getElementById('rMsg').style.color='red'; return; }
   if(!url){ document.getElementById('rMsg').innerText='❌ Paste Drive link first'; document.getElementById('rMsg').style.color='red'; return; }
   btn.innerText='⏳ Saving...'; btn.disabled=true;
-  document.getElementById('rMsg').innerText='⏳ Saving as Type='+typeToSave+' Subject='+subjectFixed+'...'; document.getElementById('rMsg').style.color='black';
   try{
-    let docRef = await FB.addDoc(FB.collection(FB.db,'resources'), {title, type:typeToSave, type2:typeBtn, grade, subject:subjectFixed, subject2:subject, url, description:desc, createdAt:FB.serverTimestamp()});
-    document.getElementById('rMsg').innerText='✅ ADDED! Type='+typeToSave+' - Will appear in '+TYPE_TO_FILE[typeBtn];
-    document.getElementById('rMsg').style.color='green';
-    document.getElementById('viewBtnWrap').classList.remove('hidden');
-    document.getElementById('viewLink').href='/'+TYPE_TO_FILE[typeBtn];
-    document.getElementById('viewLink').innerText='👀 VIEW IN '+TYPE_TO_FILE[typeBtn].toUpperCase()+' →';
+    await FB.addDoc(FB.collection(FB.db,'resources'), {title, type:typeToSave, type2:typeBtn, grade, subject:subjectFixed, subject2:subject, url, description:desc, createdAt:FB.serverTimestamp()});
+    document.getElementById('rMsg').innerText='✅ ADDED! Will appear in '+TYPE_TO_FILE[typeBtn]; document.getElementById('rMsg').style.color='green';
+    document.getElementById('viewBtnWrap').classList.remove('hidden'); document.getElementById('viewLink').href='/'+TYPE_TO_FILE[typeBtn];
     document.getElementById('rUrl').value=''; document.getElementById('rDesc').value=''; document.getElementById('rTitle').value='';
     await loadRes(); await loadPreview();
-  }catch(e){
-    document.getElementById('rMsg').innerText='❌ FAILED: '+e.message;
-    document.getElementById('rMsg').style.color='red';
-    alert('FAILED:\n'+e.message);
-  }
+  }catch(e){ document.getElementById('rMsg').innerText='❌ FAILED: '+e.message; document.getElementById('rMsg').style.color='red'; }
   btn.innerHTML='+ Add to <span id="showWhere">'+TYPE_TO_FILE[typeBtn]+'</span>'; btn.disabled=false;
 }
-
-async function loadPreview(){
-  let FB=window.FB; let filter=document.getElementById('previewFilter').value;
-  let box=document.getElementById('previewList'); box.innerHTML='⏳ Loading preview...';
-  try{
-    let snap=await FB.getDocs(FB.query(FB.collection(FB.db,'resources'), FB.where('type','==',filter)));
-    let items=[]; snap.forEach(d=>items.push({id:d.id,...d.data()}));
-    items.sort((a,b)=>(b.createdAt?.seconds||0)-(a.createdAt?.seconds||0));
-    if(!items.length){ box.innerHTML='<p class="text-[11px]">No '+filter+' yet. Add one above - it will appear here AND in curriculum-designs.html</p>'; return; }
-    box.innerHTML='';
-    items.slice(0,20).forEach(r=>{ box.innerHTML+=`<div class="bg-[#f7f7f5] p-3 rounded-2xl flex justify-between gap-2"><div><p class="font-bold text-[11px]">${r.title}</p><p class="text-[10px] text-gray-500">${r.grade} • ${r.subject} • ${r.type}</p><a href="${r.url}" target="_blank" class="text-[10px] text-blue-600 underline">Open Link</a></div><button onclick="delRes('${r.id}')" class="text-red-500 text-[10px]">Delete</button></div>`; });
-  }catch(e){ box.innerHTML='❌ '+e.message; }
-}
-async function loadRes(){ let FB=window.FB; try{ let snap=await FB.getDocs(FB.collection(FB.db,'resources')); allRes=[]; snap.forEach(d=>allRes.push({id:d.id,...d.data()})); rList.innerHTML=''; if(!allRes.length) rList.innerHTML='<p class="text-[11px]">No resources yet</p>'; allRes.slice(-20).reverse().forEach(r=>{ rList.innerHTML+=`<div class="bg-[#f7f7f5] p-3 rounded-2xl flex justify-between gap-2"><div><p class="font-bold text-[11px]">${r.title} - ${r.type}</p><p class="text-[10px] text-gray-500">${r.grade} • ${r.subject||''}</p></div><button onclick="delRes('${r.id}')" class="text-red-500 text-[10px]">Delete</button></div>`; }); }catch(e){ rList.innerHTML='❌ '+e.message; } }
+async function loadPreview(){ let FB=window.FB; let filter=document.getElementById('previewFilter').value; let box=document.getElementById('previewList'); box.innerHTML='⏳ Loading...'; try{ let snap=await FB.getDocs(FB.query(FB.collection(FB.db,'resources'), FB.where('type','==',filter))); let items=[]; snap.forEach(d=>items.push({id:d.id,...d.data()})); items.sort((a,b)=>(b.createdAt?.seconds||0)-(a.createdAt?.seconds||0)); if(!items.length){ box.innerHTML='<p class="text-[11px]">No '+filter+' yet</p>'; return; } box.innerHTML=''; items.slice(0,20).forEach(r=>{ box.innerHTML+=`<div class="bg-[#f7f7f5] p-3 rounded-2xl flex justify-between gap-2"><div><p class="font-bold text-[11px]">${r.title}</p><p class="text-[10px] text-gray-500">${r.grade} • ${r.subject} • ${r.type}</p></div><button onclick="delRes('${r.id}')" class="text-red-500 text-[10px]">Delete</button></div>`; }); }catch(e){ box.innerHTML='❌ '+e.message; } }
+async function loadRes(){ let FB=window.FB; try{ let snap=await FB.getDocs(FB.collection(FB.db,'resources')); allRes=[]; snap.forEach(d=>allRes.push({id:d.id,...d.data()})); rList.innerHTML=''; allRes.slice(-20).reverse().forEach(r=>{ rList.innerHTML+=`<div class="bg-[#f7f7f5] p-3 rounded-2xl flex justify-between gap-2"><div><p class="font-bold text-[11px]">${r.title} - ${r.type}</p><p class="text-[10px] text-gray-500">${r.grade} • ${r.subject||''}</p></div><button onclick="delRes('${r.id}')" class="text-red-500 text-[10px]">Delete</button></div>`; }); }catch(e){ rList.innerHTML='❌ '+e.message; } }
 async function delRes(id){ let FB=window.FB; if(!confirm('Delete?')) return; await FB.deleteDoc(FB.doc(FB.db,'resources',id)); loadRes(); loadPreview(); }
 async function addAiBrain(){ let FB=window.FB; try{ await FB.addDoc(FB.collection(FB.db,'ai_brain'), {title:aiTitle.value, subject:aiSubject.value, grade:aiGrade.value, use:aiUse.value, text:aiText.value, photo:photoBase64, createdAt:FB.serverTimestamp()}); aiMsg.innerText='🧠 Fed ✅'; photoBase64=''; document.getElementById('preview').classList.add('hidden'); loadAi(); }catch(e){ aiMsg.innerText='❌ '+e.message; } }
 async function loadAi(){ let FB=window.FB; try{ let snap=await FB.getDocs(FB.collection(FB.db,'ai_brain')); aiList.innerHTML=''; snap.forEach(d=>{ let m=d.data(); aiList.innerHTML+=`<div class="bg-white/10 p-3 rounded-2xl"><p class="text-[11px] font-bold">${m.title} - ${m.grade} - ${m.subject} - ${m.use}</p>${m.photo?`<img src="${m.photo}" class="mt-2 rounded-xl max-h-[100px]">`:''}</div>`; }); }catch(e){ aiList.innerHTML='❌ '+e.message; } }
-async function loadTuition(){
- let FB=window.FB;
- try{
-  let snap=await FB.getDocs(FB.collection(FB.db,'homeschooling_requests'));
-  let docs=[]; snap.forEach(d=>docs.push({id:d.id,...d.data()}));
-  document.getElementById('tuitionCountTop').innerText=docs.length;
-  document.getElementById('tStatus').innerText=`✅ Found ${docs.length} — Parent + Teacher requests`;
-  let list=document.getElementById('tList'); list.innerHTML='';
-  if(docs.length==0){ list.innerHTML=`<div class="bg-[#f7f7f5] p-8 rounded-2xl text-center"><p class="font-bold text-[13px]">No requests yet</p></div>`; return; }
-  docs.forEach(r=>{
-    let col=r.status=='approved'?'bg-green-500':r.status=='rejected'?'bg-red-500':'bg-[#ffcc1a]';
-    let isTeacher = (r.requestedBy||'').toLowerCase()=='teacher' || r.teacherRequest==true;
-    let line1 = isTeacher? `Teacher of <b>${r.teacherId? 'SHKET-'+r.teacherId.slice(-5):'SHKET...' } (${r.teacherName||'Teacher'})</b> is requesting for homeschooling.` : `Parent of <b>${r.shke||'SHKE...'}</b> is requesting for homeschooling.`;
-    let line2 = isTeacher? `Teacher <b>${r.teacherId? 'SHKET-'+r.teacherId.slice(-5):''}</b> is requesting for homeschooling for student <b>${r.childName||r.shke||'Student'}</b> and parent <b>${r.shke||''}</b>` : `Parent of <b>${r.shke||'SHKE...'}</b> is requesting for homeschooling for student <b>${r.childName||r.shke||'Student'}</b> and teacher <b>${r.teacherId?'SHKET-'+r.teacherId.slice(-5):'Not assigned'}</b>`;
-    list.innerHTML+=`<div class="border rounded-[20px] p-5"><div class="flex justify-between"><span class="${col} text-[9px] px-3 py-1 rounded-full font-bold">${(r.status||'pending').toUpperCase()} • ${isTeacher?'TEACHER REQUEST':'PARENT REQUEST'}</span><span class="text-[10px] text-gray-400">${r.id}</span></div><div class="mt-3 space-y-1 text-[13px] leading-7"><p>1. ${line1}</p><p>2. ${line2}</p><p class="text-[11px] text-gray-600 mt-2 bg-[#f7f7f5] p-2 rounded-xl">Child: ${r.childName||'-'} | SHKE: ${r.shke||'-'} | Grade: ${r.grade||'-'} | Subject: ${r.subject||'-'} | Parent Phone: ${r.parentPhone||'-'} | Teacher: ${r.teacherName||'-'} (${r.teacherId||''})</p></div><div class="mt-4 grid grid-cols-3 gap-2"><button onclick="approveTuition('${r.id}')" class="bg-black text-white py-3 rounded-xl font-bold text-[11px]">✅ Approve</button><button onclick="rejectTuition('${r.id}')" class="bg-white border border-red-300 text-red-600 py-3 rounded-xl font-bold text-[11px]">❌ Reject</button><button onclick="toggleAssign('${r.id}')" class="bg-[#ffcc1a] text-black py-3 rounded-xl font-bold text-[11px]">👩‍🏫 Assign Teacher</button></div><div id="assign-${r.id}" class="hidden mt-3 bg-[#f7f7f5] p-3 rounded-xl"><div class="grid grid-cols-2 gap-2"><input id="tid-${r.id}" placeholder="Teacher UserId / SHKET..." class="bg-white border p-2 rounded-xl text-[11px]" value="${r.teacherId||''}"><input id="tname-${r.id}" placeholder="Mr Kamau" class="bg-white border p-2 rounded-xl text-[11px]" value="${r.teacherName||''}"></div><button onclick="doAssign('${r.id}')" class="w-full bg-black text-white py-2 rounded-xl text-[11px] font-bold mt-2">Confirm Assign + Approve</button></div></div>`;
-  });
- }catch(e){ document.getElementById('tStatus').innerText='❌ '+e.message; }
-}
+async function loadTuition(){ let FB=window.FB; try{ let snap=await FB.getDocs(FB.collection(FB.db,'homeschooling_requests')); let docs=[]; snap.forEach(d=>docs.push({id:d.id,...d.data()})); document.getElementById('tuitionCountTop').innerText=docs.length; document.getElementById('tStatus').innerText=`✅ Found ${docs.length}`; let list=document.getElementById('tList'); list.innerHTML=''; docs.forEach(r=>{ let col=r.status=='approved'?'bg-green-500':r.status=='rejected'?'bg-red-500':'bg-[#ffcc1a]'; let isTeacher=(r.requestedBy||'').toLowerCase()=='teacher'||r.teacherRequest==true; let line1=isTeacher?`Teacher of <b>${r.teacherId?'SHKET-'+r.teacherId.slice(-5):'SHKET...'}</b> is requesting`:`Parent of <b>${r.shke||'SHKE...'}</b> is requesting`; list.innerHTML+=`<div class="border rounded-[20px] p-5"><div class="flex justify-between"><span class="${col} text-[9px] px-3 py-1 rounded-full font-bold">${(r.status||'pending').toUpperCase()}</span><span class="text-[10px]">${r.id}</span></div><p class="mt-3 text-[13px]">${line1}</p><div class="mt-4 grid grid-cols-3 gap-2"><button onclick="approveTuition('${r.id}')" class="bg-black text-white py-3 rounded-xl font-bold text-[11px]">✅ Approve</button><button onclick="rejectTuition('${r.id}')" class="bg-white border text-red-600 py-3 rounded-xl font-bold text-[11px]">❌ Reject</button><button onclick="toggleAssign('${r.id}')" class="bg-[#ffcc1a] py-3 rounded-xl font-bold text-[11px]">Assign</button></div><div id="assign-${r.id}" class="hidden mt-3 bg-[#f7f7f5] p-3 rounded-xl"><div class="grid grid-cols-2 gap-2"><input id="tid-${r.id}" placeholder="Teacher ID" class="bg-white border p-2 rounded-xl text-[11px]" value="${r.teacherId||''}"><input id="tname-${r.id}" placeholder="Mr Kamau" class="bg-white border p-2 rounded-xl text-[11px]" value="${r.teacherName||''}"></div><button onclick="doAssign('${r.id}')" class="w-full bg-black text-white py-2 rounded-xl text-[11px] font-bold mt-2">Confirm</button></div></div>`; }); }catch(e){ document.getElementById('tStatus').innerText='❌ '+e.message; } }
 async function approveTuition(id){ let FB=window.FB; await FB.updateDoc(FB.doc(FB.db,'homeschooling_requests',id), {status:'approved'}); loadTuition(); }
-async function rejectTuition(id){ let FB=window.FB; if(!confirm('Reject '+id+'?')) return; await FB.updateDoc(FB.doc(FB.db,'homeschooling_requests',id), {status:'rejected'}); loadTuition(); }
+async function rejectTuition(id){ let FB=window.FB; if(!confirm('Reject?')) return; await FB.updateDoc(FB.doc(FB.db,'homeschooling_requests',id), {status:'rejected'}); loadTuition(); }
 function toggleAssign(id){ document.getElementById('assign-'+id).classList.toggle('hidden'); }
 async function doAssign(id){ let FB=window.FB; let tId=document.getElementById('tid-'+id).value.trim(); let tName=document.getElementById('tname-'+id).value.trim(); let td=await FB.getDoc(FB.doc(FB.db,'users',tId)); let em=td.exists()?td.data().email||'':''; await FB.updateDoc(FB.doc(FB.db,'homeschooling_requests',id), {status:'approved', teacherId:tId, teacherName:tName, teacherEmail:em}); loadTuition(); }
 async function loadCounts(){ let FB=window.FB; try{ let snap=await FB.getDocs(FB.collection(FB.db,'users')); let sc=0,tc=0; snap.forEach(d=>{ let r=(d.data().role||'').toLowerCase(); if(r=='teacher') tc++; else sc++; }); document.getElementById('sCount').innerText=sc; document.getElementById('tCount2').innerText=tc; }catch(e){} }
-setTimeout(()=>{ updateSubjects('rGrade','rSubject'); updateSubjects('aiGrade','aiSubject'); showTab('resources'); loadCounts(); loadTuition(); },900);
+setTimeout(()=>{ updateSubjects('rGrade','rSubject'); updateSubjects('aiGrade','aiSubject'); showTab('resources'); loadCounts(); loadTuition(); loadGeminiKey(); },900);
 </script>
 </body>
 </html>
