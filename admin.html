@@ -70,7 +70,7 @@ onAuthStateChanged(auth,u=>{ if(!u) signInAnonymously(auth).catch(e=>console.log
 <div class="bg-white rounded-[24px] border p-6 mt-6"><h3 class="font-bold text-[13px]">Recent Resources - Edit / Delete</h3><div id="rList" class="mt-4 space-y-2 max-h-[500px] overflow-y-auto"></div></div>
 </div>
 <div class="col-span-12 lg:col-span-5"><div class="grid grid-cols-2 gap-3"><div class="bg-white rounded-[20px] border p-5"><p class="text-[10px] text-gray-400">Students</p><p id="sCount" class="font-black text-[22px]">0</p></div><div class="bg-white rounded-[20px] border p-5"><p class="text-[10px] text-gray-400">Teachers</p><p id="tCount2" class="font-black text-[22px]">0</p></div></div>
-<div class="bg-white rounded-[20px] border p-5 mt-3"><p class="text-[11px] font-bold">How it works</p><p class="text-[11px] text-gray-500 mt-1 leading-relaxed">1. Title optional - file name used if empty<br>2. Link in grey box + File in yellow box = BOTH saved<br>3. Learner: Read Original = File pages inside<br>4. Download = Opens Link outside<br>5. Edit / Delete in Recent Resources below</p></div>
+<div class="bg-white rounded-[20px] border p-5 mt-3"><p class="text-[11px] font-bold">How it works</p><p class="text-[11px] text-gray-500 mt-1 leading-relaxed">1. Title optional - file name used if empty<br>2. Link in grey box + File in yellow box = BOTH saved<br>3. Drive /view link auto-converted to direct download link<br>4. Learner: Read Original = File pages inside<br>5. Download = Opens Link outside<br>6. Edit / Delete in Recent Resources below</p></div>
 </div>
 </div>
 </div>
@@ -146,6 +146,24 @@ const TYPE_TO_FILE = { Notes:'notes.html', Design:'curriculum-designs.html', Exa
 const TYPE_TO_SAVE = { Notes:'Notes', Design:'Curriculum Design', Exam:'Exam', Homework:'Homework', Scheme:'Scheme', LessonPlan:'LessonPlan' };
 function showTab(t){['resources','ai','tuition'].forEach(x=>{document.getElementById('tab-'+x).classList.add('hidden'); document.getElementById('btn-'+x).className='bg-white border px-4 py-2 rounded-full text-[11px] font-bold';}); document.getElementById('tab-'+t).classList.remove('hidden'); document.getElementById('btn-'+t).className='bg-black text-white px-4 py-2 rounded-full text-[11px] font-bold'; if(t=='resources'){ loadRes(); loadPreview(); } if(t=='ai'){ loadAi(); loadGeminiKey(); } if(t=='tuition') loadTuition();}
 function setType(t){ currentType=t; document.getElementById('rType').value=t; document.getElementById('showWhere').innerText=TYPE_TO_FILE[t]||'notes.html'; document.getElementById('previewFilter').value=TYPE_TO_SAVE[t]; loadPreview(); document.querySelectorAll('.typeBtn').forEach(b=>b.className='typeBtn bg-white border p-3 rounded-2xl text-left'); document.getElementById('t'+t).className='typeBtn bg-black text-white p-3 rounded-2xl text-left'; }
+// NEW: Convert Drive /view link to direct download link
+function convertDriveLink(url){
+  if(!url) return url;
+  url = url.trim();
+  if(url.includes("drive.google.com/file/d/")){
+    let id = url.split("/file/d/")[1].split("/")[0].split("?")[0];
+    return "https://drive.google.com/uc?export=download&id=" + id;
+  }
+  if(url.includes("drive.google.com/open?id=")){
+    let id = url.split("id=")[1].split("&")[0];
+    return "https://drive.google.com/uc?export=download&id=" + id;
+  }
+  if(url.includes("docs.google.com/") && url.includes("/d/")){
+    let parts = url.split("/d/");
+    if(parts[1]){ let id = parts[1].split("/")[0]; return "https://drive.google.com/uc?export=download&id=" + id; }
+  }
+  return url;
+}
 async function handleResourceFile(input){
   let file = input.files[0]; if(!file) return;
   RESOURCE_FILE_NAME = file.name;
@@ -220,6 +238,11 @@ async function addResource(){
   let subject=document.getElementById('rSubject').value;
   let url=document.getElementById('rUrl').value.trim();
   let desc=document.getElementById('rDesc').value.trim();
+  // AUTO-CONVERT Drive link
+  if(url){
+    url = convertDriveLink(url);
+    document.getElementById('rUrl').value = url;
+  }
   if(!title){
     if(RESOURCE_FILE_NAME) title = RESOURCE_FILE_NAME.replace(/\.(pdf|docx|txt)$/i,"");
     else if(url) title = url.split("/").pop().slice(0,60) || "Untitled Design";
@@ -305,7 +328,7 @@ async function loadRes(){
     allRes=[]; s.forEach(d=>allRes.push({id:d.id,...d.data()}));
     let box=document.getElementById('rList');
     if(!allRes.length){ box.innerHTML='<p class="text-[12px] text-gray-400">No resources yet</p>'; return; }
-    box.innerHTML = allRes.slice().reverse().slice(0,50).map(r=>`<div class="bg-[#f7f7f5] p-3 rounded-xl"><div class="flex justify-between gap-2"><div><p class="font-bold text-[12px]">${r.title}</p><p class="text-[11px] text-gray-500">${r.grade} • ${r.subject} • ${r.type} • ${r.pages?r.pages+' pages':(r.fullText?'Has text':'⚠️ NO FILE')}</p><p class="text-[11px] text-blue-600 truncate">${r.fileUrl||r.url||''}</p></div></div><div class="flex gap-2 mt-2"><button onclick="editRes('${r.id}')" class="flex-1 bg-black text-white py-2 rounded-lg text-[11px] font-bold">✏️ Edit</button><button onclick="deleteRes('${r.id}')" class="flex-1 bg-red-500 text-white py-2 rounded-lg text-[11px] font-bold">🗑 Delete</button></div></div>`).join('');
+    box.innerHTML = allRes.slice().reverse().slice(0,50).map(r=>`<div class="bg-[#f7f7f5] p-3 rounded-xl"><div class="flex justify-between gap-2"><div><p class="font-bold text-[12px]">${r.title}</p><p class="text-[11px] text-gray-500">${r.grade} • ${r.subject} • ${r.type} • ${r.pages?r.pages+' pages':(r.fullText?'Has text':(r.fileUrl||r.url?'🔗 Link attached - tap Download to open':'⚠️ NO FILE'))}</p><p class="text-[11px] text-blue-600 truncate">${r.fileUrl||r.url||''}</p></div></div><div class="flex gap-2 mt-2"><button onclick="editRes('${r.id}')" class="flex-1 bg-black text-white py-2 rounded-lg text-[11px] font-bold">✏️ Edit</button><button onclick="deleteRes('${r.id}')" class="flex-1 bg-red-500 text-white py-2 rounded-lg text-[11px] font-bold">🗑 Delete</button></div></div>`).join('');
   }catch(e){}
 }
 async function deleteRes(id){
@@ -325,7 +348,7 @@ async function loadPreview(){
     list=list.filter(r=>r.type==filter);
     let box=document.getElementById('previewList');
     if(!list.length){ box.innerHTML='<p class="text-[11px] text-gray-400">No items for '+filter+'</p>'; return; }
-    box.innerHTML=list.slice().reverse().slice(0,20).map(r=>`<div class="bg-[#f7f7f5] p-3 rounded-xl"><p class="font-bold text-[12px]">${r.title}</p><p class="text-[11px] text-gray-500">${r.grade} • ${r.subject} • ${r.pages?r.pages+' pages':''} ${r.fullText?'✅ Full text saved':'⚠️ Blank - tap Edit and upload PDF'}</p></div>`).join('');
+    box.innerHTML=list.slice().reverse().slice(0,20).map(r=>`<div class="bg-[#f7f7f5] p-3 rounded-xl"><p class="font-bold text-[12px]">${r.title}</p><p class="text-[11px] text-gray-500">${r.grade} • ${r.subject} • ${r.pages?r.pages+' pages':''} ${r.fullText?'✅ Full text saved':(r.fileUrl||r.url?'🔗 Link only - opens in Drive':'⚠️ Blank')}</p></div>`).join('');
   }catch(e){}
 }
 async function addAiBrain(){
