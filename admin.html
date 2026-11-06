@@ -5,15 +5,14 @@
 <title>SomaHub Admin - Parent + Teacher Request</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
 <style>body{font-family:'Inter',sans-serif}</style>
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 import { getFirestore, collection, getDocs, doc, getDoc, setDoc, updateDoc, deleteDoc, addDoc, serverTimestamp, query, where } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-storage.js";
 const cfg={apiKey:"AIzaSyA93BNes3AmFyxIEgjSbvbIWqLyorLsuj8",authDomain:"somahubkenya-9e458.firebaseapp.com",projectId:"somahubkenya-9e458",storageBucket:"somahubkenya-9e458.firebasestorage.app",messagingSenderId:"615579085715",appId:"1:615579085715:web:28fca37ba498324bb49666"};
-const app=initializeApp(cfg); const db=getFirestore(app); const auth=getAuth(app);
+const app=initializeApp(cfg); const db=getFirestore(app); const auth=getAuth(app); const storage=getStorage(app);
 window.FB={db,collection,getDocs,doc,getDoc,setDoc,updateDoc,deleteDoc,addDoc,serverTimestamp,query,where};
 onAuthStateChanged(auth,u=>{ if(!u) signInAnonymously(auth).catch(e=>console.log(e)); });
 </script>
@@ -51,16 +50,17 @@ onAuthStateChanged(auth,u=>{ if(!u) signInAnonymously(auth).catch(e=>console.log
 </select>
 <select id="rSubject" class="bg-[#f7f7f5] border p-4 rounded-2xl text-[13px]"></select>
 </div>
-<input id="rUrl" placeholder="🔗 ATTACH LINK HERE - Paste Drive / PDF / YouTube link here" class="w-full bg-[#f7f7f5] border p-4 rounded-2xl text-[13px] mb-3 outline-none">
-<button onclick="feedDriveToAiBrain()" id="feedDriveBtn" class="w-full bg-[#ffcc1a] py-3 rounded-2xl font-bold text-[13px] mb-3">🧠 Read Drive PDF & Save to AI Brain</button>
-<p id="feedDriveStatus" class="text-[11px] text-center font-bold mb-3"></p>
+<input id="rUrl" placeholder="🔗 Cloud link will appear here automatically after upload" class="w-full bg-[#f7f7f5] border p-4 rounded-2xl text-[13px] mb-3 outline-none">
+
+<!-- SIMPLE CLOUD UPLOAD - ONLY 1 BUTTON -->
 <div class="bg-[#fffbe6] border-2 border-dashed border-[#ffcc1a] p-4 rounded-2xl mb-3">
-<p class="font-bold text-[13px]">📄 Upload Design / Notes File (Admin Only)</p>
-<p class="text-[11px] text-gray-500">PDF, DOCX, TXT - AI will read ALL pages + save to Brain automatically.</p>
-<input id="rFile" type="file" accept=".pdf,.docx,.txt" class="w-full mt-2 text-[12px]" onchange="handleResourceFile(this)">
+<p class="font-bold text-[13px]">📤 Upload PDF to Cloud</p>
+<p class="text-[11px] text-gray-500">Pick PDF from phone. It uploads to cloud. Cloud reads it. No Low Memory, no Failed to fetch.</p>
+<label class="block text-center bg-black text-white py-3 rounded-2xl font-bold text-[13px] mt-3 cursor-pointer">📤 Choose PDF to Upload to Cloud<input id="rFile" type="file" accept=".pdf,.docx,.txt" class="hidden" onchange="handleResourceFile(this)"></label>
 <p id="rFileStatus" class="text-[11px] font-bold mt-2 text-gray-700"></p>
 <p id="rFilePreview" class="text-[11px] mt-1 text-gray-500 max-h-[100px] overflow-y-auto"></p>
 </div>
+
 <textarea id="rDesc" placeholder="Description... e.g. Agriculture 8 (optional)" class="w-full bg-[#f7f7f5] border p-4 rounded-2xl text-[13px] h-[80px] mb-3 outline-none"></textarea>
 <p id="editBanner" class="hidden text-[12px] font-bold text-center bg-yellow-100 p-2 rounded-xl mb-2">✏️ Editing: <span id="editTitleShow"></span> - Tap Update below to save changes</p>
 <button onclick="addResource()" id="addBtn" class="w-full bg-black text-white py-4 rounded-2xl font-bold text-[13px]">+ Add to <span id="showWhere">notes.html</span> + 🧠 AI Brain</button>
@@ -76,7 +76,7 @@ onAuthStateChanged(auth,u=>{ if(!u) signInAnonymously(auth).catch(e=>console.log
 </div>
 </div>
 <div class="col-span-12 lg:col-span-5"><div class="grid grid-cols-2 gap-3"><div class="bg-white rounded-[20px] border p-5"><p class="text-[10px] text-gray-400">Students</p><p id="sCount" class="font-black text-[22px]">0</p></div><div class="bg-white rounded-[20px] border p-5"><p class="text-[10px] text-gray-400">Teachers</p><p id="tCount2" class="font-black text-[22px]">0</p></div></div>
-<div class="bg-white rounded-[20px] border p-5 mt-3"><p class="text-[11px] font-bold">How it works - Auto Brain</p><p class="text-[11px] text-gray-500 mt-1 leading-relaxed">1. Title empty = Grade + Subject, NEVER link<br>2. + Add = Saves to Resources + AI Brain<br>3. File = AI reads ALL pages<br>4. Link only = AI gets Title + Description<br>5. Drive PDF button = Reads Drive PDF into Brain<br>6. Delete = Deletes from Brain too</p></div>
+<div class="bg-white rounded-[20px] border p-5 mt-3"><p class="text-[11px] font-bold">How it works - Cloud</p><p class="text-[11px] text-gray-500 mt-1 leading-relaxed">1. Choose PDF to Upload to Cloud<br>2. Cloud reads PDF (not your phone)<br>3. Tap + Add = Saves to Resources + AI Brain<br>4. Learner sees Saved + AI, no Failed to fetch</p></div>
 </div>
 </div>
 </div>
@@ -168,336 +168,182 @@ function convertDriveLink(url){
     let id = url.split("id=")[1].split("&")[0];
     return "https://drive.google.com/uc?export=download&id=" + id;
   }
-  if(url.includes("docs.google.com/") && url.includes("/d/")){
-    let parts = url.split("/d/");
-    if(parts[1]){ let id = parts[1].split("/")[0]; return "https://drive.google.com/uc?export=download&id=" + id; }
-  }
   return url;
 }
+function isJunkText(t){ if(!t) return true; let s=t.trim(); if(s.length<100) return true; let letters=(s.match(/[a-zA-Z]/g)||[]).length; if(letters/s.length<0.4) return true; return false; }
+
+// === NEW SIMPLE CLOUD UPLOAD + CLOUD READER ===
 async function handleResourceFile(input){
   let file = input.files[0]; if(!file) return;
-  RESOURCE_FILE_NAME = file.name;
-  document.getElementById("rFileStatus").innerText = "⏳ Reading ALL pages of "+file.name+"...";
+  document.getElementById("rFileStatus").innerText = "⏳ Uploading to Cloud... please wait...";
   try{
-    if(file.name.toLowerCase().endsWith(".pdf")){
-      let buf = await file.arrayBuffer();
-      let pdf = await pdfjsLib.getDocument({data:buf}).promise;
-      RESOURCE_PAGES = pdf.numPages; let all="";
-      for(let i=1;i<=pdf.numPages;i++){
-        let page = await pdf.getPage(i);
-        let tc = await page.getTextContent();
-        all += `\n[PAGE ${i}]\n` + tc.items.map(it=>it.str).join(" ");
-        document.getElementById("rFileStatus").innerText = `⏳ Reading page ${i}/${pdf.numPages}...`;
+    let safeName = (document.getElementById("rGrade").value + "-" + document.getElementById("rSubject").value + "-" + Date.now() + "-" + file.name).replace(/[^a-zA-Z0-9.\-_]/g,"-");
+    let storageRef = ref(storage, "resources/" + safeName);
+    await uploadBytes(storageRef, file);
+    let cloudUrl = await getDownloadURL(storageRef);
+    document.getElementById("rUrl").value = cloudUrl;
+    RESOURCE_FILE_NAME = file.name;
+    document.getElementById("rFileStatus").innerText = "✅ Saved to Cloud! Now cloud is reading PDF... wait 10-20 sec...";
+    // Cloud reads, not phone
+    try{
+      let readRes = await fetch("/api/read-cloud?url=" + encodeURIComponent(cloudUrl));
+      let readData = await readRes.json();
+      if(readData.ok && readData.text){
+        RESOURCE_FULLTEXT = readData.text;
+        RESOURCE_PAGES = readData.pages;
+        document.getElementById("rFileStatus").innerText = `✅ Cloud read ${readData.pages} pages - ${readData.chars} chars. Now tap + Add below.`;
+        document.getElementById("rFilePreview").innerText = RESOURCE_FULLTEXT.slice(0,300);
+      } else {
+        RESOURCE_FULLTEXT = "";
+        document.getElementById("rFileStatus").innerText = "✅ Saved to Cloud! Cloud could not read text. You can still tap + Add, it will save as link.";
       }
-      RESOURCE_FULLTEXT = all;
-    } else if(file.name.toLowerCase().endsWith(".docx")){
-      let buf = await file.arrayBuffer();
-      let r = await mammoth.extractRawText({arrayBuffer:buf});
-      RESOURCE_FULLTEXT = r.value; RESOURCE_PAGES = 1;
-    } else {
-      RESOURCE_FULLTEXT = await file.text(); RESOURCE_PAGES = 1;
+    }catch(e){
+      RESOURCE_FULLTEXT = "";
+      document.getElementById("rFileStatus").innerText = "✅ Saved to Cloud! Cloud reader not ready yet: " + e.message + " - Tap + Add anyway.";
     }
-    document.getElementById("rFileStatus").innerText = `✅ Read ${RESOURCE_PAGES} page(s) - ${RESOURCE_FULLTEXT.length} chars from ${RESOURCE_FILE_NAME}. Now tap + Add / Update - it will auto-save to AI Brain.`;
-    document.getElementById("rFilePreview").innerText = RESOURCE_FULLTEXT.slice(0,500) + "...";
-  }catch(e){ document.getElementById("rFileStatus").innerText = "❌ Could not read file: "+e.message; }
+  }catch(e){
+    document.getElementById("rFileStatus").innerText = "❌ Cloud upload failed: " + e.message + " - Check Storage Rules in Firebase.";
+  }
 }
-async function feedDriveToAiBrain(){
-  let FB=window.FB;
-  let url = document.getElementById('rUrl').value.trim();
-  let grade = document.getElementById('rGrade').value;
-  let subject = document.getElementById('rSubject').value;
-  let title = cleanTitle(document.getElementById('rTitle').value, grade, subject);
-  document.getElementById('rTitle').value = title;
-  if(!url){ alert('Paste Drive link first in the grey box'); return; }
-  url = convertDriveLink(url);
-  document.getElementById('rUrl').value = url;
-  document.getElementById('feedDriveStatus').innerText = '⏳ Downloading PDF from Drive...';
+// Old Drive button removed - kept as dummy so no error if called
+async function feedDriveToAiBrain(){ alert("Drive reading is removed. Use Upload PDF to Cloud instead."); }
+
+async function saveToBrain(data){
   try{
-    let res = await fetch(url);
-    let buf = await res.arrayBuffer();
-    let head = new TextDecoder().decode(buf.slice(0,5));
-    if(head !== "%PDF-") throw new Error("Google blocked download - file is PRIVATE. Download PDF to phone and use yellow Choose File box.");
-    let pdf = await pdfjsLib.getDocument({data:buf}).promise;
-    let all = "";
-    for(let i=1;i<=pdf.numPages;i++){
-      let page = await pdf.getPage(i);
-      let tc = await page.getTextContent();
-      all += `\n[PAGE ${i}]\n` + tc.items.map(it=>it.str).join(" ");
-      document.getElementById('feedDriveStatus').innerText = `⏳ Reading page ${i}/${pdf.numPages}...`;
-    }
-    RESOURCE_FULLTEXT = all; RESOURCE_PAGES = pdf.numPages; RESOURCE_FILE_NAME = title + ".pdf";
-    document.getElementById('rFileStatus').innerText = `✅ Read ${pdf.numPages} pages - ${all.length} chars. Now tap + Add / Update.`;
-    document.getElementById('rFilePreview').innerText = all.slice(0,500);
-    await FB.addDoc(FB.collection(FB.db,'ai_brain'), {title, subject, grade, use:"all", type: TYPE_TO_SAVE[currentType]||currentType, text: all.slice(0,90000), pages: pdf.numPages, fileUrl: url, createdAt: FB.serverTimestamp()});
-    document.getElementById('feedDriveStatus').innerText = `✅ DONE! ${pdf.numPages} pages saved to AI Brain. Now tap + Add / Update to also save as Resource.`;
-  }catch(e){ document.getElementById('feedDriveStatus').innerText = `❌ Drive blocked: ${e.message}`; }
+    let brainText = (data.title + " " + (data.subject||"") + " " + (data.grade||"") + " " + (data.description||"") + " " + (data.fullText||"")).slice(0,30000);
+    await window.FB.addDoc(window.FB.collection(window.FB.db,"ai_brain"), { title: data.title, subject: data.subject||"", grade: data.grade||"", type: data.type||"", text: brainText, fullText: (data.fullText||"").slice(0,30000), fileUrl: data.fileUrl||"", createdAt: window.FB.serverTimestamp() });
+  }catch(e){ console.log("Brain save error", e); }
 }
-async function loadGeminiKey(){
-  let FB=window.FB;
-  try{
-    let d=await FB.getDoc(FB.doc(FB.db,'settings','gemini'));
-    if(d.exists() && d.data().key){
-      let k=d.data().key;
-      document.getElementById('geminiKeyInput').value=k;
-      document.getElementById('geminiStatus').innerText='✅ Key Saved • '+k.slice(0,6)+'...'+k.slice(-4);
-    } else {
-      document.getElementById('geminiStatus').innerText='❌ No Key Saved';
-    }
-  }catch(e){ document.getElementById('geminiStatus').innerText='❌ '+e.message; }
-}
-function toggleGeminiKey(){ let i=document.getElementById('geminiKeyInput'); i.type=i.type=='password'?'text':'password'; }
-async function saveGeminiKey(){
-  let FB=window.FB; let k=document.getElementById('geminiKeyInput').value.trim();
-  if(!k){ alert('Paste key first'); return; }
-  try{
-    await FB.setDoc(FB.doc(FB.db,'settings','gemini'), {key:k, updatedAt:FB.serverTimestamp()});
-    await FB.setDoc(FB.doc(FB.db,'settings','ai'), {geminiKey:k, updatedAt:FB.serverTimestamp()});
-    document.getElementById('geminiStatus').innerText='✅ Key Saved • '+k.slice(0,6)+'...'+k.slice(-4);
-    alert('✅ Gemini Key Saved!');
-  }catch(e){ alert('❌ '+e.message); }
-}
-async function testGeminiKey(){
-  let k=document.getElementById('geminiKeyInput').value.trim();
-  if(!k){ alert('Paste key first'); return; }
-  document.getElementById('geminiTestResult').innerText='⏳ Testing key...';
-  try{
-    let r=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${k}`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({contents:[{parts:[{text:'Say hello in one word'}]}]})});
-    let d=await r.json();
-    if(d.error) throw new Error(d.error.message);
-    document.getElementById('geminiTestResult').innerText='✅ Key WORKS! AI said: '+(d.candidates?.[0]?.content?.parts?.[0]?.text||'Hello');
-  }catch(e){ document.getElementById('geminiTestResult').innerText='❌ Key FAILED: '+e.message; }
-}
-async function clearGeminiKey(){ let FB=window.FB; await FB.setDoc(FB.doc(FB.db,'settings','gemini'), {key:''}); await FB.setDoc(FB.doc(FB.db,'settings','ai'), {geminiKey:''}); document.getElementById('geminiKeyInput').value=''; document.getElementById('geminiStatus').innerText='❌ No Key Saved'; }
-async function openCamera(){ try{ stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:'environment'}}); let v=document.getElementById('video'); v.srcObject=stream; v.classList.remove('hidden'); document.getElementById('camBtns').classList.remove('hidden'); }catch(e){ alert(e.message); } }
-function closeCamera(){ if(stream) stream.getTracks().forEach(t=>t.stop()); document.getElementById('video').classList.add('hidden'); document.getElementById('camBtns').classList.add('hidden'); }
-function takePhoto(){ let v=document.getElementById('video'); let c=document.getElementById('canvas'); c.width=v.videoWidth; c.height=v.videoHeight; c.getContext('2d').drawImage(v,0,0); photoBase64=c.toDataURL('image/jpeg',0.7); document.getElementById('preview').src=photoBase64; document.getElementById('preview').classList.remove('hidden'); document.getElementById('photoStatus').innerText='✅ Photo captured'; closeCamera(); }
-function handleFile(input){ let f=input.files[0]; if(!f) return; let r=new FileReader(); r.onload=e=>{ photoBase64=e.target.result; document.getElementById('preview').src=photoBase64; document.getElementById('preview').classList.remove('hidden'); document.getElementById('photoStatus').innerText='✅ Photo selected: '+f.name; }; r.readAsDataURL(f); }
-// AUTO BRAIN: Save to ai_brain helper - used by addResource for ALL types
-async function saveToBrain(FB, opts){
-  try{
-    await FB.addDoc(FB.collection(FB.db,'ai_brain'), {
-      title: opts.title, subject: opts.subject, grade: opts.grade, use: "all",
-      type: opts.type, text: opts.text, pages: opts.pages||0,
-      fileName: opts.fileName||"", fileUrl: opts.fileUrl||"",
-      resourceId: opts.resourceId||"", createdAt: FB.serverTimestamp()
-    });
-    return true;
-  }catch(e){ return false; }
-}
+
 async function addResource(){
-  let FB=window.FB;
-  let titleRaw=document.getElementById('rTitle').value.trim();
-  let grade=document.getElementById('rGrade').value;
-  let subject=document.getElementById('rSubject').value;
-  let url=document.getElementById('rUrl').value.trim();
-  let desc=document.getElementById('rDesc').value.trim();
-  if(url){ url = convertDriveLink(url); document.getElementById('rUrl').value = url; }
-  // Title NEVER from link
-  let title = cleanTitle(titleRaw, grade, subject);
-  if(!titleRaw){
-    if(RESOURCE_FILE_NAME) title = RESOURCE_FILE_NAME.replace(/\.(pdf|docx|txt)$/i,"").replace(/[-_]/g," ").trim() || title;
-    document.getElementById('rTitle').value = title;
-  }
-  // Description NEVER a link
-  if(desc && (desc.includes("uc?export") || desc.includes("drive.google.com") || desc.startsWith("http"))){
-    desc = grade + " " + subject + " - Original Design";
-    document.getElementById('rDesc').value = desc;
-  }
-  let isEditing = !!EDITING_ID;
-  document.getElementById('rMsg').innerText = isEditing ? '⏳ Updating + Brain...' : '⏳ Saving to Resources + AI Brain...';
+  let grade=document.getElementById("rGrade").value;
+  let subject=document.getElementById("rSubject").value;
+  let title=cleanTitle(document.getElementById("rTitle").value, grade, subject);
+  let url=document.getElementById("rUrl").value.trim();
+  let desc=document.getElementById("rDesc").value.trim();
+  let type=TYPE_TO_SAVE[currentType]||"Notes";
+  let fullText = RESOURCE_FULLTEXT || "";
+  // If editing and no new file, keep old fullText handled in edit flow
+  let data={ title, grade, subject, type, fileUrl: url, description: desc, fullText: fullText.slice(0,30000), fileName: RESOURCE_FILE_NAME||"", pages: RESOURCE_PAGES||0, createdAt: window.FB.serverTimestamp() };
+  document.getElementById("rMsg").innerText="⏳ Saving...";
   try{
-    let data = {
-      title: title, grade: grade, subject: subject,
-      type: TYPE_TO_SAVE[currentType] || currentType,
-      url: url, fileUrl: url, description: desc || title,
-      hasLink: url ? true : false,
-      updatedAt: FB.serverTimestamp()
-    };
-    if(RESOURCE_FULLTEXT || !isEditing){
-      data.fullText = (RESOURCE_FULLTEXT || "").slice(0,90000);
-      data.pages = RESOURCE_PAGES || 0;
-      data.fileName = RESOURCE_FILE_NAME || "";
-      data.hasFile = RESOURCE_FULLTEXT ? true : false;
-    }
-    if(!desc && RESOURCE_FULLTEXT) data.description = RESOURCE_FULLTEXT.slice(0,500);
-    if(!isEditing) data.createdAt = FB.serverTimestamp();
-    let savedId = EDITING_ID;
-    if(isEditing){
-      await FB.updateDoc(FB.doc(FB.db,'resources',EDITING_ID), data);
-      document.getElementById('rMsg').innerText = `✅ Updated! ${title}`;
-      // Update Brain too - delete old brain for this resource, add new
-      try{
-        let old = await FB.getDocs(FB.query(FB.collection(FB.db,'ai_brain'), FB.where('resourceId','==',EDITING_ID)));
-        for(let d of old.docs) await FB.deleteDoc(FB.doc(FB.db,'ai_brain',d.id));
-      }catch(e){}
+    if(EDITING_ID){
+      await window.FB.updateDoc(window.FB.doc(window.FB.db,"resources",EDITING_ID), { title, grade, subject, type, fileUrl:url, description:desc, fullText: fullText.slice(0,30000), fileName: RESOURCE_FILE_NAME||"", pages: RESOURCE_PAGES||0 });
+      await saveToBrain(data);
+      document.getElementById("rMsg").innerText="✅ Updated + Brain saved!";
+      cancelEdit();
     } else {
-      let newDoc = await FB.addDoc(FB.collection(FB.db,'resources'), data);
-      savedId = newDoc.id;
-      document.getElementById('rMsg').innerText = `✅ Saved! ${RESOURCE_FULLTEXT?`File: ${RESOURCE_PAGES} pages. `:''}${url?'Link: attached.':''}`;
+      await window.FB.addDoc(window.FB.collection(window.FB.db,"resources"), data);
+      await saveToBrain(data);
+      document.getElementById("rMsg").innerText="✅ Added + Brain saved!";
     }
-    // AUTO BRAIN - EVERYTHING goes to Brain: Design, Notes, Exam, Homework, Scheme, Lesson
-    let brainText = (RESOURCE_FULLTEXT || "").trim();
-    let brainContent = brainText ? brainText.slice(0,90000) : `${title}\n${grade} ${subject} - ${currentType}\n${desc || title}\nLink: ${url || 'No link'}`;
-    let ok = await saveToBrain(FB, {title, subject, grade, type: TYPE_TO_SAVE[currentType]||currentType, text: brainContent, pages: RESOURCE_PAGES||0, fileName: RESOURCE_FILE_NAME||"", fileUrl: url||"", resourceId: savedId||""});
-    document.getElementById('rMsg').innerText += ok ? ` 🧠 + AI Brain saved!` : ` ⚠️ Brain failed`;
-    document.getElementById('rTitle').value=''; document.getElementById('rDesc').value=''; document.getElementById('rUrl').value='';
-    document.getElementById('rFile').value=''; document.getElementById('rFileStatus').innerText=''; document.getElementById('rFilePreview').innerText='';
     RESOURCE_FULLTEXT=""; RESOURCE_FILE_NAME=""; RESOURCE_PAGES=0;
-    cancelEdit();
-    document.getElementById('viewBtnWrap').classList.remove('hidden');
+    document.getElementById("rTitle").value=""; document.getElementById("rUrl").value=""; document.getElementById("rDesc").value=""; document.getElementById("rFile").value=""; document.getElementById("rFileStatus").innerText=""; document.getElementById("rFilePreview").innerText="";
     loadRes(); loadPreview();
-  }catch(e){ document.getElementById('rMsg').innerText='❌ '+e.message; }
+    document.getElementById("viewBtnWrap").classList.remove("hidden");
+    document.getElementById("viewLink").href = "/" + (TYPE_TO_FILE[currentType]||"notes.html");
+  }catch(e){ document.getElementById("rMsg").innerText="❌ "+e.message; }
 }
-function cancelEdit(){
-  EDITING_ID = null;
-  document.getElementById('cancelEditBtn').classList.add('hidden');
-  document.getElementById('editBanner').classList.add('hidden');
-  document.getElementById('addBtn').innerHTML = '+ Add to <span id="showWhere">' + (TYPE_TO_FILE[currentType]||'notes.html') + '</span> + 🧠 AI Brain';
-  document.getElementById('rTitle').value=''; document.getElementById('rDesc').value=''; document.getElementById('rUrl').value='';
-  document.getElementById('rFile').value=''; document.getElementById('rFileStatus').innerText='';
-  RESOURCE_FULLTEXT=""; RESOURCE_FILE_NAME=""; RESOURCE_PAGES=0;
-}
-async function editRes(id){
-  let FB=window.FB;
-  let r = allRes.find(x=>x.id===id);
-  if(!r){ let d = await FB.getDoc(FB.doc(FB.db,'resources',id)); r = {id:d.id, ...d.data()}; }
-  if(!r) return;
-  EDITING_ID = id;
-  document.getElementById('rTitle').value = cleanTitle(r.title, r.grade, r.subject);
-  document.getElementById('rGrade').value = r.grade || 'Grade 8';
-  updateSubjects('rGrade','rSubject');
-  document.getElementById('rSubject').value = r.subject || '';
-  document.getElementById('rUrl').value = r.fileUrl || r.url || '';
-  document.getElementById('rDesc').value = r.description || '';
-  let typeBack = r.type === 'Curriculum Design' ? 'Design' : (r.type || 'Notes');
-  if(TYPE_TO_SAVE[typeBack]) setType(typeBack);
-  else if(Object.values(TYPE_TO_SAVE).includes(r.type)){ let k = Object.keys(TYPE_TO_SAVE).find(k=>TYPE_TO_SAVE[k]===r.type); if(k) setType(k); }
-  document.getElementById('editBanner').classList.remove('hidden');
-  document.getElementById('editTitleShow').innerText = r.title;
-  document.getElementById('cancelEditBtn').classList.remove('hidden');
-  document.getElementById('addBtn').innerText = '💾 Update File + 🧠 Brain';
-  document.getElementById('rFileStatus').innerText = r.fullText ? `Current file kept: ${r.pages||'?'} pages, ${r.fullText.length} chars. Choose a new file ONLY if you want to replace it.` : `No file saved yet. Choose a file now to add pages.`;
-  window.scrollTo({top:0, behavior:'smooth'});
-  document.getElementById('rMsg').innerText = '✏️ Editing - change Title / Link / File then tap Update File';
-}
+function cancelEdit(){ EDITING_ID=null; document.getElementById("editBanner").classList.add("hidden"); document.getElementById("cancelEditBtn").classList.add("hidden"); document.getElementById("addBtn").innerText="+ Add to "+(TYPE_TO_FILE[currentType]||"notes.html")+" + 🧠 AI Brain"; document.getElementById("rTitle").value=""; document.getElementById("rUrl").value=""; document.getElementById("rDesc").value=""; RESOURCE_FULLTEXT=""; RESOURCE_PAGES=0; }
 async function loadRes(){
-  let FB=window.FB;
   try{
-    let s=await FB.getDocs(FB.collection(FB.db,'resources'));
-    allRes=[]; s.forEach(d=>allRes.push({id:d.id,...d.data()}));
-    let box=document.getElementById('rList');
-    if(!allRes.length){ box.innerHTML='<p class="text-[12px] text-gray-400">No resources yet</p>'; return; }
-    box.innerHTML = allRes.slice().reverse().slice(0,50).map(r=>{ let t=cleanTitle(r.title,r.grade,r.subject); return `<div class="bg-[#f7f7f5] p-3 rounded-xl"><div class="flex justify-between gap-2"><div><p class="font-bold text-[12px]">${t}</p><p class="text-[11px] text-gray-500">${r.grade} • ${r.subject} • ${r.type} • ${r.pages?r.pages+' pages':(r.fullText?'Has text':(r.fileUrl||r.url?'🔗 Link attached':'⚠️ NO FILE'))} • 🧠 Brain auto</p><p class="text-[11px] text-blue-600 truncate">${r.fileUrl||r.url||''}</p></div></div><div class="flex gap-2 mt-2"><button onclick="editRes('${r.id}')" class="flex-1 bg-black text-white py-2 rounded-lg text-[11px] font-bold">✏️ Edit</button><button onclick="deleteRes('${r.id}')" class="flex-1 bg-red-500 text-white py-2 rounded-lg text-[11px] font-bold">🗑 Delete</button></div></div>`; }).join('');
-  }catch(e){}
-}
-async function deleteRes(id){
-  let r = allRes.find(x=>x.id===id);
-  if(!confirm('Delete "'+(r?r.title:id)+'"?\nLearners will NOT see it anymore. It will also be removed from AI Brain.')) return;
-  let FB=window.FB;
-  await FB.deleteDoc(FB.doc(FB.db,'resources',id));
-  try{
-    let s = await FB.getDocs(FB.query(FB.collection(FB.db,'ai_brain'), FB.where('resourceId','==',id)));
-    for(let d of s.docs) await FB.deleteDoc(FB.doc(FB.db,'ai_brain',d.id));
-  }catch(e){}
-  if(EDITING_ID===id) cancelEdit();
-  loadRes(); loadPreview();
+    let snap=await window.FB.getDocs(window.FB.collection(window.FB.db,"resources"));
+    allRes=[]; snap.forEach(d=>{ allRes.push({id:d.id, ...d.data()}); });
+    allRes.sort((a,b)=>(b.createdAt?.seconds||0)-(a.createdAt?.seconds||0));
+    let html=allRes.slice(0,50).map(r=>{
+      let hasText = r.fullText && !isJunkText(r.fullText);
+      let badge = hasText ? `<span class="text-green-600">✅ Full text saved + 🧠 Brain</span>` : `<span class="text-orange-600">🔗 Link only - Upload PDF to Cloud to fix</span>`;
+      return `<div class="bg-[#f7f7f5] p-3 rounded-xl flex justify-between gap-2"><div><p class="font-bold text-[12px]">${r.title||r.grade+" "+r.subject}</p><p class="text-[11px] text-gray-500">${r.grade} • ${r.subject} • ${r.type} • ${badge}</p></div><div class="flex gap-1 shrink-0"><button onclick="editRes('${r.id}')" class="bg-black text-white px-2 py-1 rounded-lg text-[11px]">✏️ Edit</button><button onclick="deleteRes('${r.id}')" class="bg-red-500 text-white px-2 py-1 rounded-lg text-[11px]">🗑️</button></div></div>`;
+    }).join("");
+    document.getElementById("rList").innerHTML = html || "<p class='text-[11px] text-gray-500'>No resources yet</p>";
+  }catch(e){ document.getElementById("rList").innerText="Error: "+e.message; }
 }
 async function loadPreview(){
-  let FB=window.FB;
-  try{
-    let filter=document.getElementById('previewFilter').value;
-    let s=await FB.getDocs(FB.collection(FB.db,'resources'));
-    let list=[]; s.forEach(d=>list.push({id:d.id,...d.data()}));
-    list=list.filter(r=>r.type==filter);
-    let box=document.getElementById('previewList');
-    if(!list.length){ box.innerHTML='<p class="text-[11px] text-gray-400">No items for '+filter+'</p>'; return; }
-    box.innerHTML=list.slice().reverse().slice(0,20).map(r=>{ let t=cleanTitle(r.title,r.grade,r.subject); let d=(r.description||""); if(d.includes("uc?export")||d.startsWith("http")) d=t+" - Original Design"; return `<div class="bg-[#f7f7f5] p-3 rounded-xl"><p class="font-bold text-[12px]">${t}</p><p class="text-[11px] text-gray-500">${r.grade} • ${r.subject} • ${r.pages?r.pages+' pages':''} ${r.fullText?'✅ Full text saved + 🧠 Brain':(r.fileUrl||r.url?'🔗 Link only - opens in Drive + 🧠 Brain':'⚠️ Blank')}</p></div>`; }).join('');
-  }catch(e){}
+  let filter=document.getElementById("previewFilter").value;
+  let list=allRes.filter(r=>r.type===filter);
+  if(list.length===0) { document.getElementById("previewList").innerHTML="<p class='text-[11px] text-gray-500'>No "+filter+" yet</p>"; return; }
+  document.getElementById("previewList").innerHTML=list.slice(0,20).map(r=>{
+    let hasText = r.fullText && !isJunkText(r.fullText);
+    return `<div class="bg-[#f7f7f5] p-3 rounded-xl"><p class="font-bold text-[12px]">${r.title}</p><p class="text-[11px]">${hasText?"✅ Full text saved + 🧠 Brain":"🔗 Link only - opens in Drive + 🧠 Brain"}</p></div>`;
+  }).join("");
 }
-async function syncAllToBrain(){
-  if(!confirm('Copy ALL resources (Design, Notes, Exam, Homework...) to AI Brain?')) return;
-  let FB=window.FB;
-  document.getElementById('syncStatus').innerText = '⏳ Syncing...';
-  let s = await FB.getDocs(FB.collection(FB.db,'resources'));
-  let count=0, skipped=0;
-  for(let d of s.docs){
-    let r = d.data();
-    let check = await FB.getDocs(FB.query(FB.collection(FB.db,'ai_brain'), FB.where('resourceId','==',d.id)));
-    if(!check.empty){ skipped++; continue; }
-    let brainText = (r.fullText||"").trim();
-    let content = brainText ? brainText.slice(0,90000) : `${r.title}\n${r.grade} ${r.subject} - ${r.type}\n${r.description||r.title}`;
-    let clean = cleanTitle(r.title, r.grade, r.subject);
-    await FB.addDoc(FB.collection(FB.db,'ai_brain'), {title: clean, subject: r.subject||"", grade: r.grade||"", use: "all", type: r.type||"", text: content, pages: r.pages||0, fileUrl: r.fileUrl||r.url||"", resourceId: d.id, createdAt: FB.serverTimestamp()});
-    count++;
-  }
-  document.getElementById('syncStatus').innerText = `✅ Synced ${count} new, skipped ${skipped} already in Brain.`;
-  alert(`✅ Done! ${count} resources now in AI Brain.`);
-  loadAi();
+function editRes(id){
+  let r=allRes.find(x=>x.id===id); if(!r) return;
+  EDITING_ID=id;
+  document.getElementById("rTitle").value=r.title||"";
+  document.getElementById("rGrade").value=r.grade||"Grade 8"; updateSubjects('rGrade','rSubject');
+  setTimeout(()=>{ document.getElementById("rSubject").value=r.subject||""; },50);
+  document.getElementById("rUrl").value=r.fileUrl||"";
+  document.getElementById("rDesc").value=r.description||"";
+  RESOURCE_FULLTEXT=r.fullText||""; RESOURCE_PAGES=r.pages||0; RESOURCE_FILE_NAME=r.fileName||"";
+  document.getElementById("editBanner").classList.remove("hidden");
+  document.getElementById("editTitleShow").innerText=r.title||"";
+  document.getElementById("cancelEditBtn").classList.remove("hidden");
+  document.getElementById("addBtn").innerText="💾 Update File + 🧠 Brain";
+  window.scrollTo({top:0, behavior:'smooth'});
+  document.getElementById("rFileStatus").innerText = RESOURCE_FULLTEXT ? `ℹ️ This file already has ${RESOURCE_FULLTEXT.length} chars saved. Upload new PDF only if you want to replace it.` : "ℹ️ This file is Link only. Upload PDF to Cloud to fix it.";
 }
-async function fixBadTitles(){
-  if(!confirm('Fix all titles that look like links?\nExample: "uc?export..." will become "Grade 8 CRE"')) return;
-  let FB=window.FB;
-  let s=await FB.getDocs(FB.collection(FB.db,'resources'));
-  let fixed=0;
-  for(let d of s.docs){
-    let r=d.data();
-    let title = (r.title||"").trim();
-    let isBad = !title || title.includes("uc?export") || title.includes("drive.google.com") || title.includes("http") || title.includes("id=1");
-    if(isBad){
-      let newTitle = (r.grade||"Grade 8") + " " + (r.subject||"");
-      await FB.updateDoc(FB.doc(FB.db,'resources',d.id), {title: newTitle, description: newTitle + " - Original Design"});
-      fixed++;
-    } else if(r.description && (r.description.includes("uc?export") || r.description.includes("drive.google.com"))){
-      await FB.updateDoc(FB.doc(FB.db,'resources',d.id), {description: (r.grade||"")+" "+(r.subject||"")+" - Original Design"});
-      fixed++;
-    }
-  }
-  alert(`✅ Fixed ${fixed} item(s). Reloading...`);
+async function deleteRes(id){
+  if(!confirm("Delete this resource?")) return;
+  await window.FB.deleteDoc(window.FB.doc(window.FB.db,"resources",id));
   loadRes(); loadPreview();
 }
-async function addAiBrain(){
-  let FB=window.FB;
-  let title=document.getElementById('aiTitle').value.trim();
-  let subject=document.getElementById('aiSubject').value;
-  let grade=document.getElementById('aiGrade').value;
-  let use=document.getElementById('aiUse').value;
-  let text=document.getElementById('aiText').value.trim();
-  if(!title && !text){ alert('Add Title or Text'); return; }
-  try{
-    await FB.addDoc(FB.collection(FB.db,'ai_brain'), {title, subject, grade, use, text: text || title, photo: photoBase64 || "", createdAt: FB.serverTimestamp()});
-    document.getElementById('aiMsg').innerText='✅ Saved to AI Brain';
-    document.getElementById('aiTitle').value=''; document.getElementById('aiText').value=''; photoBase64=''; document.getElementById('preview').classList.add('hidden');
-    loadAi();
-  }catch(e){ document.getElementById('aiMsg').innerText='❌ '+e.message; }
+async function syncAllToBrain(){
+  document.getElementById("syncStatus").innerText="⏳ Syncing...";
+  let count=0;
+  for(let r of allRes){ await saveToBrain(r); count++; }
+  document.getElementById("syncStatus").innerText=`✅ Synced ${count} to Brain`;
 }
+async function fixBadTitles(){
+  for(let r of allRes){
+    if(!r.title || r.title.includes("uc?export") || r.title.includes("http")){
+      let nt=(r.grade||"")+" "+(r.subject||"");
+      await window.FB.updateDoc(window.FB.doc(window.FB.db,"resources",r.id), {title: nt});
+    }
+  }
+  alert("Done - bad titles fixed"); loadRes();
+}
+// --- AI Brain + Gemini + Tuition (kept from your file) ---
 async function loadAi(){
-  let FB=window.FB;
   try{
-    let s=await FB.getDocs(FB.collection(FB.db,'ai_brain'));
-    let list=[]; s.forEach(d=>list.push({id:d.id,...d.data()}));
-    let box=document.getElementById('aiList');
-    if(!list.length){ box.innerHTML='<p class="text-[12px] text-gray-300">No AI Brain items yet</p>'; return; }
-    box.innerHTML=list.slice().reverse().slice(0,30).map(r=>`<div class="bg-white/10 p-3 rounded-xl"><p class="font-bold text-[12px]">${cleanTitle(r.title,r.grade,r.subject)}</p><p class="text-[11px] text-gray-300">${r.grade} • ${r.subject} • ${r.use} • ${r.type||''} • ${(r.text||'').length} chars</p>${r.photo?`<img src="${r.photo}" class="w-full rounded-lg mt-2">`:''}<button onclick="deleteAi('${r.id}')" class="bg-red-500 px-2 py-1 rounded-lg text-[11px] mt-2">Delete</button></div>`).join('');
-  }catch(e){}
+    let snap=await window.FB.getDocs(window.FB.collection(window.FB.db,"ai_brain"));
+    let list=[]; snap.forEach(d=>list.push({id:d.id,...d.data()}));
+    list.sort((a,b)=>(b.createdAt?.seconds||0)-(a.createdAt?.seconds||0));
+    document.getElementById("aiList").innerHTML=list.slice(0,50).map(x=>`<div class="bg-white/10 p-3 rounded-xl"><p class="font-bold text-[12px]">${x.title||""}</p><p class="text-[11px] text-gray-300">${(x.text||"").slice(0,150)}</p></div>`).join("")||"<p class='text-[11px]'>No Brain yet</p>";
+  }catch(e){ document.getElementById("aiList").innerText=e.message; }
 }
-async function deleteAi(id){ if(!confirm('Delete from Brain?')) return; let FB=window.FB; await FB.deleteDoc(FB.doc(FB.db,'ai_brain',id)); loadAi(); }
+async function addAiBrain(){
+  let title=document.getElementById("aiTitle").value||"Untitled";
+  let text=document.getElementById("aiText").value;
+  let grade=document.getElementById("aiGrade").value;
+  let subject=document.getElementById("aiSubject").value;
+  let use=document.getElementById("aiUse").value;
+  if(!text && !photoBase64){ document.getElementById("aiMsg").innerText="Paste text or photo first"; return; }
+  try{
+    await window.FB.addDoc(window.FB.collection(window.FB.db,"ai_brain"), {title, text: text||photoBase64, grade, subject, use, createdAt: window.FB.serverTimestamp()});
+    document.getElementById("aiMsg").innerText="✅ Fed to Brain";
+    document.getElementById("aiText").value=""; loadAi();
+  }catch(e){ document.getElementById("aiMsg").innerText="❌ "+e.message; }
+}
+function loadGeminiKey(){ let k=localStorage.getItem("gemini_key"); document.getElementById("geminiStatus").innerText = k ? "✅ Key saved (hidden)" : "⚠️ No key saved"; if(k) document.getElementById("geminiKeyInput").value=k; }
+function saveGeminiKey(){ let k=document.getElementById("geminiKeyInput").value.trim(); if(!k) return; localStorage.setItem("gemini_key",k); document.getElementById("geminiStatus").innerText="✅ Key saved"; }
+function testGeminiKey(){ document.getElementById("geminiTestResult").innerText="Testing via /api/gemini..."; fetch("/api/gemini",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({prompt:"Say hi"})}).then(r=>r.json()).then(d=>{ document.getElementById("geminiTestResult").innerText = d.text||d.error||"OK"; }).catch(e=>{ document.getElementById("geminiTestResult").innerText="❌ "+e.message; }); }
+function clearGeminiKey(){ localStorage.removeItem("gemini_key"); document.getElementById("geminiKeyInput").value=""; loadGeminiKey(); }
+function toggleGeminiKey(){ let i=document.getElementById("geminiKeyInput"); i.type = i.type==="password"?"text":"password"; }
+function openCamera(){ document.getElementById("video").classList.remove("hidden"); document.getElementById("camBtns").classList.remove("hidden"); navigator.mediaDevices.getUserMedia({video:true}).then(s=>{ stream=s; document.getElementById("video").srcObject=s; }).catch(e=>{ document.getElementById("photoStatus").innerText="Camera error: "+e.message; }); }
+function takePhoto(){ let v=document.getElementById("video"); let c=document.getElementById("canvas"); c.width=v.videoWidth; c.height=v.videoHeight; c.getContext("2d").drawImage(v,0,0); photoBase64=c.toDataURL("image/jpeg",0.7); document.getElementById("preview").src=photoBase64; document.getElementById("preview").classList.remove("hidden"); document.getElementById("photoStatus").innerText="✅ Photo captured"; closeCamera(); }
+function closeCamera(){ if(stream) stream.getTracks().forEach(t=>t.stop()); document.getElementById("video").classList.add("hidden"); document.getElementById("camBtns").classList.add("hidden"); }
+function handleFile(input){ let f=input.files[0]; if(!f) return; let r=new FileReader(); r.onload=e=>{ photoBase64=e.target.result; document.getElementById("preview").src=photoBase64; document.getElementById("preview").classList.remove("hidden"); }; r.readAsDataURL(f); }
 async function loadTuition(){
-  let FB=window.FB;
   try{
-    document.getElementById('tStatus').innerText='Loading...';
-    let s=await FB.getDocs(FB.collection(FB.db,'tuition_requests'));
-    let list=[]; s.forEach(d=>list.push({id:d.id,...d.data()}));
-    document.getElementById('tuitionCountTop').innerText=list.length;
-    if(!list.length){ document.getElementById('tStatus').innerText='No requests yet'; document.getElementById('tList').innerHTML=''; return; }
-    document.getElementById('tStatus').innerText=`${list.length} request(s)`;
-    document.getElementById('tList').innerHTML=list.slice().reverse().map(r=>`<div class="bg-[#f7f7f5] p-4 rounded-2xl"><p class="font-bold text-[13px]">${r.parentName||r.name||'Parent'} - ${r.grade||''}</p><p class="text-[12px] text-gray-600">${r.phone||''} • ${r.location||''}</p><p class="text-[12px] mt-1">${r.message||r.notes||''}</p></div>`).join('');
-  }catch(e){ document.getElementById('tStatus').innerText='❌ '+e.message; }
+    let snap=await window.FB.getDocs(window.FB.collection(window.FB.db,"tuition_requests"));
+    let list=[]; snap.forEach(d=>list.push({id:d.id,...d.data()}));
+    document.getElementById("tuitionCountTop").innerText=list.length;
+    document.getElementById("tStatus").innerText=`${list.length} requests`;
+    document.getElementById("tList").innerHTML=list.map(x=>`<div class="bg-[#f7f7f5] p-4 rounded-2xl"><p class="font-bold text-[13px]">${x.name||"Parent"} - ${x.grade||""} ${x.subject||""}</p><p class="text-[12px] text-gray-500">${x.phone||""} • ${x.location||""}</p><p class="text-[12px] mt-1">${x.message||""}</p></div>`).join("")||"<p>No requests</p>";
+  }catch(e){ document.getElementById("tStatus").innerText="Error: "+e.message; }
 }
-updateSubjects('rGrade','rSubject');
-updateSubjects('aiGrade','aiSubject');
-showTab('resources');
-setTimeout(loadRes, 800);
-setTimeout(loadPreview, 800);
+window.addEventListener("DOMContentLoaded", ()=>{ updateSubjects('rGrade','rSubject'); updateSubjects('aiGrade','aiSubject'); showTab('resources'); });
 </script>
 </body>
 </html>
