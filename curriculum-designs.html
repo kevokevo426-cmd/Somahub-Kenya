@@ -93,29 +93,35 @@ function safeDesc(r){
   if(d.includes("uc?export") || d.includes("drive.google.com") || d.startsWith("http")) return safeTitle(r) + " - Original Design";
   return d;
 }
-// BRAIN LOOKUP - Find Brain text for a resource
+// FIX: Junk Brain = link text, not real PDF text - treat as empty
+function isJunkText(t){
+  if(!t) return true;
+  t = t.trim();
+  if(t.length < 300) return true;
+  if(t.includes("uc?export") || t.includes("drive.google.com") || t.includes("export=download") || t.includes("id=1ZV")) return true;
+  if(t.split("\n").length <= 4 && t.length < 800) return true;
+  return false;
+}
 function getBrainTextFor(r){
   if(!r) return "";
-  if(r.fullText && r.fullText.length > 100) return r.fullText;
+  if(r.fullText && !isJunkText(r.fullText)) return r.fullText;
   if(AI_BRAIN.length){
     let m = AI_BRAIN.find(x=>x.resourceId===r.id);
-    if(m && (m.text||"").length>100) return m.text;
+    if(m && m.text && !isJunkText(m.text)) return m.text;
     let m2 = AI_BRAIN.find(x=>safeTitle(x)===safeTitle(r) && x.grade===r.grade && (x.subject===r.subject || !x.subject));
-    if(m2 && (m2.text||"").length>100) return m2.text;
+    if(m2 && m2.text && !isJunkText(m2.text)) return m2.text;
   }
-  return r.fullText || "";
+  return "";
 }
 async function loadResources(){
   try{ let FB=window.FB; let s=await FB.getDocs(FB.collection(FB.db,'resources')); ALL=[]; s.forEach(d=>ALL.push({id:d.id,...d.data()})); }catch(e){ ALL=[]; }
-  // LOAD AI BRAIN + MERGE - Admin auto-saves everything here
   try{
     let FB=window.FB; let b=await FB.getDocs(FB.collection(FB.db,'ai_brain'));
     AI_BRAIN=[]; b.forEach(d=>AI_BRAIN.push({id:d.id,...d.data()}));
-    // Fill missing fullText from Brain
     ALL.forEach(r=>{
-      if(!r.fullText || r.fullText.length < 100){
+      if(!r.fullText || isJunkText(r.fullText)){
         let bt = getBrainTextFor(r);
-        if(bt) r.fullText = bt;
+        if(bt) r.fullText = bt; else r.fullText = "";
       }
     });
   }catch(e){ AI_BRAIN=[]; }
@@ -142,7 +148,7 @@ function formatAI(text){
   }); if(inList) out+="</ul>"; return out;
 }
 function getAdminFileContext(question){
-  if(!CURRENT_FILE_TEXT) return "";
+  if(!CURRENT_FILE_TEXT || isJunkText(CURRENT_FILE_TEXT)) return "";
   let qWords=(question||"").toLowerCase().split(/[^a-z0-9]+/).filter(w=>w.length>3);
   let chunks=[]; for(let i=0;i<CURRENT_FILE_TEXT.length;i+=1200) chunks.push(CURRENT_FILE_TEXT.slice(i,i+1200));
   let scored=chunks.map(c=>{let low=c.toLowerCase(); let s=0; qWords.forEach(w=>{if(low.includes(w)) s++;}); return {c,s};}).sort((a,b)=>b.s-a.s);
@@ -187,21 +193,20 @@ async function searchNotes(){
   currentGrade=document.getElementById("gradeSel").value; CURRENT_TOPIC=q;
   let box=document.getElementById("searchResult");
   let words=q.toLowerCase().split(/[^a-z0-9]+/).filter(w=>w.length>3);
-  // Search BOTH Resources + Brain
   let hayAll = ALL.map(r=>({...r, _text: getBrainTextFor(r)}));
   let matched=hayAll.filter(r=>{let hay=((r.title||"")+" "+(r.subject||"")+" "+(r.description||"")+" "+(r._text||"")).toLowerCase(); return r.grade==currentGrade && words.some(w=>hay.includes(w));});
   if(!matched.length){
     matched=hayAll.filter(r=>{let hay=((r.title||"")+" "+(r.subject||"")+" "+(r.description||"")+" "+(r._text||"")).toLowerCase(); return words.some(w=>hay.includes(w));}).slice(0,3);
-    // Also search Brain directly if no Resource match
     if(!matched.length && AI_BRAIN.length){
-      let bm = AI_BRAIN.filter(b=>{let hay=((b.title||"")+" "+(b.subject||"")+" "+(b.text||"")).toLowerCase(); return b.grade==currentGrade && words.some(w=>hay.includes(w));}).slice(0,3);
+      let bm = AI_BRAIN.filter(b=>{let hay=((b.title||"")+" "+(b.subject||"")+" "+(b.text||"")).toLowerCase(); return b.grade==currentGrade && words.some(w=>hay.includes(w)) && !isJunkText(b.text);}).slice(0,3);
       matched = bm.map(b=>({id:b.resourceId||b.id, title:b.title, grade:b.grade, subject:b.subject, description:b.title, fullText:b.text, _text:b.text}));
     }
   }
-  if(matched.length && matched[0]._text){ CURRENT_FILE_TEXT = matched[0]._text; }
-  else if(matched.length && matched[0].fullText){ CURRENT_FILE_TEXT = matched[0].fullText; }
+  if(matched.length && matched[0]._text && !isJunkText(matched[0]._text)){ CURRENT_FILE_TEXT = matched[0]._text; }
+  else if(matched.length && matched[0].fullText && !isJunkText(matched[0].fullText)){ CURRENT_FILE_TEXT = matched[0].fullText; }
+  else CURRENT_FILE_TEXT = "";
   box.innerHTML=`<p class="font-black">🔍 "${q}" - ${matched.length} designs + AI meaning for ${currentGrade}</p><div class="ai-box mt-2">⏳ Thinking...</div>`;
-  let designCtx=matched.length?matched.map((r,i)=>`${i+1}. ${safeTitle(r)} | ${r.grade} ${r.subject} | ${(r._text||r.fullText||'NO FILE TEXT YET - Admin must feed to AI Brain').slice(0,2000)}`).join("\n"):"No exact design - use CBC/KICD.";
+  let designCtx=matched.length?matched.map((r,i)=>`${i+1}. ${safeTitle(r)} | ${r.grade} ${r.subject} | ${(r._text||r.fullText||'').length>300 && !isJunkText(r._text||r.fullText) ? (r._text||r.fullText).slice(0,2000) : 'NO FILE TEXT YET - Link only'}`).join("\n"):"No exact design - use CBC/KICD.";
   let fileCtx=getAdminFileContext(q);
   let prompt=`You are SomaHub CBC Tutor for ${currentGrade}. Topic: ${q}\nDesigns (Admin files + AI Brain):\n${designCtx}\n${fileCtx}\nTASK: 1. Meaning, 2. Compare PP1, Grade 4, Grade 7, Grade 9, 3. 3 Key Points, 4. 1 Kenya example. Use **bold**. Never mention missing resources. Never mention links.`;
   try{ let ai=await callAI(prompt,q); let videoQ=encodeURIComponent(q+" "+currentGrade+" CBC Kenya lesson"); box.innerHTML=`<p class="font-black">🔍 "${q}" - ${matched.length} designs</p>${matched.map(r=>`<div class="mt-2 text-[13px]"><b>${safeTitle(r)}</b> • ${r.grade} ${r.subject} <button class="action-btn bg-[#0d9488] ml-1" onclick="openDesign('${r.id}')">Open</button></div>`).join("")}<div class="ai-box mt-3">${formatAI(ai)}</div><div class="flex gap-2 mt-3 flex-wrap"><a target="_blank" href="https://www.youtube.com/results?search_query=${videoQ}" class="action-btn bg-red-600 no-underline">▶ Watch Video</a><button class="action-btn bg-orange-500" onclick="makeHomework('${q.replace(/'/g,"")}')">Set Homework</button><button class="action-btn bg-[#263b99]" onclick="makeExam('${q.replace(/'/g,"")}')">Set Exam</button></div>`; }catch(e){ box.innerHTML=`<div class="ai-box">AI busy: ${e.message}</div>`; }
@@ -214,7 +219,7 @@ function loadDesigns(){
   if(!list.length){ box.innerHTML=`<div class="card text-center text-gray-500 text-[13px]">No saved designs for ${currentGrade} ${subj||''} yet.<br>Use Search Notes above - AI will generate from CBC / KICD.</div>`; return; }
   box.innerHTML=list.map(r=>{
     let bt = getBrainTextFor(r);
-    let badge = bt && bt.length>100 ? `🧠 Brain: ${Math.round(bt.length/1000)}k chars` : `⚠️ Brain empty`;
+    let badge = bt && !isJunkText(bt) ? `🧠 Brain: ${Math.round(bt.length/1000)}k chars` : `🔗 Link only - Tap Read Original to see PDF`;
     return `<div class="card"><p class="font-black text-[15px]">${safeTitle(r)}</p><p class="text-[12px] text-gray-500">${r.grade} • ${r.subject} • ${r.type||'Design'} • ${badge}</p><p class="text-[13px] mt-1">${safeDesc(r).slice(0,180)}</p><div class="flex gap-2 mt-3 flex-wrap"><button class="action-btn bg-[#0d9488]" onclick="openOriginalDesign('${r.id}')">📖 Read Original</button><button class="action-btn bg-[#263b99]" onclick="openDesign('${r.id}')">🤖 AI Explains</button></div></div>`;
   }).join("");
 }
@@ -224,7 +229,7 @@ async function openOriginalDesign(id){
   CURRENT_TOPIC = safeTitle(r);
   let fileUrl = r.fileUrl || r.url || r.pdfUrl || r.link || "";
   let title = safeTitle(r);
-  if(CURRENT_FILE_TEXT && CURRENT_FILE_TEXT.length > 100){
+  if(CURRENT_FILE_TEXT && !isJunkText(CURRENT_FILE_TEXT)){
     openReader(title, `${r.grade} • ${r.subject} • Original Design (Not AI)`, CURRENT_FILE_TEXT);
     return;
   }
@@ -265,9 +270,8 @@ async function openDesign(id){
   let box=document.getElementById("detailBox");
   box.innerHTML=`<div class="card"><h3 class="font-black">${safeTitle(r)}</h3><p class="text-[12px] text-gray-500">${r.grade} • ${r.subject}</p><p class="text-[14px] mt-2">${safeDesc(r)}</p><div class="ai-box mt-3">⏳ AI Explains...</div><div class="flex gap-2 mt-3 flex-wrap"><button class="action-btn bg-[#0d9488]" onclick="openOriginalDesign('${r.id}')">📖 Read Original Instead</button><button class="action-btn bg-red-600" onclick="closeDetail()">✕ Exit</button></div></div>`;
   box.scrollIntoView({behavior:"smooth"});
-  // NEVER send link to AI - AI cannot open links
-  if(!CURRENT_FILE_TEXT || CURRENT_FILE_TEXT.length < 100){
-    box.querySelector(".ai-box").innerHTML = "⚠️ AI has NOT read this file yet.<br><br>Admin must tap <b>🧠 Read Drive PDF & Save to AI Brain</b> in admin.html for this design, or re-upload the file.<br><br>Until then AI can only answer from general CBC knowledge.";
+  if(!CURRENT_FILE_TEXT || isJunkText(CURRENT_FILE_TEXT)){
+    box.querySelector(".ai-box").innerHTML = "⚠️ AI has NOT read this file yet.<br><br>This file is LINK ONLY. Admin must download PDF from Drive to phone, then in admin.html use yellow box <b>Choose File</b> to upload it. Then AI will read it.<br><br>Tap 📖 Read Original Instead to read the real PDF from Drive.";
     return;
   }
   try{ let prompt=`You are SomaHub CBC Tutor for ${r.grade}. You MUST answer ONLY from this ADMIN FILE + AI BRAIN below. Do NOT mention any link. Do NOT say you cannot open files. The file content is already given to you.\n\nADMIN FILE - ${safeTitle(r)}:\n${CURRENT_FILE_TEXT.slice(0,12000)}\n\nTASK: Summarize. Give Meaning, Key Points, Activities, Assessment. Use **bold**.`; let ai=await callAI(prompt,safeTitle(r)); box.querySelector(".ai-box").innerHTML=formatAI(ai); }catch(e){ box.querySelector(".ai-box").innerHTML="AI busy, try again."; }
