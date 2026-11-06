@@ -34,7 +34,7 @@ onAuthStateChanged(auth,u=>{ if(!u) signInAnonymously(auth).catch(e=>console.log
 <div class="grid grid-cols-12 gap-6">
 <div class="col-span-12 lg:col-span-7">
 <div class="bg-white rounded-[24px] border p-6 shadow-sm">
-<h2 class="font-extrabold text-[15px] mb-4">📚 Feed Resource</h2>
+<h2 class="font-extrabold text-[15px] mb-4">📚 Feed Resource - Auto Saves to AI Brain</h2>
 <div class="grid grid-cols-3 gap-2 mb-4">
 <button onclick="setType('Notes')" id="tNotes" class="typeBtn bg-black text-white p-3 rounded-2xl text-left"><p class="text-[12px] font-bold">📘 Notes</p></button>
 <button onclick="setType('Design')" id="tDesign" class="typeBtn bg-white border p-3 rounded-2xl text-left"><p class="text-[12px] font-bold">🎨 Design</p></button>
@@ -44,7 +44,7 @@ onAuthStateChanged(auth,u=>{ if(!u) signInAnonymously(auth).catch(e=>console.log
 <button onclick="setType('LessonPlan')" id="tLessonPlan" class="typeBtn bg-white border p-3 rounded-2xl text-left"><p class="text-[12px] font-bold">📋 Lesson</p></button>
 </div>
 <input type="hidden" id="rType" value="Notes">
-<input id="rTitle" placeholder="Title (optional - will use file name if empty) — e.g. Grade 8 Agriculture" class="w-full bg-[#f7f7f5] border p-4 rounded-2xl text-[13px] mb-3 outline-none">
+<input id="rTitle" placeholder="Title (optional - auto = Grade + Subject) — e.g. Grade 8 Agriculture" class="w-full bg-[#f7f7f5] border p-4 rounded-2xl text-[13px] mb-3 outline-none">
 <div class="grid grid-cols-2 gap-3 mb-3">
 <select id="rGrade" onchange="updateSubjects('rGrade','rSubject')" class="bg-[#f7f7f5] border p-4 rounded-2xl text-[13px]">
 <option>Playgroup</option><option>PP1</option><option>PP2</option><option>Grade 1</option><option>Grade 2</option><option>Grade 3</option><option>Grade 4</option><option>Grade 5</option><option>Grade 6</option><option>Grade 7</option><option selected>Grade 8</option><option>Grade 9</option><option>Grade 10</option>
@@ -52,25 +52,31 @@ onAuthStateChanged(auth,u=>{ if(!u) signInAnonymously(auth).catch(e=>console.log
 <select id="rSubject" class="bg-[#f7f7f5] border p-4 rounded-2xl text-[13px]"></select>
 </div>
 <input id="rUrl" placeholder="🔗 ATTACH LINK HERE - Paste Drive / PDF / YouTube link here" class="w-full bg-[#f7f7f5] border p-4 rounded-2xl text-[13px] mb-3 outline-none">
+<button onclick="feedDriveToAiBrain()" id="feedDriveBtn" class="w-full bg-[#ffcc1a] py-3 rounded-2xl font-bold text-[13px] mb-3">🧠 Read Drive PDF & Save to AI Brain</button>
+<p id="feedDriveStatus" class="text-[11px] text-center font-bold mb-3"></p>
 <div class="bg-[#fffbe6] border-2 border-dashed border-[#ffcc1a] p-4 rounded-2xl mb-3">
 <p class="font-bold text-[13px]">📄 Upload Design / Notes File (Admin Only)</p>
-<p class="text-[11px] text-gray-500">PDF, DOCX, TXT - AI will read ALL pages. Learner will see Read Original page by page.</p>
+<p class="text-[11px] text-gray-500">PDF, DOCX, TXT - AI will read ALL pages + save to Brain automatically.</p>
 <input id="rFile" type="file" accept=".pdf,.docx,.txt" class="w-full mt-2 text-[12px]" onchange="handleResourceFile(this)">
 <p id="rFileStatus" class="text-[11px] font-bold mt-2 text-gray-700"></p>
 <p id="rFilePreview" class="text-[11px] mt-1 text-gray-500 max-h-[100px] overflow-y-auto"></p>
 </div>
 <textarea id="rDesc" placeholder="Description... e.g. Agriculture 8 (optional)" class="w-full bg-[#f7f7f5] border p-4 rounded-2xl text-[13px] h-[80px] mb-3 outline-none"></textarea>
 <p id="editBanner" class="hidden text-[12px] font-bold text-center bg-yellow-100 p-2 rounded-xl mb-2">✏️ Editing: <span id="editTitleShow"></span> - Tap Update below to save changes</p>
-<button onclick="addResource()" id="addBtn" class="w-full bg-black text-white py-4 rounded-2xl font-bold text-[13px]">+ Add to <span id="showWhere">notes.html</span></button>
+<button onclick="addResource()" id="addBtn" class="w-full bg-black text-white py-4 rounded-2xl font-bold text-[13px]">+ Add to <span id="showWhere">notes.html</span> + 🧠 AI Brain</button>
 <button onclick="cancelEdit()" id="cancelEditBtn" class="hidden w-full bg-white border py-3 rounded-2xl font-bold text-[13px] mt-2">✕ Cancel Edit - Add New Instead</button>
 <p id="rMsg" class="text-[11px] text-center font-bold mt-2"></p>
 <div id="viewBtnWrap" class="hidden mt-3"><a id="viewLink" href="/curriculum-designs.html" target="_blank" class="block text-center bg-[#ffcc1a] py-3 rounded-2xl font-bold text-[13px]">👀 VIEW IN DESIGN HTML →</a></div>
 </div>
 <div class="bg-white rounded-[24px] border p-6 mt-6"><h3 class="font-bold text-[13px]">👀 Preview - What will appear in Design HTML</h3><div class="flex gap-2 mt-3"><select id="previewFilter" onchange="loadPreview()" class="bg-[#f7f7f5] border p-2 rounded-xl text-[11px]"><option value="Curriculum Design">🎨 Design Only</option><option value="Notes">📘 Notes</option><option value="Exam">📝 Exam</option><option value="Homework">📝 Homework</option><option value="Scheme">🗂️ Scheme</option><option value="LessonPlan">📋 Lesson</option></select><button onclick="loadPreview()" class="bg-black text-white px-3 py-2 rounded-xl text-[11px] font-bold">🔄 Reload</button></div><div id="previewList" class="mt-4 space-y-2 max-h-[400px] overflow-y-auto"></div></div>
-<div class="bg-white rounded-[24px] border p-6 mt-6"><h3 class="font-bold text-[13px]">Recent Resources - Edit / Delete</h3><div id="rList" class="mt-4 space-y-2 max-h-[500px] overflow-y-auto"></div></div>
+<div class="bg-white rounded-[24px] border p-6 mt-6"><h3 class="font-bold text-[13px]">Recent Resources - Edit / Delete</h3><div id="rList" class="mt-4 space-y-2 max-h-[500px] overflow-y-auto"></div>
+<button onclick="syncAllToBrain()" class="w-full bg-black text-white py-3 rounded-xl font-bold text-[12px] mt-3">🧠 Sync ALL Old Resources to AI Brain (Tap Once)</button>
+<p id="syncStatus" class="text-[11px] text-center font-bold mt-1"></p>
+<button onclick="fixBadTitles()" class="w-full bg-red-500 text-white py-3 rounded-xl font-bold text-[12px] mt-2">🧹 Fix Bad Titles - Change "uc?export..." to "Grade 8 Subject"</button>
+</div>
 </div>
 <div class="col-span-12 lg:col-span-5"><div class="grid grid-cols-2 gap-3"><div class="bg-white rounded-[20px] border p-5"><p class="text-[10px] text-gray-400">Students</p><p id="sCount" class="font-black text-[22px]">0</p></div><div class="bg-white rounded-[20px] border p-5"><p class="text-[10px] text-gray-400">Teachers</p><p id="tCount2" class="font-black text-[22px]">0</p></div></div>
-<div class="bg-white rounded-[20px] border p-5 mt-3"><p class="text-[11px] font-bold">How it works</p><p class="text-[11px] text-gray-500 mt-1 leading-relaxed">1. Title optional - file name used if empty<br>2. Link in grey box + File in yellow box = BOTH saved<br>3. Drive /view link auto-converted to direct download link<br>4. Learner: Read Original = File pages inside<br>5. Download = Opens Link outside<br>6. Edit / Delete in Recent Resources below</p></div>
+<div class="bg-white rounded-[20px] border p-5 mt-3"><p class="text-[11px] font-bold">How it works - Auto Brain</p><p class="text-[11px] text-gray-500 mt-1 leading-relaxed">1. Title empty = Grade + Subject, NEVER link<br>2. + Add = Saves to Resources + AI Brain<br>3. File = AI reads ALL pages<br>4. Link only = AI gets Title + Description<br>5. Drive PDF button = Reads Drive PDF into Brain<br>6. Delete = Deletes from Brain too</p></div>
 </div>
 </div>
 </div>
@@ -94,7 +100,7 @@ onAuthStateChanged(auth,u=>{ if(!u) signInAnonymously(auth).catch(e=>console.log
 <p id="geminiTestResult" class="text-[11px] mt-2"></p>
 </div>
 <div class="bg-white rounded-[24px] border p-6">
-<h2 class="font-extrabold text-[16px]">🤖 Feed SomaHub AI Brain</h2><p class="text-[11px] text-gray-500">Take photo of textbook → AI uses for Exam/Homework</p>
+<h2 class="font-extrabold text-[16px]">🤖 Feed SomaHub AI Brain (Photo / Text)</h2><p class="text-[11px] text-gray-500">Take photo of textbook → AI uses for Exam/Homework. Resources tab already auto-feeds, this is only for photos.</p>
 <div class="mt-5 bg-[#f7f7f5] p-4 rounded-2xl border-2 border-dashed">
 <div class="grid grid-cols-2 gap-3"><button onclick="openCamera()" class="bg-black text-white py-3 rounded-xl text-[12px] font-bold">📷 Open Camera</button><label class="bg-white border py-3 rounded-xl text-[12px] font-bold text-center cursor-pointer">🖼️ Choose Photo<input type="file" id="fileInput" accept="image/*" capture="environment" class="hidden" onchange="handleFile(this)"></label></div>
 <video id="video" autoplay playsinline class="hidden w-full mt-3 rounded-2xl bg-black h-[240px]"></video><canvas id="canvas" class="hidden"></canvas>
@@ -146,7 +152,11 @@ const TYPE_TO_FILE = { Notes:'notes.html', Design:'curriculum-designs.html', Exa
 const TYPE_TO_SAVE = { Notes:'Notes', Design:'Curriculum Design', Exam:'Exam', Homework:'Homework', Scheme:'Scheme', LessonPlan:'LessonPlan' };
 function showTab(t){['resources','ai','tuition'].forEach(x=>{document.getElementById('tab-'+x).classList.add('hidden'); document.getElementById('btn-'+x).className='bg-white border px-4 py-2 rounded-full text-[11px] font-bold';}); document.getElementById('tab-'+t).classList.remove('hidden'); document.getElementById('btn-'+t).className='bg-black text-white px-4 py-2 rounded-full text-[11px] font-bold'; if(t=='resources'){ loadRes(); loadPreview(); } if(t=='ai'){ loadAi(); loadGeminiKey(); } if(t=='tuition') loadTuition();}
 function setType(t){ currentType=t; document.getElementById('rType').value=t; document.getElementById('showWhere').innerText=TYPE_TO_FILE[t]||'notes.html'; document.getElementById('previewFilter').value=TYPE_TO_SAVE[t]; loadPreview(); document.querySelectorAll('.typeBtn').forEach(b=>b.className='typeBtn bg-white border p-3 rounded-2xl text-left'); document.getElementById('t'+t).className='typeBtn bg-black text-white p-3 rounded-2xl text-left'; }
-// NEW: Convert Drive /view link to direct download link
+function cleanTitle(t, grade, subject){
+  t=(t||"").trim();
+  if(!t || t.includes("uc?export") || t.includes("drive.google.com") || t.includes("http") || t.includes("id=")) return (grade||"")+" "+(subject||"");
+  return t;
+}
 function convertDriveLink(url){
   if(!url) return url;
   url = url.trim();
@@ -187,9 +197,40 @@ async function handleResourceFile(input){
     } else {
       RESOURCE_FULLTEXT = await file.text(); RESOURCE_PAGES = 1;
     }
-    document.getElementById("rFileStatus").innerText = `✅ Read ${RESOURCE_PAGES} page(s) - ${RESOURCE_FULLTEXT.length} chars from ${RESOURCE_FILE_NAME}. Now tap + Add / Update.`;
+    document.getElementById("rFileStatus").innerText = `✅ Read ${RESOURCE_PAGES} page(s) - ${RESOURCE_FULLTEXT.length} chars from ${RESOURCE_FILE_NAME}. Now tap + Add / Update - it will auto-save to AI Brain.`;
     document.getElementById("rFilePreview").innerText = RESOURCE_FULLTEXT.slice(0,500) + "...";
   }catch(e){ document.getElementById("rFileStatus").innerText = "❌ Could not read file: "+e.message; }
+}
+async function feedDriveToAiBrain(){
+  let FB=window.FB;
+  let url = document.getElementById('rUrl').value.trim();
+  let grade = document.getElementById('rGrade').value;
+  let subject = document.getElementById('rSubject').value;
+  let title = cleanTitle(document.getElementById('rTitle').value, grade, subject);
+  document.getElementById('rTitle').value = title;
+  if(!url){ alert('Paste Drive link first in the grey box'); return; }
+  url = convertDriveLink(url);
+  document.getElementById('rUrl').value = url;
+  document.getElementById('feedDriveStatus').innerText = '⏳ Downloading PDF from Drive...';
+  try{
+    let res = await fetch(url);
+    let buf = await res.arrayBuffer();
+    let head = new TextDecoder().decode(buf.slice(0,5));
+    if(head !== "%PDF-") throw new Error("Google blocked download - file is PRIVATE. Download PDF to phone and use yellow Choose File box.");
+    let pdf = await pdfjsLib.getDocument({data:buf}).promise;
+    let all = "";
+    for(let i=1;i<=pdf.numPages;i++){
+      let page = await pdf.getPage(i);
+      let tc = await page.getTextContent();
+      all += `\n[PAGE ${i}]\n` + tc.items.map(it=>it.str).join(" ");
+      document.getElementById('feedDriveStatus').innerText = `⏳ Reading page ${i}/${pdf.numPages}...`;
+    }
+    RESOURCE_FULLTEXT = all; RESOURCE_PAGES = pdf.numPages; RESOURCE_FILE_NAME = title + ".pdf";
+    document.getElementById('rFileStatus').innerText = `✅ Read ${pdf.numPages} pages - ${all.length} chars. Now tap + Add / Update.`;
+    document.getElementById('rFilePreview').innerText = all.slice(0,500);
+    await FB.addDoc(FB.collection(FB.db,'ai_brain'), {title, subject, grade, use:"all", type: TYPE_TO_SAVE[currentType]||currentType, text: all.slice(0,90000), pages: pdf.numPages, fileUrl: url, createdAt: FB.serverTimestamp()});
+    document.getElementById('feedDriveStatus').innerText = `✅ DONE! ${pdf.numPages} pages saved to AI Brain. Now tap + Add / Update to also save as Resource.`;
+  }catch(e){ document.getElementById('feedDriveStatus').innerText = `❌ Drive blocked: ${e.message}`; }
 }
 async function loadGeminiKey(){
   let FB=window.FB;
@@ -231,35 +272,44 @@ async function openCamera(){ try{ stream=await navigator.mediaDevices.getUserMed
 function closeCamera(){ if(stream) stream.getTracks().forEach(t=>t.stop()); document.getElementById('video').classList.add('hidden'); document.getElementById('camBtns').classList.add('hidden'); }
 function takePhoto(){ let v=document.getElementById('video'); let c=document.getElementById('canvas'); c.width=v.videoWidth; c.height=v.videoHeight; c.getContext('2d').drawImage(v,0,0); photoBase64=c.toDataURL('image/jpeg',0.7); document.getElementById('preview').src=photoBase64; document.getElementById('preview').classList.remove('hidden'); document.getElementById('photoStatus').innerText='✅ Photo captured'; closeCamera(); }
 function handleFile(input){ let f=input.files[0]; if(!f) return; let r=new FileReader(); r.onload=e=>{ photoBase64=e.target.result; document.getElementById('preview').src=photoBase64; document.getElementById('preview').classList.remove('hidden'); document.getElementById('photoStatus').innerText='✅ Photo selected: '+f.name; }; r.readAsDataURL(f); }
+// AUTO BRAIN: Save to ai_brain helper - used by addResource for ALL types
+async function saveToBrain(FB, opts){
+  try{
+    await FB.addDoc(FB.collection(FB.db,'ai_brain'), {
+      title: opts.title, subject: opts.subject, grade: opts.grade, use: "all",
+      type: opts.type, text: opts.text, pages: opts.pages||0,
+      fileName: opts.fileName||"", fileUrl: opts.fileUrl||"",
+      resourceId: opts.resourceId||"", createdAt: FB.serverTimestamp()
+    });
+    return true;
+  }catch(e){ return false; }
+}
 async function addResource(){
   let FB=window.FB;
-  let title=document.getElementById('rTitle').value.trim();
+  let titleRaw=document.getElementById('rTitle').value.trim();
   let grade=document.getElementById('rGrade').value;
   let subject=document.getElementById('rSubject').value;
   let url=document.getElementById('rUrl').value.trim();
   let desc=document.getElementById('rDesc').value.trim();
-  // AUTO-CONVERT Drive link
-  if(url){
-    url = convertDriveLink(url);
-    document.getElementById('rUrl').value = url;
-  }
-  if(!title){
-    if(RESOURCE_FILE_NAME) title = RESOURCE_FILE_NAME.replace(/\.(pdf|docx|txt)$/i,"");
-    else if(url) title = url.split("/").pop().slice(0,60) || "Untitled Design";
-    else title = grade + " " + subject + " Design";
+  if(url){ url = convertDriveLink(url); document.getElementById('rUrl').value = url; }
+  // Title NEVER from link
+  let title = cleanTitle(titleRaw, grade, subject);
+  if(!titleRaw){
+    if(RESOURCE_FILE_NAME) title = RESOURCE_FILE_NAME.replace(/\.(pdf|docx|txt)$/i,"").replace(/[-_]/g," ").trim() || title;
     document.getElementById('rTitle').value = title;
   }
+  // Description NEVER a link
+  if(desc && (desc.includes("uc?export") || desc.includes("drive.google.com") || desc.startsWith("http"))){
+    desc = grade + " " + subject + " - Original Design";
+    document.getElementById('rDesc').value = desc;
+  }
   let isEditing = !!EDITING_ID;
-  document.getElementById('rMsg').innerText = isEditing ? '⏳ Updating...' : '⏳ Saving BOTH file + link...';
+  document.getElementById('rMsg').innerText = isEditing ? '⏳ Updating + Brain...' : '⏳ Saving to Resources + AI Brain...';
   try{
     let data = {
-      title: title,
-      grade: grade,
-      subject: subject,
+      title: title, grade: grade, subject: subject,
       type: TYPE_TO_SAVE[currentType] || currentType,
-      url: url,
-      fileUrl: url,
-      description: desc || title,
+      url: url, fileUrl: url, description: desc || title,
       hasLink: url ? true : false,
       updatedAt: FB.serverTimestamp()
     };
@@ -271,13 +321,25 @@ async function addResource(){
     }
     if(!desc && RESOURCE_FULLTEXT) data.description = RESOURCE_FULLTEXT.slice(0,500);
     if(!isEditing) data.createdAt = FB.serverTimestamp();
+    let savedId = EDITING_ID;
     if(isEditing){
       await FB.updateDoc(FB.doc(FB.db,'resources',EDITING_ID), data);
       document.getElementById('rMsg').innerText = `✅ Updated! ${title}`;
+      // Update Brain too - delete old brain for this resource, add new
+      try{
+        let old = await FB.getDocs(FB.query(FB.collection(FB.db,'ai_brain'), FB.where('resourceId','==',EDITING_ID)));
+        for(let d of old.docs) await FB.deleteDoc(FB.doc(FB.db,'ai_brain',d.id));
+      }catch(e){}
     } else {
-      await FB.addDoc(FB.collection(FB.db,'resources'), data);
+      let newDoc = await FB.addDoc(FB.collection(FB.db,'resources'), data);
+      savedId = newDoc.id;
       document.getElementById('rMsg').innerText = `✅ Saved! ${RESOURCE_FULLTEXT?`File: ${RESOURCE_PAGES} pages. `:''}${url?'Link: attached.':''}`;
     }
+    // AUTO BRAIN - EVERYTHING goes to Brain: Design, Notes, Exam, Homework, Scheme, Lesson
+    let brainText = (RESOURCE_FULLTEXT || "").trim();
+    let brainContent = brainText ? brainText.slice(0,90000) : `${title}\n${grade} ${subject} - ${currentType}\n${desc || title}\nLink: ${url || 'No link'}`;
+    let ok = await saveToBrain(FB, {title, subject, grade, type: TYPE_TO_SAVE[currentType]||currentType, text: brainContent, pages: RESOURCE_PAGES||0, fileName: RESOURCE_FILE_NAME||"", fileUrl: url||"", resourceId: savedId||""});
+    document.getElementById('rMsg').innerText += ok ? ` 🧠 + AI Brain saved!` : ` ⚠️ Brain failed`;
     document.getElementById('rTitle').value=''; document.getElementById('rDesc').value=''; document.getElementById('rUrl').value='';
     document.getElementById('rFile').value=''; document.getElementById('rFileStatus').innerText=''; document.getElementById('rFilePreview').innerText='';
     RESOURCE_FULLTEXT=""; RESOURCE_FILE_NAME=""; RESOURCE_PAGES=0;
@@ -290,7 +352,7 @@ function cancelEdit(){
   EDITING_ID = null;
   document.getElementById('cancelEditBtn').classList.add('hidden');
   document.getElementById('editBanner').classList.add('hidden');
-  document.getElementById('addBtn').innerHTML = '+ Add to <span id="showWhere">' + (TYPE_TO_FILE[currentType]||'notes.html') + '</span>';
+  document.getElementById('addBtn').innerHTML = '+ Add to <span id="showWhere">' + (TYPE_TO_FILE[currentType]||'notes.html') + '</span> + 🧠 AI Brain';
   document.getElementById('rTitle').value=''; document.getElementById('rDesc').value=''; document.getElementById('rUrl').value='';
   document.getElementById('rFile').value=''; document.getElementById('rFileStatus').innerText='';
   RESOURCE_FULLTEXT=""; RESOURCE_FILE_NAME=""; RESOURCE_PAGES=0;
@@ -298,13 +360,10 @@ function cancelEdit(){
 async function editRes(id){
   let FB=window.FB;
   let r = allRes.find(x=>x.id===id);
-  if(!r){
-    let d = await FB.getDoc(FB.doc(FB.db,'resources',id));
-    r = {id:d.id, ...d.data()};
-  }
+  if(!r){ let d = await FB.getDoc(FB.doc(FB.db,'resources',id)); r = {id:d.id, ...d.data()}; }
   if(!r) return;
   EDITING_ID = id;
-  document.getElementById('rTitle').value = r.title || '';
+  document.getElementById('rTitle').value = cleanTitle(r.title, r.grade, r.subject);
   document.getElementById('rGrade').value = r.grade || 'Grade 8';
   updateSubjects('rGrade','rSubject');
   document.getElementById('rSubject').value = r.subject || '';
@@ -316,7 +375,7 @@ async function editRes(id){
   document.getElementById('editBanner').classList.remove('hidden');
   document.getElementById('editTitleShow').innerText = r.title;
   document.getElementById('cancelEditBtn').classList.remove('hidden');
-  document.getElementById('addBtn').innerText = '💾 Update File';
+  document.getElementById('addBtn').innerText = '💾 Update File + 🧠 Brain';
   document.getElementById('rFileStatus').innerText = r.fullText ? `Current file kept: ${r.pages||'?'} pages, ${r.fullText.length} chars. Choose a new file ONLY if you want to replace it.` : `No file saved yet. Choose a file now to add pages.`;
   window.scrollTo({top:0, behavior:'smooth'});
   document.getElementById('rMsg').innerText = '✏️ Editing - change Title / Link / File then tap Update File';
@@ -328,14 +387,18 @@ async function loadRes(){
     allRes=[]; s.forEach(d=>allRes.push({id:d.id,...d.data()}));
     let box=document.getElementById('rList');
     if(!allRes.length){ box.innerHTML='<p class="text-[12px] text-gray-400">No resources yet</p>'; return; }
-    box.innerHTML = allRes.slice().reverse().slice(0,50).map(r=>`<div class="bg-[#f7f7f5] p-3 rounded-xl"><div class="flex justify-between gap-2"><div><p class="font-bold text-[12px]">${r.title}</p><p class="text-[11px] text-gray-500">${r.grade} • ${r.subject} • ${r.type} • ${r.pages?r.pages+' pages':(r.fullText?'Has text':(r.fileUrl||r.url?'🔗 Link attached - tap Download to open':'⚠️ NO FILE'))}</p><p class="text-[11px] text-blue-600 truncate">${r.fileUrl||r.url||''}</p></div></div><div class="flex gap-2 mt-2"><button onclick="editRes('${r.id}')" class="flex-1 bg-black text-white py-2 rounded-lg text-[11px] font-bold">✏️ Edit</button><button onclick="deleteRes('${r.id}')" class="flex-1 bg-red-500 text-white py-2 rounded-lg text-[11px] font-bold">🗑 Delete</button></div></div>`).join('');
+    box.innerHTML = allRes.slice().reverse().slice(0,50).map(r=>{ let t=cleanTitle(r.title,r.grade,r.subject); return `<div class="bg-[#f7f7f5] p-3 rounded-xl"><div class="flex justify-between gap-2"><div><p class="font-bold text-[12px]">${t}</p><p class="text-[11px] text-gray-500">${r.grade} • ${r.subject} • ${r.type} • ${r.pages?r.pages+' pages':(r.fullText?'Has text':(r.fileUrl||r.url?'🔗 Link attached':'⚠️ NO FILE'))} • 🧠 Brain auto</p><p class="text-[11px] text-blue-600 truncate">${r.fileUrl||r.url||''}</p></div></div><div class="flex gap-2 mt-2"><button onclick="editRes('${r.id}')" class="flex-1 bg-black text-white py-2 rounded-lg text-[11px] font-bold">✏️ Edit</button><button onclick="deleteRes('${r.id}')" class="flex-1 bg-red-500 text-white py-2 rounded-lg text-[11px] font-bold">🗑 Delete</button></div></div>`; }).join('');
   }catch(e){}
 }
 async function deleteRes(id){
   let r = allRes.find(x=>x.id===id);
-  if(!confirm('Delete "'+(r?r.title:id)+'"?\nLearners will NOT see it anymore.')) return;
+  if(!confirm('Delete "'+(r?r.title:id)+'"?\nLearners will NOT see it anymore. It will also be removed from AI Brain.')) return;
   let FB=window.FB;
   await FB.deleteDoc(FB.doc(FB.db,'resources',id));
+  try{
+    let s = await FB.getDocs(FB.query(FB.collection(FB.db,'ai_brain'), FB.where('resourceId','==',id)));
+    for(let d of s.docs) await FB.deleteDoc(FB.doc(FB.db,'ai_brain',d.id));
+  }catch(e){}
   if(EDITING_ID===id) cancelEdit();
   loadRes(); loadPreview();
 }
@@ -348,8 +411,49 @@ async function loadPreview(){
     list=list.filter(r=>r.type==filter);
     let box=document.getElementById('previewList');
     if(!list.length){ box.innerHTML='<p class="text-[11px] text-gray-400">No items for '+filter+'</p>'; return; }
-    box.innerHTML=list.slice().reverse().slice(0,20).map(r=>`<div class="bg-[#f7f7f5] p-3 rounded-xl"><p class="font-bold text-[12px]">${r.title}</p><p class="text-[11px] text-gray-500">${r.grade} • ${r.subject} • ${r.pages?r.pages+' pages':''} ${r.fullText?'✅ Full text saved':(r.fileUrl||r.url?'🔗 Link only - opens in Drive':'⚠️ Blank')}</p></div>`).join('');
+    box.innerHTML=list.slice().reverse().slice(0,20).map(r=>{ let t=cleanTitle(r.title,r.grade,r.subject); let d=(r.description||""); if(d.includes("uc?export")||d.startsWith("http")) d=t+" - Original Design"; return `<div class="bg-[#f7f7f5] p-3 rounded-xl"><p class="font-bold text-[12px]">${t}</p><p class="text-[11px] text-gray-500">${r.grade} • ${r.subject} • ${r.pages?r.pages+' pages':''} ${r.fullText?'✅ Full text saved + 🧠 Brain':(r.fileUrl||r.url?'🔗 Link only - opens in Drive + 🧠 Brain':'⚠️ Blank')}</p></div>`; }).join('');
   }catch(e){}
+}
+async function syncAllToBrain(){
+  if(!confirm('Copy ALL resources (Design, Notes, Exam, Homework...) to AI Brain?')) return;
+  let FB=window.FB;
+  document.getElementById('syncStatus').innerText = '⏳ Syncing...';
+  let s = await FB.getDocs(FB.collection(FB.db,'resources'));
+  let count=0, skipped=0;
+  for(let d of s.docs){
+    let r = d.data();
+    let check = await FB.getDocs(FB.query(FB.collection(FB.db,'ai_brain'), FB.where('resourceId','==',d.id)));
+    if(!check.empty){ skipped++; continue; }
+    let brainText = (r.fullText||"").trim();
+    let content = brainText ? brainText.slice(0,90000) : `${r.title}\n${r.grade} ${r.subject} - ${r.type}\n${r.description||r.title}`;
+    let clean = cleanTitle(r.title, r.grade, r.subject);
+    await FB.addDoc(FB.collection(FB.db,'ai_brain'), {title: clean, subject: r.subject||"", grade: r.grade||"", use: "all", type: r.type||"", text: content, pages: r.pages||0, fileUrl: r.fileUrl||r.url||"", resourceId: d.id, createdAt: FB.serverTimestamp()});
+    count++;
+  }
+  document.getElementById('syncStatus').innerText = `✅ Synced ${count} new, skipped ${skipped} already in Brain.`;
+  alert(`✅ Done! ${count} resources now in AI Brain.`);
+  loadAi();
+}
+async function fixBadTitles(){
+  if(!confirm('Fix all titles that look like links?\nExample: "uc?export..." will become "Grade 8 CRE"')) return;
+  let FB=window.FB;
+  let s=await FB.getDocs(FB.collection(FB.db,'resources'));
+  let fixed=0;
+  for(let d of s.docs){
+    let r=d.data();
+    let title = (r.title||"").trim();
+    let isBad = !title || title.includes("uc?export") || title.includes("drive.google.com") || title.includes("http") || title.includes("id=1");
+    if(isBad){
+      let newTitle = (r.grade||"Grade 8") + " " + (r.subject||"");
+      await FB.updateDoc(FB.doc(FB.db,'resources',d.id), {title: newTitle, description: newTitle + " - Original Design"});
+      fixed++;
+    } else if(r.description && (r.description.includes("uc?export") || r.description.includes("drive.google.com"))){
+      await FB.updateDoc(FB.doc(FB.db,'resources',d.id), {description: (r.grade||"")+" "+(r.subject||"")+" - Original Design"});
+      fixed++;
+    }
+  }
+  alert(`✅ Fixed ${fixed} item(s). Reloading...`);
+  loadRes(); loadPreview();
 }
 async function addAiBrain(){
   let FB=window.FB;
@@ -373,10 +477,10 @@ async function loadAi(){
     let list=[]; s.forEach(d=>list.push({id:d.id,...d.data()}));
     let box=document.getElementById('aiList');
     if(!list.length){ box.innerHTML='<p class="text-[12px] text-gray-300">No AI Brain items yet</p>'; return; }
-    box.innerHTML=list.slice().reverse().slice(0,30).map(r=>`<div class="bg-white/10 p-3 rounded-xl"><p class="font-bold text-[12px]">${r.title}</p><p class="text-[11px] text-gray-300">${r.grade} • ${r.subject} • ${r.use}</p>${r.photo?`<img src="${r.photo}" class="w-full rounded-lg mt-2">`:''}<button onclick="deleteAi('${r.id}')" class="bg-red-500 px-2 py-1 rounded-lg text-[11px] mt-2">Delete</button></div>`).join('');
+    box.innerHTML=list.slice().reverse().slice(0,30).map(r=>`<div class="bg-white/10 p-3 rounded-xl"><p class="font-bold text-[12px]">${cleanTitle(r.title,r.grade,r.subject)}</p><p class="text-[11px] text-gray-300">${r.grade} • ${r.subject} • ${r.use} • ${r.type||''} • ${(r.text||'').length} chars</p>${r.photo?`<img src="${r.photo}" class="w-full rounded-lg mt-2">`:''}<button onclick="deleteAi('${r.id}')" class="bg-red-500 px-2 py-1 rounded-lg text-[11px] mt-2">Delete</button></div>`).join('');
   }catch(e){}
 }
-async function deleteAi(id){ if(!confirm('Delete?')) return; let FB=window.FB; await FB.deleteDoc(FB.doc(FB.db,'ai_brain',id)); loadAi(); }
+async function deleteAi(id){ if(!confirm('Delete from Brain?')) return; let FB=window.FB; await FB.deleteDoc(FB.doc(FB.db,'ai_brain',id)); loadAi(); }
 async function loadTuition(){
   let FB=window.FB;
   try{
