@@ -5,188 +5,255 @@
 <title>SomaHub Curriculum Designs - REAL AI + Notes + Video</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-import { getAuth, onAuthStateChanged, GoogleAuthProvider, signInWithPopup, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-import { getFirestore, doc, getDoc, setDoc, collection, getDocs, query, where, updateDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 const firebaseConfig = { apiKey: "AIzaSyA93BNes3AmFyxIEgjSbvbIWqLyorLsuj8", authDomain: "somahubkenya-9e458.firebaseapp.com", projectId: "somahubkenya-9e458", storageBucket: "somahubkenya-9e458.firebasestorage.app", messagingSenderId: "615579085715", appId: "1:615579085715:web:28fca37ba498324bb49666" };
 const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
 const db = getFirestore(app);
-window.FB = { db, doc, getDoc, setDoc, collection, getDocs, query, where, updateDoc, serverTimestamp, auth };
+window.FB = { db, collection, getDocs };
 </script>
 <style>
-*{box-sizing:border-box} body{font-family:system-ui,-apple-system,sans-serif;background:#f1f5f9;margin:0}
-.hero{background:linear-gradient(135deg,#0f766e,#0d9488 45%,#000 100%);border-radius:24px;color:#fff;padding:22px}
-.search-box{background:#fff;border-radius:16px;display:flex;gap:8px;padding:8px;align-items:center}
-.search-box input{flex:1;border:0;outline:none;font-size:17px;padding:10px 6px}
-.btn-search{background:#0d9488;color:#fff;border:0;border-radius:12px;padding:12px 16px;font-weight:800;cursor:pointer;white-space:nowrap}
-.card{background:#fff;border-radius:16px;padding:14px;border:1px solid #e2e8f0}
-.ai-box{background:#000;color:#fff;border-radius:12px;padding:14px;line-height:1.6;font-size:14px}
+*{box-sizing:border-box}
+html,body{width:100%;max-width:100%;overflow-x:hidden;margin:0;padding:0}
+body{font-family:system-ui,-apple-system,sans-serif;background:#f1f5f9}
+.page{width:100%;max-width:480px;margin:0 auto;padding:10px;padding-bottom:100px;overflow-x:hidden}
+.hero{width:100%;max-width:100%;overflow:hidden;background:linear-gradient(135deg,#0f766e,#0d9488 45%,#000 100%);border-radius:20px;color:#fff;padding:18px 14px}
+.hero h1{font-size:23px;line-height:1.25;word-wrap:break-word}
+.hero p{font-size:13.5px;line-height:1.5;word-wrap:break-word}
+.search-box{width:100%;max-width:100%;background:#fff;border-radius:14px;display:flex;gap:6px;padding:6px;align-items:center;overflow:hidden}
+.search-box input{flex:1 1 auto;min-width:0;width:0;border:0;outline:none;font-size:16px;padding:10px 6px}
+.btn-search{flex:0 0 auto;background:#0d9488;color:#fff;border:0;border-radius:10px;padding:10px 12px;font-weight:800;cursor:pointer;font-size:13px;line-height:1.2;white-space:nowrap}
+.card{background:#fff;border-radius:14px;padding:13px;border:1px solid #e2e8f0;width:100%;overflow-wrap:anywhere}
+.ai-box{background:#000;color:#fff;border-radius:12px;padding:13px;line-height:1.6;font-size:13.5px;overflow-wrap:anywhere;white-space:pre-wrap}
 .ai-box b{color:#5eead4}
 .ai-key{color:#f87171;font-weight:900}
 .ai-answer{color:#4ade80;font-weight:900}
 .ai-note{color:#fb923c;font-weight:900}
-select,input{font-family:inherit}
-.action-btn{border:0;border-radius:999px;padding:8px 14px;font-weight:800;font-size:12px;color:#fff;cursor:pointer}
+select,input{font-family:inherit;max-width:100%}
+.action-btn{border:0;border-radius:999px;padding:8px 13px;font-weight:800;font-size:12px;color:#fff;cursor:pointer;white-space:nowrap}
+/* === ORIGINAL READER === */
+#reader{position:fixed;inset:0;z-index:100;background:#fff;display:flex;flex-direction:column;overflow:hidden}
+.reader-top{flex:0 0 auto;background:#0f766e;color:#fff;padding:12px 14px;display:flex;align-items:center;justify-content:space-between;gap:8px}
+.reader-top b{font-size:14px;line-height:1.3}
+.reader-page{flex:1;overflow-y:auto;padding:18px 16px;line-height:1.75;font-size:15px;color:#111;white-space:pre-wrap;overflow-wrap:anywhere}
+.reader-bar{flex:0 0 auto;border-top:1px solid #e2e8f0;padding:10px;display:flex;gap:6px;align-items:center;background:#f8fafc}
+.reader-bar button{flex:1;border:0;border-radius:999px;padding:11px 6px;font-weight:800;font-size:12px;color:#fff;cursor:pointer}
+.upload-box{border:2px dashed #0d9488;background:#f0fdfa;border-radius:14px;padding:13px;text-align:center}
 .hidden{display:none!important}
+@media print{ body *{visibility:hidden} #printArea, #printArea *{visibility:visible} #printArea{position:absolute;left:0;top:0;width:100%;padding:20px;white-space:pre-wrap;line-height:1.7} }
 </style>
 </head>
-<body class="p-3 max-w-3xl mx-auto pb-24">
-
-<!-- HERO - SAME DESIGN AS SCREENSHOT -->
+<body>
+<div class="page">
 <div class="hero">
-  <h1 class="text-[26px] leading-tight font-black">📘 CBC Curriculum Designs<br>PP1-G9 - REAL AI Explains + Video</h1>
-  <p class="text-[14px] opacity-90 mt-2 leading-relaxed">AI summarizes KICD design, searches word meaning by level PP1-G9 + comparison, YouTube video of strand, sets homework/exam FROM design</p>
-  <div class="search-box mt-4">
-    <input id="searchInput" placeholder="e.g. Crop production" value="Crop production">
+  <h1>📘 CBC Curriculum Designs<br>PP1-G9 - REAL AI Explains + Video</h1>
+  <p>AI summarizes KICD design, searches word meaning by level PP1-G9 + comparison, YouTube video of strand, sets homework/exam FROM design</p>
+  <div class="search-box mt-3">
+    <input id="searchInput" placeholder="Search word or strand...">
     <button class="btn-search" onclick="searchNotes()">Search<br>Notes</button>
   </div>
-  <div id="searchResult" class="card mt-4 text-gray-800"></div>
+  <div id="searchResult" class="card mt-3 text-gray-800"></div>
 </div>
 
-<!-- FILTERS -->
-<div class="mt-4 space-y-3">
-  <select id="gradeSel" class="w-full bg-white border rounded-xl p-3.5 text-[16px] outline-none" onchange="loadDesigns()">
+<div class="upload-box mt-3">
+  <p class="font-black text-[14px] text-[#0f766e]">📄 Upload Design / Notes File - AI Reads ALL Pages</p>
+  <p class="text-[12px] text-gray-500 mt-1">PDF, DOCX, TXT - AI reads every page</p>
+  <input id="fileInput" type="file" accept=".pdf,.docx,.txt" class="hidden" onchange="handleFile(this)">
+  <button class="action-btn bg-[#0d9488] mt-2" onclick="document.getElementById('fileInput').click()">📂 Choose File</button>
+  <p id="fileStatus" class="text-[12px] font-bold mt-2 text-gray-700"></p>
+  <div id="fileActions" class="hidden flex gap-2 justify-center flex-wrap mt-2">
+    <button class="action-btn bg-[#263b99]" onclick="openUploadedReader()">📖 Read Original Page by Page</button>
+    <button class="action-btn bg-orange-500" onclick="makeFromFile('homework')">Set Homework FROM File</button>
+    <button class="action-btn bg-red-600" onclick="makeFromFile('exam')">Set Exam FROM File</button>
+  </div>
+</div>
+
+<div class="mt-3 space-y-3">
+  <select id="gradeSel" class="w-full bg-white border rounded-xl p-3 text-[15px] outline-none" onchange="loadDesigns()">
     <option>PP1</option><option>PP2</option><option>Grade 1</option><option>Grade 2</option><option>Grade 3</option><option>Grade 4</option><option>Grade 5</option><option>Grade 6</option><option>Grade 7</option><option selected>Grade 8</option><option>Grade 9</option>
   </select>
-  <select id="subjectSel" class="w-full bg-white border rounded-xl p-3.5 text-[16px] outline-none" onchange="loadDesigns()">
+  <select id="subjectSel" class="w-full bg-white border rounded-xl p-3 text-[15px] outline-none" onchange="loadDesigns()">
     <option value="">All Subjects</option>
     <option>Agriculture and Nutrition</option><option>English</option><option>Kiswahili</option><option>Mathematics</option><option>Integrated Science</option><option>Social Studies</option><option>CRE</option><option>IRE</option><option>Creative Arts</option><option>Physical Education</option><option>Pre-Technical Studies</option>
   </select>
-  <button class="w-full bg-[#0d9488] text-white font-black py-3.5 rounded-xl text-[16px]" onclick="loadDesigns()">📘 Show Designs</button>
+  <button class="w-full bg-[#0d9488] text-white font-black py-3 rounded-xl text-[15px]" onclick="loadDesigns()">📘 Show Designs</button>
+</div>
+<div id="designsList" class="mt-3 space-y-3"></div>
+<div id="detailBox" class="mt-3"></div>
+<div id="notesBox" class="mt-3 space-y-3"></div>
 </div>
 
-<div id="designsList" class="mt-4 space-y-3"></div>
-<div id="detailBox" class="mt-4"></div>
+<!-- === ORIGINAL READER - PAGE BY PAGE === -->
+<div id="reader" class="hidden">
+  <div class="reader-top">
+    <button onclick="closeReader()" style="background:rgba(255,255,255,.2);border:0;color:#fff;border-radius:999px;padding:8px 12px;font-weight:800">← Back</button>
+    <div style="flex:1;text-align:center"><b id="readerTitle">Grade 8 Agriculture</b><div id="readerMeta" style="font-size:11px;opacity:.85"></div></div>
+    <button onclick="downloadOriginal()" style="background:#fff;color:#0f766e;border:0;border-radius:999px;padding:8px 12px;font-weight:800">⬇ Download</button>
+  </div>
+  <div id="readerPage" class="reader-page"></div>
+  <div class="reader-bar">
+    <button style="background:#64748b" onclick="prevPage()">← Prev</button>
+    <span id="pageLabel" style="font-weight:900;font-size:12px;white-space:nowrap;padding:0 6px">Page 1 / 1</span>
+    <button style="background:#0d9488" onclick="nextPage()">Next →</button>
+    <button style="background:#263b99" onclick="printOriginal()">🖨 Print</button>
+  </div>
+</div>
+<div id="printArea" class="hidden"></div>
 
 <script>
 const PROXY = "/api/gemini";
 let ALL = [];
 let currentGrade = "Grade 8";
+let FILE_TEXT = ""; let FILE_NAME = ""; let FILE_PAGES = 0;
+// Reader state - ORIGINAL file, not AI
+let READER_PAGES = []; let READER_IDX = 0; let READER_TITLE = ""; let READER_META = "";
 
-// --- LOAD DESIGNS FROM FIRESTORE - NO KEY NEEDED ---
 async function loadResources(){
-  try{
-    let FB = window.FB;
-    let s = await FB.getDocs(FB.collection(FB.db,'resources'));
-    ALL = []; s.forEach(d=>ALL.push({id:d.id,...d.data()}));
-  }catch(e){ ALL = []; }
-  loadDesigns();
+  try{ let FB=window.FB; let s=await FB.getDocs(FB.collection(FB.db,'resources')); ALL=[]; s.forEach(d=>ALL.push({id:d.id,...d.data()})); }catch(e){ ALL=[]; }
+  loadDesigns(); renderNotes();
 }
 async function callAI(prompt, question){
-  // FIX: Uses Vercel /api/gemini - GEMINI -> OPENROUTER -> OPENAI. No admin.html key needed.
-  let res = await fetch(PROXY,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({
-    prompt: prompt,
-    question: question || prompt,
-    grade: currentGrade,
-    task: "EN",
-    history: []
-  })});
-  let data = {};
-  try{ data = await res.json(); }catch(e){}
+  let res = await fetch(PROXY,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({prompt, question: question||prompt, grade: currentGrade, task:"EN", history:[]})});
+  let data={}; try{data=await res.json();}catch(e){}
   let txt = data.answer || data.text || data.reply || "";
-  if(!txt) throw new Error(data.error || data.details || "AI busy, try again");
+  if(!txt) throw new Error(data.error||"AI busy");
   return txt;
 }
 function formatAI(text){
   let esc = text.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
-  esc = esc.replace(/\*\*(.*?)\*\*/g,"<b>$1</b>");
-  esc = esc.replace(/\*(.*?)\*/g,"<i>$1</i>");
+  esc = esc.replace(/\*\*(.*?)\*\*/g,"<b>$1</b>"); esc = esc.replace(/\*(.*?)\*/g,"<i>$1</i>");
   esc = esc.replace(/^### (.*)$/gm,"<div style='color:#5eead4;font-weight:900;margin:10px 0 4px'>$1</div>");
   esc = esc.replace(/^## (.*)$/gm,"<div style='color:#5eead4;font-weight:900;margin:10px 0 4px'>$1</div>");
-  let lines = esc.split("\n"); let out=""; let inList=false;
-  lines.forEach(l=>{
-    let t=l.trim();
-    if(/^(Key Point|Important|Note|Answer|Final Answer|Solution)[:：]/i.test(t)){
-      if(inList){out+="</ul>";inList=false;}
-      let cls=/^(Answer|Final Answer|Solution)/i.test(t)?"ai-answer":/^(Note|Important)/i.test(t)?"ai-note":"ai-key";
-      out+=`<p><span class="${cls}">${l}</span></p>`;
-    }
+  let lines=esc.split("\n"); let out=""; let inList=false;
+  lines.forEach(l=>{ let t=l.trim();
+    if(/^(Key Point|Important|Note|Answer|Final Answer|Solution)[:：]/i.test(t)){ if(inList){out+="</ul>";inList=false;} let cls=/^(Answer|Final Answer|Solution)/i.test(t)?"ai-answer":/^(Note|Important)/i.test(t)?"ai-note":"ai-key"; out+=`<p><span class="${cls}">${l}</span></p>`; }
     else if(/^\d+\.\s/.test(l)){ out+=`<p><b>${l}</b></p>`; }
     else if(/^[-*]\s/.test(l)){ if(!inList){out+="<ul>";inList=true;} out+=`<li>${l.replace(/^[-*]\s/,"")}</li>`; }
     else { if(inList){out+="</ul>";inList=false;} if(t) out+=`<p>${l}</p>`; }
-  });
-  if(inList) out+="</ul>";
-  return out;
+  }); if(inList) out+="</ul>"; return out;
 }
-
-// --- SEARCH NOTES - FIXED: Never says "Add Gemini key", always gives AI answer ---
-async function searchNotes(){
-  let q = document.getElementById("searchInput").value.trim();
-  if(!q) return;
-  currentGrade = document.getElementById("gradeSel").value;
-  let box = document.getElementById("searchResult");
-  // Find designs - fuzzy: match any word >3 letters, not exact title only
-  let words = q.toLowerCase().split(/[^a-z0-9]+/).filter(w=>w.length>3);
-  let matched = ALL.filter(r=>{
-    let hay = ((r.title||"")+" "+(r.subject||"")+" "+(r.description||"")+" "+(r.strand||"")).toLowerCase();
-    return r.grade==currentGrade && words.some(w=>hay.includes(w));
-  });
-  // Also try any grade if none in this grade - so "0 designs" never blocks learning
-  if(!matched.length) matched = ALL.filter(r=>{
-    let hay = ((r.title||"")+" "+(r.subject||"")+" "+(r.description||"")).toLowerCase();
-    return words.some(w=>hay.includes(w));
-  }).slice(0,3);
-
-  box.innerHTML = `<p class="font-black">🔍 "${q}" - ${matched.length} designs + AI meaning for ${currentGrade}</p><div class="ai-box mt-2">⏳ Thinking... using Vercel AI (Gemini → OpenRouter → OpenAI)</div>`;
-  let designCtx = matched.length ? matched.map((r,i)=>`${i+1}. [${r.type||'Design'}] ${r.title} | ${r.grade} ${r.subject} | ${r.description||''}`).join("\n") : "No exact design in Firestore - use CBC / KICD knowledge.";
-  let prompt = `You are SomaHub CBC Tutor for ${currentGrade}. Topic: ${q}\nDesigns found:\n${designCtx}\n\nTASK: 1. Give clear meaning of "${q}" for ${currentGrade} in simple English + Kiswahili word if needed. 2. Compare how this topic is taught in PP1, Grade 4, Grade 7, Grade 9 - what is different? 3. Give 3 Key Points. 4. Give 1 Kenya real-life example. Use **bold** for key points. Start key lines with Key Point:, Answer:, Note:. Never mention Admin, Designs missing, or keys. Just give answer.`;
+function getFileContext(question){
+  if(!FILE_TEXT) return "";
+  let qWords=(question||"").toLowerCase().split(/[^a-z0-9]+/).filter(w=>w.length>3);
+  let chunks=[]; for(let i=0;i<FILE_TEXT.length;i+=1200) chunks.push(FILE_TEXT.slice(i,i+1200));
+  let scored=chunks.map(c=>{let low=c.toLowerCase(); let s=0; qWords.forEach(w=>{if(low.includes(w)) s++;}); return {c,s};}).sort((a,b)=>b.s-a.s);
+  return `\n\nUPLOADED FILE: ${FILE_NAME} | ${FILE_PAGES} pages\nMost relevant pages:\n${scored.slice(0,4).map(x=>x.c).join("\n---\n")}\n`;
+}
+// Split original text into pages - respects [PAGE n] if saved, else 1800 chars per page
+function splitIntoPages(text){
+  if(!text) return ["No original file text saved for this design. Ask Admin to re-upload with fullText."];
+  if(text.includes("[PAGE ")){
+    let parts = text.split(/\[PAGE \d+\]/).map(s=>s.trim()).filter(Boolean);
+    if(parts.length) return parts;
+  }
+  let pages=[]; for(let i=0;i<text.length;i+=1800) pages.push(text.slice(i,i+1800));
+  return pages;
+}
+function openReader(title, meta, text, fileUrl){
+  READER_TITLE = title; READER_META = meta;
+  READER_PAGES = splitIntoPages(text||""); READER_IDX = 0;
+  // If Firestore has original fileUrl (PDF), offer to open it directly - but still show text pages
+  if(fileUrl) READER_META += " • Original PDF available";
+  document.getElementById("readerTitle").innerText = title;
+  document.getElementById("readerMeta").innerText = meta;
+  document.getElementById("reader").classList.remove("hidden");
+  renderReaderPage();
+  window.scrollTo(0,0);
+}
+function renderReaderPage(){
+  document.getElementById("readerPage").innerText = READER_PAGES[READER_IDX] || "";
+  document.getElementById("pageLabel").innerText = `Page ${READER_IDX+1} / ${READER_PAGES.length}`;
+  document.getElementById("readerPage").scrollTop = 0;
+}
+function nextPage(){ if(READER_IDX < READER_PAGES.length-1){ READER_IDX++; renderReaderPage(); } }
+function prevPage(){ if(READER_IDX>0){ READER_IDX--; renderReaderPage(); } }
+function closeReader(){ document.getElementById("reader").classList.add("hidden"); }
+// Download ORIGINAL - not AI version
+function downloadOriginal(){
+  let full = READER_PAGES.join("\n\n--- PAGE BREAK ---\n\n");
+  let blob = new Blob([READER_TITLE+"\n"+READER_META+"\n\n"+full], {type:"text/plain"});
+  let a=document.createElement("a"); a.href=URL.createObjectURL(blob); a.download = READER_TITLE.replace(/[^a-z0-9]+/gi,"_")+".txt"; a.click();
+}
+function printOriginal(){
+  let full = READER_PAGES.join("\n\n--- PAGE BREAK ---\n\n");
+  let w = window.open("", "_blank");
+  w.document.write("<html><head><title>"+READER_TITLE+"</title></head><body style='font-family:sans-serif;padding:20px;line-height:1.7;white-space:pre-wrap'><h2>"+READER_TITLE+"</h2><p>"+READER_META+"</p><pre style='white-space:pre-wrap;font-family:sans-serif'>"+full.replace(/</g,"&lt;")+"</pre></body></html>");
+  w.document.close(); w.print();
+}
+function openUploadedReader(){
+  if(!FILE_TEXT){ alert("Upload a file first"); return; }
+  openReader(FILE_NAME, currentGrade+" • Uploaded File • "+FILE_PAGES+" pages (Original)", FILE_TEXT, "");
+}
+async function handleFile(input){
+  let file=input.files[0]; if(!file) return;
+  FILE_NAME=file.name; document.getElementById("fileStatus").innerText="⏳ Reading ALL pages of "+file.name+"...";
   try{
-    let ai = await callAI(prompt, q);
-    let videoQ = encodeURIComponent(q + " " + currentGrade + " CBC Kenya lesson");
-    box.innerHTML = `<p class="font-black">🔍 "${q}" - ${matched.length} designs + AI meaning for ${currentGrade}</p>
-      ${matched.map(r=>`<div class="mt-2 text-[13px]"><b>${r.title}</b> • ${r.grade} ${r.subject} <button class="action-btn bg-[#0d9488] ml-1" onclick="openDesign('${r.id}')">Open</button></div>`).join("")}
-      <div class="ai-box mt-3">${formatAI(ai)}</div>
-      <div class="flex gap-2 mt-3 flex-wrap">
-        <a target="_blank" href="https://www.youtube.com/results?search_query=${videoQ}" class="action-btn bg-red-600 no-underline">▶ Watch Video</a>
-        <button class="action-btn bg-orange-500" onclick="makeHomework('${q.replace(/'/g,"")}')">Set Homework</button>
-        <button class="action-btn bg-[#263b99]" onclick="makeExam('${q.replace(/'/g,"")}')">Set Exam</button>
-      </div>`;
-  }catch(e){
-    box.innerHTML = `<p class="font-black">🔍 "${q}" - ${matched.length} designs</p><div class="ai-box mt-2">AI is busy. Try again in a few seconds. (${e.message})</div>`;
-  }
+    if(file.name.toLowerCase().endsWith(".pdf")){
+      let buf=await file.arrayBuffer(); let pdf=await pdfjsLib.getDocument({data:buf}).promise; FILE_PAGES=pdf.numPages; let all="";
+      for(let i=1;i<=pdf.numPages;i++){ let page=await pdf.getPage(i); let tc=await page.getTextContent(); all+=`\n[PAGE ${i}]\n`+tc.items.map(it=>it.str).join(" "); document.getElementById("fileStatus").innerText=`⏳ Reading page ${i}/${pdf.numPages}...`; }
+      FILE_TEXT=all;
+    } else if(file.name.toLowerCase().endsWith(".docx")){ let buf=await file.arrayBuffer(); let r=await mammoth.extractRawText({arrayBuffer:buf}); FILE_TEXT=r.value; FILE_PAGES=1;
+    } else { FILE_TEXT=await file.text(); FILE_PAGES=1; }
+    document.getElementById("fileStatus").innerText=`✅ Read ${FILE_PAGES} page(s) - ${FILE_TEXT.length} chars from ${FILE_NAME}`;
+    document.getElementById("fileActions").classList.remove("hidden");
+    try{ localStorage.setItem("somahub_uploaded_file", JSON.stringify({name:FILE_NAME,pages:FILE_PAGES,text:FILE_TEXT.slice(0,60000)})); }catch(e){}
+  }catch(e){ document.getElementById("fileStatus").innerText="❌ "+e.message; }
+  input.value="";
 }
-
+async function makeFromFile(type){
+  let box=document.getElementById("searchResult"); box.innerHTML+=`<div class="ai-box mt-2">⏳ Setting ${type} FROM file...</div>`;
+  try{ let task=type==='exam'?`Set Exam for ${currentGrade} FROM uploaded file ONLY. 10 questions: 5 MCQ, 3 Short, 2 Structured. Marking Scheme at end.`:`Set Homework for ${currentGrade} FROM uploaded file ONLY. 5 questions easy to hard, 1 Kenya example, Answers at end.`; let prompt=`You are SomaHub CBC Tutor. ${getFileContext("exam homework")}\nTASK: ${task} Use **bold**.`; let ai=await callAI(prompt,task); box.innerHTML+=`<div class="ai-box mt-2">${formatAI(ai)}</div>`; }catch(e){}
+}
+function addFileToNotes(){ try{ let notes=JSON.parse(localStorage.getItem("somahub_notes")||"[]"); notes.unshift({title:FILE_NAME,grade:currentGrade,text:FILE_TEXT.slice(0,8000),pages:FILE_PAGES,time:new Date().toLocaleString()}); localStorage.setItem("somahub_notes",JSON.stringify(notes.slice(0,20))); renderNotes(); alert("Added to Notes ✅"); }catch(e){} }
+function renderNotes(){
+  let notes=[]; try{notes=JSON.parse(localStorage.getItem("somahub_notes")||"[]");}catch(e){}
+  let box=document.getElementById("notesBox"); if(!notes.length){box.innerHTML="";return;}
+  box.innerHTML=`<h3 class="font-black text-[15px]">📝 My Notes (${notes.length})</h3>`+notes.map((n,i)=>`<div class="card"><p class="font-black text-[13px]">${n.title}</p><p class="text-[11px] text-gray-500">${n.grade} • ${n.pages} pages • ${n.time}</p><p class="text-[12px] mt-1">${(n.text||"").slice(0,300)}...</p><button class="action-btn bg-[#0d9488] mt-2" onclick="useNote(${i})">Use This Note</button></div>`).join("");
+}
+function useNote(i){ let notes=JSON.parse(localStorage.getItem("somahub_notes")||"[]"); if(!notes[i]) return; FILE_TEXT=notes[i].text; FILE_NAME=notes[i].title; FILE_PAGES=notes[i].pages; document.getElementById("fileStatus").innerText=`✅ Loaded note: ${FILE_NAME}`; document.getElementById("fileActions").classList.remove("hidden"); }
+async function searchNotes(){
+  let q=document.getElementById("searchInput").value.trim(); if(!q) return;
+  currentGrade=document.getElementById("gradeSel").value;
+  let box=document.getElementById("searchResult");
+  let words=q.toLowerCase().split(/[^a-z0-9]+/).filter(w=>w.length>3);
+  let matched=ALL.filter(r=>{let hay=((r.title||"")+" "+(r.subject||"")+" "+(r.description||"")+" "+(r.fullText||"")).toLowerCase(); return r.grade==currentGrade && words.some(w=>hay.includes(w));});
+  if(!matched.length) matched=ALL.filter(r=>{let hay=((r.title||"")+" "+(r.subject||"")+" "+(r.description||"")).toLowerCase(); return words.some(w=>hay.includes(w));}).slice(0,3);
+  box.innerHTML=`<p class="font-black">🔍 "${q}" - ${matched.length} designs + AI meaning for ${currentGrade}</p><div class="ai-box mt-2">⏳ Thinking...</div>`;
+  let designCtx=matched.length?matched.map((r,i)=>`${i+1}. ${r.title} | ${r.grade} ${r.subject} | ${(r.fullText||r.description||'').slice(0,1500)}`).join("\n"):"No exact design - use CBC/KICD.";
+  let fileCtx=FILE_TEXT?getFileContext(q):"";
+  let prompt=`You are SomaHub CBC Tutor for ${currentGrade}. Topic: ${q}\nDesigns:\n${designCtx}\n${fileCtx}\nTASK: 1. Meaning, 2. Compare PP1, Grade 4, Grade 7, Grade 9, 3. 3 Key Points, 4. 1 Kenya example. Use **bold**. Never mention missing resources.`;
+  try{ let ai=await callAI(prompt,q); let videoQ=encodeURIComponent(q+" "+currentGrade+" CBC Kenya lesson"); box.innerHTML=`<p class="font-black">🔍 "${q}" - ${matched.length} designs</p>${matched.map(r=>`<div class="mt-2 text-[13px]"><b>${r.title}</b> • ${r.grade} ${r.subject} <button class="action-btn bg-[#0d9488] ml-1" onclick="openDesign('${r.id}')">Open</button></div>`).join("")}<div class="ai-box mt-3">${formatAI(ai)}</div><div class="flex gap-2 mt-3 flex-wrap"><a target="_blank" href="https://www.youtube.com/results?search_query=${videoQ}" class="action-btn bg-red-600 no-underline">▶ Watch Video</a><button class="action-btn bg-orange-500" onclick="makeHomework('${q.replace(/'/g,"")}')">Set Homework</button><button class="action-btn bg-[#263b99]" onclick="makeExam('${q.replace(/'/g,"")}')">Set Exam</button></div>`; }catch(e){ box.innerHTML=`<div class="ai-box">AI busy: ${e.message}</div>`; }
+}
 function loadDesigns(){
-  currentGrade = document.getElementById("gradeSel").value;
-  let subj = document.getElementById("subjectSel").value;
-  let list = ALL.filter(r=>r.grade==currentGrade && (!subj || r.subject==subj));
-  let box = document.getElementById("designsList");
-  if(!list.length){
-    box.innerHTML = `<div class="card text-center text-gray-500 text-[13px]">No saved designs for ${currentGrade} ${subj||''} yet.<br>Use Search Notes above - AI will generate from CBC / KICD.</div>`;
-    return;
-  }
-  box.innerHTML = list.map(r=>`<div class="card"><p class="font-black text-[14px]">${r.title}</p><p class="text-[12px] text-gray-500">${r.grade} • ${r.subject} • ${r.type||'Design'}</p><p class="text-[13px] mt-1">${(r.description||'').slice(0,180)}</p><div class="flex gap-2 mt-2"><button class="action-btn bg-[#0d9488]" onclick="openDesign('${r.id}')">Open + AI Explains</button></div></div>`).join("");
+  currentGrade=document.getElementById("gradeSel").value;
+  let subj=document.getElementById("subjectSel").value;
+  let list=ALL.filter(r=>r.grade==currentGrade && (!subj || r.subject==subj));
+  let box=document.getElementById("designsList");
+  if(!list.length){ box.innerHTML=`<div class="card text-center text-gray-500 text-[13px]">No saved designs for ${currentGrade} ${subj||''} yet.<br>Use Search Notes above - AI will generate from CBC / KICD.</div>`; return; }
+  // === CHANGED: 2 buttons - Read Original (page by page) + AI Explains ===
+  box.innerHTML=list.map(r=>`<div class="card"><p class="font-black text-[15px]">${r.title}</p><p class="text-[12px] text-gray-500">${r.grade} • ${r.subject} • ${r.type||'Design'}</p><p class="text-[13px] mt-1">${(r.description||'').slice(0,180)}</p><div class="flex gap-2 mt-3 flex-wrap"><button class="action-btn bg-[#0d9488]" onclick="openOriginalDesign('${r.id}')">📖 Read Original</button><button class="action-btn bg-[#263b99]" onclick="openDesign('${r.id}')">🤖 AI Explains</button></div></div>`).join("");
+}
+function openOriginalDesign(id){
+  let r=ALL.find(x=>x.id==id); if(!r) return;
+  // Original text = fullText if Admin saved it, else description. If fileUrl exists, user can still download original PDF via reader Download.
+  let original = r.fullText || r.text || r.content || r.description || "";
+  // If Admin saved fileUrl, open PDF in new tab as well? No - show reader first, Download button in reader downloads text. If you want PDF download, add fileUrl to reader.
+  openReader(r.title, `${r.grade} • ${r.subject} • Original Design (Not AI)`, original, r.fileUrl || r.url || "");
 }
 async function openDesign(id){
-  let r = ALL.find(x=>x.id==id); if(!r) return;
-  currentGrade = r.grade || currentGrade;
-  let box = document.getElementById("detailBox");
-  box.innerHTML = `<div class="card"><h3 class="font-black">${r.title}</h3><p class="text-[12px] text-gray-500">${r.grade} • ${r.subject}</p><p class="text-[14px] mt-2">${r.description||''}</p><div class="ai-box mt-3">⏳ AI Explains...</div></div>`;
+  let r=ALL.find(x=>x.id==id); if(!r) return;
+  currentGrade=r.grade||currentGrade;
+  let box=document.getElementById("detailBox");
+  box.innerHTML=`<div class="card"><h3 class="font-black">${r.title}</h3><p class="text-[12px] text-gray-500">${r.grade} • ${r.subject}</p><p class="text-[14px] mt-2">${r.description||''}</p><div class="ai-box mt-3">⏳ AI Explains...</div><button class="action-btn bg-[#0d9488] mt-2" onclick="openOriginalDesign('${r.id}')">📖 Read Original Instead</button></div>`;
   box.scrollIntoView({behavior:"smooth"});
-  try{
-    let prompt = `You are SomaHub CBC Tutor for ${r.grade}. Design: Title: ${r.title}, Subject: ${r.subject}, Description: ${r.description||''}, Strand: ${r.strand||''}\nTASK: Summarize this KICD design in simple steps for learner + teacher. Give: 1. Meaning, 2. Key Points, 3. Activities, 4. Assessment. Use **bold** for key points. Never mention missing resources or keys.`;
-    let ai = await callAI(prompt, r.title);
-    box.querySelector(".ai-box").innerHTML = formatAI(ai);
-  }catch(e){ box.querySelector(".ai-box").innerHTML = "AI busy, try again."; }
+  try{ let prompt=`You are SomaHub CBC Tutor for ${r.grade}. Design: ${r.title}, ${r.subject}, ${(r.fullText||r.description||'').slice(0,4000)}\nTASK: Summarize. Give Meaning, Key Points, Activities, Assessment. Use **bold**.`; let ai=await callAI(prompt,r.title); box.querySelector(".ai-box").innerHTML=formatAI(ai); }catch(e){ box.querySelector(".ai-box").innerHTML="AI busy, try again."; }
 }
-async function makeHomework(topic){
-  let box = document.getElementById("searchResult");
-  box.innerHTML += `<div class="ai-box mt-3">⏳ Setting homework...</div>`;
-  try{
-    let ai = await callAI(`Set Homework for ${currentGrade} on ${topic}. 5 questions easy to hard, 1 real-life Kenya example, Answers at end. Use **bold**.`, topic);
-    box.innerHTML += `<div class="ai-box mt-2">${formatAI(ai)}</div>`;
-  }catch(e){}
-}
-async function makeExam(topic){
-  let box = document.getElementById("searchResult");
-  box.innerHTML += `<div class="ai-box mt-3">⏳ Setting exam...</div>`;
-  try{
-    let ai = await callAI(`Set Exam for ${currentGrade} on ${topic}. 10 questions: 5 MCQ, 3 Short Answer, 2 Structured. Give Marking Scheme at end. Use **bold**.`, topic);
-    box.innerHTML += `<div class="ai-box mt-2">${formatAI(ai)}</div>`;
-  }catch(e){}
-}
+async function makeHomework(topic){ let box=document.getElementById("searchResult"); box.innerHTML+=`<div class="ai-box mt-2">⏳ Setting homework...</div>`; try{ let ai=await callAI(`Set Homework for ${currentGrade} on ${topic}. ${getFileContext(topic)} 5 questions easy to hard, 1 Kenya example, Answers at end. Use **bold**.`,topic); box.innerHTML+=`<div class="ai-box mt-2">${formatAI(ai)}</div>`; }catch(e){} }
+async function makeExam(topic){ let box=document.getElementById("searchResult"); box.innerHTML+=`<div class="ai-box mt-2">⏳ Setting exam...</div>`; try{ let ai=await callAI(`Set Exam for ${currentGrade} on ${topic}. ${getFileContext(topic)} 10 questions: 5 MCQ, 3 Short, 2 Structured. Marking Scheme at end. Use **bold**.`,topic); box.innerHTML+=`<div class="ai-box mt-2">${formatAI(ai)}</div>`; }catch(e){} }
+try{ let saved=JSON.parse(localStorage.getItem("somahub_uploaded_file")||"null"); if(saved && saved.text){ FILE_TEXT=saved.text; FILE_NAME=saved.name; FILE_PAGES=saved.pages; } }catch(e){}
 setTimeout(loadResources, 800);
 </script>
 </body>
