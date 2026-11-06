@@ -146,10 +146,32 @@ function nextPage(){ if(READER_IDX<READER_PAGES.length-1){READER_IDX++; renderRe
 function prevPage(){ if(READER_IDX>0){READER_IDX--; renderReaderPage();} }
 function closeReader(){ document.getElementById("reader").classList.add("hidden"); }
 function closeDetail(){ document.getElementById("detailBox").innerHTML=""; document.getElementById("detailBox").scrollIntoView({behavior:"smooth"}); }
+
+// FIXED: Drive helpers - never treat Drive view page as PDF
+function getDriveId(url){
+  if(!url) return null;
+  if(url.includes("/file/d/")) return url.split("/file/d/")[1].split("/")[0].split("?")[0];
+  if(url.includes("id=")) return url.split("id=")[1].split("&")[0];
+  if(url.includes("docs.google.com") && url.includes("/d/")) return url.split("/d/")[1].split("/")[0];
+  return null;
+}
+function getDriveViewLink(url){
+  let id = getDriveId(url);
+  if(id) return "https://drive.google.com/file/d/" + id + "/view";
+  return url;
+}
+function isDriveLink(url){ return !!getDriveId(url) && url.includes("drive.google.com") || (url && url.includes("docs.google.com")); }
+
 function downloadOriginal(){
   let r = ALL.find(x=>x.title===READER_TITLE);
-  if((!READER_PAGES.join("").trim() || READER_PAGES.join("").length < 50) && r && (r.fileUrl || r.url || r.pdfUrl)){
-    window.open(r.fileUrl || r.url || r.pdfUrl, "_blank");
+  if(r && (r.fileUrl || r.url || r.pdfUrl)){
+    let link = r.fileUrl || r.url || r.pdfUrl;
+    // Drive: always open VIEW page, not uc?export=download - that fails on phone
+    if(isDriveLink(link)){
+      window.open(getDriveViewLink(link), "_blank");
+      return;
+    }
+    window.open(link, "_blank");
     return;
   }
   let full=READER_PAGES.join("\n\n--- PAGE BREAK ---\n\n");
@@ -189,14 +211,29 @@ async function openOriginalDesign(id){
   CURRENT_FILE_TEXT = r.fullText || r.text || r.content || "";
   CURRENT_TOPIC = r.title;
   let fileUrl = r.fileUrl || r.url || r.pdfUrl || r.link || "";
+
+  // 1. FILE uploaded in Admin - show pages inside SomaHub
   if(CURRENT_FILE_TEXT && CURRENT_FILE_TEXT.length > 100){
     openReader(r.title, `${r.grade} • ${r.subject} • Original Design (Not AI)`, CURRENT_FILE_TEXT);
     return;
   }
-  if(fileUrl){
+
+  // 2. DRIVE LINK ONLY - DO NOT fetch as PDF, Google blocks it
+  if(fileUrl && isDriveLink(fileUrl)){
+    let view = getDriveViewLink(fileUrl);
+    openReader(r.title, `${r.grade} • ${r.subject} • Drive Link`, `This design is saved as a Google Drive link, not as pages inside SomaHub.\n\n✅ Tap ⬇ Download at the top to open it in Drive.\n\nIt will open in Google Drive / Browser where you can read / download the real PDF.\n\nFile link:\n${view}\n\n---\nAdmin tip: To read page-by-page INSIDE SomaHub, Admin must use Choose File in admin.html to upload the PDF file, not just the link.`);
+    return;
+  }
+
+  // 3. DIRECT PDF link (ends with .pdf or not Drive) - try to fetch, check it is really PDF
+  if(fileUrl && (fileUrl.toLowerCase().endsWith(".pdf") || fileUrl.includes(".pdf") || fileUrl.includes("uc?export"))){
     openReader(r.title, `${r.grade} • ${r.subject} • Loading original PDF...`, "⏳ Loading original PDF from Admin file... Please wait...");
     try{
       let buf = await fetch(fileUrl).then(res=>res.arrayBuffer());
+      let head = new TextDecoder().decode(buf.slice(0,5));
+      if(head !== "%PDF-"){
+        throw new Error("This link is not a direct PDF. It is a Drive view page. Tap Download to open in Drive instead.");
+      }
       let pdf = await pdfjsLib.getDocument({data:buf}).promise;
       let all = "";
       for(let i=1;i<=pdf.numPages;i++){
@@ -208,10 +245,18 @@ async function openOriginalDesign(id){
       openReader(r.title, `${r.grade} • ${r.subject} • Original Design - ${pdf.numPages} pages (Not AI)`, all);
       return;
     }catch(e){
-      openReader(r.title, `${r.grade} • ${r.subject}`, `Could not load original PDF.\n\nAdmin needs to re-upload this design with full file.\n\nError: ${e.message}\n\nFile link: ${fileUrl}\n\nTap Download to try opening PDF directly.`);
+      openReader(r.title, `${r.grade} • ${r.subject}`, `Could not read PDF inside SomaHub.\n\nReason: ${e.message}\n\n✅ SOLUTION: Tap ⬇ Download at top - it will open the PDF in Drive / Browser.\n\nFile link: ${fileUrl}`);
       return;
     }
   }
+
+  // 4. YouTube or other link
+  if(fileUrl){
+    openReader(r.title, `${r.grade} • ${r.subject} • Link`, `This design is saved as a link.\n\n✅ Tap ⬇ Download at top to open it.\n\nLink: ${fileUrl}`);
+    return;
+  }
+
+  // 5. Truly blank
   openReader(r.title, `${r.grade} • ${r.subject} • Original Design (Not AI)`, `⚠️ This design is BLANK in the database.\n\nAdmin only saved:\nTitle: ${r.title}\nDescription: ${r.description||''}\n\nNo file text, no PDF link was saved.\n\nFIX: Admin must re-upload ${r.title} PDF in admin.html with fullText code. After re-upload, this page will show all pages.`);
 }
 async function openDesign(id){
