@@ -5,6 +5,8 @@
 <title>SomaHub Admin - Parent + Teacher Request</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
 <style>body{font-family:'Inter',sans-serif}</style>
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
@@ -49,14 +51,25 @@ onAuthStateChanged(auth,u=>{ if(!u) signInAnonymously(auth).catch(e=>console.log
 </select>
 <select id="rSubject" class="bg-[#f7f7f5] border p-4 rounded-2xl text-[13px]"></select>
 </div>
-<input id="rUrl" placeholder="Drive / PDF / YouTube link" class="w-full bg-[#f7f7f5] border p-4 rounded-2xl text-[13px] mb-3 outline-none"><textarea id="rDesc" placeholder="Description... e.g. Agriculture 8" class="w-full bg-[#f7f7f5] border p-4 rounded-2xl text-[13px] h-[80px] mb-3 outline-none"></textarea>
+<input id="rUrl" placeholder="Drive / PDF / YouTube link (optional - for Download)" class="w-full bg-[#f7f7f5] border p-4 rounded-2xl text-[13px] mb-3 outline-none">
+<!-- === NEW: ADMIN ONLY FILE UPLOAD - READS ALL PAGES === -->
+<div class="bg-[#fffbe6] border-2 border-dashed border-[#ffcc1a] p-4 rounded-2xl mb-3">
+<p class="font-bold text-[13px]">📄 Upload Design / Notes File (Admin Only)</p>
+<p class="text-[11px] text-gray-500">PDF, DOCX, TXT - AI will read ALL pages. Learner will see Read Original page by page.</p>
+<input id="rFile" type="file" accept=".pdf,.docx,.txt" class="w-full mt-2 text-[12px]" onchange="handleResourceFile(this)">
+<p id="rFileStatus" class="text-[11px] font-bold mt-2 text-gray-700"></p>
+<p id="rFilePreview" class="text-[11px] mt-1 text-gray-500 max-h-[100px] overflow-y-auto"></p>
+</div>
+<textarea id="rDesc" placeholder="Description... e.g. Agriculture 8" class="w-full bg-[#f7f7f5] border p-4 rounded-2xl text-[13px] h-[80px] mb-3 outline-none"></textarea>
 <button onclick="addResource()" id="addBtn" class="w-full bg-black text-white py-4 rounded-2xl font-bold text-[13px]">+ Add to <span id="showWhere">notes.html</span></button><p id="rMsg" class="text-[11px] text-center font-bold mt-2"></p>
 <div id="viewBtnWrap" class="hidden mt-3"><a id="viewLink" href="/curriculum-designs.html" target="_blank" class="block text-center bg-[#ffcc1a] py-3 rounded-2xl font-bold text-[13px]">👀 VIEW IN DESIGN HTML →</a></div>
 </div>
 <div class="bg-white rounded-[24px] border p-6 mt-6"><h3 class="font-bold text-[13px]">👀 Preview - What will appear in Design HTML</h3><div class="flex gap-2 mt-3"><select id="previewFilter" onchange="loadPreview()" class="bg-[#f7f7f5] border p-2 rounded-xl text-[11px]"><option value="Curriculum Design">🎨 Design Only</option><option value="Notes">📘 Notes</option><option value="Exam">📝 Exam</option><option value="Homework">📝 Homework</option><option value="Scheme">🗂️ Scheme</option><option value="LessonPlan">📋 Lesson</option></select><button onclick="loadPreview()" class="bg-black text-white px-3 py-2 rounded-xl text-[11px] font-bold">🔄 Reload</button></div><div id="previewList" class="mt-4 space-y-2 max-h-[400px] overflow-y-auto"></div></div>
 <div class="bg-white rounded-[24px] border p-6 mt-6"><h3 class="font-bold text-[13px]">Recent Resources</h3><div id="rList" class="mt-4 space-y-2 max-h-[400px] overflow-y-auto"></div></div>
 </div>
-<div class="col-span-12 lg:col-span-5"><div class="grid grid-cols-2 gap-3"><div class="bg-white rounded-[20px] border p-5"><p class="text-[10px] text-gray-400">Students</p><p id="sCount" class="font-black text-[22px]">0</p></div><div class="bg-white rounded-[20px] border p-5"><p class="text-[10px] text-gray-400">Teachers</p><p id="tCount2" class="font-black text-[22px]">0</p></div></div></div>
+<div class="col-span-12 lg:col-span-5"><div class="grid grid-cols-2 gap-3"><div class="bg-white rounded-[20px] border p-5"><p class="text-[10px] text-gray-400">Students</p><p id="sCount" class="font-black text-[22px]">0</p></div><div class="bg-white rounded-[20px] border p-5"><p class="text-[10px] text-gray-400">Teachers</p><p id="tCount2" class="font-black text-[22px]">0</p></div></div>
+<div class="bg-white rounded-[20px] border p-5 mt-3"><p class="text-[11px] font-bold">How Read Original works</p><p class="text-[11px] text-gray-500 mt-1 leading-relaxed">1. Admin uploads PDF here → fullText saved<br>2. Learner taps Grade 8 → Agriculture → 📖 Read Original<br>3. Learner reads page by page, Download, Print<br>4. AI Explains uses same fullText for Homework/Exam</p></div>
+</div>
 </div>
 </div>
 
@@ -64,10 +77,9 @@ onAuthStateChanged(auth,u=>{ if(!u) signInAnonymously(auth).catch(e=>console.log
 <div id="tab-ai" class="hidden">
 <div class="grid grid-cols-12 gap-6">
 <div class="col-span-12 lg:col-span-7">
-<!-- GEMINI KEY BOX - NEW - THIS IS WHAT DESIGN PAGE READS -->
 <div class="bg-black text-white rounded-[24px] p-6 mb-6">
 <h2 class="font-extrabold text-[16px]">🔑 Gemini API Key - For ALL AI in SomaHub</h2>
-<p class="text-[11px] text-gray-300">Design page, Exam, Homework all read this key from Firestore. Add once, works for all students.</p>
+<p class="text-[11px] text-gray-300">Now AI also uses Vercel /api/gemini (Gemini → OpenRouter → OpenAI). This key is backup.</p>
 <p id="geminiStatus" class="text-[11px] font-bold mt-2 bg-white/10 p-2 rounded-xl">⏳ Checking saved key...</p>
 <div class="flex gap-2 mt-3">
 <input id="geminiKeyInput" type="password" placeholder="Paste Gemini Key - AIza..." class="flex-1 bg-white text-black border p-3 rounded-xl text-[13px] outline-none">
@@ -81,7 +93,6 @@ onAuthStateChanged(auth,u=>{ if(!u) signInAnonymously(auth).catch(e=>console.log
 <a href="https://aistudio.google.com/app/apikey" target="_blank" class="block text-center text-[11px] underline mt-2 text-[#ffcc1a]">Get Free Key from Google AI Studio ↗</a>
 <p id="geminiTestResult" class="text-[11px] mt-2"></p>
 </div>
-
 <div class="bg-white rounded-[24px] border p-6">
 <h2 class="font-extrabold text-[16px]">🤖 Feed SomaHub AI Brain</h2><p class="text-[11px] text-gray-500">Take photo of textbook → AI uses for Exam/Homework</p>
 <div class="mt-5 bg-[#f7f7f5] p-4 rounded-2xl border-2 border-dashed">
@@ -112,6 +123,7 @@ onAuthStateChanged(auth,u=>{ if(!u) signInAnonymously(auth).catch(e=>console.log
 </div>
 <script>
 let currentType='Notes', allRes=[], photoBase64='', stream=null;
+let RESOURCE_FULLTEXT = "", RESOURCE_FILE_NAME = "", RESOURCE_PAGES = 0;
 const LEARNING_AREAS = {
   "Playgroup": ["Language Activities","Mathematical Activities","Environmental Activities","Creative Activities","Religious Activities","Movement and Music","Health and Nutrition","Play"],
   "PP1": ["Language Activities","Mathematical Activities","Environmental Activities","Creative Activities","Religious Education - CRE / IRE / HRE","Movement Activities","Music"],
@@ -134,7 +146,36 @@ const TYPE_TO_SAVE = { Notes:'Notes', Design:'Curriculum Design', Exam:'Exam', H
 function showTab(t){['resources','ai','tuition'].forEach(x=>{document.getElementById('tab-'+x).classList.add('hidden'); document.getElementById('btn-'+x).className='bg-white border px-4 py-2 rounded-full text-[11px] font-bold';}); document.getElementById('tab-'+t).classList.remove('hidden'); document.getElementById('btn-'+t).className='bg-black text-white px-4 py-2 rounded-full text-[11px] font-bold'; if(t=='resources'){ loadRes(); loadPreview(); } if(t=='ai'){ loadAi(); loadGeminiKey(); } if(t=='tuition') loadTuition();}
 function setType(t){ currentType=t; document.getElementById('rType').value=t; document.getElementById('showWhere').innerText=TYPE_TO_FILE[t]||'notes.html'; document.getElementById('previewFilter').value=TYPE_TO_SAVE[t]; loadPreview(); document.querySelectorAll('.typeBtn').forEach(b=>b.className='typeBtn bg-white border p-3 rounded-2xl text-left'); document.getElementById('t'+t).className='typeBtn bg-black text-white p-3 rounded-2xl text-left'; }
 
-// ===== GEMINI KEY - SAVED IN FIRESTORE settings/gemini - DESIGN PAGE READS THIS =====
+// ===== ADMIN FILE - READ ALL PAGES =====
+async function handleResourceFile(input){
+  let file = input.files[0]; if(!file) return;
+  RESOURCE_FILE_NAME = file.name;
+  document.getElementById("rFileStatus").innerText = "⏳ Reading ALL pages of "+file.name+"...";
+  try{
+    if(file.name.toLowerCase().endsWith(".pdf")){
+      let buf = await file.arrayBuffer();
+      let pdf = await pdfjsLib.getDocument({data:buf}).promise;
+      RESOURCE_PAGES = pdf.numPages; let all="";
+      for(let i=1;i<=pdf.numPages;i++){
+        let page = await pdf.getPage(i);
+        let tc = await page.getTextContent();
+        all += `\n[PAGE ${i}]\n` + tc.items.map(it=>it.str).join(" ");
+        document.getElementById("rFileStatus").innerText = `⏳ Reading page ${i}/${pdf.numPages}...`;
+      }
+      RESOURCE_FULLTEXT = all;
+    } else if(file.name.toLowerCase().endsWith(".docx")){
+      let buf = await file.arrayBuffer();
+      let r = await mammoth.extractRawText({arrayBuffer:buf});
+      RESOURCE_FULLTEXT = r.value; RESOURCE_PAGES = 1;
+    } else {
+      RESOURCE_FULLTEXT = await file.text(); RESOURCE_PAGES = 1;
+    }
+    document.getElementById("rFileStatus").innerText = `✅ Read ${RESOURCE_PAGES} page(s) - ${RESOURCE_FULLTEXT.length} chars from ${RESOURCE_FILE_NAME}. Now tap + Add - learner will see all pages.`;
+    document.getElementById("rFilePreview").innerText = RESOURCE_FULLTEXT.slice(0,500) + "...";
+  }catch(e){ document.getElementById("rFileStatus").innerText = "❌ Could not read file: "+e.message; }
+}
+
+// ===== GEMINI KEY =====
 async function loadGeminiKey(){
   let FB=window.FB;
   try{
@@ -142,9 +183,9 @@ async function loadGeminiKey(){
     if(d.exists() && d.data().key){
       let k=d.data().key;
       document.getElementById('geminiKeyInput').value=k;
-      document.getElementById('geminiStatus').innerText='✅ Key Saved • '+k.slice(0,6)+'...'+k.slice(-4)+' • Design page will now show REAL AI meaning';
+      document.getElementById('geminiStatus').innerText='✅ Key Saved • '+k.slice(0,6)+'...'+k.slice(-4);
     } else {
-      document.getElementById('geminiStatus').innerText='❌ No Key Saved - Design page will show "Add Gemini key in admin.html"';
+      document.getElementById('geminiStatus').innerText='❌ No Key Saved';
     }
   }catch(e){ document.getElementById('geminiStatus').innerText='❌ '+e.message; }
 }
@@ -153,11 +194,10 @@ async function saveGeminiKey(){
   let FB=window.FB; let k=document.getElementById('geminiKeyInput').value.trim();
   if(!k){ alert('Paste key first'); return; }
   try{
-    // Save in 2 places so ANY design file version can read it
     await FB.setDoc(FB.doc(FB.db,'settings','gemini'), {key:k, updatedAt:FB.serverTimestamp()});
     await FB.setDoc(FB.doc(FB.db,'settings','ai'), {geminiKey:k, updatedAt:FB.serverTimestamp()});
-    document.getElementById('geminiStatus').innerText='✅ Key Saved • '+k.slice(0,6)+'...'+k.slice(-4)+' • Now open Design page - it will show REAL AI';
-    alert('✅ Gemini Key Saved!\n\nNow open curriculum-designs.html and search "Crop production" - it will show REAL AI meaning, not "Add Gemini key"');
+    document.getElementById('geminiStatus').innerText='✅ Key Saved • '+k.slice(0,6)+'...'+k.slice(-4);
+    alert('✅ Gemini Key Saved!');
   }catch(e){ alert('❌ '+e.message); }
 }
 async function testGeminiKey(){
@@ -175,36 +215,110 @@ async function clearGeminiKey(){ let FB=window.FB; await FB.setDoc(FB.doc(FB.db,
 
 async function openCamera(){ try{ stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:'environment'}}); let v=document.getElementById('video'); v.srcObject=stream; v.classList.remove('hidden'); document.getElementById('camBtns').classList.remove('hidden'); }catch(e){ alert(e.message); } }
 function closeCamera(){ if(stream) stream.getTracks().forEach(t=>t.stop()); document.getElementById('video').classList.add('hidden'); document.getElementById('camBtns').classList.add('hidden'); }
-function takePhoto(){ let v=document.getElementById('video'); let c=document.getElementById('canvas'); c.width=v.videoWidth; c.height=v.videoHeight; c.getContext('2d').drawImage(v,0,0); photoBase64=c.toDataURL('image/jpeg',0.7); document.getElementById('preview').src=photoBase64; document.getElementById('preview').classList.remove('hidden'); closeCamera(); }
-function handleFile(i){ let f=i.files[0]; let r=new FileReader(); r.onload=e=>{ photoBase64=e.target.result; document.getElementById('preview').src=photoBase64; document.getElementById('preview').classList.remove('hidden'); }; r.readAsDataURL(f); }
+function takePhoto(){ let v=document.getElementById('video'); let c=document.getElementById('canvas'); c.width=v.videoWidth; c.height=v.videoHeight; c.getContext('2d').drawImage(v,0,0); photoBase64=c.toDataURL('image/jpeg',0.7); document.getElementById('preview').src=photoBase64; document.getElementById('preview').classList.remove('hidden'); document.getElementById('photoStatus').innerText='✅ Photo captured'; closeCamera(); }
+function handleFile(input){ let f=input.files[0]; if(!f) return; let r=new FileReader(); r.onload=e=>{ photoBase64=e.target.result; document.getElementById('preview').src=photoBase64; document.getElementById('preview').classList.remove('hidden'); document.getElementById('photoStatus').innerText='✅ Photo selected: '+f.name; }; r.readAsDataURL(f); }
+
+// ===== ADD RESOURCE - NOW SAVES fullText + fileUrl + pages =====
 async function addResource(){
-  let FB=window.FB; let btn=document.getElementById('addBtn');
-  let title=document.getElementById('rTitle').value.trim(); let grade=document.getElementById('rGrade').value; let subject=document.getElementById('rSubject').value; let url=document.getElementById('rUrl').value.trim(); let desc=document.getElementById('rDesc').value.trim(); let typeBtn=document.getElementById('rType').value;
-  let typeToSave = TYPE_TO_SAVE[typeBtn] || typeBtn; let subjectFixed = subject.replace(/ & /g,' and ').replace(/&/g,'and');
-  if(!title){ document.getElementById('rMsg').innerText='❌ Write Title first'; document.getElementById('rMsg').style.color='red'; return; }
-  if(!url){ document.getElementById('rMsg').innerText='❌ Paste Drive link first'; document.getElementById('rMsg').style.color='red'; return; }
-  btn.innerText='⏳ Saving...'; btn.disabled=true;
+  let FB=window.FB;
+  let title=document.getElementById('rTitle').value.trim();
+  let grade=document.getElementById('rGrade').value;
+  let subject=document.getElementById('rSubject').value;
+  let url=document.getElementById('rUrl').value.trim();
+  let desc=document.getElementById('rDesc').value.trim();
+  if(!title){ alert('Add Title first'); return; }
+  document.getElementById('rMsg').innerText='⏳ Saving... reading file if attached...';
   try{
-    await FB.addDoc(FB.collection(FB.db,'resources'), {title, type:typeToSave, type2:typeBtn, grade, subject:subjectFixed, subject2:subject, url, description:desc, createdAt:FB.serverTimestamp()});
-    document.getElementById('rMsg').innerText='✅ ADDED! Will appear in '+TYPE_TO_FILE[typeBtn]; document.getElementById('rMsg').style.color='green';
-    document.getElementById('viewBtnWrap').classList.remove('hidden'); document.getElementById('viewLink').href='/'+TYPE_TO_FILE[typeBtn];
-    document.getElementById('rUrl').value=''; document.getElementById('rDesc').value=''; document.getElementById('rTitle').value='';
-    await loadRes(); await loadPreview();
-  }catch(e){ document.getElementById('rMsg').innerText='❌ FAILED: '+e.message; document.getElementById('rMsg').style.color='red'; }
-  btn.innerHTML='+ Add to <span id="showWhere">'+TYPE_TO_FILE[typeBtn]+'</span>'; btn.disabled=false;
+    let data = {
+      title: title,
+      grade: grade,
+      subject: subject,
+      type: TYPE_TO_SAVE[currentType] || currentType,
+      url: url,
+      fileUrl: url,
+      description: desc || title,
+      fullText: (RESOURCE_FULLTEXT || "").slice(0,90000),
+      pages: RESOURCE_PAGES || 0,
+      fileName: RESOURCE_FILE_NAME || "",
+      createdAt: FB.serverTimestamp()
+    };
+    // If file was uploaded, description auto-fill from file if empty
+    if(!desc && RESOURCE_FULLTEXT) data.description = RESOURCE_FULLTEXT.slice(0,500);
+    await FB.addDoc(FB.collection(FB.db,'resources'), data);
+    document.getElementById('rMsg').innerText = RESOURCE_FULLTEXT ? `✅ Saved with ${RESOURCE_PAGES} page(s) - ${RESOURCE_FULLTEXT.length} chars. Learner can now Read Original page by page.` : `✅ Saved (No file attached - only title/description. Learner will see blank. Upload PDF next time.)`;
+    document.getElementById('rTitle').value=''; document.getElementById('rDesc').value=''; document.getElementById('rUrl').value='';
+    document.getElementById('rFile').value=''; document.getElementById('rFileStatus').innerText=''; document.getElementById('rFilePreview').innerText='';
+    RESOURCE_FULLTEXT=""; RESOURCE_FILE_NAME=""; RESOURCE_PAGES=0;
+    document.getElementById('viewBtnWrap').classList.remove('hidden');
+    loadRes(); loadPreview();
+  }catch(e){ document.getElementById('rMsg').innerText='❌ '+e.message; }
 }
-async function loadPreview(){ let FB=window.FB; let filter=document.getElementById('previewFilter').value; let box=document.getElementById('previewList'); box.innerHTML='⏳ Loading...'; try{ let snap=await FB.getDocs(FB.query(FB.collection(FB.db,'resources'), FB.where('type','==',filter))); let items=[]; snap.forEach(d=>items.push({id:d.id,...d.data()})); items.sort((a,b)=>(b.createdAt?.seconds||0)-(a.createdAt?.seconds||0)); if(!items.length){ box.innerHTML='<p class="text-[11px]">No '+filter+' yet</p>'; return; } box.innerHTML=''; items.slice(0,20).forEach(r=>{ box.innerHTML+=`<div class="bg-[#f7f7f5] p-3 rounded-2xl flex justify-between gap-2"><div><p class="font-bold text-[11px]">${r.title}</p><p class="text-[10px] text-gray-500">${r.grade} • ${r.subject} • ${r.type}</p></div><button onclick="delRes('${r.id}')" class="text-red-500 text-[10px]">Delete</button></div>`; }); }catch(e){ box.innerHTML='❌ '+e.message; } }
-async function loadRes(){ let FB=window.FB; try{ let snap=await FB.getDocs(FB.collection(FB.db,'resources')); allRes=[]; snap.forEach(d=>allRes.push({id:d.id,...d.data()})); rList.innerHTML=''; allRes.slice(-20).reverse().forEach(r=>{ rList.innerHTML+=`<div class="bg-[#f7f7f5] p-3 rounded-2xl flex justify-between gap-2"><div><p class="font-bold text-[11px]">${r.title} - ${r.type}</p><p class="text-[10px] text-gray-500">${r.grade} • ${r.subject||''}</p></div><button onclick="delRes('${r.id}')" class="text-red-500 text-[10px]">Delete</button></div>`; }); }catch(e){ rList.innerHTML='❌ '+e.message; } }
-async function delRes(id){ let FB=window.FB; if(!confirm('Delete?')) return; await FB.deleteDoc(FB.doc(FB.db,'resources',id)); loadRes(); loadPreview(); }
-async function addAiBrain(){ let FB=window.FB; try{ await FB.addDoc(FB.collection(FB.db,'ai_brain'), {title:aiTitle.value, subject:aiSubject.value, grade:aiGrade.value, use:aiUse.value, text:aiText.value, photo:photoBase64, createdAt:FB.serverTimestamp()}); aiMsg.innerText='🧠 Fed ✅'; photoBase64=''; document.getElementById('preview').classList.add('hidden'); loadAi(); }catch(e){ aiMsg.innerText='❌ '+e.message; } }
-async function loadAi(){ let FB=window.FB; try{ let snap=await FB.getDocs(FB.collection(FB.db,'ai_brain')); aiList.innerHTML=''; snap.forEach(d=>{ let m=d.data(); aiList.innerHTML+=`<div class="bg-white/10 p-3 rounded-2xl"><p class="text-[11px] font-bold">${m.title} - ${m.grade} - ${m.subject} - ${m.use}</p>${m.photo?`<img src="${m.photo}" class="mt-2 rounded-xl max-h-[100px]">`:''}</div>`; }); }catch(e){ aiList.innerHTML='❌ '+e.message; } }
-async function loadTuition(){ let FB=window.FB; try{ let snap=await FB.getDocs(FB.collection(FB.db,'homeschooling_requests')); let docs=[]; snap.forEach(d=>docs.push({id:d.id,...d.data()})); document.getElementById('tuitionCountTop').innerText=docs.length; document.getElementById('tStatus').innerText=`✅ Found ${docs.length}`; let list=document.getElementById('tList'); list.innerHTML=''; docs.forEach(r=>{ let col=r.status=='approved'?'bg-green-500':r.status=='rejected'?'bg-red-500':'bg-[#ffcc1a]'; let isTeacher=(r.requestedBy||'').toLowerCase()=='teacher'||r.teacherRequest==true; let line1=isTeacher?`Teacher of <b>${r.teacherId?'SHKET-'+r.teacherId.slice(-5):'SHKET...'}</b> is requesting`:`Parent of <b>${r.shke||'SHKE...'}</b> is requesting`; list.innerHTML+=`<div class="border rounded-[20px] p-5"><div class="flex justify-between"><span class="${col} text-[9px] px-3 py-1 rounded-full font-bold">${(r.status||'pending').toUpperCase()}</span><span class="text-[10px]">${r.id}</span></div><p class="mt-3 text-[13px]">${line1}</p><div class="mt-4 grid grid-cols-3 gap-2"><button onclick="approveTuition('${r.id}')" class="bg-black text-white py-3 rounded-xl font-bold text-[11px]">✅ Approve</button><button onclick="rejectTuition('${r.id}')" class="bg-white border text-red-600 py-3 rounded-xl font-bold text-[11px]">❌ Reject</button><button onclick="toggleAssign('${r.id}')" class="bg-[#ffcc1a] py-3 rounded-xl font-bold text-[11px]">Assign</button></div><div id="assign-${r.id}" class="hidden mt-3 bg-[#f7f7f5] p-3 rounded-xl"><div class="grid grid-cols-2 gap-2"><input id="tid-${r.id}" placeholder="Teacher ID" class="bg-white border p-2 rounded-xl text-[11px]" value="${r.teacherId||''}"><input id="tname-${r.id}" placeholder="Mr Kamau" class="bg-white border p-2 rounded-xl text-[11px]" value="${r.teacherName||''}"></div><button onclick="doAssign('${r.id}')" class="w-full bg-black text-white py-2 rounded-xl text-[11px] font-bold mt-2">Confirm</button></div></div>`; }); }catch(e){ document.getElementById('tStatus').innerText='❌ '+e.message; } }
-async function approveTuition(id){ let FB=window.FB; await FB.updateDoc(FB.doc(FB.db,'homeschooling_requests',id), {status:'approved'}); loadTuition(); }
-async function rejectTuition(id){ let FB=window.FB; if(!confirm('Reject?')) return; await FB.updateDoc(FB.doc(FB.db,'homeschooling_requests',id), {status:'rejected'}); loadTuition(); }
-function toggleAssign(id){ document.getElementById('assign-'+id).classList.toggle('hidden'); }
-async function doAssign(id){ let FB=window.FB; let tId=document.getElementById('tid-'+id).value.trim(); let tName=document.getElementById('tname-'+id).value.trim(); let td=await FB.getDoc(FB.doc(FB.db,'users',tId)); let em=td.exists()?td.data().email||'':''; await FB.updateDoc(FB.doc(FB.db,'homeschooling_requests',id), {status:'approved', teacherId:tId, teacherName:tName, teacherEmail:em}); loadTuition(); }
-async function loadCounts(){ let FB=window.FB; try{ let snap=await FB.getDocs(FB.collection(FB.db,'users')); let sc=0,tc=0; snap.forEach(d=>{ let r=(d.data().role||'').toLowerCase(); if(r=='teacher') tc++; else sc++; }); document.getElementById('sCount').innerText=sc; document.getElementById('tCount2').innerText=tc; }catch(e){} }
-setTimeout(()=>{ updateSubjects('rGrade','rSubject'); updateSubjects('aiGrade','aiSubject'); showTab('resources'); loadCounts(); loadTuition(); loadGeminiKey(); },900);
+async function loadRes(){
+  let FB=window.FB;
+  try{
+    let s=await FB.getDocs(FB.collection(FB.db,'resources'));
+    allRes=[]; s.forEach(d=>allRes.push({id:d.id,...d.data()}));
+    let box=document.getElementById('rList');
+    if(!allRes.length){ box.innerHTML='<p class="text-[12px] text-gray-400">No resources yet</p>'; return; }
+    box.innerHTML = allRes.slice().reverse().slice(0,20).map(r=>`<div class="flex justify-between items-center bg-[#f7f7f5] p-3 rounded-xl"><div><p class="font-bold text-[12px]">${r.title}</p><p class="text-[11px] text-gray-500">${r.grade} • ${r.subject} • ${r.type} • ${r.pages?r.pages+' pages':(r.fullText?'Has text':'⚠️ NO FILE - BLANK')}</p></div><button onclick="deleteRes('${r.id}')" class="bg-red-500 text-white px-2 py-1 rounded-lg text-[11px]">Delete</button></div>`).join('');
+  }catch(e){}
+}
+async function deleteRes(id){ if(!confirm('Delete this resource?')) return; let FB=window.FB; await FB.deleteDoc(FB.doc(FB.db,'resources',id)); loadRes(); loadPreview(); }
+async function loadPreview(){
+  let FB=window.FB;
+  try{
+    let filter=document.getElementById('previewFilter').value;
+    let s=await FB.getDocs(FB.collection(FB.db,'resources'));
+    let list=[]; s.forEach(d=>list.push({id:d.id,...d.data()}));
+    list=list.filter(r=>r.type==filter);
+    let box=document.getElementById('previewList');
+    if(!list.length){ box.innerHTML='<p class="text-[11px] text-gray-400">No items for '+filter+'</p>'; return; }
+    box.innerHTML=list.slice().reverse().slice(0,20).map(r=>`<div class="bg-[#f7f7f5] p-3 rounded-xl"><p class="font-bold text-[12px]">${r.title}</p><p class="text-[11px] text-gray-500">${r.grade} • ${r.subject} • ${r.pages?r.pages+' pages':''} ${r.fullText?'✅ Full text saved':'⚠️ Blank - re-upload PDF'}</p></div>`).join('');
+  }catch(e){}
+}
+async function addAiBrain(){
+  let FB=window.FB;
+  let title=document.getElementById('aiTitle').value.trim();
+  let subject=document.getElementById('aiSubject').value;
+  let grade=document.getElementById('aiGrade').value;
+  let use=document.getElementById('aiUse').value;
+  let text=document.getElementById('aiText').value.trim();
+  if(!title && !text){ alert('Add Title or Text'); return; }
+  try{
+    await FB.addDoc(FB.collection(FB.db,'ai_brain'), {title, subject, grade, use, text: text || title, photo: photoBase64 || "", createdAt: FB.serverTimestamp()});
+    document.getElementById('aiMsg').innerText='✅ Saved to AI Brain';
+    document.getElementById('aiTitle').value=''; document.getElementById('aiText').value=''; photoBase64=''; document.getElementById('preview').classList.add('hidden');
+    loadAi();
+  }catch(e){ document.getElementById('aiMsg').innerText='❌ '+e.message; }
+}
+async function loadAi(){
+  let FB=window.FB;
+  try{
+    let s=await FB.getDocs(FB.collection(FB.db,'ai_brain'));
+    let list=[]; s.forEach(d=>list.push({id:d.id,...d.data()}));
+    let box=document.getElementById('aiList');
+    if(!list.length){ box.innerHTML='<p class="text-[12px] text-gray-300">No AI Brain items yet</p>'; return; }
+    box.innerHTML=list.slice().reverse().slice(0,30).map(r=>`<div class="bg-white/10 p-3 rounded-xl"><p class="font-bold text-[12px]">${r.title}</p><p class="text-[11px] text-gray-300">${r.grade} • ${r.subject} • ${r.use}</p>${r.photo?`<img src="${r.photo}" class="w-full rounded-lg mt-2">`:''}<button onclick="deleteAi('${r.id}')" class="bg-red-500 px-2 py-1 rounded-lg text-[11px] mt-2">Delete</button></div>`).join('');
+  }catch(e){}
+}
+async function deleteAi(id){ if(!confirm('Delete?')) return; let FB=window.FB; await FB.deleteDoc(FB.doc(FB.db,'ai_brain',id)); loadAi(); }
+async function loadTuition(){
+  let FB=window.FB;
+  try{
+    document.getElementById('tStatus').innerText='Loading...';
+    let s=await FB.getDocs(FB.collection(FB.db,'tuition_requests'));
+    let list=[]; s.forEach(d=>list.push({id:d.id,...d.data()}));
+    document.getElementById('tuitionCountTop').innerText=list.length;
+    if(!list.length){ document.getElementById('tStatus').innerText='No requests yet'; document.getElementById('tList').innerHTML=''; return; }
+    document.getElementById('tStatus').innerText=`${list.length} request(s)`;
+    document.getElementById('tList').innerHTML=list.slice().reverse().map(r=>`<div class="bg-[#f7f7f5] p-4 rounded-2xl"><p class="font-bold text-[13px]">${r.parentName||r.name||'Parent'} - ${r.grade||''}</p><p class="text-[12px] text-gray-600">${r.phone||''} • ${r.location||''}</p><p class="text-[12px] mt-1">${r.message||r.notes||''}</p></div>`).join('');
+  }catch(e){ document.getElementById('tStatus').innerText='❌ '+e.message; }
+}
+updateSubjects('rGrade','rSubject');
+updateSubjects('aiGrade','aiSubject');
+showTab('resources');
+setTimeout(loadRes, 800);
+setTimeout(loadPreview, 800);
 </script>
 </body>
 </html>
