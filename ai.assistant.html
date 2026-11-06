@@ -33,7 +33,10 @@ body{overflow:hidden}
 .ai-detail{color:#111827;font-weight:600}
 .ai-card ul{margin:7px 0 7px 20px;list-style:disc}
 .ai-card ol{margin:7px 0 7px 20px;list-style:decimal}
-/* ===== FIX 1 - 4 BUTTONS SAME LINE, SMALLER, DIFFERENT COLOURS ===== */
+.ai-card b{color:#2563eb}
+.ai-card .ai-key{color:#dc2626;font-weight:900}
+.ai-card .ai-answer{color:#16a34a;font-weight:900}
+.ai-card .ai-note{color:#ea580c;font-weight:900}
 .ai-actions{display:flex;gap:5px;flex-wrap:nowrap;margin:10px 0 0 50px}
 .ai-actions button{flex:1;min-width:0;white-space:nowrap;border:0;padding:7px 4px;border-radius:999px;font-size:11px;font-weight:800;color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:4px}
 .ai-actions button:active{transform:scale(.96)}
@@ -219,21 +222,19 @@ function findRelevantResources(userText){
   if(scored.length) return scored.slice(0,5);
   return sameGrade.filter(r=>['Curriculum Design','Design','Notes','Scheme','LessonPlan'].includes(r.type)).slice(0,5);
 }
-/* ===== FIX 2 - Photo = ANSWER it, not set homework ===== */
 function buildContext(userText, hasPhoto){
   let t = (userText||"").toLowerCase();
-  // Only treat as SET exam/homework when user EXPLICITLY says "set / give / create / make"
   let isExam = /set.*exam|give.*exam|create.*exam|make.*exam|set.*test|set.*mtihani/i.test(t);
   let isHW = /set.*homework|give.*homework|create.*homework|make.*homework|set.*assignment|set.*kazi/i.test(t);
   let rel = findRelevantResources(userText);
   let ctx = `You are SomaHub Tutor, CBC Kenya tutor for ${grade}. Answer in ${detectLang(userText)=='SW'?'Kiswahili + English mix':'English'}.\n`;
-  ctx += `RULE: First use Admin Designs/Notes below if they match. If information is NOT in available resources, Gemini adds it from CBC / KICD knowledge. Never say "No Admin Design found", never mention missing resources. Just give complete correct answer.\n\n`;
+  ctx += `RULE: Use the Designs/Notes below if they match. If not, just answer from CBC / KICD knowledge. Never mention Admin, Designs, resources, or missing anything. Just give the answer. Use **bold** for key points, and start key lines with Key Point:, Answer:, Note: or Important:\n\n`;
   if(rel.length){
-    ctx += `Admin Designs/Notes for ${grade}:\n`;
+    ctx += `Designs/Notes for ${grade}:\n`;
     rel.forEach((r,i)=>{ ctx += `${i+1}. [${r.type}] ${r.title} | ${r.grade} ${r.subject} | ${r.description||''}\n`; });
     ctx += `\nUse these first, then add what is missing from KICD.\n\n`;
   } else {
-    ctx += `No Admin resource matched this exact topic. Add full answer from CBC / KICD ${grade} curriculum.\n\n`;
+    ctx += `Use CBC / KICD ${grade} curriculum.\n\n`;
   }
   if(AI_BRAIN.length){
     let brain = AI_BRAIN.filter(b=>b.grade==grade).slice(0,3);
@@ -241,7 +242,7 @@ function buildContext(userText, hasPhoto){
   }
   if(isExam) ctx += `TASK: Set Exam. 10 questions: 5 MCQ, 3 Short Answer, 2 Structured. Give Marking Scheme at end.\n`;
   else if(isHW) ctx += `TASK: Set Homework. 5 questions easy to hard, 1 real-life Kenya example, Answers at end.\n`;
-  else if(hasPhoto) ctx += `TASK: PHOTO ATTACHED - This is a question paper / homework photo the learner uploaded. DO NOT create new homework. READ the photo carefully, TRANSCRIBE each question, then ANSWER / SOLVE each question one by one with clear steps and final answers. If photo is blurry, answer what you can see. Use Designs/Notes above if they match the topic.\n`;
+  else if(hasPhoto) ctx += `TASK: PHOTO ATTACHED - This is a question paper / homework photo. DO NOT create new homework. READ the photo, TRANSCRIBE each question, then ANSWER / SOLVE each question one by one with clear steps and final answers. If photo is blurry, answer what you can see.\n`;
   else ctx += `Explain clearly.\n`;
   ctx += `\nUser question: ${userText || "Answer the questions in the attached photo"}`;
   return ctx;
@@ -293,13 +294,20 @@ function removeThinking(){ let t = document.getElementById("thinkingRow"); if(t)
 function formatAI(text){
   let esc = text.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
   esc = esc.replace(/\*\*(.*?)\*\*/g,"<b>$1</b>");
+  esc = esc.replace(/\*(.*?)\*/g,"<i>$1</i>");
   esc = esc.replace(/^### (.*)$/gm,"<div class='ai-explanation'>$1</div>");
   esc = esc.replace(/^## (.*)$/gm,"<div class='ai-explanation'>$1</div>");
   let lines = esc.split("\n"); let out = ""; let inList = false;
   lines.forEach(l=>{
-    if(/^\d+\.\s/.test(l)){ out += `<p><b>${l}</b></p>`; }
+    let t = l.trim();
+    if(/^(Key Point|Key Points|Important|Remember|Note|Answer|Final Answer|Marking Scheme|Solution)[:：]/i.test(t)){
+      if(inList){ out += "</ul>"; inList = false; }
+      let cls = /^(Answer|Final Answer|Solution|Marking Scheme)/i.test(t) ? "ai-answer" : /^(Note|Important|Remember)/i.test(t) ? "ai-note" : "ai-key";
+      out += `<p><span class="${cls}">${l}</span></p>`;
+    }
+    else if(/^\d+\.\s/.test(l)){ out += `<p><b>${l}</b></p>`; }
     else if(/^[-*]\s/.test(l)){ if(!inList){ out += "<ul>"; inList = true; } out += `<li>${l.replace(/^[-*]\s/,"")}</li>`; }
-    else { if(inList){ out += "</ul>"; inList = false; } if(l.trim()) out += `<p>${l}</p>`; }
+    else { if(inList){ out += "</ul>"; inList = false; } if(t) out += `<p>${l}</p>`; }
   });
   if(inList) out += "</ul>";
   return out;
@@ -310,31 +318,36 @@ async function sendMsg(){
   if(isThinking) return;
   if(!resourcesLoaded) await reloadResources();
   let hasPhoto = !!uploadedPhoto;
+  let photoToSend = uploadedPhoto;
   let displayText = text || "📷 Photo";
   addUserMsg(displayText);
   msg.value = ""; resizeTextarea(); clearAttach(false);
   isThinking = true; addThinking();
   try{
     let contextPrompt = buildContext(text, hasPhoto);
-    let body = { prompt: contextPrompt, grade: grade, lang: detectLang(text), history: chatHistory.slice(-6) };
-    if(uploadedPhoto) body.image = uploadedPhoto;
+    // ALIGNED TO api/gemini.js: sends BOTH prompt + question, BOTH image + photo, history with content
+    let body = {
+      prompt: contextPrompt,
+      question: text || "Answer the questions in the attached photo",
+      grade: grade,
+      lang: detectLang(text),
+      task: detectLang(text),
+      history: chatHistory.slice(-4).map(h=>({role:h.role, content:h.text})),
+      image: photoToSend,
+      photo: photoToSend,
+      mimeType: uploadedMime || "image/jpeg",
+      mime: uploadedMime || "image/jpeg"
+    };
     let res = await fetch(PROXY,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(body)});
-    let data = null; let aiText = "";
-    if(res.ok){ data = await res.json(); aiText = data.text || data.answer || data.reply || ""; }
-    if(!aiText){
-      let key = await getGeminiKey();
-      if(!key) throw new Error("AI is busy. Try again.");
-      let gres = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${key}`,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({contents:[{parts:[{text:contextPrompt}]}]})});
-      let gdata = await gres.json();
-      if(gdata.error) throw new Error(gdata.error.message);
-      aiText = gdata.candidates?.[0]?.content?.parts?.[0]?.text || "";
-    }
-    if(!aiText) throw new Error("No answer from AI");
+    let data = {};
+    try{ data = await res.json(); }catch(e){ data = {}; }
+    let aiText = data.answer || data.text || data.reply || "";
+    if(!aiText) throw new Error(data.error || data.details || "No answer from AI");
     removeThinking();
     addAiMsg(formatAI(aiText), aiText);
     chatHistory.push({role:"user",text:text});
     chatHistory.push({role:"ai",text:aiText});
-    saveHistory(text, aiText);
+    saveHistory(text || "📷 Photo", aiText);
     uploadedPhoto = "";
   }catch(e){ removeThinking(); addAiMsg(`<p>${e.message}</p>`, e.message); showError(e.message); }
   isThinking = false;
