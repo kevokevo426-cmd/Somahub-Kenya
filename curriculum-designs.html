@@ -10,133 +10,184 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebas
 import { getAuth, onAuthStateChanged, GoogleAuthProvider, signInWithPopup, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 import { getFirestore, doc, getDoc, setDoc, collection, getDocs, query, where, updateDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 const firebaseConfig = { apiKey: "AIzaSyA93BNes3AmFyxIEgjSbvbIWqLyorLsuj8", authDomain: "somahubkenya-9e458.firebaseapp.com", projectId: "somahubkenya-9e458", storageBucket: "somahubkenya-9e458.firebasestorage.app", messagingSenderId: "615579085715", appId: "1:615579085715:web:28fca37ba498324bb49666" };
-const app=initializeApp(firebaseConfig); const auth=getAuth(app); const db=getFirestore(app); const provider=new GoogleAuthProvider();
-window.FB={auth,db,provider,signInWithPopup,signInWithEmailAndPassword,createUserWithEmailAndPassword,onAuthStateChanged,signOut,doc,getDoc,setDoc,collection,getDocs,query,where,updateDoc,serverTimestamp};
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+window.FB = { db, doc, getDoc, setDoc, collection, getDocs, query, where, updateDoc, serverTimestamp, auth };
 </script>
+<style>
+*{box-sizing:border-box} body{font-family:system-ui,-apple-system,sans-serif;background:#f1f5f9;margin:0}
+.hero{background:linear-gradient(135deg,#0f766e,#0d9488 45%,#000 100%);border-radius:24px;color:#fff;padding:22px}
+.search-box{background:#fff;border-radius:16px;display:flex;gap:8px;padding:8px;align-items:center}
+.search-box input{flex:1;border:0;outline:none;font-size:17px;padding:10px 6px}
+.btn-search{background:#0d9488;color:#fff;border:0;border-radius:12px;padding:12px 16px;font-weight:800;cursor:pointer;white-space:nowrap}
+.card{background:#fff;border-radius:16px;padding:14px;border:1px solid #e2e8f0}
+.ai-box{background:#000;color:#fff;border-radius:12px;padding:14px;line-height:1.6;font-size:14px}
+.ai-box b{color:#5eead4}
+.ai-key{color:#f87171;font-weight:900}
+.ai-answer{color:#4ade80;font-weight:900}
+.ai-note{color:#fb923c;font-weight:900}
+select,input{font-family:inherit}
+.action-btn{border:0;border-radius:999px;padding:8px 14px;font-weight:800;font-size:12px;color:#fff;cursor:pointer}
+.hidden{display:none!important}
+</style>
 </head>
-<body class="bg-teal-50">
-<header class="bg-white shadow sticky top-0 z-50">
-<div class="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
-<a href="/" class="font-bold text-sm"><i class="fa-solid fa-book-atlas text-teal-600"></i> Curriculum Designs <span id="aiLive" class="bg-red-100 text-red-600 text-[9px] px-2 py-1 rounded-full ml-2">AI OFF</span></a>
-<div class="flex gap-2 items-center">
-<span id="premB" class="hidden bg-green-600 text-white px-3 py-1 rounded-full text-[10px] font-bold">PREMIUM</span>
-<a href="/ai-assistant.html" class="text-xs bg-black text-white px-3 py-2 rounded-full">🤖 AI Assistant</a>
-<a href="/lesson-plans.html" class="text-xs bg-indigo-100 px-3 py-2 rounded-full">Lesson Plans</a>
-<button id="authBtn" class="bg-teal-600 text-white px-4 py-2 rounded-full text-xs font-bold">Login</button>
-</div>
-</div>
-</header>
+<body class="p-3 max-w-3xl mx-auto pb-24">
 
-<div class="max-w-7xl mx-auto p-4">
-<div class="bg-gradient-to-r from-teal-600 to-black rounded-[1.5rem] p-6 text-white">
-<h1 class="text-xl font-black">📘 CBC Curriculum Designs PP1-G9 - REAL AI Explains + Video</h1>
-<p class="text-xs mt-2">AI summarizes KICD design, searches word meaning by level PP1-G9 + comparison, YouTube video of strand, sets homework/exam FROM design</p>
-<div class="mt-4 bg-white rounded-xl p-2 flex gap-2">
-<input id="wordSearch" placeholder="🔍 Search word/strand e.g 'Photosynthesis' or 'Mau Mau' or 'Strand: Measurement'" class="flex-1 p-3 rounded-xl text-sm text-black outline-none">
-<button onclick="searchWord()" class="bg-teal-600 text-white px-4 py-3 rounded-xl font-bold text-xs">Search Notes</button>
-<button onclick="searchYouTube()" class="bg-red-600 text-white px-4 py-3 rounded-xl font-bold text-xs">🎥 Video</button>
-</div>
-<div id="searchResult" class="hidden mt-4 bg-white text-black rounded-xl p-4 text-sm"></div>
-<div id="youtubeBox" class="hidden mt-4 bg-white rounded-xl p-3"></div>
+<!-- HERO - SAME DESIGN AS SCREENSHOT -->
+<div class="hero">
+  <h1 class="text-[26px] leading-tight font-black">📘 CBC Curriculum Designs<br>PP1-G9 - REAL AI Explains + Video</h1>
+  <p class="text-[14px] opacity-90 mt-2 leading-relaxed">AI summarizes KICD design, searches word meaning by level PP1-G9 + comparison, YouTube video of strand, sets homework/exam FROM design</p>
+  <div class="search-box mt-4">
+    <input id="searchInput" placeholder="e.g. Crop production" value="Crop production">
+    <button class="btn-search" onclick="searchNotes()">Search<br>Notes</button>
+  </div>
+  <div id="searchResult" class="card mt-4 text-gray-800"></div>
 </div>
 
-<div class="mt-6 grid md:grid-cols-5 gap-3">
-<select id="gradeSel" class="border p-3 rounded-xl text-sm bg-white"><option>PP1</option><option>PP2</option><option>Grade 1</option><option>Grade 2</option><option>Grade 3</option><option>Grade 4</option><option>Grade 5</option><option selected>Grade 6</option><option>Grade 7</option><option>Grade 8</option><option>Grade 9</option></select>
-<select id="subSel" class="border p-3 rounded-xl text-sm bg-white"><option>Mathematics</option><option>English</option><option>Kiswahili</option><option>Science and Technology</option><option>SST</option><option>CRE</option><option>Agriculture and Nutrition</option><option>Creative Arts</option><option>Pre-Technical</option></select>
-<button onclick="loadDesigns()" class="bg-teal-600 text-white py-3 rounded-xl font-bold text-sm">📘 Show Designs</button>
-<button onclick="aiExplainDesign()" class="bg-black text-white py-3 rounded-xl font-bold text-sm">🤖 AI Explain Design</button>
-<button onclick="aiSetFromDesign()" class="bg-green-600 text-white py-3 rounded-xl font-bold text-sm">📝 Set HW from Design</button>
+<!-- FILTERS -->
+<div class="mt-4 space-y-3">
+  <select id="gradeSel" class="w-full bg-white border rounded-xl p-3.5 text-[16px] outline-none" onchange="loadDesigns()">
+    <option>PP1</option><option>PP2</option><option>Grade 1</option><option>Grade 2</option><option>Grade 3</option><option>Grade 4</option><option>Grade 5</option><option>Grade 6</option><option>Grade 7</option><option selected>Grade 8</option><option>Grade 9</option>
+  </select>
+  <select id="subjectSel" class="w-full bg-white border rounded-xl p-3.5 text-[16px] outline-none" onchange="loadDesigns()">
+    <option value="">All Subjects</option>
+    <option>Agriculture and Nutrition</option><option>English</option><option>Kiswahili</option><option>Mathematics</option><option>Integrated Science</option><option>Social Studies</option><option>CRE</option><option>IRE</option><option>Creative Arts</option><option>Physical Education</option><option>Pre-Technical Studies</option>
+  </select>
+  <button class="w-full bg-[#0d9488] text-white font-black py-3.5 rounded-xl text-[16px]" onclick="loadDesigns()">📘 Show Designs</button>
 </div>
 
-<div id="aiDesignBox" class="hidden mt-6 bg-white p-5 rounded-[1.5rem] shadow border-2 border-teal-200"></div>
-<div id="list" class="mt-6 grid md:grid-cols-2 lg:grid-cols-3 gap-4"><p class="text-sm text-gray-500">Select grade → Show Designs</p></div>
-</div>
-
-<div id="authModal" class="hidden fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4"><div class="bg-white rounded-2xl p-6 w-full max-w-sm"><h3 class="font-bold">Teacher Login</h3><button id="gLogin" class="w-full border-2 py-3 rounded-full mt-3 font-bold text-sm">Google Login</button><input id="email" placeholder="Email" class="w-full border p-3 rounded-xl mt-3 text-sm"><input id="pass" type="password" placeholder="Password" class="w-full border p-3 rounded-xl mt-2 text-sm"><button id="eLogin" class="w-full bg-teal-600 text-white py-3 rounded-full mt-3 font-bold">Login</button><button onclick="closeM()" class="w-full mt-2 text-xs">Close</button></div></div>
-<div id="subModal" class="hidden fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4"><div class="bg-white rounded-2xl p-6 w-full max-w-sm text-center"><h3 class="font-bold">Unlock Designs - 500 KES Till 0701305109</h3><input id="mpesa" placeholder="M-Pesa Code" class="w-full border p-3 rounded-xl mt-3 uppercase font-bold text-sm"><button onclick="submitMpesa()" class="w-full bg-green-600 text-white py-3 rounded-full mt-3 font-bold">Submit</button><button onclick="closeM()" class="w-full mt-2 text-xs">Close</button></div></div>
+<div id="designsList" class="mt-4 space-y-3"></div>
+<div id="detailBox" class="mt-4"></div>
 
 <script>
-let currentUser=null, userData=null, geminiKey="", allDesigns=[];
-function closeM(){document.getElementById('authModal').classList.add('hidden'); document.getElementById('subModal').classList.add('hidden');}
-async function callGemini(prompt){
- if(!geminiKey) return null;
- try{ const res=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${geminiKey}`,{method:"POST", headers:{"Content-Type":"application/json"}, body: JSON.stringify({contents:[{parts:[{text: prompt}]}]})}); const data=await res.json(); return data.candidates?.[0]?.content?.parts?.[0]?.text||null; }catch(e){return null;}
+const PROXY = "/api/gemini";
+let ALL = [];
+let currentGrade = "Grade 8";
+
+// --- LOAD DESIGNS FROM FIRESTORE - NO KEY NEEDED ---
+async function loadResources(){
+  try{
+    let FB = window.FB;
+    let s = await FB.getDocs(FB.collection(FB.db,'resources'));
+    ALL = []; s.forEach(d=>ALL.push({id:d.id,...d.data()}));
+  }catch(e){ ALL = []; }
+  loadDesigns();
 }
-async function loadDesigns(){
- const grade=document.getElementById('gradeSel').value; const sub=document.getElementById('subSel').value;
- const list=document.getElementById('list'); list.innerHTML="Loading designs for "+grade+" "+sub+"...";
- try{
-  const FB=window.FB; const q=FB.query(FB.collection(FB.db,"resources"), FB.where("grade","==",grade), FB.where("subject","==",sub), FB.where("type","==","Curriculum Design"));
-  const snap=await FB.getDocs(q); allDesigns=[]; list.innerHTML="";
-  if(snap.empty){list.innerHTML=`<div class="col-span-3 text-center py-10 bg-white rounded-2xl border"><p>No designs for ${grade} - ${sub} yet</p><p class="text-xs mt-2">Add via admin.html Type=Curriculum Design<br>Free KICD link: <a href="https://kicd.ac.ke/cbc-materials/curriculum-designs/" target="_blank" class="text-blue-600 underline">kicd.ac.ke</a></p><button onclick="aiExplainDesign()" class="mt-3 bg-black text-white px-4 py-2 rounded-full text-xs">🤖 AI Explain KICD Design for ${grade} ${sub}</button></div>`; return;}
-  snap.forEach(d=>{const r=d.data(); r.id=d.id; allDesigns.push(r);});
-  allDesigns.forEach(r=>{
-   const prem=userData?.isPremium;
-   list.innerHTML+=`<div class="bg-white p-5 rounded-2xl shadow border"><div class="flex justify-between text-[10px]"><span class="bg-teal-100 text-teal-700 px-2 py-1 rounded-full font-bold">${r.grade}</span><span class="bg-green-100 px-2 py-1 rounded-full">${r.subject}</span></div><h3 class="font-bold text-sm mt-3">${r.title}</h3><p class="text-[11px] text-gray-500 mt-1">📘 KICD Official 2024 • Strand info</p><div class="grid grid-cols-2 gap-2 mt-3"><button onclick="openLink('${r.link}')" class="w-full ${prem?'bg-teal-600':'bg-gray-300'} text-white py-2 rounded-full text-xs font-bold">${prem?'📥 Download':'🔒 Subscribe'}</button><button onclick="aiExplainOne('${r.id}')" class="w-full border py-2 rounded-full text-xs font-bold">🤖 AI Explain</button></div><button onclick="aiSetOne('${r.id}')" class="w-full mt-2 bg-black text-white py-2 rounded-full text-[10px] font-bold">📝 Set HW/Exam FROM This Design</button></div>`;
+async function callAI(prompt, question){
+  // FIX: Uses Vercel /api/gemini - GEMINI -> OPENROUTER -> OPENAI. No admin.html key needed.
+  let res = await fetch(PROXY,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({
+    prompt: prompt,
+    question: question || prompt,
+    grade: currentGrade,
+    task: "EN",
+    history: []
+  })});
+  let data = {};
+  try{ data = await res.json(); }catch(e){}
+  let txt = data.answer || data.text || data.reply || "";
+  if(!txt) throw new Error(data.error || data.details || "AI busy, try again");
+  return txt;
+}
+function formatAI(text){
+  let esc = text.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+  esc = esc.replace(/\*\*(.*?)\*\*/g,"<b>$1</b>");
+  esc = esc.replace(/\*(.*?)\*/g,"<i>$1</i>");
+  esc = esc.replace(/^### (.*)$/gm,"<div style='color:#5eead4;font-weight:900;margin:10px 0 4px'>$1</div>");
+  esc = esc.replace(/^## (.*)$/gm,"<div style='color:#5eead4;font-weight:900;margin:10px 0 4px'>$1</div>");
+  let lines = esc.split("\n"); let out=""; let inList=false;
+  lines.forEach(l=>{
+    let t=l.trim();
+    if(/^(Key Point|Important|Note|Answer|Final Answer|Solution)[:：]/i.test(t)){
+      if(inList){out+="</ul>";inList=false;}
+      let cls=/^(Answer|Final Answer|Solution)/i.test(t)?"ai-answer":/^(Note|Important)/i.test(t)?"ai-note":"ai-key";
+      out+=`<p><span class="${cls}">${l}</span></p>`;
+    }
+    else if(/^\d+\.\s/.test(l)){ out+=`<p><b>${l}</b></p>`; }
+    else if(/^[-*]\s/.test(l)){ if(!inList){out+="<ul>";inList=true;} out+=`<li>${l.replace(/^[-*]\s/,"")}</li>`; }
+    else { if(inList){out+="</ul>";inList=false;} if(t) out+=`<p>${l}</p>`; }
   });
- }catch(e){document.getElementById('list').innerHTML=e.message;}
-}
-function openLink(link){ if(!currentUser){document.getElementById('authModal').classList.remove('hidden'); return;} if(!userData?.isPremium){document.getElementById('subModal').classList.remove('hidden'); return;} window.open(link,"_blank"); }
-
-async function searchWord(){
- const w=document.getElementById('wordSearch').value.trim(); if(!w) return alert("Type word/strand");
- const grade=document.getElementById('gradeSel').value; const sub=document.getElementById('subSel').value;
- const box=document.getElementById('searchResult'); box.classList.remove('hidden'); box.innerHTML=`<p class="animate-pulse">🔍 Searching "${w}" in designs + notes for ${grade}...</p>`;
- let found=allDesigns.filter(n=>(n.title+n.description).toLowerCase().includes(w.toLowerCase()));
- let ai=await callGemini(`Explain term/strand "${w}" for Kenyan CBC ${grade} ${sub} curriculum design. Give meaning according to level, comparison PP1 vs ${grade}, strands/sub-strands, learning outcomes, suggested activities. Notes found: ${found.map(n=>n.title).join(', ')||'none'}. Simple English+Kiswahili, Kenyan example.`);
- box.innerHTML=`<h3 class="font-black">🔍 "${w}" - ${found.length} designs + AI meaning for ${grade}</h3><div class="mt-2">${found.map(n=>`<div class="bg-teal-50 p-2 rounded-lg text-xs"><b>${n.title}</b> - ${n.description?.substring(0,100)} <button onclick="openLink('${n.link}')" class="bg-teal-600 text-white px-2 py-1 rounded-full ml-2">Open</button></div>`).join('')||''}<div class="mt-3 bg-black text-white p-4 rounded-xl text-xs">${ai? ai.replace(/\n/g,'<br>') : 'Add Gemini key in admin.html → AI Brain for real AI meaning + level comparison'}</div></div>`;
-}
-function searchYouTube(){
- const w=document.getElementById('wordSearch').value.trim(); if(!w) return alert("Type word first");
- const grade=document.getElementById('gradeSel').value; const box=document.getElementById('youtubeBox'); box.classList.remove('hidden');
- const q=encodeURIComponent(w+" "+grade+" CBC Kenya strand explained process");
- box.innerHTML=`<h3 class="font-bold text-sm">🎥 YouTube for "${w}" - ${grade}</h3><iframe class="w-full h-[220px] rounded-xl mt-2" src="https://www.youtube.com/embed?listType=search&list=${q}" frameborder="0" allowfullscreen></iframe><a href="https://www.youtube.com/results?search_query=${q}" target="_blank" class="mt-2 block bg-red-600 text-white p-3 rounded-xl text-center font-bold text-sm">📺 Open YouTube: ${w}</a>`;
+  if(inList) out+="</ul>";
+  return out;
 }
 
-async function aiExplainDesign(){
- const grade=document.getElementById('gradeSel').value; const sub=document.getElementById('subSel').value;
- const box=document.getElementById('aiDesignBox'); box.classList.remove('hidden'); box.innerHTML=`<p class="animate-pulse">🤖 AI summarizing KICD Curriculum Design for ${grade} ${sub}...</p>`;
- let ai=await callGemini(`Summarize KICD Curriculum Design for Kenyan CBC ${grade} ${sub}. Give: Strands, Sub-strands, Learning Outcomes, Suggested Activities, Resources, Assessment, comparison PP1 vs ${grade}, level info. Explain simple for teacher.`);
- box.innerHTML=`<h3 class="font-black">🤖 KICD Curriculum Design Summary - ${grade} ${sub}</h3><div class="mt-3 bg-gray-50 p-4 rounded-xl text-sm leading-relaxed">${ai? ai.replace(/\n/g,'<br>') : 'Add Gemini key in admin.html → AI Brain for real KICD summary'}</div><div class="mt-3 flex gap-2"><button onclick="aiSetFromDesign()" class="bg-green-600 text-white px-4 py-2 rounded-full text-xs font-bold">📝 Set HW/Exam from this Design</button><button onclick="searchYouTube()" class="bg-red-600 text-white px-4 py-2 rounded-full text-xs font-bold">🎥 Video for Strands</button></div>`;
- box.scrollIntoView({behavior:'smooth'});
-}
-async function aiExplainOne(id){
- const d=allDesigns.find(x=>x.id===id); const box=document.getElementById('aiDesignBox'); box.classList.remove('hidden'); box.innerHTML=`<p class="animate-pulse">🤖 Explaining ${d.title}...</p>`;
- let ai=await callGemini(`Explain curriculum design: ${d.title} ${d.description} Grade ${d.grade} Subject ${d.subject}. Give strands, outcomes, activities, level comparison, meaning by level, simple English+Kiswahili.`);
- box.innerHTML=`<h3 class="font-black">🤖 ${d.title} - AI Explained</h3><div class="mt-3 bg-gray-50 p-4 rounded-xl text-sm">${ai? ai.replace(/\n/g,'<br>') : 'Add Gemini key for real explanation'}</div>`; box.scrollIntoView({behavior:'smooth'});
-}
-async function aiSetFromDesign(){
- const grade=document.getElementById('gradeSel').value; const sub=document.getElementById('subSel').value;
- const box=document.getElementById('aiDesignBox'); box.classList.remove('hidden'); box.innerHTML=`<p class="animate-pulse">🤖 Setting Homework/Exam FROM KICD Design for ${grade} ${sub}...</p>`;
- let ctx=allDesigns.map(n=>n.title+": "+n.description?.substring(0,80)).join('\n')||`KICD ${grade} ${sub} design`;
- let ai=await callGemini(`From KICD Curriculum Design for ${grade} ${sub}:\n${ctx}\n\nCreate: 1) 5 Homework Qs according to ${grade} level, 2) 5 Exam Qs, 3) Answers + marking scheme, 4) Level comparison PP1 vs ${grade}, 5) Strands covered. CBC format.`);
- box.innerHTML=`<h3 class="font-black">📝 Homework & Exam FROM KICD Design - ${grade} ${sub}</h3><div class="mt-3 bg-green-50 p-4 rounded-xl text-sm">${ai? ai.replace(/\n/g,'<br>') : 'Add Gemini key for real HW from design'}</div><div class="mt-3"><a href="/ai-homework.html" class="bg-black text-white px-4 py-2 rounded-full text-xs font-bold">📸 AI Mark Answers</a></div>`; box.scrollIntoView({behavior:'smooth'});
-}
-async function aiSetOne(id){
- const d=allDesigns.find(x=>x.id===id); const box=document.getElementById('aiDesignBox'); box.classList.remove('hidden'); box.innerHTML=`<p class="animate-pulse">📝 Setting HW from ${d.title}...</p>`;
- let ai=await callGemini(`From design ${d.title} ${d.description} Grade ${d.grade} ${d.subject}, create 5 HW + 5 Exam Qs according to ${d.grade} level, with answers, marking, level comparison.`);
- box.innerHTML=`<h3 class="font-black">📝 HW/Exam FROM: ${d.title}</h3><div class="mt-3 bg-green-50 p-4 rounded-xl text-sm">${ai? ai.replace(/\n/g,'<br>') : 'Add Gemini key'}</div>`; box.scrollIntoView({behavior:'smooth'});
+// --- SEARCH NOTES - FIXED: Never says "Add Gemini key", always gives AI answer ---
+async function searchNotes(){
+  let q = document.getElementById("searchInput").value.trim();
+  if(!q) return;
+  currentGrade = document.getElementById("gradeSel").value;
+  let box = document.getElementById("searchResult");
+  // Find designs - fuzzy: match any word >3 letters, not exact title only
+  let words = q.toLowerCase().split(/[^a-z0-9]+/).filter(w=>w.length>3);
+  let matched = ALL.filter(r=>{
+    let hay = ((r.title||"")+" "+(r.subject||"")+" "+(r.description||"")+" "+(r.strand||"")).toLowerCase();
+    return r.grade==currentGrade && words.some(w=>hay.includes(w));
+  });
+  // Also try any grade if none in this grade - so "0 designs" never blocks learning
+  if(!matched.length) matched = ALL.filter(r=>{
+    let hay = ((r.title||"")+" "+(r.subject||"")+" "+(r.description||"")).toLowerCase();
+    return words.some(w=>hay.includes(w));
+  }).slice(0,3);
+
+  box.innerHTML = `<p class="font-black">🔍 "${q}" - ${matched.length} designs + AI meaning for ${currentGrade}</p><div class="ai-box mt-2">⏳ Thinking... using Vercel AI (Gemini → OpenRouter → OpenAI)</div>`;
+  let designCtx = matched.length ? matched.map((r,i)=>`${i+1}. [${r.type||'Design'}] ${r.title} | ${r.grade} ${r.subject} | ${r.description||''}`).join("\n") : "No exact design in Firestore - use CBC / KICD knowledge.";
+  let prompt = `You are SomaHub CBC Tutor for ${currentGrade}. Topic: ${q}\nDesigns found:\n${designCtx}\n\nTASK: 1. Give clear meaning of "${q}" for ${currentGrade} in simple English + Kiswahili word if needed. 2. Compare how this topic is taught in PP1, Grade 4, Grade 7, Grade 9 - what is different? 3. Give 3 Key Points. 4. Give 1 Kenya real-life example. Use **bold** for key points. Start key lines with Key Point:, Answer:, Note:. Never mention Admin, Designs missing, or keys. Just give answer.`;
+  try{
+    let ai = await callAI(prompt, q);
+    let videoQ = encodeURIComponent(q + " " + currentGrade + " CBC Kenya lesson");
+    box.innerHTML = `<p class="font-black">🔍 "${q}" - ${matched.length} designs + AI meaning for ${currentGrade}</p>
+      ${matched.map(r=>`<div class="mt-2 text-[13px]"><b>${r.title}</b> • ${r.grade} ${r.subject} <button class="action-btn bg-[#0d9488] ml-1" onclick="openDesign('${r.id}')">Open</button></div>`).join("")}
+      <div class="ai-box mt-3">${formatAI(ai)}</div>
+      <div class="flex gap-2 mt-3 flex-wrap">
+        <a target="_blank" href="https://www.youtube.com/results?search_query=${videoQ}" class="action-btn bg-red-600 no-underline">▶ Watch Video</a>
+        <button class="action-btn bg-orange-500" onclick="makeHomework('${q.replace(/'/g,"")}')">Set Homework</button>
+        <button class="action-btn bg-[#263b99]" onclick="makeExam('${q.replace(/'/g,"")}')">Set Exam</button>
+      </div>`;
+  }catch(e){
+    box.innerHTML = `<p class="font-black">🔍 "${q}" - ${matched.length} designs</p><div class="ai-box mt-2">AI is busy. Try again in a few seconds. (${e.message})</div>`;
+  }
 }
 
-setTimeout(()=>{
- const FB=window.FB;
- document.getElementById('gLogin').onclick=async()=>{try{await FB.signInWithPopup(FB.auth,FB.provider)}catch(e){alert(e.message)}};
- document.getElementById('eLogin').onclick=async()=>{const em=document.getElementById('email').value, ps=document.getElementById('pass').value; try{await FB.createUserWithEmailAndPassword(FB.auth,em,ps)}catch{try{await FB.signInWithEmailAndPassword(FB.auth,em,ps)}catch(e){alert(e.message)}};};
- document.getElementById('authBtn').onclick=()=>{if(currentUser) FB.signOut(FB.auth); else document.getElementById('authModal').classList.remove('hidden');};
- FB.onAuthStateChanged(FB.auth, async(u)=>{
-  currentUser=u;
-  if(u){
-   document.getElementById('authBtn').innerText="Logout";
-   const ref=FB.doc(FB.db,"users",u.uid); const snap=await FB.getDoc(ref);
-   if(!snap.exists()){await FB.setDoc(ref,{email:u.email, role:"teacher", isPremium:false, mpesaCode:"", createdAt:FB.serverTimestamp()}); userData={isPremium:false};}
-   else{userData=snap.data(); if(userData.isPremium){document.getElementById('premB').classList.remove('hidden');}}
-   try{const cfg=await FB.getDoc(FB.doc(FB.db,"config","ai")); if(cfg.exists() && cfg.data().geminiKey){geminiKey=cfg.data().geminiKey; document.getElementById('aiLive').innerText="AI LIVE ✅"; document.getElementById('aiLive').className="bg-green-100 text-green-700 text-[9px] px-2 py-1 rounded-full ml-2";}}catch(e){}
-  }else{document.getElementById('authBtn').innerText="Login"; userData=null; document.getElementById('premB').classList.add('hidden');}
- });
- loadDesigns();
-},600);
-async function submitMpesa(){const c=document.getElementById('mpesa').value.trim().toUpperCase(); if(!c) return alert("Enter"); if(!currentUser) return alert("Login"); const FB=window.FB; await FB.updateDoc(FB.doc(FB.db,"users",currentUser.uid),{mpesaCode:c, status:"pending_payment"}); alert("✅ Sent Till 0701305109"); closeM();}
-window.loadDesigns=loadDesigns; window.openLink=openLink; window.closeM=closeM; window.submitMpesa=submitMpesa; window.searchWord=searchWord; window.searchYouTube=searchYouTube; window.aiExplainDesign=aiExplainDesign; window.aiExplainOne=aiExplainOne; window.aiSetFromDesign=aiSetFromDesign; window.aiSetOne=aiSetOne;
+function loadDesigns(){
+  currentGrade = document.getElementById("gradeSel").value;
+  let subj = document.getElementById("subjectSel").value;
+  let list = ALL.filter(r=>r.grade==currentGrade && (!subj || r.subject==subj));
+  let box = document.getElementById("designsList");
+  if(!list.length){
+    box.innerHTML = `<div class="card text-center text-gray-500 text-[13px]">No saved designs for ${currentGrade} ${subj||''} yet.<br>Use Search Notes above - AI will generate from CBC / KICD.</div>`;
+    return;
+  }
+  box.innerHTML = list.map(r=>`<div class="card"><p class="font-black text-[14px]">${r.title}</p><p class="text-[12px] text-gray-500">${r.grade} • ${r.subject} • ${r.type||'Design'}</p><p class="text-[13px] mt-1">${(r.description||'').slice(0,180)}</p><div class="flex gap-2 mt-2"><button class="action-btn bg-[#0d9488]" onclick="openDesign('${r.id}')">Open + AI Explains</button></div></div>`).join("");
+}
+async function openDesign(id){
+  let r = ALL.find(x=>x.id==id); if(!r) return;
+  currentGrade = r.grade || currentGrade;
+  let box = document.getElementById("detailBox");
+  box.innerHTML = `<div class="card"><h3 class="font-black">${r.title}</h3><p class="text-[12px] text-gray-500">${r.grade} • ${r.subject}</p><p class="text-[14px] mt-2">${r.description||''}</p><div class="ai-box mt-3">⏳ AI Explains...</div></div>`;
+  box.scrollIntoView({behavior:"smooth"});
+  try{
+    let prompt = `You are SomaHub CBC Tutor for ${r.grade}. Design: Title: ${r.title}, Subject: ${r.subject}, Description: ${r.description||''}, Strand: ${r.strand||''}\nTASK: Summarize this KICD design in simple steps for learner + teacher. Give: 1. Meaning, 2. Key Points, 3. Activities, 4. Assessment. Use **bold** for key points. Never mention missing resources or keys.`;
+    let ai = await callAI(prompt, r.title);
+    box.querySelector(".ai-box").innerHTML = formatAI(ai);
+  }catch(e){ box.querySelector(".ai-box").innerHTML = "AI busy, try again."; }
+}
+async function makeHomework(topic){
+  let box = document.getElementById("searchResult");
+  box.innerHTML += `<div class="ai-box mt-3">⏳ Setting homework...</div>`;
+  try{
+    let ai = await callAI(`Set Homework for ${currentGrade} on ${topic}. 5 questions easy to hard, 1 real-life Kenya example, Answers at end. Use **bold**.`, topic);
+    box.innerHTML += `<div class="ai-box mt-2">${formatAI(ai)}</div>`;
+  }catch(e){}
+}
+async function makeExam(topic){
+  let box = document.getElementById("searchResult");
+  box.innerHTML += `<div class="ai-box mt-3">⏳ Setting exam...</div>`;
+  try{
+    let ai = await callAI(`Set Exam for ${currentGrade} on ${topic}. 10 questions: 5 MCQ, 3 Short Answer, 2 Structured. Give Marking Scheme at end. Use **bold**.`, topic);
+    box.innerHTML += `<div class="ai-box mt-2">${formatAI(ai)}</div>`;
+  }catch(e){}
+}
+setTimeout(loadResources, 800);
 </script>
 </body>
 </html>
