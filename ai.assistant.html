@@ -4,2533 +4,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>SomaHub Tutor</title>
-
-<script src="https://cdn.tailwindcss.com"></script>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800;900&display=swap" rel="stylesheet">
-
-<style>
-*{box-sizing:border-box}
-
-html,body{
-  margin:0;
-  padding:0;
-  width:100%;
-  height:100%;
-  font-family:'Nunito',sans-serif;
-  background:#f5f8ff;
-}
-
-body{overflow:hidden}
-
-#app{
-  width:100%;
-  height:100dvh;
-  min-height:100svh;
-  display:flex;
-  flex-direction:column;
-  overflow:hidden;
-}
-
-#topHeader{
-  flex:0 0 auto;
-  height:64px;
-  min-height:64px;
-  background:#fff;
-  border-bottom:1px solid #e7ebf2;
-  z-index:20;
-}
-
-#chat{
-  flex:1 1 auto;
-  min-height:0;
-  overflow-y:auto;
-  overflow-x:hidden;
-  -webkit-overflow-scrolling:touch;
-  padding-bottom:10px;
-}
-
-#chat::-webkit-scrollbar{width:4px}
-#chat::-webkit-scrollbar-thumb{
-  background:#d4d9e4;
-  border-radius:20px;
-}
-
-.chat-inner{
-  width:100%;
-  max-width:980px;
-  margin:auto;
-  padding:18px 14px 25px;
-}
-
-#welcome{
-  width:100%;
-  max-width:760px;
-  margin:auto;
-  padding:38px 10px 25px;
-  text-align:center;
-}
-
-.welcome-logo{
-  width:88px;
-  height:88px;
-  margin:auto;
-  border-radius:28px;
-  background:linear-gradient(145deg,#3349b8,#5368dc);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-size:42px;
-  box-shadow:0 12px 30px rgba(51,73,184,.18);
-}
-
-.welcome-title{
-  margin-top:18px;
-  color:#263b99;
-  font-size:clamp(25px,4vw,40px);
-  font-weight:900;
-  line-height:1.15;
-}
-
-.welcome-text{
-  margin:12px auto 0;
-  max-width:560px;
-  color:#68738a;
-  font-size:clamp(14px,2vw,17px);
-  line-height:1.6;
-}
-
-.message-in{
-  animation:messageIn .16s ease-out;
-}
-
-@keyframes messageIn{
-  from{opacity:0;transform:translateY(5px)}
-  to{opacity:1;transform:none}
-}
-
-/* ================= AI ANSWER ================= */
-
-.ai-card{
-  background:#fff;
-  border:1px solid #e4e8f0;
-  border-radius:18px;
-  padding:16px 18px;
-  line-height:1.7;
-  font-size:14px;
-  color:#111827;
-  box-shadow:0 3px 12px rgba(30,50,90,.04);
-  overflow-wrap:anywhere;
-}
-
-.ai-card p{margin:7px 0}
-
-.ai-topic{
-  color:#dc2626;
-  font-size:13px;
-  font-weight:900;
-  margin:2px 0 8px;
-}
-
-.ai-explanation{
-  color:#2563eb;
-  font-size:15px;
-  font-weight:900;
-  margin:11px 0 5px;
-}
-
-.ai-detail{
-  color:#111827;
-  font-weight:600;
-}
-
-.ai-card ul{
-  margin:7px 0 7px 20px;
-  list-style:disc;
-}
-
-.ai-card ol{
-  margin:7px 0 7px 20px;
-  list-style:decimal;
-}
-
-/* ================= INPUT ================= */
-
-#inputFooter{
-  flex:0 0 auto;
-  width:100%;
-  background:#f1f4fa;
-  border-top:1px solid #dfe5ef;
-  padding:8px 10px;
-  padding-bottom:max(8px,env(safe-area-inset-bottom));
-  z-index:30;
-}
-
-.input-inner{
-  width:100%;
-  max-width:980px;
-  margin:auto;
-}
-
-.input-row{
-  width:100%;
-  display:flex;
-  align-items:flex-end;
-  gap:7px;
-}
-
-.message-box{
-  flex:1 1 auto;
-  min-width:0;
-  min-height:48px;
-  max-height:125px;
-  background:#fff;
-  border:1px solid #dce2eb;
-  border-radius:26px;
-  display:flex;
-  align-items:flex-end;
-  padding:4px 7px;
-  box-shadow:0 2px 8px rgba(20,40,80,.05);
-}
-
-.message-box:focus-within{
-  border-color:#7184d8;
-  box-shadow:0 0 0 3px rgba(81,102,210,.08);
-}
-
-.tool-btn{
-  width:38px;
-  height:38px;
-  min-width:38px;
-  border:0;
-  border-radius:50%;
-  background:transparent;
-  color:#667085;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  cursor:pointer;
-}
-
-.tool-btn:active{transform:scale(.94)}
-
-#msg{
-  flex:1;
-  min-width:0;
-  border:0;
-  outline:none;
-  background:transparent;
-  resize:none;
-  font-family:'Nunito',sans-serif;
-  font-size:15px;
-  line-height:21px;
-  color:#182033;
-  padding:9px 6px;
-  min-height:40px;
-  max-height:105px;
-  overflow-y:auto;
-}
-
-#msg::placeholder{color:#98a2b3}
-
-.action-btn{
-  width:48px;
-  height:48px;
-  min-width:48px;
-  border:0;
-  border-radius:50%;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  color:#fff;
-  cursor:pointer;
-  box-shadow:0 4px 12px rgba(30,45,100,.18);
-}
-
-.action-btn:active{transform:scale(.92)}
-
-#voiceBtn{background:#263b99}
-#sendBtn{background:#20c56b}
-
-#voiceBtn.recording{
-  background:#dc2626;
-  animation:pulseRecord 1s infinite;
-}
-
-@keyframes pulseRecord{
-  0%,100%{box-shadow:0 0 0 0 rgba(220,38,38,.25)}
-  50%{box-shadow:0 0 0 9px rgba(220,38,38,0)}
-}
-
-.thinking-bubble{
-  display:flex;
-  align-items:center;
-  gap:8px;
-  color:#7b8496;
-  font-size:12px;
-}
-
-.thinking-dots{
-  display:flex;
-  gap:3px;
-}
-
-.thinking-dots span{
-  width:5px;
-  height:5px;
-  border-radius:50%;
-  background:#6574c5;
-  animation:dot .8s infinite;
-}
-
-.thinking-dots span:nth-child(2){animation-delay:.15s}
-.thinking-dots span:nth-child(3){animation-delay:.3s}
-
-@keyframes dot{
-  0%,100%{opacity:.25;transform:translateY(0)}
-  50%{opacity:1;transform:translateY(-2px)}
-}
-
-#historyDrawer{
-  position:fixed;
-  inset:0;
-  z-index:100;
-  background:#f8faff;
-}
-
-button,select{
-  -webkit-tap-highlight-color:transparent;
-  font-family:inherit;
-}
-
-.hidden{display:none!important}
-
-/* PHONE */
-@media(max-width:480px){
-
-  #topHeader{
-    height:60px;
-    min-height:60px;
-  }
-
-  .header-title{font-size:13px!important}
-  .header-status{font-size:9px!important}
-
-  #grade{
-    max-width:105px;
-    font-size:11px!important;
-    padding-left:9px;
-    padding-right:9px;
-  }
-
-  .chat-inner{
-    padding:12px 9px 18px;
-  }
-
-  #welcome{
-    padding:25px 8px 20px;
-  }
-
-  .welcome-logo{
-    width:72px;
-    height:72px;
-    border-radius:24px;
-    font-size:34px;
-  }
-
-  .welcome-title{font-size:24px}
-  .welcome-text{font-size:13px}
-
-  .ai-card{
-    font-size:13.5px;
-    padding:14px;
-    border-radius:16px;
-  }
-
-  .tool-btn{
-    width:34px;
-    min-width:34px;
-    height:36px;
-  }
-
-  #msg{
-    font-size:14px;
-    padding-left:3px;
-    padding-right:3px;
-  }
-
-  .action-btn{
-    width:45px;
-    height:45px;
-    min-width:45px;
-  }
-}
-
-/* TABLET */
-@media(min-width:600px){
-
-  #topHeader{
-    height:70px;
-    min-height:70px;
-  }
-
-  .chat-inner{
-    padding-left:24px;
-    padding-right:24px;
-  }
-
-  #inputFooter{
-    padding-left:20px;
-    padding-right:20px;
-  }
-
-  .message-box{min-height:52px}
-  #msg{font-size:16px}
-}
-
-/* LAPTOP */
-@media(min-width:1024px){
-
-  #topHeader{
-    height:74px;
-    min-height:74px;
-  }
-
-  .chat-inner{padding-top:24px}
-
-  #inputFooter{
-    padding:12px 24px 14px;
-  }
-
-  .message-box{min-height:54px}
-
-  .action-btn{
-    width:52px;
-    height:52px;
-    min-width:52px;
-  }
-}
-</style>
-</head>
-
-<body>
-
-<div id="app">
-
-<!-- HEADER -->
-<header id="topHeader" class="flex items-center justify-between px-3 md:px-5">
-
-  <div class="flex items-center gap-2.5 min-w-0">
-
-    <img
-      src="/logo.png"
-      onerror="this.onerror=null;this.src='https://i.pravatar.cc/100'"
-      class="w-10 h-10 md:w-11 md:h-11 rounded-full bg-white border object-cover shrink-0"
-      alt="SomaHub"
-    >
-
-    <div class="leading-tight min-w-0">
-
-      <p class="header-title font-black text-[15px] md:text-[17px] text-[#263b99] truncate">
-        SomaHub Tutor
-      </p>
-
-      <p class="header-status text-[10px] md:text-[11px] text-green-600 font-bold flex items-center gap-1">
-        <span class="w-2 h-2 bg-green-500 rounded-full inline-block"></span>
-        Online • Auto EN/SW
-      </p>
-
-    </div>
-
-  </div>
-
-  <div class="flex items-center gap-2">
-
-    <select
-      id="grade"
-      class="h-9 md:h-10 bg-[#f3f5fa] rounded-full px-3 md:px-4 text-[11px] md:text-[12px] font-bold outline-none border border-[#e1e5ed]"
-    >
-      <option>Playground</option>
-      <option>PP1</option>
-      <option>PP2</option>
-      <option>Grade 1</option>
-      <option>Grade 2</option>
-      <option>Grade 3</option>
-      <option>Grade 4</option>
-      <option>Grade 5</option>
-      <option>Grade 6</option>
-      <option selected>Grade 7</option>
-      <option>Grade 8</option>
-      <option>Grade 9</option>
-      <option>Grade 10</option>
-    </select>
-
-    <button
-      onclick="openHistory()"
-      class="w-9 h-9 md:w-10 md:h-10 rounded-full bg-[#263b99] text-white flex items-center justify-center text-[12px]"
-    >
-      <i class="fa-regular fa-clock"></i>
-    </button>
-
-  </div>
-</header>
-
-
-<!-- CHAT -->
-<main id="chat">
-
-  <div class="chat-inner">
-
-    <div id="welcome">
-
-      <div class="welcome-logo">🎓</div>
-
-      <h2 class="welcome-title">
-        How can I help you learn?
-      </h2>
-
-      <p class="welcome-text">
-        Ask a question, upload homework, or say Habari.
-        SomaHub Tutor helps learners and teachers in English and Kiswahili.
-      </p>
-
-    </div>
-
-    <div id="messages"></div>
-
-  </div>
-
-</main>
-
-
-<!-- INPUT -->
-<footer id="inputFooter">
-
-  <div class="input-inner">
-
-    <div
-      id="previewBox"
-      class="hidden mb-2 bg-white rounded-xl p-2 flex items-center gap-2 border border-gray-200"
-    >
-
-      <img
-        id="previewImg"
-        class="w-10 h-10 rounded-lg object-cover hidden"
-        alt=""
-      >
-
-      <i
-        id="previewDocIcon"
-        class="fa-solid fa-file text-gray-400 text-lg hidden"
-      ></i>
-
-      <span
-        id="previewName"
-        class="text-[11px] flex-1 truncate font-semibold text-gray-700"
-      ></span>
-
-      <button
-        onclick="clearAttach()"
-        class="w-7 h-7 bg-gray-900 text-white rounded-full text-[10px]"
-      >✕</button>
-
-    </div>
-
-
-    <div
-      id="errorBox"
-      class="hidden bg-red-50 text-red-600 text-[11px] px-3 py-1.5 rounded-xl mb-2 text-center"
-    ></div>
-
-
-    <div class="input-row">
-
-      <div class="message-box">
-
-        <button
-          onclick="document.getElementById('docInput').click()"
-          class="tool-btn"
-          aria-label="Attach document"
-        >
-          <i class="fa-solid fa-paperclip"></i>
-        </button>
-
-        <button
-          onclick="document.getElementById('imgInput').click()"
-          class="tool-btn"
-          aria-label="Choose image"
-        >
-          <i class="fa-solid fa-image"></i>
-        </button>
-
-        <button
-          onclick="document.getElementById('camInput').click()"
-          class="tool-btn"
-          aria-label="Camera"
-        >
-          <i class="fa-solid fa-camera"></i>
-        </button>
-
-        <textarea
-          id="msg"
-          rows="1"
-          placeholder="Ask SomaHub..."
-          autocomplete="off"
-          spellcheck="true"
-        ></textarea>
-
-      </div>
-
-      <!-- HOLD TO RECORD -->
-      <button
-        id="voiceBtn"
-        class="action-btn"
-        aria-label="Hold to speak"
-        title="Hold to speak"
-        type="button"
-      >
-        <i class="fa-solid fa-microphone"></i>
-      </button>
-
-      <!-- SEND -->
-      <button
-        id="sendBtn"
-        class="action-btn"
-        onclick="sendMsg()"
-        aria-label="Send"
-        type="button"
-      >
-        <i class="fa-solid fa-paper-plane text-[15px]"></i>
-      </button>
-
-    </div>
-
-    <p
-      id="listenTxt"
-      class="hidden text-[10px] text-red-500 text-center mt-1 font-bold"
-    >
-      ● Listening... release to stop
-    </p>
-
-  </div>
-
-</footer>
-
-</div>
-
-
-<!-- HISTORY -->
-<div id="historyDrawer" class="hidden flex-col">
-
-  <div class="h-14 border-b bg-white flex items-center justify-between px-4 shrink-0">
-
-    <button
-      onclick="closeHistory()"
-      class="font-bold text-sm text-[#263b99]"
-    >
-      ← Back
-    </button>
-
-    <b class="text-[14px]">History</b>
-
-    <button
-      onclick="clearHistory()"
-      class="text-[11px] text-gray-500"
-    >
-      Delete All
-    </button>
-
-  </div>
-
-  <div id="historyList" class="flex-1 overflow-auto p-3"></div>
-
-</div>
-
-
-<!-- FILE INPUTS -->
-<input
-  id="docInput"
-  type="file"
-  class="hidden"
-  accept=".pdf,.doc,.docx,.txt"
-  onchange="handleDoc(this)"
->
-
-<input
-  id="imgInput"
-  type="file"
-  class="hidden"
-  accept="image/*"
-  onchange="handlePhoto(this)"
->
-
-<input
-  id="camInput"
-  type="file"
-  class="hidden"
-  accept="image/*"
-  capture="environment"
-  onchange="handlePhoto(this)"
->
-
-
-<script>
-
-/* =========================================================
-   SOMAHUB CONFIG
-   DO NOT CHANGE THE API ENDPOINT
-========================================================= */
-
-const PROXY = "/api/gemini";
-
-let grade = "Grade 7";
-
-let uploadedPhoto = "";
-let uploadedMime = "";
-let uploadedDocName = "";
-
-let isThinking = false;
-
-let recognition = null;
-let listening = false;
-
-let chatHistory = [];
-
-
-/* =========================================================
-   DOM
-========================================================= */
-
-const chat = document.getElementById("chat");
-const messages = document.getElementById("messages");
-const msg = document.getElementById("msg");
-const welcome = document.getElementById("welcome");
-const voiceBtn = document.getElementById("voiceBtn");
-const listenTxt = document.getElementById("listenTxt");
-
-
-/* =========================================================
-   LANGUAGE
-========================================================= */
-
-const SW = [
-  "habari",
-  "mambo",
-  "nisaidie",
-  "hesabu",
-  "hisabati",
-  "sayansi",
-  "kiswahili",
-  "shule",
-  "mwalimu",
-  "asante",
-  "eleza",
-  "soma",
-  "darasa",
-  "mtihani",
-  "kwa nini",
-  "ni nini"
-];
-
-function detectLang(text){
-
-  if(!text) return "EN";
-
-  const t =
-    String(text).toLowerCase();
-
-  return SW.some(
-    word => t.includes(word)
-  ) ? "SW" : "EN";
-}
-
-
-/* =========================================================
-   GRADE
-========================================================= */
-
-document
-  .getElementById("grade")
-  .addEventListener("change",e => {
-
-    grade = e.target.value;
-
-  });
-
-
-/* =========================================================
-   TEXT AREA
-========================================================= */
-
-function resizeTextarea(){
-
-  msg.style.height = "auto";
-
-  msg.style.height =
-    Math.min(
-      Math.max(msg.scrollHeight,40),
-      105
-    ) + "px";
-}
-
-msg.addEventListener(
-  "input",
-  resizeTextarea
-);
-
-
-/* =========================================================
-   ENTER TO SEND
-========================================================= */
-
-msg.addEventListener(
-  "keydown",
-  e => {
-
-    if(
-      e.key === "Enter" &&
-      !e.shiftKey
-    ){
-
-      e.preventDefault();
-
-      sendMsg();
-
-    }
-
-  }
-);
-
-
-/* =========================================================
-   VOICE RECOGNITION
-   HOLD -> SPEAK
-   RELEASE -> STOP
-   TEXT REMAINS EDITABLE
-========================================================= */
-
-(function(){
-
-  const SpeechRecognition =
-    window.SpeechRecognition ||
-    window.webkitSpeechRecognition;
-
-  if(!SpeechRecognition){
-
-    recognition = null;
-
-    return;
-  }
-
-  recognition =
-    new SpeechRecognition();
-
-  recognition.continuous = false;
-
-  /*
-    We deliberately use final results only.
-    This prevents words from duplicating inside
-    the text box while the learner is speaking.
-  */
-  recognition.interimResults = false;
-
-  recognition.maxAlternatives = 1;
-
-
-  recognition.onstart = function(){
-
-    listening = true;
-
-    voiceBtn.classList.add(
-      "recording"
-    );
-
-    voiceBtn.innerHTML =
-      '<i class="fa-solid fa-stop"></i>';
-
-    listenTxt.classList.remove(
-      "hidden"
-    );
-
-  };
-
-
-  recognition.onresult = function(event){
-
-    let spoken = "";
-
-    for(
-      let i = event.resultIndex;
-      i < event.results.length;
-      i++
-    ){
-
-      if(
-        event.results[i].isFinal
-      ){
-
-        spoken +=
-          event.results[i][0].transcript;
-      }
-
-    }
-
-    spoken = spoken.trim();
-
-    if(spoken){
-
-      const existing =
-        msg.value.trim();
-
-      msg.value =
-        existing
-          ? existing + " " + spoken
-          : spoken;
-
-      resizeTextarea();
-
-      /*
-        Very important:
-        the learner can now edit the text
-        before pressing Send.
-      */
-
-      msg.focus();
-
-    }
-
-  };
-
-
-  recognition.onerror = function(event){
-
-    listening = false;
-
-    voiceBtn.classList.remove(
-      "recording"
-    );
-
-    voiceBtn.innerHTML =
-      '<i class="fa-solid fa-microphone"></i>';
-
-    listenTxt.classList.add(
-      "hidden"
-    );
-
-    if(
-      event.error !== "no-speech" &&
-      event.error !== "aborted"
-    ){
-
-      showError(
-        "Voice input: " +
-        event.error
-      );
-
-    }
-
-  };
-
-
-  recognition.onend = function(){
-
-    listening = false;
-
-    voiceBtn.classList.remove(
-      "recording"
-    );
-
-    voiceBtn.innerHTML =
-      '<i class="fa-solid fa-microphone"></i>';
-
-    listenTxt.classList.add(
-      "hidden"
-    );
-
-    resizeTextarea();
-
-  };
-
-})();
-
-
-/* =========================================================
-   START VOICE
-========================================================= */
-
-function startVoice(event){
-
-  if(event){
-    event.preventDefault();
-  }
-
-  if(!recognition){
-
-    showError(
-      "Voice typing is not supported here. Try Chrome."
-    );
-
-    return;
-  }
-
-  if(listening) return;
-
-  /*
-    Detect language from existing text.
-  */
-
-  recognition.lang =
-    detectLang(msg.value) === "SW"
-      ? "sw-KE"
-      : "en-KE";
-
-  try{
-
-    recognition.start();
-
-  }catch(error){
-
-    console.log(
-      "Speech start:",
-      error
-    );
-
-  }
-
-}
-
-
-/* =========================================================
-   STOP VOICE
-========================================================= */
-
-function stopVoice(event){
-
-  if(event){
-    event.preventDefault();
-  }
-
-  if(
-    recognition &&
-    listening
-  ){
-
-    recognition.stop();
-
-  }
-
-}
-
-
-/* =========================================================
-   TOUCH: HOLD TO RECORD
-========================================================= */
-
-voiceBtn.addEventListener(
-  "touchstart",
-  startVoice,
-  {passive:false}
-);
-
-voiceBtn.addEventListener(
-  "touchend",
-  stopVoice,
-  {passive:false}
-);
-
-voiceBtn.addEventListener(
-  "touchcancel",
-  stopVoice,
-  {passive:false}
-);
-
-
-/* =========================================================
-   MOUSE: HOLD TO RECORD
-========================================================= */
-
-voiceBtn.addEventListener(
-  "mousedown",
-  startVoice
-);
-
-voiceBtn.addEventListener(
-  "mouseup",
-  stopVoice
-);
-
-voiceBtn.addEventListener(
-  "mouseleave",
-  stopVoice
-);
-
-
-/* =========================================================
-   PHOTO
-========================================================= */
-
-function handlePhoto(input){
-
-  const file =
-    input.files[0];
-
-  if(!file) return;
-
-  const reader =
-    new FileReader();
-
-  reader.onload = function(){
-
-    const img =
-      new Image();
-
-    img.onload = function(){
-
-      const canvas =
-        document.createElement(
-          "canvas"
-        );
-
-      let width = img.width;
-      let height = img.height;
-
-      const max = 1200;
-
-      if(
-        width > max ||
-        height > max
-      ){
-
-        const scale =
-          Math.min(
-            max / width,
-            max / height
-          );
-
-        width =
-          Math.round(
-            width * scale
-          );
-
-        height =
-          Math.round(
-            height * scale
-          );
-
-      }
-
-      canvas.width = width;
-      canvas.height = height;
-
-      canvas
-        .getContext("2d")
-        .drawImage(
-          img,
-          0,
-          0,
-          width,
-          height
-        );
-
-      uploadedPhoto =
-        canvas.toDataURL(
-          "image/jpeg",
-          .72
-        );
-
-      uploadedMime =
-        "image/jpeg";
-
-      document
-        .getElementById(
-          "previewImg"
-        )
-        .src =
-        uploadedPhoto;
-
-      document
-        .getElementById(
-          "previewImg"
-        )
-        .classList
-        .remove("hidden");
-
-      document
-        .getElementById(
-          "previewDocIcon"
-        )
-        .classList
-        .add("hidden");
-
-      document
-        .getElementById(
-          "previewName"
-        )
-        .textContent =
-        file.name;
-
-      document
-        .getElementById(
-          "previewBox"
-        )
-        .classList
-        .remove("hidden");
-
-    };
-
-    img.src =
-      reader.result;
-
-  };
-
-  reader.readAsDataURL(file);
-
-  input.value = "";
-
-}
-
-
-/* =========================================================
-   DOCUMENT
-========================================================= */
-
-function handleDoc(input){
-
-  const file =
-    input.files[0];
-
-  if(!file) return;
-
-  uploadedDocName =
-    file.name;
-
-  uploadedPhoto = "";
-
-  document
-    .getElementById(
-      "previewImg"
-    )
-    .classList
-    .add("hidden");
-
-  document
-    .getElementById(
-      "previewDocIcon"
-    )
-    .classList
-    .remove("hidden");
-
-  document
-    .getElementById(
-      "previewName"
-    )
-    .textContent =
-    file.name;
-
-  document
-    .getElementById(
-      "previewBox"
-    )
-    .classList
-    .remove("hidden");
-
-  input.value = "";
-
-}
-
-
-/* =========================================================
-   CLEAR ATTACHMENT
-========================================================= */
-
-function clearAttach(){
-
-  uploadedPhoto = "";
-
-  uploadedMime = "";
-
-  uploadedDocName = "";
-
-  document
-    .getElementById(
-      "previewBox"
-    )
-    .classList
-    .add("hidden");
-
-}
-
-
-/* =========================================================
-   ERROR
-========================================================= */
-
-function showError(message){
-
-  const box =
-    document.getElementById(
-      "errorBox"
-    );
-
-  box.textContent =
-    message ||
-    "Something went wrong.";
-
-  box.classList.remove(
-    "hidden"
-  );
-
-  setTimeout(
-    () => {
-      box.classList.add(
-        "hidden"
-      );
-    },
-    5000
-  );
-
-}
-
-
-/* =========================================================
-   CLEAN AI RESPONSE
-========================================================= */
-
-function cleanAIText(text){
-
-  let result =
-    String(text || "");
-
-  /*
-    Remove bracket labels.
-  */
-
-  result =
-    result.replace(
-      /\[(topic|strand|explanation|answer|details?|detailed explanation|reason|correct answer)\]\s*/gi,
-      ""
-    );
-
-  /*
-    Remove markdown heading symbols.
-  */
-
-  result =
-    result.replace(
-      /^#{1,6}\s*/gm,
-      ""
-    );
-
-  /*
-    Remove empty square brackets.
-  */
-
-  result =
-    result.replace(
-      /\[\s*\]/g,
-      ""
-    );
-
-  return result.trim();
-
-}
-
-
-/* =========================================================
-   FORMAT AI RESPONSE
-========================================================= */
-
-function formatResponse(text){
-
-  let result =
-    cleanAIText(text);
-
-  /*
-    Escape HTML.
-  */
-
-  result =
-    result
-      .replace(/&/g,"&amp;")
-      .replace(/</g,"&lt;")
-      .replace(/>/g,"&gt;");
-
-
-  /*
-    Bold text.
-  */
-
-  result =
-    result.replace(
-      /\*\*(.*?)\*\*/g,
-      "<strong>$1</strong>"
-    );
-
-
-  /*
-    Topic / Strand = RED.
-  */
-
-  result =
-    result.replace(
-      /^(Topic|Strand)\s*[:\-]\s*(.*?)$/gim,
-      '<div class="ai-topic">$1: $2</div>'
-    );
-
-
-  /*
-    Explanation = BLUE.
-  */
-
-  result =
-    result.replace(
-      /^(Explanation|Answer|Correct Answer)\s*[:\-]?\s*$/gim,
-      '<div class="ai-explanation">$1</div>'
-    );
-
-
-  /*
-    Other choices explanation = BLUE.
-  */
-
-  result =
-    result.replace(
-      /^(Why the other choices are wrong|Why other choices are wrong)\s*[:\-]?\s*$/gim,
-      '<div class="ai-explanation">Why the other choices are wrong</div>'
-    );
-
-
-  const lines =
-    result.split("\n");
-
-  let html = "";
-
-  lines.forEach(line => {
-
-    line =
-      line.trim();
-
-    if(!line) return;
-
-
-    if(
-      line.includes(
-        'class="ai-topic"'
-      ) ||
-      line.includes(
-        'class="ai-explanation"'
-      )
-    ){
-
-      html += line;
-
-      return;
-
-    }
-
-
-    if(
-      line.startsWith("- ") ||
-      line.startsWith("• ")
-    ){
-
-      html +=
-        `<p class="ai-detail">• ${line.slice(2)}</p>`;
-
-      return;
-
-    }
-
-
-    if(
-      /^\d+\.\s/.test(line)
-    ){
-
-      html +=
-        `<p class="ai-detail">${line}</p>`;
-
-      return;
-
-    }
-
-
-    html +=
-      `<p class="ai-detail">${line}</p>`;
-
-  });
-
-
-  return html;
-
-}
-
-
-/* =========================================================
-   ADD USER MESSAGE
-========================================================= */
-
-function addUser(text){
-
-  welcome.classList.add(
-    "hidden"
-  );
-
-  const div =
-    document.createElement(
-      "div"
-    );
-
-  div.className =
-    "flex justify-end mb-3 message-in";
-
-
-  const safe =
-    String(text)
-      .replace(/</g,"&lt;")
-      .replace(/>/g,"&gt;");
-
-
-  div.innerHTML = `
-    <div
-      class="max-w-[82%] md:max-w-[70%]
-      bg-[#dcf8c6]
-      rounded-2xl rounded-br-sm
-      px-4 py-2.5
-      text-[13px] md:text-[14px]
-      shadow-sm text-gray-900"
-    >
-      ${safe}
-    </div>
-  `;
-
-
-  messages.appendChild(div);
-
-
-  chatHistory.push({
-    role:"user",
-    content:text
-  });
-
-
-  scrollBottom();
-
-}
-
-
-/* =========================================================
-   ADD USER PHOTO
-========================================================= */
-
-function addUserPhoto(photo){
-
-  welcome.classList.add(
-    "hidden"
-  );
-
-  const div =
-    document.createElement(
-      "div"
-    );
-
-  div.className =
-    "flex justify-end mb-3 message-in";
-
-
-  div.innerHTML = `
-    <div
-      class="bg-[#dcf8c6]
-      rounded-xl p-1 shadow-sm"
-    >
-      <img
-        src="${photo}"
-        class="max-w-[220px]
-        max-h-[300px]
-        rounded-lg
-        object-contain"
-        alt="Homework photo"
-      >
-    </div>
-  `;
-
-
-  messages.appendChild(div);
-
-  scrollBottom();
-
-}
-
-
-/* =========================================================
-   THINKING
-========================================================= */
-
-function addThinking(){
-
-  document
-    .getElementById(
-      "thinking"
-    )
-    ?.remove();
-
-
-  const div =
-    document.createElement(
-      "div"
-    );
-
-  div.id = "thinking";
-
-  div.className =
-    "flex gap-2 mb-3 items-start message-in";
-
-
-  div.innerHTML = `
-
-    <div
-      class="w-7 h-7 rounded-full
-      bg-[#3349b8]
-      text-white
-      flex items-center
-      justify-center
-      text-[11px]
-      shrink-0"
-    >
-      🎓
-    </div>
-
-    <div
-      class="bg-white
-      border border-gray-200
-      rounded-2xl
-      px-4 py-3
-      shadow-sm"
-    >
-
-      <div class="thinking-bubble">
-
-        <span>Thinking</span>
-
-        <div class="thinking-dots">
-          <span></span>
-          <span></span>
-          <span></span>
-        </div>
-
-      </div>
-
-    </div>
-
-  `;
-
-
-  messages.appendChild(div);
-
-  scrollBottom();
-
-}
-
-
-/* =========================================================
-   ADD AI ANSWER
-========================================================= */
-
-function addAI(text){
-
-  welcome.classList.add(
-    "hidden"
-  );
-
-
-  const id =
-    "ai_" +
-    Date.now();
-
-
-  const div =
-    document.createElement(
-      "div"
-    );
-
-  div.className =
-    "flex gap-2 mb-4 message-in items-start";
-
-
-  div.innerHTML = `
-
-    <div
-      class="w-7 h-7 rounded-full
-      bg-[#3349b8]
-      text-white
-      flex items-center
-      justify-center
-      text-[11px]
-      shrink-0 mt-1"
-    >
-      🎓
-    </div>
-
-    <div class="flex-1 min-w-0">
-
-      <div
-        id="${id}"
-        class="ai-card"
-      >
-        ${formatResponse(text)}
-      </div>
-
-      <div
-        class="flex flex-wrap
-        gap-1.5 mt-2"
-      >
-
-        <button
-          onclick="copyCard('${id}')"
-          class="h-7 px-3 bg-white
-          border border-gray-200
-          rounded-full
-          text-[10px] font-bold"
-        >
-          <i class="fa-regular fa-copy"></i>
-          Copy
-        </button>
-
-        <button
-          onclick="listenCard('${id}')"
-          class="h-7 px-3 bg-white
-          border border-gray-200
-          rounded-full
-          text-[10px] font-bold"
-        >
-          <i class="fa-solid fa-volume-high"></i>
-          Listen
-        </button>
-
-        <button
-          onclick="downloadCard('${id}')"
-          class="h-7 px-3 bg-white
-          border border-gray-200
-          rounded-full
-          text-[10px] font-bold"
-        >
-          <i class="fa-solid fa-download"></i>
-          Download
-        </button>
-
-        <button
-          onclick="printCard('${id}')"
-          class="h-7 px-3
-          bg-[#263b99]
-          text-white
-          rounded-full
-          text-[10px]
-          font-bold"
-        >
-          <i class="fa-solid fa-print"></i>
-          Print
-        </button>
-
-      </div>
-
-    </div>
-  `;
-
-
-  messages.appendChild(div);
-
-
-  chatHistory.push({
-    role:"assistant",
-    content:text
-  });
-
-
-  scrollBottom();
-
-}
-
-
-/* =========================================================
-   SCROLL
-========================================================= */
-
-function scrollBottom(){
-
-  requestAnimationFrame(() => {
-
-    chat.scrollTop =
-      chat.scrollHeight;
-
-  });
-
-}
-
-
-/* =========================================================
-   COPY
-========================================================= */
-
-async function copyCard(id){
-
-  const element =
-    document.getElementById(id);
-
-  if(!element) return;
-
-  const text =
-    element.innerText;
-
-  try{
-
-    await navigator.clipboard.writeText(
-      text
-    );
-
-  }catch{
-
-    const textarea =
-      document.createElement(
-        "textarea"
-      );
-
-    textarea.value = text;
-
-    document.body.appendChild(
-      textarea
-    );
-
-    textarea.select();
-
-    document.execCommand(
-      "copy"
-    );
-
-    textarea.remove();
-
-  }
-
-}
-
-
-/* =========================================================
-   LISTEN
-========================================================= */
-
-function listenCard(id){
-
-  if(
-    !("speechSynthesis" in window)
-  ){
-
-    showError(
-      "Speech playback is not supported."
-    );
-
-    return;
-
-  }
-
-
-  speechSynthesis.cancel();
-
-
-  const element =
-    document.getElementById(id);
-
-  if(!element) return;
-
-
-  const text =
-    element.innerText.slice(
-      0,
-      3000
-    );
-
-
-  const speech =
-    new SpeechSynthesisUtterance(
-      text
-    );
-
-
-  speech.lang =
-    detectLang(text) === "SW"
-      ? "sw-KE"
-      : "en-KE";
-
-
-  speech.rate = 1.05;
-
-  speech.pitch = 1;
-
-
-  speechSynthesis.speak(
-    speech
-  );
-
-}
-
-
-/* =========================================================
-   DOWNLOAD
-========================================================= */
-
-function downloadCard(id){
-
-  const element =
-    document.getElementById(id);
-
-  if(!element) return;
-
-
-  const text =
-    element.innerText;
-
-
-  const blob =
-    new Blob(
-      [text],
-      {type:"text/plain"}
-    );
-
-
-  const url =
-    URL.createObjectURL(blob);
-
-
-  const link =
-    document.createElement("a");
-
-
-  link.href = url;
-
-  link.download =
-    "SomaHub-" +
-    Date.now() +
-    ".txt";
-
-
-  document.body.appendChild(
-    link
-  );
-
-  link.click();
-
-  link.remove();
-
-
-  setTimeout(
-    () => URL.revokeObjectURL(url),
-    1000
-  );
-
-}
-
-
-/* =========================================================
-   PRINT
-========================================================= */
-
-function printCard(id){
-
-  const element =
-    document.getElementById(id);
-
-  if(!element) return;
-
-
-  const content =
-    element.innerHTML;
-
-
-  const win =
-    window.open(
-      "",
-      "_blank"
-    );
-
-
-  if(!win){
-
-    showError(
-      "Please allow pop-ups to print."
-    );
-
-    return;
-
-  }
-
-
-  win.document.write(`
-    <!DOCTYPE html>
-
-    <html>
-
-    <head>
-
-      <title>SomaHub Tutor</title>
-
-      <style>
-
-        body{
-          font-family:Arial,sans-serif;
-          padding:25px;
-          line-height:1.7;
-          font-size:14px;
-          color:#111;
-        }
-
-        .ai-topic{
-          color:#dc2626;
-          font-weight:bold;
-        }
-
-        .ai-explanation{
-          color:#2563eb;
-          font-weight:bold;
-          margin-top:15px;
-        }
-
-        .ai-detail{
-          color:#111;
-        }
-
-      </style>
-
-    </head>
-
-    <body>
-
-      ${content}
-
-      <script>
-        window.onload=function(){
-          window.print();
-        };
-      <\/script>
-
-    </body>
-
-    </html>
-  `);
-
-
-  win.document.close();
-
-}
-
-
-/* =========================================================
-   HISTORY
-========================================================= */
-
-function saveH(text){
-
-  const history =
-    JSON.parse(
-      localStorage.getItem("sh") ||
-      "[]"
-    );
-
-
-  history.unshift({
-
-    id:Date.now(),
-
-    title:
-      String(text).slice(
-        0,
-        60
-      ),
-
-    time:
-      new Date().toISOString(),
-
-    grade:grade
-
-  });
-
-
-  localStorage.setItem(
-    "sh",
-    JSON.stringify(
-      history.slice(
-        0,
-        100
-      )
-    )
-  );
-
-}
-
-
-/* =========================================================
-   OPEN HISTORY
-========================================================= */
-
-function openHistory(){
-
-  const drawer =
-    document.getElementById(
-      "historyDrawer"
-    );
-
-
-  drawer.classList.remove(
-    "hidden"
-  );
-
-  drawer.classList.add(
-    "flex"
-  );
-
-
-  const history =
-    JSON.parse(
-      localStorage.getItem("sh") ||
-      "[]"
-    );
-
-
-  const list =
-    document.getElementById(
-      "historyList"
-    );
-
-
-  if(!history.length){
-
-    list.innerHTML = `
-      <p
-        class="text-center
-        text-gray-400
-        mt-20 text-xs"
-      >
-        No history yet
-      </p>
-    `;
-
-    return;
-
-  }
-
-
-  list.innerHTML = "";
-
-
-  history.forEach(item => {
-
-    const div =
-      document.createElement(
-        "div"
-      );
-
-
-    div.className =
-      "py-3 border-b flex justify-between gap-3";
-
-
-    const title =
-      String(item.title)
-        .replace(/</g,"&lt;")
-        .replace(/>/g,"&gt;");
-
-
-    div.innerHTML = `
-
-      <div class="min-w-0">
-
-        <p
-          class="text-[12px]
-          font-bold truncate"
-        >
-          ${title}
-        </p>
-
-        <p
-          class="text-[9px]
-          text-gray-500 mt-1"
-        >
-          ${item.grade || "Learner"}
-        </p>
-
-      </div>
-
-      <button
-        onclick="delH('${item.id}')"
-        class="text-[16px]
-        text-gray-400
-        shrink-0"
-      >
-        ×
-      </button>
-
-    `;
-
-
-    list.appendChild(div);
-
-  });
-
-}
-
-
-/* =========================================================
-   CLOSE HISTORY
-========================================================= */
-
-function closeHistory(){
-
-  const drawer =
-    document.getElementById(
-      "historyDrawer"
-    );
-
-
-  drawer.classList.add(
-    "hidden"
-  );
-
-  drawer.classList.remove(
-    "flex"
-  );
-
-}
-
-
-/* =========================================================
-   DELETE HISTORY ITEM
-========================================================= */
-
-function delH(id){
-
-  let history =
-    JSON.parse(
-      localStorage.getItem("sh") ||
-      "[]"
-    );
-
-
-  history =
-    history.filter(
-      item =>
-        String(item.id) !==
-        String(id)
-    );
-
-
-  localStorage.setItem(
-    "sh",
-    JSON.stringify(history)
-  );
-
-
-  openHistory();
-
-}
-
-
-/* =========================================================
-   CLEAR HISTORY
-========================================================= */
-
-function clearHistory(){
-
-  if(
-    confirm(
-      "Delete all history?"
-    )
-  ){
-
-    localStorage.removeItem(
-      "sh"
-    );
-
-    openHistory();
-
-  }
-
-}
-
-
-/* =========================================================
-   SEND MESSAGE
-   IMPORTANT:
-   THIS PAYLOAD MATCHES YOUR WORKING API
-========================================================= */
-
-async function sendMsg(){
-
-  const text =
-    msg.value.trim();
-
-
-  if(
-    !text &&
-    !uploadedPhoto
-  ){
-
-    return;
-
-  }
-
-
-  if(isThinking){
-
-    return;
-
-  }
-
-
-  /*
-    Stop voice if it is active.
-  */
-
-  if(
-    recognition &&
-    listening
-  ){
-
-    recognition.stop();
-
-  }
-
-
-  /*
-    Show learner/teacher message immediately.
-  */
-
-  if(text){
-
-    addUser(text);
-
-  }
-
-
-  if(uploadedPhoto){
-
-    addUserPhoto(
-      uploadedPhoto
-    );
-
-  }
-
-
-  saveH(
-    text ||
-    uploadedDocName ||
-    "Photo"
-  );
-
-
-  const question =
-    text ||
-    "Explain this image";
-
-
-  const language =
-    detectLang(text);
-
-
-  /*
-    Clear input immediately.
-  */
-
-  msg.value = "";
-
-  msg.style.height =
-    "40px";
-
-
-  /*
-    Keep attachment before clearing.
-  */
-
-  const photo =
-    uploadedPhoto;
-
-  const mime =
-    uploadedMime ||
-    "image/jpeg";
-
-
-  clearAttach();
-
-
-  /*
-    Show thinking immediately.
-  */
-
-  addThinking();
-
-  isThinking = true;
-
-
-  /*
-    DO NOT CHANGE THESE FIELD NAMES.
-    They match /api/gemini.
-  */
-
-  const payload = {
-
-    question:question,
-
-    originalQuestion:question,
-
-    grade:grade,
-
-    role:"Student",
-
-    task:language,
-
-    mode:"student",
-
-    history:
-      chatHistory.slice(-6),
-
-    photo:photo || "",
-
-    mimeType:mime,
-
-    provider:"auto"
-
-  };
-
-
-  try{
-
-    const response =
-      await fetch(
-        PROXY,
-        {
-          method:"POST",
-
-          headers:{
-            "Content-Type":
-              "application/json"
-          },
-
-          body:
-            JSON.stringify(
-              payload
-            )
-        }
-      );
-
-
-    const raw =
-      await response.text();
-
-
-    let data;
-
-
-    try{
-
-      data =
-        JSON.parse(raw);
-
-    }catch{
-
-      throw new Error(
-        raw ||
-        "Invalid response from SomaHub AI."
-      );
-
-    }
-
-
-    /*
-      Remove thinking as soon
-      as the API answers.
-    */
-
-    document
-      .getElementById(
-        "thinking"
-      )
-      ?.remove();
-
-
-    if(!response.ok){
-
-      throw new Error(
-        data.error ||
-        data.message ||
-        "Unable to get an answer."
-      );
-
-    }
-
-
-    const answer =
-      data.answer ||
-      data.reply ||
-      "";
-
-
-    if(!answer){
-
-      throw new Error(
-        "SomaHub AI returned an empty answer."
-      );
-
-    }
-
-
-    /*
-      Display the actual API answer.
-    */
-
-    addAI(answer);
-
-
-  }catch(error){
-
-    document
-      .getElementById(
-        "thinking"
-      )
-      ?.remove();
-
-
-    console.error(
-      "SomaHub API error:",
-      error
-    );
-
-
-    showError(
-      error.message ||
-      "Unable to get an answer."
-    );
-
-
-    addAI(
-      "Sorry, I couldn't get the answer right now. Please try again."
-    );
-
-
-  }finally{
-
-    isThinking = false;
-
-    setTimeout(
-      scrollBottom,
-      50
-    );
-
-  }
-
-}
-
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>SomaHub Tutor</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800;900&display=swap" rel="stylesheet">
@@ -2541,8 +14,7 @@ body{overflow:hidden}
 #app{width:100%;height:100dvh;min-height:100svh;display:flex;flex-direction:column;overflow:hidden}
 #topHeader{flex:0 0 auto;height:64px;min-height:64px;background:#fff;border-bottom:1px solid #e7ebf2;z-index:20}
 #chat{flex:1 1 auto;min-height:0;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;padding-bottom:10px}
-#chat::-webkit-scrollbar{width:4px}
-#chat::-webkit-scrollbar-thumb{background:#d4d9e4;border-radius:20px}
+#chat::-webkit-scrollbar{width:4px}#chat::-webkit-scrollbar-thumb{background:#d4d9e4;border-radius:20px}
 .chat-inner{width:100%;max-width:980px;margin:auto;padding:18px 14px 25px}
 #welcome{width:100%;max-width:760px;margin:auto;padding:38px 10px 25px;text-align:center}
 .welcome-logo{width:88px;height:88px;margin:auto;border-radius:28px;background:linear-gradient(145deg,#3349b8,#5368dc);display:flex;align-items:center;justify-content:center;font-size:42px;box-shadow:0 12px 30px rgba(51,73,184,.18)}
@@ -2551,160 +23,288 @@ body{overflow:hidden}
 .message-in{animation:messageIn .16s ease-out}
 @keyframes messageIn{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
 .ai-card{background:#fff;border:1px solid #e4e8f0;border-radius:18px;padding:16px 18px;line-height:1.7;font-size:14px;color:#111827;box-shadow:0 3px 12px rgba(30,50,90,.04);overflow-wrap:anywhere}
-.ai-card p{margin:7px 0}
-.ai-topic{color:#dc2626;font-size:13px;font-weight:900;margin:2px 0 8px}
-.ai-explanation{color:#2563eb;font-size:15px;font-weight:900;margin:11px 0 5px}
-.ai-detail{color:#111827;font-weight:600}
-.ai-card ul{margin:7px 0 7px 20px;list-style:disc}
-.ai-card ol{margin:7px 0 7px 20px;list-style:decimal}
+.ai-card p{margin:7px 0}.ai-topic{color:#dc2626;font-size:13px;font-weight:900;margin:2px 0 8px}.ai-explanation{color:#2563eb;font-size:15px;font-weight:900;margin:11px 0 5px}.ai-detail{color:#111827;font-weight:600}
+.ai-card ul{margin:7px 0 7px 20px;list-style:disc}.ai-card ol{margin:7px 0 7px 20px;list-style:decimal}
 #inputFooter{flex:0 0 auto;width:100%;background:#f1f4fa;border-top:1px solid #dfe5ef;padding:8px 10px;padding-bottom:max(8px,env(safe-area-inset-bottom));z-index:30}
-.input-inner{width:100%;max-width:980px;margin:auto}
-.input-row{width:100%;display:flex;align-items:flex-end;gap:7px}
+.input-inner{width:100%;max-width:980px;margin:auto}.input-row{width:100%;display:flex;align-items:flex-end;gap:7px}
 .message-box{flex:1 1 auto;min-width:0;min-height:48px;max-height:125px;background:#fff;border:1px solid #dce2eb;border-radius:26px;display:flex;align-items:flex-end;padding:4px 7px;box-shadow:0 2px 8px rgba(20,40,80,.05)}
 .message-box:focus-within{border-color:#7184d8;box-shadow:0 0 0 3px rgba(81,102,210,.08)}
-.tool-btn{width:38px;height:38px;min-width:38px;border:0;border-radius:50%;background:transparent;color:#667085;display:flex;align-items:center;justify-content:center;cursor:pointer}
-.tool-btn:active{transform:scale(.94)}
+.tool-btn{width:38px;height:38px;min-width:38px;border:0;border-radius:50%;background:transparent;color:#667085;display:flex;align-items:center;justify-content:center;cursor:pointer}.tool-btn:active{transform:scale(.94)}
 #msg{flex:1;min-width:0;border:0;outline:none;background:transparent;resize:none;font-family:'Nunito',sans-serif;font-size:15px;line-height:21px;color:#182033;padding:9px 6px;min-height:40px;max-height:105px;overflow-y:auto}
 #msg::placeholder{color:#98a2b3}
-.action-btn{width:48px;height:48px;min-width:48px;border:0;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;cursor:pointer;box-shadow:0 4px 12px rgba(30,45,100,.18)}
-.action-btn:active{transform:scale(.92)}
-#voiceBtn{background:#263b99}
-#sendBtn{background:#20c56b}
+.action-btn{width:48px;height:48px;min-width:48px;border:0;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;cursor:pointer;box-shadow:0 4px 12px rgba(30,45,100,.18)}.action-btn:active{transform:scale(.92)}
+#voiceBtn{background:#263b99}#sendBtn{background:#20c56b}
 #voiceBtn.recording{background:#dc2626;animation:pulseRecord 1s infinite}
 @keyframes pulseRecord{0%,100%{box-shadow:0 0 0 0 rgba(220,38,38,.25)}50%{box-shadow:0 0 0 9px rgba(220,38,38,0)}}
-.thinking-bubble{display:flex;align-items:center;gap:8px;color:#7b8496;font-size:12px}
-.thinking-dots{display:flex;gap:3px}
-.thinking-dots span{width:5px;height:5px;border-radius:50%;background:#6574c5;animation:dot .8s infinite}
-.thinking-dots span:nth-child(2){animation-delay:.15s}
-.thinking-dots span:nth-child(3){animation-delay:.3s}
+.thinking-bubble{display:flex;align-items:center;gap:8px;color:#7b8496;font-size:12px}.thinking-dots{display:flex;gap:3px}.thinking-dots span{width:5px;height:5px;border-radius:50%;background:#6574c5;animation:dot .8s infinite}.thinking-dots span:nth-child(2){animation-delay:.15s}.thinking-dots span:nth-child(3){animation-delay:.3s}
 @keyframes dot{0%,100%{opacity:.25;transform:translateY(0)}50%{opacity:1;transform:translateY(-2px)}}
 #historyDrawer{position:fixed;inset:0;z-index:100;background:#f8faff}
-button,select{-webkit-tap-highlight-color:transparent;font-family:inherit}
-.hidden{display:none!important}
+button,select{-webkit-tap-highlight-color:transparent;font-family:inherit}.hidden{display:none!important}
 @media(max-width:480px){#topHeader{height:60px;min-height:60px}.header-title{font-size:13px!important}.header-status{font-size:9px!important}#grade{max-width:105px;font-size:11px!important;padding-left:9px;padding-right:9px}.chat-inner{padding:12px 9px 18px}#welcome{padding:25px 8px 20px}.welcome-logo{width:72px;height:72px;border-radius:24px;font-size:34px}.welcome-title{font-size:24px}.welcome-text{font-size:13px}.ai-card{font-size:13.5px;padding:14px;border-radius:16px}.tool-btn{width:34px;min-width:34px;height:36px}#msg{font-size:14px;padding-left:3px;padding-right:3px}.action-btn{width:45px;height:45px;min-width:45px}}
 @media(min-width:600px){#topHeader{height:70px;min-height:70px}.chat-inner{padding-left:24px;padding-right:24px}#inputFooter{padding-left:20px;padding-right:20px}.message-box{min-height:52px}#msg{font-size:16px}}
 @media(min-width:1024px){#topHeader{height:74px;min-height:74px}.chat-inner{padding-top:24px}#inputFooter{padding:12px 24px 14px}.message-box{min-height:54px}.action-btn{width:52px;height:52px;min-width:52px}}
 </style>
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+import { getFirestore, doc, getDoc, collection, getDocs, query, where } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+const cfg={apiKey:"AIzaSyA93BNes3AmFyxIEgjSbvbIWqLyorLsuj8",authDomain:"somahubkenya-9e458.firebaseapp.com",projectId:"somahubkenya-9e458",storageBucket:"somahubkenya-9e458.firebasestorage.app",messagingSenderId:"615579085715",appId:"1:615579085715:web:28fca37ba498324bb49666"};
+const app=initializeApp(cfg); const db=getFirestore(app); const auth=getAuth(app);
+window.FB={db,doc,getDoc,collection,getDocs,query,where};
+onAuthStateChanged(auth,u=>{ if(!u) signInAnonymously(auth).catch(e=>console.log(e)); });
+</script>
 </head>
 <body>
 <div id="app">
 <header id="topHeader" class="flex items-center justify-between px-3 md:px-5">
-  <div class="flex items-center gap-2.5 min-w-0">
-    <img src="/logo.png" onerror="this.onerror=null;this.src='https://i.pravatar.cc/100'" class="w-10 h-10 md:w-11 md:h-11 rounded-full bg-white border object-cover shrink-0" alt="SomaHub">
-    <div class="leading-tight min-w-0">
-      <p class="header-title font-black text-[15px] md:text-[17px] text-[#263b99] truncate">SomaHub Tutor</p>
-      <p class="header-status text-[10px] md:text-[11px] text-green-600 font-bold flex items-center gap-1"><span class="w-2 h-2 bg-green-500 rounded-full inline-block"></span>Online • Auto EN/SW</p>
-    </div>
-  </div>
-  <div class="flex items-center gap-2">
-    <select id="grade" class="h-9 md:h-10 bg-[#f3f5fa] rounded-full px-3 md:px-4 text-[11px] md:text-[12px] font-bold outline-none border border-[#e1e5ed]">
-      <option>Playground</option><option>PP1</option><option>PP2</option><option>Grade 1</option><option>Grade 2</option><option>Grade 3</option><option>Grade 4</option><option>Grade 5</option><option>Grade 6</option><option selected>Grade 7</option><option>Grade 8</option><option>Grade 9</option><option>Grade 10</option>
-    </select>
-    <button onclick="openHistory()" class="w-9 h-9 md:w-10 md:h-10 rounded-full bg-[#263b99] text-white flex items-center justify-center text-[12px]"><i class="fa-regular fa-clock"></i></button>
-  </div>
+<div class="flex items-center gap-2.5 min-w-0">
+<img src="/logo.png" onerror="this.onerror=null;this.src='https://i.pravatar.cc/100'" class="w-10 h-10 md:w-11 md:h-11 rounded-full bg-white border object-cover shrink-0" alt="SomaHub">
+<div class="leading-tight min-w-0"><p class="header-title font-black text-[15px] md:text-[17px] text-[#263b99] truncate">SomaHub Tutor</p><p class="header-status text-[10px] md:text-[11px] text-green-600 font-bold flex items-center gap-1"><span class="w-2 h-2 bg-green-500 rounded-full inline-block"></span><span id="aiStatus">Online • Auto EN/SW • Reading Designs...</span></p></div>
+</div>
+<div class="flex items-center gap-2">
+<select id="grade" class="h-9 md:h-10 bg-[#f3f5fa] rounded-full px-3 md:px-4 text-[11px] md:text-[12px] font-bold outline-none border border-[#e1e5ed]">
+<option>Playgroup</option><option>PP1</option><option>PP2</option><option>Grade 1</option><option>Grade 2</option><option>Grade 3</option><option>Grade 4</option><option>Grade 5</option><option>Grade 6</option><option selected>Grade 7</option><option>Grade 8</option><option>Grade 9</option><option>Grade 10</option>
+</select>
+<button onclick="openHistory()" class="w-9 h-9 md:w-10 md:h-10 rounded-full bg-[#263b99] text-white flex items-center justify-center text-[12px]"><i class="fa-regular fa-clock"></i></button>
+</div>
 </header>
-<main id="chat">
-  <div class="chat-inner">
-    <div id="welcome"><div class="welcome-logo">🎓</div><h2 class="welcome-title">How can I help you learn?</h2><p class="welcome-text">Ask a question, upload homework, or say Habari. SomaHub Tutor helps learners and teachers in English and Kiswahili.</p></div>
-    <div id="messages"></div>
-  </div>
-</main>
-<footer id="inputFooter">
-  <div class="input-inner">
-    <div id="previewBox" class="hidden mb-2 bg-white rounded-xl p-2 flex items-center gap-2 border border-gray-200">
-      <img id="previewImg" class="w-10 h-10 rounded-lg object-cover hidden" alt=""><i id="previewDocIcon" class="fa-solid fa-file text-gray-400 text-lg hidden"></i><span id="previewName" class="text-[11px] flex-1 truncate font-semibold text-gray-700"></span><button onclick="clearAttach()" class="w-7 h-7 bg-gray-900 text-white rounded-full text-[10px]">✕</button>
-    </div>
-    <div id="errorBox" class="hidden bg-red-50 text-red-600 text-[11px] px-3 py-1.5 rounded-xl mb-2 text-center"></div>
-    <div class="input-row">
-      <div class="message-box">
-        <button onclick="document.getElementById('docInput').click()" class="tool-btn"><i class="fa-solid fa-paperclip"></i></button><button onclick="document.getElementById('imgInput').click()" class="tool-btn"><i class="fa-solid fa-image"></i></button><button onclick="document.getElementById('camInput').click()" class="tool-btn"><i class="fa-solid fa-camera"></i></button><textarea id="msg" rows="1" placeholder="Ask SomaHub..." autocomplete="off" spellcheck="true"></textarea>
-      </div>
-      <button id="voiceBtn" class="action-btn" type="button"><i class="fa-solid fa-microphone"></i></button><button id="sendBtn" class="action-btn" onclick="sendMsg()" type="button"><i class="fa-solid fa-paper-plane text-[15px]"></i></button>
-    </div>
-    <p id="listenTxt" class="hidden text-[10px] text-red-500 text-center mt-1 font-bold">● Listening... release to stop</p>
-  </div>
-</footer>
+
+<!-- QUICK ACTIONS - NEW - SET EXAM / HW FROM DESIGNS -->
+<div class="bg-white border-b px-3 py-2 flex gap-2 overflow-x-auto shrink-0">
+<button onclick="quickAction('exam')" class="whitespace-nowrap bg-[#263b99] text-white px-3 py-1.5 rounded-full text-[11px] font-bold">📝 Set Exam from Design</button>
+<button onclick="quickAction('homework')" class="whitespace-nowrap bg-[#20c56b] text-white px-3 py-1.5 rounded-full text-[11px] font-bold">📓 Set Homework from Notes</button>
+<button onclick="quickAction('explain')" class="whitespace-nowrap bg-black text-white px-3 py-1.5 rounded-full text-[11px] font-bold">🤖 Explain Design</button>
+<button onclick="reloadResources()" class="whitespace-nowrap bg-white border px-3 py-1.5 rounded-full text-[11px] font-bold">🔄 Reload Designs</button>
+<span id="resCount" class="whitespace-nowrap text-[10px] text-gray-500 self-center font-bold"></span>
+</div>
+
+<main id="chat"><div class="chat-inner"><div id="welcome"><div class="welcome-logo">🎓</div><h2 class="welcome-title">How can I help you learn?</h2><p class="welcome-text">Ask a question, upload homework, or say Habari. SomaHub Tutor helps learners and teachers in English and Kiswahili.<br><b>Now reads your Admin Designs + Notes to set real CBC Exams & Homework.</b></p></div><div id="messages"></div></div></main>
+<footer id="inputFooter"><div class="input-inner">
+<div id="previewBox" class="hidden mb-2 bg-white rounded-xl p-2 flex items-center gap-2 border border-gray-200"><img id="previewImg" class="w-10 h-10 rounded-lg object-cover hidden" alt=""><i id="previewDocIcon" class="fa-solid fa-file text-gray-400 text-lg hidden"></i><span id="previewName" class="text-[11px] flex-1 truncate font-semibold text-gray-700"></span><button onclick="clearAttach()" class="w-7 h-7 bg-gray-900 text-white rounded-full text-[10px]">✕</button></div>
+<div id="errorBox" class="hidden bg-red-50 text-red-600 text-[11px] px-3 py-1.5 rounded-xl mb-2 text-center"></div>
+<div class="input-row"><div class="message-box">
+<button onclick="document.getElementById('docInput').click()" class="tool-btn"><i class="fa-solid fa-paperclip"></i></button>
+<button onclick="document.getElementById('imgInput').click()" class="tool-btn"><i class="fa-solid fa-image"></i></button>
+<button onclick="document.getElementById('camInput').click()" class="tool-btn"><i class="fa-solid fa-camera"></i></button>
+<textarea id="msg" rows="1" placeholder="Ask SomaHub... e.g Set exam for Grade 8 Agriculture" autocomplete="off" spellcheck="true"></textarea>
+</div>
+<button id="voiceBtn" class="action-btn" type="button"><i class="fa-solid fa-microphone"></i></button>
+<button id="sendBtn" class="action-btn" onclick="sendMsg()" type="button"><i class="fa-solid fa-paper-plane text-[15px]"></i></button>
+</div><p id="listenTxt" class="hidden text-[10px] text-red-500 text-center mt-1 font-bold">● Listening... release to stop</p>
+</div></footer>
 </div>
 <div id="historyDrawer" class="hidden flex-col"><div class="h-14 border-b bg-white flex items-center justify-between px-4 shrink-0"><button onclick="closeHistory()" class="font-bold text-sm text-[#263b99]">← Back</button><b class="text-[14px]">History</b><button onclick="clearHistory()" class="text-[11px] text-gray-500">Delete All</button></div><div id="historyList" class="flex-1 overflow-auto p-3"></div></div>
-<input id="docInput" type="file" class="hidden" accept=".pdf,.doc,.docx,.txt" onchange="handleDoc(this)"><input id="imgInput" type="file" class="hidden" accept="image/*" onchange="handlePhoto(this)"><input id="camInput" type="file" class="hidden" accept="image/*" capture="environment" onchange="handlePhoto(this)">
+<input id="docInput" type="file" class="hidden" accept=".pdf,.doc,.docx,.txt" onchange="handleDoc(this)">
+<input id="imgInput" type="file" class="hidden" accept="image/*" onchange="handlePhoto(this)">
+<input id="camInput" type="file" class="hidden" accept="image/*" capture="environment" onchange="handlePhoto(this)">
+
 <script>
 const PROXY = "/api/gemini";
 let grade = "Grade 7";
-let uploadedPhoto = "";let uploadedMime = "";let uploadedDocName = "";let isThinking = false;let recognition = null;let listening = false;let chatHistory = [];
-const chat = document.getElementById("chat");const messages = document.getElementById("messages");const msg = document.getElementById("msg");const welcome = document.getElementById("welcome");const voiceBtn = document.getElementById("voiceBtn");const listenTxt = document.getElementById("listenTxt");
-const SW = ["habari","mambo","nisaidie","hesabu","hisabati","sayansi","kiswahili","shule","mwalimu","asante","eleza","soma","darasa","mtihani","kwa nini","ni nini"];
-function detectLang(text){if(!text) return "EN";const t=String(text).toLowerCase();return SW.some(word=>t.includes(word))?"SW":"EN"}
-document.getElementById("grade").addEventListener("change",e=>{grade=e.target.value});
-function resizeTextarea(){msg.style.height="auto";msg.style.height=Math.min(Math.max(msg.scrollHeight,40),105)+"px"}
-msg.addEventListener("input",resizeTextarea);
-msg.addEventListener("keydown",e=>{if(e.key==="Enter"&&!e.shiftKey){e.preventDefault();sendMsg()}});
-(function(){
-  const SpeechRecognition=window.SpeechRecognition||window.webkitSpeechRecognition;if(!SpeechRecognition){recognition=null;return}
-  recognition=new SpeechRecognition();recognition.continuous=false;recognition.interimResults=false;recognition.maxAlternatives=1;
-  recognition.onstart=function(){listening=true;voiceBtn.classList.add("recording");voiceBtn.innerHTML='<i class="fa-solid fa-stop"></i>';listenTxt.classList.remove("hidden")};
-  recognition.onresult=function(event){let spoken="";for(let i=event.resultIndex;i<event.results.length;i++){if(event.results[i].isFinal){spoken+=event.results[i][0].transcript}}spoken=spoken.trim();if(spoken){const existing=msg.value.trim();msg.value=existing?existing+" "+spoken:spoken;resizeTextarea();msg.focus()}};
-  recognition.onerror=function(event){listening=false;voiceBtn.classList.remove("recording");voiceBtn.innerHTML='<i class="fa-solid fa-microphone"></i>';listenTxt.classList.add("hidden");if(event.error!=="no-speech"&&event.error!=="aborted"){showError("Voice input: "+event.error)}};
-  recognition.onend=function(){listening=false;voiceBtn.classList.remove("recording");voiceBtn.innerHTML='<i class="fa-solid fa-microphone"></i>';listenTxt.classList.add("hidden");resizeTextarea()};
-})();
-function startVoice(event){if(event){event.preventDefault()}if(!recognition){showError("Voice typing is not supported here. Try Chrome.");return}if(listening) return;recognition.lang=detectLang(msg.value)==="SW"?"sw-KE":"en-KE";try{recognition.start()}catch(error){console.log("Speech start:",error)}}
-function stopVoice(event){if(event){event.preventDefault()}if(recognition&&listening){recognition.stop()}}
-voiceBtn.addEventListener("touchstart",startVoice,{passive:false});voiceBtn.addEventListener("touchend",stopVoice,{passive:false});voiceBtn.addEventListener("touchcancel",stopVoice,{passive:false});voiceBtn.addEventListener("mousedown",startVoice);voiceBtn.addEventListener("mouseup",stopVoice);voiceBtn.addEventListener("mouseleave",stopVoice);
-function handlePhoto(input){const file=input.files[0];if(!file) return;const reader=new FileReader();reader.onload=function(){const img=new Image();img.onload=function(){const canvas=document.createElement("canvas");let width=img.width;let height=img.height;const max=1200;if(width>max||height>max){const scale=Math.min(max/width,max/height);width=Math.round(width*scale);height=Math.round(height*scale)}canvas.width=width;canvas.height=height;canvas.getContext("2d").drawImage(img,0,0,width,height);uploadedPhoto=canvas.toDataURL("image/jpeg",.72);uploadedMime="image/jpeg";document.getElementById("previewImg").src=uploadedPhoto;document.getElementById("previewImg").classList.remove("hidden");document.getElementById("previewDocIcon").classList.add("hidden");document.getElementById("previewName").textContent=file.name;document.getElementById("previewBox").classList.remove("hidden")};img.src=reader.result};reader.readAsDataURL(file);input.value=""}
-function handleDoc(input){const file=input.files[0];if(!file) return;uploadedDocName=file.name;uploadedPhoto="";document.getElementById("previewImg").classList.add("hidden");document.getElementById("previewDocIcon").classList.remove("hidden");document.getElementById("previewName").textContent=file.name;document.getElementById("previewBox").classList.remove("hidden");input.value=""}
-function clearAttach(){uploadedPhoto="";uploadedMime="";uploadedDocName="";document.getElementById("previewBox").classList.add("hidden")}
-function showError(message){const box=document.getElementById("errorBox");box.textContent=message||"Something went wrong.";box.classList.remove("hidden");setTimeout(()=>{box.classList.add("hidden")},6000)}
-function cleanAIText(text){let result=String(text||"");result=result.replace(/\[(topic|strand|explanation|answer|details?|detailed explanation|reason|correct answer)\]\s*/gi,"");result=result.replace(/^#{1,6}\s*/gm,"");result=result.replace(/\[\s*\]/g,"");return result.trim()}
-function formatResponse(text){let result=cleanAIText(text);result=result.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");result=result.replace(/\*\*(.*?)\*\*/g,"<strong>$1</strong>");result=result.replace(/^(Topic|Strand)\s*[:\-]\s*(.*?)$/gim,'<div class="ai-topic">$1: $2</div>');result=result.replace(/^(Explanation|Answer|Correct Answer)\s*[:\-]?\s*$/gim,'<div class="ai-explanation">$1</div>');result=result.replace(/^(Why the other choices are wrong|Why other choices are wrong)\s*[:\-]?\s*$/gim,'<div class="ai-explanation">Why the other choices are wrong</div>');const lines=result.split("\n");let html="";lines.forEach(line=>{line=line.trim();if(!line) return;if(line.includes('class="ai-topic"')||line.includes('class="ai-explanation"')){html+=line;return}if(line.startsWith("- ")||line.startsWith("• ")){html+=`<p class="ai-detail">• ${line.slice(2)}</p>`;return}if(/^\d+\.\s/.test(line)){html+=`<p class="ai-detail">${line}</p>`;return}html+=`<p class="ai-detail">${line}</p>`});return html}
-function addUser(text){welcome.classList.add("hidden");const div=document.createElement("div");div.className="flex justify-end mb-3 message-in";const safe=String(text).replace(/</g,"&lt;").replace(/>/g,"&gt;");div.innerHTML=`<div class="max-w-[82%] md:max-w-[70%] bg-[#dcf8c6] rounded-2xl rounded-br-sm px-4 py-2.5 text-[13px] md:text-[14px] shadow-sm text-gray-900">${safe}</div>`;messages.appendChild(div);chatHistory.push({role:"user",content:text});scrollBottom()}
-function addUserPhoto(photo){welcome.classList.add("hidden");const div=document.createElement("div");div.className="flex justify-end mb-3 message-in";div.innerHTML=`<div class="bg-[#dcf8c6] rounded-xl p-1 shadow-sm"><img src="${photo}" class="max-w-[220px] max-h-[300px] rounded-lg object-contain" alt="Homework photo"></div>`;messages.appendChild(div);scrollBottom()}
-function addThinking(){document.getElementById("thinking")?.remove();const div=document.createElement("div");div.id="thinking";div.className="flex gap-2 mb-3 items-start message-in";div.innerHTML=`<div class="w-7 h-7 rounded-full bg-[#3349b8] text-white flex items-center justify-center text-[11px] shrink-0">🎓</div><div class="bg-white border border-gray-200 rounded-2xl px-4 py-3 shadow-sm"><div class="thinking-bubble"><span>Thinking</span><div class="thinking-dots"><span></span><span></span><span></span></div></div></div>`;messages.appendChild(div);scrollBottom()}
-function addAI(text){welcome.classList.add("hidden");const id="ai_"+Date.now();const div=document.createElement("div");div.className="flex gap-2 mb-4 message-in items-start";div.innerHTML=`<div class="w-7 h-7 rounded-full bg-[#3349b8] text-white flex items-center justify-center text-[11px] shrink-0 mt-1">🎓</div><div class="flex-1 min-w-0"><div id="${id}" class="ai-card">${formatResponse(text)}</div><div class="flex flex-wrap gap-1.5 mt-2"><button onclick="copyCard('${id}')" class="h-7 px-3 bg-white border border-gray-200 rounded-full text-[10px] font-bold"><i class="fa-regular fa-copy"></i> Copy</button><button onclick="listenCard('${id}')" class="h-7 px-3 bg-white border border-gray-200 rounded-full text-[10px] font-bold"><i class="fa-solid fa-volume-high"></i> Listen</button><button onclick="downloadCard('${id}')" class="h-7 px-3 bg-white border border-gray-200 rounded-full text-[10px] font-bold"><i class="fa-solid fa-download"></i> Download</button><button onclick="printCard('${id}')" class="h-7 px-3 bg-[#263b99] text-white rounded-full text-[10px] font-bold"><i class="fa-solid fa-print"></i> Print</button></div></div>`;messages.appendChild(div);chatHistory.push({role:"assistant",content:text});scrollBottom()}
-function scrollBottom(){requestAnimationFrame(()=>{chat.scrollTop=chat.scrollHeight})}
-async function copyCard(id){const element=document.getElementById(id);if(!element) return;const text=element.innerText;try{await navigator.clipboard.writeText(text)}catch{const textarea=document.createElement("textarea");textarea.value=text;document.body.appendChild(textarea);textarea.select();document.execCommand("copy");textarea.remove()}}
-function listenCard(id){if(!("speechSynthesis" in window)){showError("Speech playback is not supported.");return}speechSynthesis.cancel();const element=document.getElementById(id);if(!element) return;const text=element.innerText.slice(0,3000);const speech=new SpeechSynthesisUtterance(text);speech.lang=detectLang(text)==="SW"?"sw-KE":"en-KE";speech.rate=1.05;speech.pitch=1;speechSynthesis.speak(speech)}
-function downloadCard(id){const element=document.getElementById(id);if(!element) return;const text=element.innerText;const blob=new Blob([text],{type:"text/plain"});const url=URL.createObjectURL(blob);const link=document.createElement("a");link.href=url;link.download="SomaHub-"+Date.now()+".txt";document.body.appendChild(link);link.click();link.remove();setTimeout(()=>URL.revokeObjectURL(url),1000)}
-function printCard(id){const element=document.getElementById(id);if(!element) return;const content=element.innerHTML;const win=window.open("","_blank");if(!win){showError("Please allow pop-ups to print.");return}win.document.write(`<!DOCTYPE html><html><head><title>SomaHub Tutor</title><style>body{font-family:Arial,sans-serif;padding:25px;line-height:1.7;font-size:14px;color:#111}.ai-topic{color:#dc2626;font-weight:bold}.ai-explanation{color:#2563eb;font-weight:bold;margin-top:15px}.ai-detail{color:#111}</style></head><body>${content}<script>window.onload=function(){window.print()};<\/script></body></html>`);win.document.close()}
-function saveH(text){const history=JSON.parse(localStorage.getItem("sh")||"[]");history.unshift({id:Date.now(),title:String(text).slice(0,60),time:new Date().toISOString(),grade:grade});localStorage.setItem("sh",JSON.stringify(history.slice(0,100)))}
-function openHistory(){const drawer=document.getElementById("historyDrawer");drawer.classList.remove("hidden");drawer.classList.add("flex");const history=JSON.parse(localStorage.getItem("sh")||"[]");const list=document.getElementById("historyList");if(!history.length){list.innerHTML=`<p class="text-center text-gray-400 mt-20 text-xs">No history yet</p>`;return}list.innerHTML="";history.forEach(item=>{const div=document.createElement("div");div.className="py-3 border-b flex justify-between gap-3";const title=String(item.title).replace(/</g,"&lt;").replace(/>/g,"&gt;");div.innerHTML=`<div class="min-w-0"><p class="text-[12px] font-bold truncate">${title}</p><p class="text-[9px] text-gray-500 mt-1">${item.grade||"Learner"}</p></div><button onclick="delH('${item.id}')" class="text-[16px] text-gray-400 shrink-0">×</button>`;list.appendChild(div)})}
-function closeHistory(){const drawer=document.getElementById("historyDrawer");drawer.classList.add("hidden");drawer.classList.remove("flex")}
-function delH(id){let history=JSON.parse(localStorage.getItem("sh")||"[]");history=history.filter(item=>String(item.id)!==String(id));localStorage.setItem("sh",JSON.stringify(history));openHistory()}
-function clearHistory(){if(confirm("Delete all history?")){localStorage.removeItem("sh");openHistory()}}
-async function sendMsg(){
-  const text=msg.value.trim();
-  if(!text&&!uploadedPhoto){return}
-  if(isThinking){return}
-  if(recognition&&listening){recognition.stop()}
-  if(text){addUser(text)}
-  if(uploadedPhoto){addUserPhoto(uploadedPhoto)}
-  saveH(text||uploadedDocName||"Photo");
-  const question=text||"Explain this image";
-  const language=detectLang(text);
-  msg.value="";msg.style.height="40px";
-  const photo=uploadedPhoto;const mime=uploadedMime||"image/jpeg";
-  clearAttach();
-  addThinking();isThinking=true;
-  const payload={question:question,originalQuestion:question,grade:grade,role:"Student",task:language,mode:"student",history:chatHistory.slice(-6),photo:photo||"",mimeType:mime,provider:"auto"};
+let uploadedPhoto = ""; let uploadedMime = ""; let uploadedDocName = "";
+let isThinking = false; let recognition = null; let listening = false; let chatHistory = [];
+
+// ===== CONNECTED DATA - FROM ADMIN =====
+let ALL_RESOURCES = []; // Designs, Notes, Exams, Homework, Schemes, LessonPlans
+let AI_BRAIN = []; // Admin AI Brain photos/text
+let GEMINI_KEY = "";
+let resourcesLoaded = false;
+
+async function getGeminiKey(){
+  if(GEMINI_KEY) return GEMINI_KEY;
   try{
-    const response=await fetch(PROXY,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(payload)});
-    const raw=await response.text();
-    let data;try{data=JSON.parse(raw)}catch{throw new Error(raw||"Invalid response from SomaHub AI.")}
-    document.getElementById("thinking")?.remove();
-    if(!response.ok){throw new Error(data.error||data.details||data.message||"Unable to get an answer.")}
-    const answer=data.answer||data.reply||"";
-    if(!answer){throw new Error("SomaHub AI returned an empty answer.")}
-    addAI(answer);
-  }catch(error){
-    document.getElementById("thinking")?.remove();
-    console.error("SomaHub API error:",error);
-    showError(error.message||"Unable to get an answer.");
-    // Don't show generic sorry if we have real error
-  }finally{
-    isThinking=false;setTimeout(scrollBottom,50);
-  }
+    let FB=window.FB;
+    let d=await FB.getDoc(FB.doc(FB.db,'settings','gemini'));
+    if(d.exists() && d.data().key){ GEMINI_KEY=d.data().key; return GEMINI_KEY; }
+    let d2=await FB.getDoc(FB.doc(FB.db,'settings','ai'));
+    if(d2.exists() && d2.data().geminiKey){ GEMINI_KEY=d2.data().geminiKey; return GEMINI_KEY; }
+  }catch(e){ console.log(e); }
+  return localStorage.getItem('somahub_gemini_key')||"";
 }
-resizeTextarea();
-if(window.visualViewport){window.visualViewport.addEventListener("resize",()=>{setTimeout(scrollBottom,80)})}
-window.addEventListener("resize",()=>{setTimeout(scrollBottom,80)})
+
+async function reloadResources(){
+  let FB=window.FB;
+  document.getElementById('aiStatus').innerText='Loading Designs + Notes...';
+  try{
+    let snap=await FB.getDocs(FB.collection(FB.db,'resources'));
+    ALL_RESOURCES=[]; snap.forEach(d=>ALL_RESOURCES.push({id:d.id,...d.data()}));
+    let snap2=await FB.getDocs(FB.collection(FB.db,'ai_brain'));
+    AI_BRAIN=[]; snap2.forEach(d=>AI_BRAIN.push({id:d.id,...d.data()}));
+    resourcesLoaded=true;
+    let forGrade = ALL_RESOURCES.filter(r=>r.grade==grade).length;
+    document.getElementById('resCount').innerText=`📚 ${ALL_RESOURCES.length} resources • ${forGrade} for ${grade} • 🧠 ${AI_BRAIN.length} AI Brain`;
+    document.getElementById('aiStatus').innerText=`Online • ${ALL_RESOURCES.length} Designs/Notes loaded • Auto EN/SW`;
+  }catch(e){ document.getElementById('aiStatus').innerText='Online • Could not load Designs: '+e.message; }
+}
+
+// Find relevant Designs/Notes for current grade + user question
+function findRelevantResources(userText){
+  let t=userText.toLowerCase();
+  // 1. Same grade first
+  let sameGrade = ALL_RESOURCES.filter(r=>r.grade==grade);
+  // 2. Keyword match - subject or title contains words from question
+  let words = t.split(/[^a-z0-9]+/).filter(w=>w.length>3);
+  let scored = sameGrade.map(r=>{
+    let hay=(r.title+' '+r.subject+' '+r.description).toLowerCase();
+    let score=0; words.forEach(w=>{ if(hay.includes(w)) score++; });
+    // Boost Designs + Notes for exam/homework
+    if(r.type=='Curriculum Design' || r.type=='Design') score+=2;
+    if(r.type=='Notes') score+=2;
+    if(r.type=='Scheme') score+=1;
+    return {...r, score};
+  }).filter(r=>r.score>0).sort((a,b)=>b.score-a.score);
+  if(scored.length) return scored.slice(0,5);
+  // Fallback: top Designs + Notes for this grade
+  return sameGrade.filter(r=>['Curriculum Design','Design','Notes','Scheme','LessonPlan'].includes(r.type)).slice(0,5);
+}
+
+function buildContext(userText){
+  let isExam = /exam|mtihani|test|quiz|assessment/i.test(userText);
+  let isHW = /homework|hw|assignment|kazi|home work/i.test(userText);
+  let rel = findRelevantResources(userText);
+  let ctx = `You are SomaHub Tutor, CBC Kenya tutor for ${grade}. Answer in ${detectLang(userText)=='SW'?'Kiswahili + English mix':'English'}.\n`;
+  ctx += `IMPORTANT: Use ONLY the Admin Designs/Notes below to set Exam/Homework. Do NOT invent a different syllabus.\n\n`;
+  if(rel.length){
+    ctx += `=== ADMIN DESIGNS + NOTES FOR ${grade} (from admin.html) ===\n`;
+    rel.forEach((r,i)=>{ ctx += `${i+1}. [${r.type}] ${r.title} | Grade: ${r.grade} | Subject: ${r.subject} | Description: ${r.description||''} | Link: ${r.url||''}\n`; });
+    ctx += `\n`;
+  } else {
+    ctx += `No Admin Design found for ${grade} for this topic. Use CBC Kenya KICD ${grade} curriculum, but say "No Admin Design found, using KICD".\n\n`;
+  }
+  if(AI_BRAIN.length){
+    let brain = AI_BRAIN.filter(b=>b.grade==grade).slice(0,3);
+    if(brain.length){ ctx+=`=== ADMIN AI BRAIN (textbook photos/text) ===\n`; brain.forEach(b=>{ ctx+=`- ${b.title||''} | ${b.subject||''} | ${b.text||''}\n`; }); ctx+=`\n`; }
+  }
+  if(isExam){
+    ctx += `TASK: SET EXAM FROM THE DESIGN ABOVE.\n- 10 questions: 5 Multiple Choice (A-D), 3 Short Answer, 2 Structured\n- Must follow the Strand / Sub-strand / Learning Outcomes in the Design above\n- Grade level: ${grade}\n- Give Marking Scheme at end (teacher only, separate section)\n- If Design has no enough detail, say which strand is missing.\n`;
+  } else if(isHW){
+    ctx += `TASK: SET HOMEWORK FROM THE NOTES/DESIGN ABOVE.\n- 5 Homework questions, from easiest to hardest\n- Must follow the Notes/Design above\n- Include 1 practical / real-life Kenya example\n- Give Answers at end for parent/teacher\n`;
+  } else {
+    ctx += `TASK: Explain using the Design/Notes above. Quote the Strand + Learning Outcomes.\n`;
+  }
+  ctx += `\nUser question: ${userText}`;
+  return ctx;
+}
+
+function quickAction(kind){
+  if(kind=='exam'){ msg.value=`Set exam for ${grade} - use Admin Design for this grade`; }
+  if(kind=='homework'){ msg.value=`Set homework for ${grade} - use Admin Notes and Design`; }
+  if(kind=='explain'){ msg.value=`Explain the current ${grade} Design in simple words`; }
+  msg.focus(); sendMsg();
+}
+
+const chat = document.getElementById("chat");
+const messages = document.getElementById("messages");
+const msg = document.getElementById("msg");
+const welcome = document.getElementById("welcome");
+const voiceBtn = document.getElementById("voiceBtn");
+const listenTxt = document.getElementById("listenTxt");
+const SW = ["habari","mambo","nisaidie","hesabu","hisabati","sayansi","kiswahili","shule","mwalimu","asante","eleza","soma","darasa","mtihani","kwa nini","ni nini"];
+function detectLang(text){ if(!text) return "EN"; const t=String(text).toLowerCase(); return SW.some(w=>t.includes(w)) ? "SW" : "EN"; }
+document.getElementById("grade").addEventListener("change",e=>{ grade=e.target.value; reloadResources(); });
+function resizeTextarea(){ msg.style.height="auto"; msg.style.height=Math.min(Math.max(msg.scrollHeight,40),105)+"px"; }
+msg.addEventListener("input",resizeTextarea);
+msg.addEventListener("keydown",e=>{ if(e.key==="Enter" && !e.shiftKey){ e.preventDefault(); sendMsg(); } });
+
+function showError(t){ let b=document.getElementById("errorBox"); b.innerText=t; b.classList.remove("hidden"); setTimeout(()=>b.classList.add("hidden"),4000); }
+function addUserMsg(text){ welcome.style.display="none"; let d=document.createElement("div"); d.className="message-in flex justify-end my-2"; d.innerHTML=`<div class="bg-[#263b99] text-white px-4 py-3 rounded-2xl rounded-br-md max-w-[85%] text-[14px] leading-6 whitespace-pre-wrap"></div>`; d.querySelector("div").innerText=text; messages.appendChild(d); chat.scrollTop=chat.scrollHeight; }
+function addAiMsg(html){ let d=document.createElement("div"); d.className="message-in my-2"; d.innerHTML=`<div class="ai-card"></div>`; d.querySelector(".ai-card").innerHTML=html; messages.appendChild(d); chat.scrollTop=chat.scrollHeight; return d.querySelector(".ai-card"); }
+function addThinking(){ let d=document.createElement("div"); d.id="thinkingRow"; d.className="my-2"; d.innerHTML=`<div class="thinking-bubble"><div class="thinking-dots"><span></span><span></span><span></span></div> SomaHub is reading Designs + Notes...</div>`; messages.appendChild(d); chat.scrollTop=chat.scrollHeight; }
+function removeThinking(){ let t=document.getElementById("thinkingRow"); if(t) t.remove(); }
+function formatAI(text){
+  let esc=text.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+  esc=esc.replace(/\*\*(.*?)\*\*/g,"<b>$1</b>");
+  esc=esc.replace(/^### (.*)$/gm,"<div class='ai-explanation'>$1</div>");
+  esc=esc.replace(/^## (.*)$/gm,"<div class='ai-explanation'>$1</div>");
+  let lines=esc.split("\n"); let out=""; let inList=false;
+  lines.forEach(l=>{ if(/^\d+\.\s/.test(l)){ out+=`<p><b>${l}</b></p>`; } else if(/^[-*]\s/.test(l)){ if(!inList){ out+="<ul>"; inList=true; } out+=`<li>${l.replace(/^[-*]\s/,"")}</li>`; } else { if(inList){ out+="</ul>"; inList=false; } if(l.trim()) out+=`<p>${l}</p>`; } });
+  if(inList) out+="</ul>";
+  return out;
+}
+
+async function sendMsg(){
+  let text=msg.value.trim();
+  if(!text && !uploadedPhoto){ return; }
+  if(isThinking) return;
+  if(!resourcesLoaded) await reloadResources();
+  let displayText=text || "📷 Photo / Homework";
+  addUserMsg(displayText);
+  msg.value=""; resizeTextarea(); clearAttach(false);
+  isThinking=true; addThinking();
+  try{
+    // Build prompt WITH Designs + Notes context
+    let contextPrompt = buildContext(text||"Explain this homework photo");
+    let body={ prompt: contextPrompt, grade: grade, lang: detectLang(text), history: chatHistory.slice(-6) };
+    if(uploadedPhoto) body.image=uploadedPhoto;
+    let res=await fetch(PROXY,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(body)});
+    let data=null; let aiText="";
+    if(res.ok){ data=await res.json(); aiText=data.text||data.answer||data.reply||""; }
+    // Fallback: Direct Gemini using Admin key if Proxy fails
+    if(!aiText){
+      let key=await getGeminiKey();
+      if(!key) throw new Error("Add Gemini key in admin.html → AI Brain. Proxy also failed.");
+      let gres=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${key}`,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({contents:[{parts:[{text:contextPrompt}]}]})});
+      let gdata=await gres.json();
+      if(gdata.error) throw new Error(gdata.error.message);
+      aiText=gdata.candidates?.[0]?.content?.parts?.[0]?.text||"";
+    }
+    if(!aiText) throw new Error("No answer from AI");
+    removeThinking();
+    // Show which Designs were used
+    let rel=findRelevantResources(text);
+    let srcHtml = rel.length ? `<div style="background:#f0f7ff;border:1px solid #c7d7ff;border-radius:12px;padding:10px;margin-bottom:10px;font-size:11px"><b>📚 Used from Admin:</b><br>${rel.map(r=>`• ${r.type} - ${r.title} (${r.grade} ${r.subject})`).join("<br")}</div>` : `<div style="background:#fff7ed;border:1px solid #fed7aa;border-radius:12px;padding:10px;margin-bottom:10px;font-size:11px">⚠️ No Admin Design found for this topic - used KICD. Add Design in admin.html → Resources → Design</div>`;
+    let card=addAiMsg(srcHtml+formatAI(aiText));
+    chatHistory.push({role:"user",text:text}); chatHistory.push({role:"ai",text:aiText});
+    saveHistory(text, aiText);
+    uploadedPhoto="";
+  }catch(e){
+    removeThinking();
+    addAiMsg(`<p class="ai-topic">❌ Error</p><p>${e.message}</p><p class="text-[12px] text-gray-500 mt-2">Fix: Admin → AI Brain → Save Gemini Key. Then Admin → Resources → Add Design/Notes for ${grade}.</p>`);
+    showError(e.message);
+  }
+  isThinking=false;
+}
+
+// Voice
+(function(){
+  const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+  if(!SR){ recognition=null; return; }
+  recognition=new SR(); recognition.continuous=false; recognition.interimResults=false; recognition.maxAlternatives=1;
+  recognition.onstart=function(){ listening=true; voiceBtn.classList.add("recording"); voiceBtn.innerHTML='<i class="fa-solid fa-stop"></i>'; listenTxt.classList.remove("hidden"); };
+  recognition.onresult=function(event){ let spoken=""; for(let i=event.resultIndex;i<event.results.length;i++){ if(event.results[i].isFinal) spoken+=event.results[i][0].transcript; } spoken=spoken.trim(); if(spoken){ msg.value=msg.value.trim()?msg.value.trim()+" "+spoken:spoken; resizeTextarea(); msg.focus(); } };
+  recognition.onerror=function(event){ listening=false; voiceBtn.classList.remove("recording"); voiceBtn.innerHTML='<i class="fa-solid fa-microphone"></i>'; listenTxt.classList.add("hidden"); if(event.error!=="no-speech"&&event.error!=="aborted") showError("Voice: "+event.error); };
+  recognition.onend=function(){ listening=false; voiceBtn.classList.remove("recording"); voiceBtn.innerHTML='<i class="fa-solid fa-microphone"></i>'; listenTxt.classList.add("hidden"); resizeTextarea(); };
+})();
+function startVoice(e){ if(e) e.preventDefault(); if(!recognition){ showError("Voice not supported. Try Chrome."); return; } if(listening) return; recognition.lang=detectLang(msg.value)==="SW"?"sw-KE":"en-KE"; try{ recognition.start(); }catch(err){ console.log(err); } }
+function stopVoice(e){ if(e) e.preventDefault(); if(recognition&&listening) recognition.stop(); }
+voiceBtn.addEventListener("touchstart",startVoice,{passive:false}); voiceBtn.addEventListener("touchend",stopVoice,{passive:false}); voiceBtn.addEventListener("touchcancel",stopVoice,{passive:false});
+voiceBtn.addEventListener("mousedown",startVoice); voiceBtn.addEventListener("mouseup",stopVoice); voiceBtn.addEventListener("mouseleave",stopVoice);
+
+// Photo / Doc
+function handlePhoto(input){
+  const file=input.files[0]; if(!file) return;
+  const reader=new FileReader();
+  reader.onload=function(){ const img=new Image(); img.onload=function(){ const canvas=document.createElement("canvas"); let w=img.width,h=img.height; const max=1200; if(w>max||h>max){ const s=Math.min(max/w,max/h); w=Math.round(w*s); h=Math.round(h*s); } canvas.width=w; canvas.height=h; canvas.getContext("2d").drawImage(img,0,0,w,h); uploadedPhoto=canvas.toDataURL("image/jpeg",.72); uploadedMime="image/jpeg"; document.getElementById("previewImg").src=uploadedPhoto; document.getElementById("previewImg").classList.remove("hidden"); document.getElementById("previewDocIcon").classList.add("hidden"); document.getElementById("previewName").textContent=file.name; document.getElementById("previewBox").classList.remove("hidden"); }; img.src=reader.result; };
+  reader.readAsDataURL(file); input.value="";
+}
+function handleDoc(input){
+  const file=input.files[0]; if(!file) return;
+  uploadedDocName=file.name; document.getElementById("previewImg").classList.add("hidden"); document.getElementById("previewDocIcon").classList.remove("hidden"); document.getElementById("previewName").textContent=file.name+" - will be read as homework"; document.getElementById("previewBox").classList.remove("hidden");
+  const reader=new FileReader(); reader.onload=e=>{ msg.value=(msg.value?msg.value+" ":"")+"Homework file: "+file.name+" - Content: "+String(e.target.result).slice(0,2000); resizeTextarea(); }; reader.readAsText(file); input.value="";
+}
+function clearAttach(clearPhoto=true){ if(clearPhoto) uploadedPhoto=""; document.getElementById("previewBox").classList.add("hidden"); }
+
+// History
+function openHistory(){ document.getElementById("historyDrawer").classList.remove("hidden"); document.getElementById("historyDrawer").classList.add("flex"); renderHistory(); }
+function closeHistory(){ document.getElementById("historyDrawer").classList.add("hidden"); document.getElementById("historyDrawer").classList.remove("flex"); }
+function saveHistory(q,a){ try{ let h=JSON.parse(localStorage.getItem("somahub_history")||"[]"); h.unshift({q,a: a.slice(0,500), grade, time: new Date().toLocaleString()}); localStorage.setItem("somahub_history", JSON.stringify(h.slice(0,50))); }catch(e){} }
+function renderHistory(){ let h=[]; try{ h=JSON.parse(localStorage.getItem("somahub_history")||"[]"); }catch(e){} let box=document.getElementById("historyList"); if(!h.length){ box.innerHTML="<p class='text-center text-gray-400 text-[12px] mt-10'>No history yet</p>"; return; } box.innerHTML=h.map((x,i)=>`<div class="bg-white border rounded-xl p-3 mb-2 cursor-pointer" onclick="loadHistoryItem(${i})"><p class="font-bold text-[12px]">${x.q}</p><p class="text-[10px] text-gray-400">${x.grade} • ${x.time}</p></div>`).join(""); }
+function loadHistoryItem(i){ let h=JSON.parse(localStorage.getItem("somahub_history")||"[]"); if(h[i]){ msg.value=h[i].q; closeHistory(); msg.focus(); } }
+function clearHistory(){ localStorage.removeItem("somahub_history"); renderHistory(); }
+
+// Init - Load Designs/Notes from Admin on open
+setTimeout(reloadResources, 800);
+setTimeout(getGeminiKey, 800);
 </script>
 </body>
 </html>
