@@ -23,13 +23,21 @@ body{overflow:hidden}
 .welcome-text{margin:12px auto 0;max-width:560px;color:#68738a;font-size:clamp(14px,2vw,17px);line-height:1.6}
 .message-in{animation:messageIn .16s ease-out}
 @keyframes messageIn{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
-.ai-card{background:#fff;border:1px solid #e4e8f0;border-radius:18px;padding:16px 18px;line-height:1.7;font-size:14px;color:#111827;box-shadow:0 3px 12px rgba(30,50,90,.04);overflow-wrap:anywhere}
+/* ===== ORIGINAL DESIGN - DO NOT CHANGE ===== */
+.user-bubble{background:#d9f7c5;color:#111827;padding:12px 18px;border-radius:20px;border-bottom-right-radius:6px;max-width:85%;font-size:15px;line-height:1.6;font-weight:700;box-shadow:0 2px 8px rgba(0,0,0,.04)}
+.ai-row{display:flex;gap:10px;align-items:flex-start}
+.ai-avatar{width:40px;height:40px;min-width:40px;border-radius:50%;background:#263b99;color:#fff;display:flex;align-items:center;justify-content:center;font-size:18px;box-shadow:0 2px 8px rgba(38,59,153,.25)}
+.ai-card{background:#fff;border:1px solid #e4e8f0;border-radius:18px;border-top-left-radius:6px;padding:16px 18px;line-height:1.7;font-size:14px;color:#111827;box-shadow:0 3px 12px rgba(30,50,90,.04);overflow-wrap:anywhere;flex:1}
 .ai-card p{margin:7px 0}
 .ai-topic{color:#dc2626;font-size:13px;font-weight:900;margin:2px 0 8px}
 .ai-explanation{color:#2563eb;font-size:15px;font-weight:900;margin:11px 0 5px}
 .ai-detail{color:#111827;font-weight:600}
 .ai-card ul{margin:7px 0 7px 20px;list-style:disc}
 .ai-card ol{margin:7px 0 7px 20px;list-style:decimal}
+.ai-actions{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0 0 50px}
+.ai-actions button{background:#fff;border:1px solid #e4e8f0;padding:8px 16px;border-radius:999px;font-size:13px;font-weight:800;color:#111827;cursor:pointer;display:flex;align-items:center;gap:6px}
+.ai-actions button:active{transform:scale(.96)}
+.ai-actions .print-btn{background:#263b99;color:#fff;border-color:#263b99}
 #inputFooter{flex:0 0 auto;width:100%;background:#f1f4fa;border-top:1px solid #dfe5ef;padding:8px 10px;padding-bottom:max(8px,env(safe-area-inset-bottom));z-index:30}
 .input-inner{width:100%;max-width:980px;margin:auto}
 .input-row{width:100%;display:flex;align-items:flex-end;gap:7px}
@@ -68,6 +76,8 @@ button,select{-webkit-tap-highlight-color:transparent;font-family:inherit}
   .tool-btn{width:34px;min-width:34px;height:36px}
   #msg{font-size:14px;padding-left:3px;padding-right:3px}
   .action-btn{width:45px;height:45px;min-width:45px}
+  .ai-avatar{width:36px;height:36px;min-width:36px;font-size:16px}
+  .ai-actions{margin-left:46px}
 }
 @media(min-width:600px){
   #topHeader{height:70px;min-height:70px}
@@ -156,10 +166,6 @@ onAuthStateChanged(auth,u=>{ if(!u) signInAnonymously(auth).catch(e=>console.log
 <input id="imgInput" type="file" class="hidden" accept="image/*" onchange="handlePhoto(this)">
 <input id="camInput" type="file" class="hidden" accept="image/*" capture="environment" onchange="handlePhoto(this)">
 <script>
-/* =========================================================
-   SOMAHUB CONFIG
-   DO NOT CHANGE THE API ENDPOINT
-========================================================= */
 const PROXY = "/api/gemini";
 let grade = "Grade 7";
 let uploadedPhoto = "";
@@ -170,10 +176,7 @@ let recognition = null;
 let listening = false;
 let chatHistory = [];
 
-/* =========================================================
-   HIDDEN ONLY - Reads Admin Designs/Notes, Gemini adds if missing
-   NO UI - NO new buttons, NO new text on screen
-========================================================= */
+/* HIDDEN ONLY - Reads Admin Designs/Notes, Gemini adds if missing */
 let ALL_RESOURCES = [];
 let AI_BRAIN = [];
 let GEMINI_KEY = "";
@@ -238,76 +241,81 @@ function buildContext(userText){
   return ctx;
 }
 
-/* =========================================================
-   DOM
-========================================================= */
 const chat = document.getElementById("chat");
 const messages = document.getElementById("messages");
 const msg = document.getElementById("msg");
 const welcome = document.getElementById("welcome");
 const voiceBtn = document.getElementById("voiceBtn");
 const listenTxt = document.getElementById("listenTxt");
-
-/* =========================================================
-   LANGUAGE
-========================================================= */
 const SW = ["habari","mambo","nisaidie","hesabu","hisabati","sayansi","kiswahili","shule","mwalimu","asante","eleza","soma","darasa","mtihani","kwa nini","ni nini"];
 function detectLang(text){
   if(!text) return "EN";
   const t = String(text).toLowerCase();
   return SW.some(word => t.includes(word)) ? "SW" : "EN";
 }
-
-/* =========================================================
-   GRADE
-========================================================= */
 document.getElementById("grade").addEventListener("change",e => {
   grade = e.target.value;
   reloadResources();
 });
-
-/* =========================================================
-   TEXT AREA
-========================================================= */
 function resizeTextarea(){
   msg.style.height = "auto";
   msg.style.height = Math.min(Math.max(msg.scrollHeight,40),105) + "px";
 }
 msg.addEventListener("input", resizeTextarea);
-
-/* =========================================================
-   ENTER TO SEND
-========================================================= */
 msg.addEventListener("keydown", e => {
-  if(e.key === "Enter" && !e.shiftKey){
-    e.preventDefault();
-    sendMsg();
-  }
+  if(e.key === "Enter" && !e.shiftKey){ e.preventDefault(); sendMsg(); }
 });
-
-/* =========================================================
-   HELPERS - Error, Messages, Formatting, Thinking
-========================================================= */
 function showError(t){
   let b = document.getElementById("errorBox");
   b.innerText = t; b.classList.remove("hidden");
   setTimeout(()=>b.classList.add("hidden"),4000);
 }
+
+/* ===== ORIGINAL MESSAGE DESIGN - Green user, White AI + Avatar + Copy/Listen/Download/Print ===== */
+let msgId = 0;
 function addUserMsg(text){
   welcome.style.display = "none";
   let d = document.createElement("div");
   d.className = "message-in flex justify-end my-2";
-  d.innerHTML = `<div class="bg-[#263b99] text-white px-4 py-3 rounded-2xl rounded-br-md max-w-[85%] text-[14px] leading-6 whitespace-pre-wrap"></div>`;
-  d.querySelector("div").innerText = text;
+  d.innerHTML = `<div class="user-bubble"></div>`;
+  d.querySelector(".user-bubble").innerText = text;
   messages.appendChild(d); chat.scrollTop = chat.scrollHeight;
 }
-function addAiMsg(html){
+function addAiMsg(html, plainText){
+  let id = ++msgId;
   let d = document.createElement("div");
-  d.className = "message-in my-2";
-  d.innerHTML = `<div class="ai-card"></div>`;
+  d.className = "message-in my-3";
+  d.innerHTML = `<div class="ai-row"><div class="ai-avatar">🎓</div><div class="ai-card"></div></div><div class="ai-actions"><button onclick="copyMsg(${id})"><i class="fa-regular fa-copy"></i> Copy</button><button onclick="listenMsg(${id})"><i class="fa-solid fa-volume-high"></i> Listen</button><button onclick="downloadMsg(${id})"><i class="fa-solid fa-download"></i> Download</button><button class="print-btn" onclick="printMsg(${id})"><i class="fa-solid fa-print"></i> Print</button></div>`;
   d.querySelector(".ai-card").innerHTML = html;
+  d.querySelector(".ai-card").dataset.plain = plainText || d.querySelector(".ai-card").innerText;
+  d.querySelector(".ai-card").id = "aiMsg-" + id;
   messages.appendChild(d); chat.scrollTop = chat.scrollHeight;
   return d.querySelector(".ai-card");
+}
+function getMsgText(id){
+  let el = document.getElementById("aiMsg-" + id);
+  return el ? (el.dataset.plain || el.innerText) : "";
+}
+function copyMsg(id){
+  let t = getMsgText(id);
+  if(navigator.clipboard) navigator.clipboard.writeText(t).then(()=>showError("Copied ✓"));
+  else showError("Copy not supported");
+}
+function listenMsg(id){
+  let t = getMsgText(id);
+  try{ speechSynthesis.cancel(); let u = new SpeechSynthesisUtterance(t); u.lang = "en-KE"; speechSynthesis.speak(u); }catch(e){ showError("Listen not supported"); }
+}
+function downloadMsg(id){
+  let t = getMsgText(id);
+  let blob = new Blob([t], {type:"text/plain"});
+  let a = document.createElement("a");
+  a.href = URL.createObjectURL(blob); a.download = "SomaHub-Answer.txt"; a.click();
+}
+function printMsg(id){
+  let t = getMsgText(id);
+  let w = window.open("", "_blank");
+  w.document.write("<html><head><title>SomaHub Tutor</title></head><body style='font-family:sans-serif;padding:20px;line-height:1.7;white-space:pre-wrap'>"+t.replace(/</g,"&lt;")+"</body></html>");
+  w.document.close(); w.print();
 }
 function addThinking(){
   let d = document.createElement("div");
@@ -333,10 +341,6 @@ function formatAI(text){
   if(inList) out += "</ul>";
   return out;
 }
-
-/* =========================================================
-   SEND - Uses Designs/Notes in background, Gemini adds if missing
-========================================================= */
 async function sendMsg(){
   let text = msg.value.trim();
   if(!text && !uploadedPhoto) return;
@@ -363,22 +367,18 @@ async function sendMsg(){
     }
     if(!aiText) throw new Error("No answer from AI");
     removeThinking();
-    addAiMsg(formatAI(aiText));
+    addAiMsg(formatAI(aiText), aiText);
     chatHistory.push({role:"user",text:text});
     chatHistory.push({role:"ai",text:aiText});
     saveHistory(text, aiText);
     uploadedPhoto = "";
   }catch(e){
     removeThinking();
-    addAiMsg(`<p>${e.message}</p>`);
+    addAiMsg(`<p>${e.message}</p>`, e.message);
     showError(e.message);
   }
   isThinking = false;
 }
-
-/* =========================================================
-   VOICE RECOGNITION - HOLD -> SPEAK, RELEASE -> STOP
-========================================================= */
 (function(){
   const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
   if(!SpeechRecognition){ recognition = null; return; }
@@ -410,9 +410,7 @@ async function sendMsg(){
     voiceBtn.classList.remove("recording");
     voiceBtn.innerHTML = '<i class="fa-solid fa-microphone"></i>';
     listenTxt.classList.add("hidden");
-    if(event.error !== "no-speech" && event.error !== "aborted"){
-      showError("Voice input: " + event.error);
-    }
+    if(event.error !== "no-speech" && event.error !== "aborted"){ showError("Voice input: " + event.error); }
   };
   recognition.onend = function(){
     listening = false;
@@ -439,10 +437,6 @@ voiceBtn.addEventListener("touchcancel", stopVoice, {passive:false});
 voiceBtn.addEventListener("mousedown", startVoice);
 voiceBtn.addEventListener("mouseup", stopVoice);
 voiceBtn.addEventListener("mouseleave", stopVoice);
-
-/* =========================================================
-   PHOTO
-========================================================= */
 function handlePhoto(input){
   const file = input.files[0];
   if(!file) return;
@@ -473,10 +467,6 @@ function handlePhoto(input){
   reader.readAsDataURL(file);
   input.value = "";
 }
-
-/* =========================================================
-   DOC
-========================================================= */
 function handleDoc(input){
   const file = input.files[0];
   if(!file) return;
@@ -497,10 +487,6 @@ function clearAttach(clearPhoto=true){
   if(clearPhoto) uploadedPhoto = "";
   document.getElementById("previewBox").classList.add("hidden");
 }
-
-/* =========================================================
-   HISTORY
-========================================================= */
 function openHistory(){
   document.getElementById("historyDrawer").classList.remove("hidden");
   document.getElementById("historyDrawer").classList.add("flex");
