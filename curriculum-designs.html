@@ -39,6 +39,7 @@ select,input{font-family:inherit;max-width:100%}
 .reader-page{flex:1;overflow-y:auto;padding:0;line-height:1.75;font-size:15px;color:#111;white-space:pre-wrap;overflow-wrap:anywhere;background:#fff}
 .reader-page.text-mode{padding:18px 16px}
 .reader-page iframe{width:100%;height:100%;border:0;display:block}
+.reader-page canvas{width:100%!important;height:auto!important;display:block;margin:0 auto 8px;border-bottom:1px solid #e2e8f0}
 .hidden{display:none!important}
 </style>
 </head>
@@ -151,8 +152,53 @@ function getAdminFileContext(question){
   let qWords=(question||"").toLowerCase().split(/[^a-z0-9]+/).filter(w=>w.length>3);
   let chunks=[]; for(let i=0;i<CURRENT_FILE_TEXT.length;i+=1200) chunks.push(CURRENT_FILE_TEXT.slice(i,i+1200));
   let scored=chunks.map(c=>{let low=c.toLowerCase(); let s=0; qWords.forEach(w=>{if(low.includes(w)) s++;}); return {c,s};}).sort((a,b)=>b.s-a.s);
-  return `\n\nADMIN FILE (Original Design): ${CURRENT_TOPIC}\nMost relevant pages:\n${scored.slice(0,4).map(x=>x.c).join("\n---\n")}\n`;
+  return `\n\nADMIN FILE (Original Design): ${CURRENT_TOPIC}\nMost relevant pages:\n${scored.slice(0,8).map(x=>x.c).join("\n---\n")}\n`;
 }
+
+// === NEW CBC DEEP + SIMPLIFY PROMPT - USED BY ALL AI BUTTONS ===
+function buildCBCPrompt(r, topicText){
+  return `You are SomaHub CBC Tutor Kenya. You MUST use ONLY the content from this KICD Curriculum Design below. Do NOT invent. Do NOT use big grammar without explaining it.
+
+GRADE: ${r.grade}
+LEARNING AREA: ${r.subject}
+TOPIC / DESIGN: ${topicText}
+
+DOCUMENT (KICD Design - up to 25000 chars):
+${CURRENT_FILE_TEXT.slice(0,25000)}
+
+Answer in this EXACT structure. Do NOT skip any section. If a section is not in the document, say "Not in this design" - do NOT invent.
+
+PART 1 - FOR TEACHER / PARENT (Full CBC - copy from document):
+1. **Topic:**
+2. **Strand / Sub-Strand:**
+3. **General Learning Outcomes:** (from design)
+4. **Specific Learning Outcomes:** (bullet list - By end of sub-strand, learner should...)
+5. **Key Inquiry Questions:**
+6. **Core Competencies Developed:** (e.g. Communication & Collaboration, Critical Thinking, Digital Literacy, Creativity, Self-Efficacy, Citizenship - explain each in 5 words)
+7. **Values:** (e.g. Love, Respect, Responsibility, Unity, Patriotism - explain each in 5 words)
+8. **Pertinent & Contemporary Issues (PCIs):**
+9. **Suggested Learning Experiences:** (what learners actually DO in class)
+10. **Lesson Allocation / Strand Totals:** (from LESSON ALLOCATION table in document - e.g. Strand X = 12 lessons, Total = 72 lessons. If table not in text, say "Not in this design")
+
+PART 2 - FOR LEARNER - CLARIFY & SIMPLIFY (Most important - teach like a patient Kenyan teacher):
+Now teach the SAME topic again to a ${r.grade} child.
+
+Rules:
+- Use VERY simple words. 1 short sentence per idea. No long paragraphs.
+- If you must use a big word, say it then explain in brackets. Example: "Atmosphere (the air around us)"
+- Use Kenya examples: Ruiru, Nairobi, shamba, mama mboga, matatu, rain in April, sun in January, ugali, sukuma.
+- Use an analogy: "Weather is like clothes for the sky..."
+- Use emojis to make it fun.
+- Break into small steps: What is it? Why does it happen? What do we see? What do we do?
+- End with: "**In simple words:** ..." - one line a child can remember.
+
+PART 3 - CHECK UNDERSTANDING:
+- **Quick Quiz:** 5 easy questions with answers at end.
+- **Remember This:** 3 bullet points to remember for exam.
+
+Tone: Warm, friendly, patient teacher, not a textbook. Use **bold** for headings.`;
+}
+
 function openReader(title, meta, text){
   READER_TITLE=title; READER_META=meta;
   document.getElementById("readerTitle").innerText=title;
@@ -207,8 +253,8 @@ async function searchNotes(){
   box.innerHTML=`<p class="font-black">🔍 "${q}" - ${matched.length} designs + AI meaning for ${currentGrade}</p><div class="ai-box mt-2">⏳ Thinking...</div>`;
   let designCtx=matched.length?matched.map((r,i)=>`${i+1}. ${safeTitle(r)} | ${r.grade} ${r.subject} | ${(r._text||r.fullText||'').length>300 && !isJunkText(r._text||r.fullText) ? (r._text||r.fullText).slice(0,2000) : 'NO FILE TEXT YET - Link only'}`).join("\n"):"No exact design - use CBC/KICD.";
   let fileCtx=getAdminFileContext(q);
-  let prompt=`You are SomaHub CBC Tutor for ${currentGrade}. Topic: ${q}\nDesigns (Admin files + AI Brain):\n${designCtx}\n${fileCtx}\nTASK: 1. Meaning, 2. Compare PP1, Grade 4, Grade 7, Grade 9, 3. 3 Key Points, 4. 1 Kenya example. Use **bold**. Never mention missing resources. Never mention links.`;
-  try{ let ai=await callAI(prompt,q); let videoQ=encodeURIComponent(q+" "+currentGrade+" CBC Kenya lesson"); box.innerHTML=`<p class="font-black">🔍 "${q}" - ${matched.length} designs</p>${matched.map(r=>`<div class="mt-2 text-[13px]"><b>${safeTitle(r)}</b> • ${r.grade} ${r.subject} <button class="action-btn bg-[#0d9488] ml-1" onclick="openDesignCombined('${r.id}')">Open</button></div>`).join("")}<div class="ai-box mt-3">${formatAI(ai)}</div><div class="flex gap-2 mt-3 flex-wrap"><a target="_blank" href="https://www.youtube.com/results?search_query=${videoQ}" class="action-btn bg-red-600 no-underline">▶ Watch Video</a><button class="action-btn bg-orange-500" onclick="makeHomework('${q.replace(/'/g,"")}')">Set Homework</button><button class="action-btn bg-[#263b99]" onclick="makeExam('${q.replace(/'/g,"")}')">Set Exam</button></div>`; }catch(e){ box.innerHTML=`<div class="ai-box">AI busy: ${e.message}</div>`; }
+  let prompt=`You are SomaHub CBC Tutor for ${currentGrade}. Topic: ${q}\nDesigns (Admin files + AI Brain):\n${designCtx}\n${fileCtx}\nTASK: Give FULL CBC structure: Strand, Specific Outcomes, Key Inquiry Questions, Core Competencies, Values, PCIs, Lesson Totals, then CLARIFY & SIMPLIFY for a ${currentGrade} child - simple words, Kenya examples, analogy, "In simple words:" summary. Use **bold**. Never mention missing resources. Never mention links.`;
+  try{ let ai=await callAI(prompt,q); let videoQ=encodeURIComponent(q+" "+currentGrade+" CBC Kenya lesson"); box.innerHTML=`<p class="font-black">🔍 "${q}" - ${matched.length} designs</p>${matched.map(r=>`<div class="mt-2 text-[13px]"><b>${safeTitle(r)}</b> • ${r.grade} ${r.subject} <button class="action-btn bg-[#263b99] ml-1" onclick="openDesign('${r.id}')">🤖 AI Explains</button></div>`).join("")}<div class="ai-box mt-3">${formatAI(ai)}</div><div class="flex gap-2 mt-3 flex-wrap"><a target="_blank" href="https://www.youtube.com/results?search_query=${videoQ}" class="action-btn bg-red-600 no-underline">▶ Watch Video</a><button class="action-btn bg-orange-500" onclick="makeHomework('${q.replace(/'/g,"")}')">Set Homework</button><button class="action-btn bg-[#263b99]" onclick="makeExam('${q.replace(/'/g,"")}')">Set Exam</button></div>`; }catch(e){ box.innerHTML=`<div class="ai-box">AI busy: ${e.message}</div>`; }
 }
 function loadDesigns(){
   currentGrade=document.getElementById("gradeSel").value;
@@ -219,23 +265,22 @@ function loadDesigns(){
   box.innerHTML=list.map(r=>{
     let bt = getBrainTextFor(r);
     let badge = bt && !isJunkText(bt) ? `🧠 Brain: ${Math.round(bt.length/1000)}k chars` : `🔗 Link only - Tap Read Original to see PDF`;
-    return `<div class="card"><p class="font-black text-[15px]">${safeTitle(r)}</p><p class="text-[12px] text-gray-500">${r.grade} • ${r.subject} • ${r.type||'Design'} • ${badge}</p><p class="text-[13px] mt-1">${safeDesc(r).slice(0,180)}</p><div class="flex gap-2 mt-3 flex-wrap"><button class="action-btn bg-[#0d9488]" onclick="openDesignCombined('${r.id}')">📘 Tap to Open - Saved + AI</button><button class="action-btn bg-[#263b99]" onclick="openOriginalDesign('${r.id}')">📖 Read Original</button><button class="action-btn bg-[#263b99]" onclick="openDesign('${r.id}')">🤖 AI Explains</button></div></div>`;
+    return `<div class="card"><p class="font-black text-[15px]">${safeTitle(r)}</p><p class="text-[12px] text-gray-500">${r.grade} • ${r.subject} • ${r.type||'Design'} • ${badge}</p><p class="text-[13px] mt-1">${safeDesc(r).slice(0,180)}</p><div class="flex gap-2 mt-3 flex-wrap"><button class="action-btn bg-[#263b99]" onclick="openOriginalDesign('${r.id}')">📖 Read Original</button><button class="action-btn bg-[#0d9488]" onclick="openDesign('${r.id}')">🤖 AI Explains</button></div></div>`;
   }).join("");
 }
+
+// === FIXED: READ ORIGINAL ALWAYS SHOWS REAL PDF LIKE GRADE 8 ===
 async function openOriginalDesign(id){
   let r=ALL.find(x=>x.id==id); if(!r) return;
   CURRENT_FILE_TEXT = getBrainTextFor(r);
   CURRENT_TOPIC = safeTitle(r);
   let fileUrl = r.fileUrl || r.url || r.pdfUrl || r.link || "";
   let title = safeTitle(r);
-  if(CURRENT_FILE_TEXT && !isJunkText(CURRENT_FILE_TEXT)){
-    openReader(title, `${r.grade} • ${r.subject} • Original Design (Not AI)`, CURRENT_FILE_TEXT);
-    return;
-  }
+  // 1. Drive files - Google preview iframe (real PDF layout)
   if(fileUrl && isDriveLink(fileUrl)){
     let did = getDriveId(fileUrl);
     let preview = "https://drive.google.com/file/d/" + did + "/preview";
-    READER_TITLE = title; READER_META = `${r.grade} • ${r.subject} • Original PDF from Drive`;
+    READER_TITLE = title; READER_META = `${r.grade} • ${r.subject} • Original PDF`;
     document.getElementById("readerTitle").innerText=title;
     document.getElementById("readerMeta").innerText=READER_META;
     let page = document.getElementById("readerPage");
@@ -244,19 +289,52 @@ async function openOriginalDesign(id){
     document.getElementById("reader").classList.remove("hidden");
     return;
   }
-  if(fileUrl && (fileUrl.toLowerCase().endsWith(".pdf") || fileUrl.includes(".pdf") || fileUrl.includes("uc?export"))){
-    openReader(title, `${r.grade} • ${r.subject} • Loading...`, "⏳ Loading original PDF...");
+  // 2. Cloudinary / direct PDF - render with PDF.js canvas (like Grade 8 screenshot)
+  if(fileUrl && (fileUrl.toLowerCase().includes(".pdf") || fileUrl.includes("cloudinary") || fileUrl.includes("uc?export"))){
+    READER_TITLE = title; READER_META = `${r.grade} • ${r.subject} • Original PDF - Loading...`;
+    document.getElementById("readerTitle").innerText=title;
+    document.getElementById("readerMeta").innerText=READER_META;
+    let page = document.getElementById("readerPage");
+    page.classList.remove("text-mode");
+    page.innerHTML = `<div style="padding:20px;text-align:center">⏳ Loading real PDF...<br><span style="font-size:12px;color:#666">If it stays here, tap ⬇ Download at top</span></div>`;
+    document.getElementById("reader").classList.remove("hidden");
     try{
-      let buf = await fetch(fileUrl).then(res=>res.arrayBuffer());
+      if(window.pdfjsLib) pdfjsLib.GlobalWorkerOptions.workerSrc="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
+      let buf = await fetch(fileUrl).then(res=>{ if(!res.ok) throw new Error("Fetch failed "+res.status); return res.arrayBuffer(); });
       let head = new TextDecoder().decode(buf.slice(0,5));
-      if(head !== "%PDF-") throw new Error("Not a direct PDF. Tap Download.");
+      if(head !== "%PDF-") throw new Error("Not direct PDF");
       let pdf = await pdfjsLib.getDocument({data:buf}).promise;
-      let all = "";
-      for(let i=1;i<=pdf.numPages;i++){ let pg = await pdf.getPage(i); let tc = await pg.getTextContent(); all += `\n[PAGE ${i}]\n` + tc.items.map(it=>it.str).join(" "); }
-      CURRENT_FILE_TEXT = all;
-      openReader(title, `${r.grade} • ${r.subject} • Original Design - ${pdf.numPages} pages`, all);
+      document.getElementById("readerMeta").innerText=`${r.grade} • ${r.subject} • Original PDF - ${pdf.numPages} pages`;
+      page.innerHTML = "";
+      // Render first 15 pages immediately, then rest
+      let renderPage = async (i)=>{
+        let pg = await pdf.getPage(i);
+        let viewport = pg.getViewport({scale:1.6});
+        let canvas = document.createElement("canvas");
+        canvas.width = viewport.width; canvas.height = viewport.height;
+        let ctx = canvas.getContext("2d");
+        await pg.render({canvasContext:ctx, viewport}).promise;
+        let label = document.createElement("div");
+        label.style.cssText="text-align:center;font-size:11px;color:#888;padding:4px";
+        label.innerText = `Page ${i} / ${pdf.numPages}`;
+        page.appendChild(canvas); page.appendChild(label);
+      };
+      for(let i=1;i<=Math.min(pdf.numPages,15);i++){ await renderPage(i); }
+      if(pdf.numPages>15){
+        let moreBtn = document.createElement("button");
+        moreBtn.innerText = `Load remaining ${pdf.numPages-15} pages`;
+        moreBtn.style.cssText="display:block;margin:12px auto;background:#0d9488;color:#fff;border:0;padding:12px 18px;border-radius:999px;font-weight:800";
+        moreBtn.onclick = async ()=>{ moreBtn.remove(); for(let i=16;i<=pdf.numPages;i++){ await renderPage(i); } };
+        page.appendChild(moreBtn);
+      }
       return;
-    }catch(e){ openReader(title, `${r.grade} • ${r.subject}`, `Could not read PDF inside SomaHub.\n\n✅ Tap ⬇ Download at top to open it.\n\nFile: ${fileUrl}`); return; }
+    }catch(e){
+      // 3. Fallback - Google Docs Viewer (still real PDF layout, not text)
+      let gview = "https://docs.google.com/gview?embedded=1&url=" + encodeURIComponent(fileUrl);
+      page.innerHTML = `<iframe src="${gview}"></iframe>`;
+      document.getElementById("readerMeta").innerText=`${r.grade} • ${r.subject} • Original PDF`;
+      return;
+    }
   }
   if(fileUrl){ openReader(title, `${r.grade} • ${r.subject} • Link`, `Tap ⬇ Download at top to open it.\n\nLink: ${fileUrl}`); return; }
   openReader(title, `${r.grade} • ${r.subject}`, `⚠️ This design is BLANK.\n\nAdmin only saved Title: ${title}\n\nFIX: Admin must re-upload ${title} PDF in admin.html.`);
@@ -267,35 +345,18 @@ async function openDesign(id){
   CURRENT_FILE_TEXT=getBrainTextFor(r);
   CURRENT_TOPIC=safeTitle(r);
   let box=document.getElementById("detailBox");
-  box.innerHTML=`<div class="card"><h3 class="font-black">${safeTitle(r)}</h3><p class="text-[12px] text-gray-500">${r.grade} • ${r.subject}</p><p class="text-[14px] mt-2">${safeDesc(r)}</p><div class="ai-box mt-3">⏳ AI Explains...</div><div class="flex gap-2 mt-3 flex-wrap"><button class="action-btn bg-[#0d9488]" onclick="openOriginalDesign('${r.id}')">📖 Read Original Instead</button><button class="action-btn bg-red-600" onclick="closeDetail()">✕ Exit</button></div></div>`;
+  box.innerHTML=`<div class="card"><h3 class="font-black">${safeTitle(r)}</h3><p class="text-[12px] text-gray-500">${r.grade} • ${r.subject}</p><p class="text-[14px] mt-2">${safeDesc(r)}</p><div class="ai-box mt-3">⏳ AI Explains - Reading full CBC design...</div><div class="flex gap-2 mt-3 flex-wrap"><button class="action-btn bg-[#263b99]" onclick="openOriginalDesign('${r.id}')">📖 Read Original Instead</button><button class="action-btn bg-red-600" onclick="closeDetail()">✕ Exit</button></div></div>`;
   box.scrollIntoView({behavior:"smooth"});
   if(!CURRENT_FILE_TEXT || isJunkText(CURRENT_FILE_TEXT)){
-    box.querySelector(".ai-box").innerHTML = "⚠️ AI has NOT read this file yet.<br><br>This file is LINK ONLY. Admin must download PDF from Drive to phone, then in admin.html use yellow box <b>Choose File</b> to upload it. Then AI will read it.<br><br>Tap 📖 Read Original Instead to read the real PDF from Drive.";
+    box.querySelector(".ai-box").innerHTML = "⚠️ AI has NOT read this file yet.<br><br>This file is LINK ONLY. Admin must re-upload PDF in admin.html using <b>Choose PDF to Upload to Cloud</b>. Then AI will read it.<br><br>Tap 📖 Read Original Instead to read the real PDF.";
     return;
   }
-  try{ let prompt=`You are SomaHub CBC Tutor for ${r.grade}. You MUST answer ONLY from this ADMIN FILE + AI BRAIN below. Do NOT mention any link. Do NOT say you cannot open files. The file content is already given to you.\n\nADMIN FILE - ${safeTitle(r)}:\n${CURRENT_FILE_TEXT.slice(0,12000)}\n\nTASK: Summarize. Give Meaning, Key Points, Activities, Assessment. Use **bold**.`; let ai=await callAI(prompt,safeTitle(r)); box.querySelector(".ai-box").innerHTML=formatAI(ai); }catch(e){ box.querySelector(".ai-box").innerHTML="AI busy, try again."; }
+  try{ let prompt=buildCBCPrompt(r, safeTitle(r)); let ai=await callAI(prompt,safeTitle(r)); box.querySelector(".ai-box").innerHTML=formatAI(ai); }catch(e){ box.querySelector(".ai-box").innerHTML="AI busy, try again."; }
 }
-// NEW - 1 TAP = SAVED + AI TOGETHER
-async function openDesignCombined(id){
-  let r=ALL.find(x=>x.id==id); if(!r) return;
-  currentGrade=r.grade||currentGrade;
-  CURRENT_FILE_TEXT=getBrainTextFor(r);
-  CURRENT_TOPIC=safeTitle(r);
-  let box=document.getElementById("detailBox");
-  box.innerHTML=`<div class="card"><h3 class="font-black">${safeTitle(r)}</h3><p class="text-[12px] text-gray-500">${r.grade} • ${r.subject}</p><p class="font-black mt-4">📚 SAVED DESIGN</p><p class="text-[14px] mt-1">${safeDesc(r)}</p><button class="action-btn bg-[#0d9488] mt-2" onclick="openOriginalDesign('${r.id}')">📖 Read Original PDF</button><p class="font-black mt-4">🤖 AI GENERATED - Summary Notes based on this Design</p><div class="ai-box mt-2">⏳ AI making summary from this Design...</div><div class="flex gap-2 mt-3 flex-wrap"><button class="action-btn bg-red-600" onclick="closeDetail()">✕ Exit</button></div></div>`;
-  box.scrollIntoView({behavior:"smooth"});
-  if(!CURRENT_FILE_TEXT || isJunkText(CURRENT_FILE_TEXT)){
-    box.querySelector(".ai-box").innerHTML = "⚠️ Link only - Admin must re-upload PDF file so AI can read it. Tap 📖 Read Original to see Drive PDF.";
-    return;
-  }
-  try{
-    let prompt=`Give summary notes based on this Curriculum Design. 1) Short Summary 2) 5 Key Points 3) What to remember for exam. Simple English. Use **bold**.\n\nDESIGN:\n${CURRENT_FILE_TEXT.slice(0,12000)}`;
-    let ai=await callAI(prompt, safeTitle(r));
-    box.querySelector(".ai-box").innerHTML=formatAI(ai);
-  }catch(e){ box.querySelector(".ai-box").innerHTML="AI busy, try again."; }
-}
-async function makeHomework(topic){ let box=document.getElementById("searchResult"); box.innerHTML+=`<div class="ai-box mt-2">⏳ Setting homework...</div>`; try{ let ai=await callAI(`Set Homework for ${currentGrade} on ${topic}. ${getAdminFileContext(topic)} 5 questions easy to hard, 1 Kenya example, Answers at end. Use **bold**.`,topic); box.innerHTML+=`<div class="ai-box mt-2">${formatAI(ai)}</div>`; }catch(e){} }
-async function makeExam(topic){ let box=document.getElementById("searchResult"); box.innerHTML+=`<div class="ai-box mt-2">⏳ Setting exam...</div>`; try{ let ai=await callAI(`Set Exam for ${currentGrade} on ${topic}. ${getAdminFileContext(topic)} 10 questions: 5 MCQ, 3 Short, 2 Structured. Marking Scheme at end. Use **bold**.`,topic); box.innerHTML+=`<div class="ai-box mt-2">${formatAI(ai)}</div>`; }catch(e){} }
+// Kept for old links - now uses same deep CBC prompt
+async function openDesignCombined(id){ return openDesign(id); }
+async function makeHomework(topic){ let box=document.getElementById("searchResult"); box.innerHTML+=`<div class="ai-box mt-2">⏳ Setting homework...</div>`; try{ let ai=await callAI(`Set Homework for ${currentGrade} on ${topic}. ${getAdminFileContext(topic)} Use the CBC structure: Specific Outcomes, then CLARIFY & SIMPLIFY in simple words with Kenya examples. 5 questions easy to hard, 1 Kenya example, Answers at end. Use **bold**.`,topic); box.innerHTML+=`<div class="ai-box mt-2">${formatAI(ai)}</div>`; }catch(e){} }
+async function makeExam(topic){ let box=document.getElementById("searchResult"); box.innerHTML+=`<div class="ai-box mt-2">⏳ Setting exam...</div>`; try{ let ai=await callAI(`Set Exam for ${currentGrade} on ${topic}. ${getAdminFileContext(topic)} Use CBC structure + CLARIFY & SIMPLIFY. 10 questions: 5 MCQ, 3 Short, 2 Structured. Marking Scheme at end. Use **bold**.`,topic); box.innerHTML+=`<div class="ai-box mt-2">${formatAI(ai)}</div>`; }catch(e){} }
 setTimeout(loadResources, 800);
 </script>
 </body>
