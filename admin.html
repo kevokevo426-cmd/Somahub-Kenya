@@ -102,10 +102,11 @@ async function handleResourceFile(input){
     let form=new FormData();
     form.append("file", file);
     form.append("upload_preset", "somahub");
-    // FIXED: auto instead of raw - raw blocks Google Viewer + PDF.js iframe, auto allows viewing
-    let res=await fetch("https://api.cloudinary.com/v1_1/wzm2sx30/auto/upload", {method:"POST", body:form});
+    // FIXED: image/upload for PDFs - raw = 401 deny, image = public viewable PDF
+    // Cloudinary treats PDF uploaded as image as viewable document
+    let res=await fetch("https://api.cloudinary.com/v1_1/wzm2sx30/image/upload", {method:"POST", body:form});
     let data=await res.json();
-    if(!data.secure_url) throw new Error(data.error?.message || "Upload failed - check preset is Unsigned");
+    if(!data.secure_url) throw new Error(data.error?.message || "Upload failed - check preset is Unsigned. In Cloudinary: Settings > Upload > Upload presets > somahub > Signing Mode = Unsigned");
     document.getElementById("rUrl").value=data.secure_url;
     RESOURCE_FILE_NAME=file.name;
     if(RESOURCE_FULLTEXT && RESOURCE_FULLTEXT.length>100){
@@ -113,7 +114,7 @@ async function handleResourceFile(input){
     } else {
       document.getElementById("rFileStatus").innerText="✅ Saved to Cloud! (AI could not read text - scanned PDF? Tap + Add, then use Read Original)";
     }
-    document.getElementById("rFilePreview").innerText="Cloud link: "+data.secure_url.slice(0,60)+"... | AI text: "+RESOURCE_FULLTEXT.length+" chars";
+    document.getElementById("rFilePreview").innerText="Cloud link: "+data.secure_url.slice(0,70)+"... | AI text: "+RESOURCE_FULLTEXT.length+" chars";
     showViewButtonAfterUpload();
   }catch(e){ document.getElementById("rFileStatus").innerText="❌ Upload failed: "+e.message; }
 }
