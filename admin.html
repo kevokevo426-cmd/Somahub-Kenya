@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SomaHub Admin - Parent + Teacher Request</title>
+<title>SomaHub Admin</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
 <style>body{font-family:'Inter',sans-serif}</style>
@@ -14,25 +14,14 @@ import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstati
 const cfg={apiKey:"AIzaSyA93BNes3AmFyxIEgjSbvbIWqLyorLsuj8",authDomain:"somahubkenya-9e458.firebaseapp.com",projectId:"somahubkenya-9e458",storageBucket:"somahubkenya-9e458.firebasestorage.app",messagingSenderId:"615579085715",appId:"1:615579085715:web:28fca37ba498324bb49666"};
 const app=initializeApp(cfg); const db=getFirestore(app); const auth=getAuth(app); const storage=getStorage(app);
 window.FB={db,collection,getDocs,doc,getDoc,setDoc,updateDoc,deleteDoc,addDoc,serverTimestamp,query,where};
+window.SOMA_STORAGE={storage, ref, uploadBytes, getDownloadURL};
 onAuthStateChanged(auth,u=>{ if(!u) signInAnonymously(auth).catch(e=>console.log(e)); });
 </script>
 </head>
 <body class="bg-[#f7f7f5] text-[#111] min-h-screen">
-<header class="bg-white border-b sticky top-0 z-50">
-<div class="max-w-6xl mx-auto px-6 py-4 flex justify-between items-center">
-<div><h1 class="font-extrabold text-[18px] tracking-tight">SomaHub Admin</h1><p class="text-[10px] text-gray-500 -mt-1">Parent + Teacher can request homeschooling • SHKE + SHKET • Playgroup - Grade 10</p></div>
-<div class="flex gap-2 flex-wrap">
-<button onclick="showTab('resources')" id="btn-resources" class="bg-white border px-4 py-2 rounded-full text-[11px] font-bold">📚 Resources</button>
-<button onclick="showTab('ai')" id="btn-ai" class="bg-white border px-4 py-2 rounded-full text-[11px] font-bold">🤖 AI Brain</button>
-<button onclick="showTab('tuition')" id="btn-tuition" class="bg-black text-white px-4 py-2 rounded-full text-[11px] font-bold">🏠 Tuition <span id="tuitionCountTop" class="bg-[#ffcc1a] text-black px-1.5 rounded-full ml-1">0</span></button>
-</div>
-</div>
-</header>
+<header class="bg-white border-b sticky top-0 z-50"><div class="max-w-6xl mx-auto px-6 py-4 flex justify-between items-center"><div><h1 class="font-extrabold text-[18px]">SomaHub Admin</h1><p class="text-[10px] text-gray-500 -mt-1">SHKE + SHKET • Playgroup - Grade 10</p></div><div class="flex gap-2 flex-wrap"><button onclick="showTab('resources')" id="btn-resources" class="bg-white border px-4 py-2 rounded-full text-[11px] font-bold">📚 Resources</button><button onclick="showTab('ai')" id="btn-ai" class="bg-white border px-4 py-2 rounded-full text-[11px] font-bold">🤖 AI Brain</button><button onclick="showTab('tuition')" id="btn-tuition" class="bg-black text-white px-4 py-2 rounded-full text-[11px] font-bold">🏠 Tuition <span id="tuitionCountTop" class="bg-[#ffcc1a] text-black px-1.5 rounded-full ml-1">0</span></button></div></div></header>
 <div class="max-w-6xl mx-auto px-6 py-6">
-<div id="tab-resources" class="hidden">
-<div class="grid grid-cols-12 gap-6">
-<div class="col-span-12 lg:col-span-7">
-<div class="bg-white rounded-[24px] border p-6 shadow-sm">
+<div id="tab-resources" class="hidden"><div class="grid grid-cols-12 gap-6"><div class="col-span-12 lg:col-span-7"><div class="bg-white rounded-[24px] border p-6 shadow-sm">
 <h2 class="font-extrabold text-[15px] mb-4">📚 Feed Resource - Auto Saves to AI Brain</h2>
 <div class="grid grid-cols-3 gap-2 mb-4">
 <button onclick="setType('Notes')" id="tNotes" class="typeBtn bg-black text-white p-3 rounded-2xl text-left"><p class="text-[12px] font-bold">📘 Notes</p></button>
@@ -43,306 +32,77 @@ onAuthStateChanged(auth,u=>{ if(!u) signInAnonymously(auth).catch(e=>console.log
 <button onclick="setType('LessonPlan')" id="tLessonPlan" class="typeBtn bg-white border p-3 rounded-2xl text-left"><p class="text-[12px] font-bold">📋 Lesson</p></button>
 </div>
 <input type="hidden" id="rType" value="Notes">
-<input id="rTitle" placeholder="Title (optional - auto = Grade + Subject) — e.g. Grade 8 Agriculture" class="w-full bg-[#f7f7f5] border p-4 rounded-2xl text-[13px] mb-3 outline-none">
-<div class="grid grid-cols-2 gap-3 mb-3">
-<select id="rGrade" onchange="updateSubjects('rGrade','rSubject')" class="bg-[#f7f7f5] border p-4 rounded-2xl text-[13px]">
-<option>Playgroup</option><option>PP1</option><option>PP2</option><option>Grade 1</option><option>Grade 2</option><option>Grade 3</option><option>Grade 4</option><option>Grade 5</option><option>Grade 6</option><option>Grade 7</option><option selected>Grade 8</option><option>Grade 9</option><option>Grade 10</option>
-</select>
-<select id="rSubject" class="bg-[#f7f7f5] border p-4 rounded-2xl text-[13px]"></select>
-</div>
-<input id="rUrl" placeholder="🔗 Cloud link will appear here automatically after upload" class="w-full bg-[#f7f7f5] border p-4 rounded-2xl text-[13px] mb-3 outline-none">
-
-<!-- SIMPLE CLOUD UPLOAD - ONLY 1 BUTTON -->
-<div class="bg-[#fffbe6] border-2 border-dashed border-[#ffcc1a] p-4 rounded-2xl mb-3">
-<p class="font-bold text-[13px]">📤 Upload PDF to Cloud</p>
-<p class="text-[11px] text-gray-500">Pick PDF from phone. It uploads to cloud. Cloud reads it. No Low Memory, no Failed to fetch.</p>
-<label class="block text-center bg-black text-white py-3 rounded-2xl font-bold text-[13px] mt-3 cursor-pointer">📤 Choose PDF to Upload to Cloud<input id="rFile" type="file" accept=".pdf,.docx,.txt" class="hidden" onchange="handleResourceFile(this)"></label>
-<p id="rFileStatus" class="text-[11px] font-bold mt-2 text-gray-700"></p>
-<p id="rFilePreview" class="text-[11px] mt-1 text-gray-500 max-h-[100px] overflow-y-auto"></p>
-</div>
-
-<textarea id="rDesc" placeholder="Description... e.g. Agriculture 8 (optional)" class="w-full bg-[#f7f7f5] border p-4 rounded-2xl text-[13px] h-[80px] mb-3 outline-none"></textarea>
-<p id="editBanner" class="hidden text-[12px] font-bold text-center bg-yellow-100 p-2 rounded-xl mb-2">✏️ Editing: <span id="editTitleShow"></span> - Tap Update below to save changes</p>
+<input id="rTitle" placeholder="Title (optional - auto = Grade + Subject)" class="w-full bg-[#f7f7f5] border p-4 rounded-2xl text-[13px] mb-3 outline-none">
+<div class="grid grid-cols-2 gap-3 mb-3"><select id="rGrade" onchange="updateSubjects('rGrade','rSubject')" class="bg-[#f7f7f5] border p-4 rounded-2xl text-[13px]"><option>Playgroup</option><option>PP1</option><option>PP2</option><option>Grade 1</option><option>Grade 2</option><option>Grade 3</option><option>Grade 4</option><option>Grade 5</option><option>Grade 6</option><option>Grade 7</option><option selected>Grade 8</option><option>Grade 9</option><option>Grade 10</option></select><select id="rSubject" class="bg-[#f7f7f5] border p-4 rounded-2xl text-[13px]"></select></div>
+<input id="rUrl" placeholder="🔗 Cloud link will appear here automatically" class="w-full bg-[#f7f7f5] border p-4 rounded-2xl text-[13px] mb-3 outline-none">
+<div class="bg-[#fffbe6] border-2 border-dashed border-[#ffcc1a] p-4 rounded-2xl mb-3"><p class="font-bold text-[13px]">📤 Upload PDF to Cloud</p><p class="text-[11px] text-gray-500">Pick PDF from phone. It uploads to cloud. No Low Memory, no Failed to fetch.</p><label class="block text-center bg-black text-white py-3 rounded-2xl font-bold text-[13px] mt-3 cursor-pointer">📤 Choose PDF to Upload to Cloud<input id="rFile" type="file" accept=".pdf,.docx,.txt" class="hidden" onchange="handleResourceFile(this)"></label><p id="rFileStatus" class="text-[11px] font-bold mt-2 text-gray-700"></p><p id="rFilePreview" class="text-[11px] mt-1 text-gray-500 max-h-[100px] overflow-y-auto"></p></div>
+<textarea id="rDesc" placeholder="Description... (optional)" class="w-full bg-[#f7f7f5] border p-4 rounded-2xl text-[13px] h-[80px] mb-3 outline-none"></textarea>
+<p id="editBanner" class="hidden text-[12px] font-bold text-center bg-yellow-100 p-2 rounded-xl mb-2">✏️ Editing: <span id="editTitleShow"></span></p>
 <button onclick="addResource()" id="addBtn" class="w-full bg-black text-white py-4 rounded-2xl font-bold text-[13px]">+ Add to <span id="showWhere">notes.html</span> + 🧠 AI Brain</button>
-<button onclick="cancelEdit()" id="cancelEditBtn" class="hidden w-full bg-white border py-3 rounded-2xl font-bold text-[13px] mt-2">✕ Cancel Edit - Add New Instead</button>
+<button onclick="cancelEdit()" id="cancelEditBtn" class="hidden w-full bg-white border py-3 rounded-2xl font-bold text-[13px] mt-2">✕ Cancel Edit</button>
 <p id="rMsg" class="text-[11px] text-center font-bold mt-2"></p>
 <div id="viewBtnWrap" class="hidden mt-3"><a id="viewLink" href="/curriculum-designs.html" target="_blank" class="block text-center bg-[#ffcc1a] py-3 rounded-2xl font-bold text-[13px]">👀 VIEW IN DESIGN HTML →</a></div>
 </div>
-<div class="bg-white rounded-[24px] border p-6 mt-6"><h3 class="font-bold text-[13px]">👀 Preview - What will appear in Design HTML</h3><div class="flex gap-2 mt-3"><select id="previewFilter" onchange="loadPreview()" class="bg-[#f7f7f5] border p-2 rounded-xl text-[11px]"><option value="Curriculum Design">🎨 Design Only</option><option value="Notes">📘 Notes</option><option value="Exam">📝 Exam</option><option value="Homework">📝 Homework</option><option value="Scheme">🗂️ Scheme</option><option value="LessonPlan">📋 Lesson</option></select><button onclick="loadPreview()" class="bg-black text-white px-3 py-2 rounded-xl text-[11px] font-bold">🔄 Reload</button></div><div id="previewList" class="mt-4 space-y-2 max-h-[400px] overflow-y-auto"></div></div>
-<div class="bg-white rounded-[24px] border p-6 mt-6"><h3 class="font-bold text-[13px]">Recent Resources - Edit / Delete</h3><div id="rList" class="mt-4 space-y-2 max-h-[500px] overflow-y-auto"></div>
-<button onclick="syncAllToBrain()" class="w-full bg-black text-white py-3 rounded-xl font-bold text-[12px] mt-3">🧠 Sync ALL Old Resources to AI Brain (Tap Once)</button>
-<p id="syncStatus" class="text-[11px] text-center font-bold mt-1"></p>
-<button onclick="fixBadTitles()" class="w-full bg-red-500 text-white py-3 rounded-xl font-bold text-[12px] mt-2">🧹 Fix Bad Titles - Change "uc?export..." to "Grade 8 Subject"</button>
-</div>
-</div>
-<div class="col-span-12 lg:col-span-5"><div class="grid grid-cols-2 gap-3"><div class="bg-white rounded-[20px] border p-5"><p class="text-[10px] text-gray-400">Students</p><p id="sCount" class="font-black text-[22px]">0</p></div><div class="bg-white rounded-[20px] border p-5"><p class="text-[10px] text-gray-400">Teachers</p><p id="tCount2" class="font-black text-[22px]">0</p></div></div>
-<div class="bg-white rounded-[20px] border p-5 mt-3"><p class="text-[11px] font-bold">How it works - Cloud</p><p class="text-[11px] text-gray-500 mt-1 leading-relaxed">1. Choose PDF to Upload to Cloud<br>2. Cloud reads PDF (not your phone)<br>3. Tap + Add = Saves to Resources + AI Brain<br>4. Learner sees Saved + AI, no Failed to fetch</p></div>
-</div>
-</div>
-</div>
-<div id="tab-ai" class="hidden">
-<div class="grid grid-cols-12 gap-6">
-<div class="col-span-12 lg:col-span-7">
-<div class="bg-black text-white rounded-[24px] p-6 mb-6">
-<h2 class="font-extrabold text-[16px]">🔑 Gemini API Key - For ALL AI in SomaHub</h2>
-<p class="text-[11px] text-gray-300">Now AI also uses Vercel /api/gemini (Gemini → OpenRouter → OpenAI). This key is backup.</p>
-<p id="geminiStatus" class="text-[11px] font-bold mt-2 bg-white/10 p-2 rounded-xl">⏳ Checking saved key...</p>
-<div class="flex gap-2 mt-3">
-<input id="geminiKeyInput" type="password" placeholder="Paste Gemini Key - AIza..." class="flex-1 bg-white text-black border p-3 rounded-xl text-[13px] outline-none">
-<button onclick="toggleGeminiKey()" class="bg-white text-black px-3 rounded-xl">👁️</button>
-</div>
-<div class="flex gap-2 mt-3">
-<button onclick="saveGeminiKey()" class="flex-1 bg-[#ffcc1a] text-black py-3 rounded-xl font-bold text-[13px]">💾 Save Gemini Key</button>
-<button onclick="testGeminiKey()" class="flex-1 bg-white text-black py-3 rounded-xl font-bold text-[13px]">🧪 Test Key</button>
-<button onclick="clearGeminiKey()" class="bg-red-500 text-white px-4 py-3 rounded-xl font-bold text-[13px]">Clear</button>
-</div>
-<a href="https://aistudio.google.com/app/apikey" target="_blank" class="block text-center text-[11px] underline mt-2 text-[#ffcc1a]">Get Free Key from Google AI Studio ↗</a>
-<p id="geminiTestResult" class="text-[11px] mt-2"></p>
-</div>
-<div class="bg-white rounded-[24px] border p-6">
-<h2 class="font-extrabold text-[16px]">🤖 Feed SomaHub AI Brain (Photo / Text)</h2><p class="text-[11px] text-gray-500">Take photo of textbook → AI uses for Exam/Homework. Resources tab already auto-feeds, this is only for photos.</p>
-<div class="mt-5 bg-[#f7f7f5] p-4 rounded-2xl border-2 border-dashed">
-<div class="grid grid-cols-2 gap-3"><button onclick="openCamera()" class="bg-black text-white py-3 rounded-xl text-[12px] font-bold">📷 Open Camera</button><label class="bg-white border py-3 rounded-xl text-[12px] font-bold text-center cursor-pointer">🖼️ Choose Photo<input type="file" id="fileInput" accept="image/*" capture="environment" class="hidden" onchange="handleFile(this)"></label></div>
-<video id="video" autoplay playsinline class="hidden w-full mt-3 rounded-2xl bg-black h-[240px]"></video><canvas id="canvas" class="hidden"></canvas>
-<div class="flex gap-2 mt-3 hidden" id="camBtns"><button onclick="takePhoto()" class="flex-1 bg-[#ffcc1a] py-2.5 rounded-xl font-bold text-[12px]">📸 Capture</button><button onclick="closeCamera()" class="flex-1 bg-white border py-2.5 rounded-xl font-bold text-[12px]">Close</button></div>
-<img id="preview" class="hidden w-full mt-3 rounded-2xl border max-h-[300px] object-contain bg-white"><p id="photoStatus" class="text-[10px] mt-2"></p>
-</div>
-<div class="mt-5 space-y-3"><input id="aiTitle" placeholder="Title" class="w-full bg-[#f7f7f5] border p-4 rounded-2xl text-[13px]">
-<div class="grid grid-cols-3 gap-3">
-<select id="aiSubject" class="bg-[#f7f7f5] border p-3 rounded-2xl text-[12px]"></select>
-<select id="aiGrade" onchange="updateSubjects('aiGrade','aiSubject')" class="bg-[#f7f7f5] border p-3 rounded-2xl text-[12px]">
-<option>Playgroup</option><option>PP1</option><option>PP2</option><option>Grade 1</option><option>Grade 2</option><option>Grade 3</option><option>Grade 4</option><option>Grade 5</option><option>Grade 6</option><option>Grade 7</option><option selected>Grade 8</option><option>Grade 9</option><option>Grade 10</option>
-</select>
-<select id="aiUse" class="bg-[#f7f7f5] border p-3 rounded-2xl text-[12px]"><option value="all">All</option><option value="exam">EXAM</option><option value="homework">HOMEWORK</option></select></div>
-<textarea id="aiText" placeholder="Paste text..." class="w-full bg-[#f7f7f5] border p-4 rounded-2xl text-[13px] h-[100px]"></textarea><button onclick="addAiBrain()" class="w-full bg-[#ffcc1a] py-4 rounded-2xl font-bold text-[13px]">🧠 Feed to AI</button><p id="aiMsg" class="text-[11px] text-center"></p></div>
-</div>
-</div>
-<div class="col-span-12 lg:col-span-5"><div class="bg-black text-white rounded-[24px] p-6"><h3 class="font-bold text-[13px]">🧠 AI Library</h3><div id="aiList" class="mt-4 space-y-3 max-h-[700px] overflow-y-auto"></div></div></div>
-</div>
-</div>
-<div id="tab-tuition">
-<div class="max-w-4xl mx-auto bg-white rounded-[24px] border p-6 shadow-sm">
-<div class="flex justify-between items-center"><h2 class="font-extrabold text-[16px]">🏠 Homeschooling Requests</h2><button onclick="loadTuition()" class="bg-black text-white px-4 py-2 rounded-full text-[11px] font-bold">🔄 Reload</button></div>
-<p id="tStatus" class="text-[11px] mt-3 bg-[#f7f7f5] p-3 rounded-xl">Loading...</p><div id="tList" class="mt-5 space-y-4"></div>
-</div>
-</div>
+<div class="bg-white rounded-[24px] border p-6 mt-6"><h3 class="font-bold text-[13px]">👀 Preview</h3><div class="flex gap-2 mt-3"><select id="previewFilter" onchange="loadPreview()" class="bg-[#f7f7f5] border p-2 rounded-xl text-[11px]"><option value="Curriculum Design">🎨 Design Only</option><option value="Notes">📘 Notes</option><option value="Exam">📝 Exam</option><option value="Homework">📝 Homework</option><option value="Scheme">🗂️ Scheme</option><option value="LessonPlan">📋 Lesson</option></select><button onclick="loadPreview()" class="bg-black text-white px-3 py-2 rounded-xl text-[11px] font-bold">🔄 Reload</button></div><div id="previewList" class="mt-4 space-y-2 max-h-[400px] overflow-y-auto"></div></div>
+<div class="bg-white rounded-[24px] border p-6 mt-6"><h3 class="font-bold text-[13px]">Recent Resources - Edit / Delete</h3><div id="rList" class="mt-4 space-y-2 max-h-[500px] overflow-y-auto"></div><button onclick="syncAllToBrain()" class="w-full bg-black text-white py-3 rounded-xl font-bold text-[12px] mt-3">🧠 Sync ALL to AI Brain</button><p id="syncStatus" class="text-[11px] text-center font-bold mt-1"></p><button onclick="fixBadTitles()" class="w-full bg-red-500 text-white py-3 rounded-xl font-bold text-[12px] mt-2">🧹 Fix Bad Titles</button></div>
+</div><div class="col-span-12 lg:col-span-5"><div class="grid grid-cols-2 gap-3"><div class="bg-white rounded-[20px] border p-5"><p class="text-[10px] text-gray-400">Students</p><p id="sCount" class="font-black text-[22px]">0</p></div><div class="bg-white rounded-[20px] border p-5"><p class="text-[10px] text-gray-400">Teachers</p><p id="tCount2" class="font-black text-[22px]">0</p></div></div><div class="bg-white rounded-[20px] border p-5 mt-3"><p class="text-[11px] font-bold">How it works - Cloud</p><p class="text-[11px] text-gray-500 mt-1">1. Choose PDF to Upload to Cloud<br>2. Tap + Add<br>3. Learner sees Saved + AI</p></div></div></div></div>
+<div id="tab-ai" class="hidden"><div class="grid grid-cols-12 gap-6"><div class="col-span-12 lg:col-span-7"><div class="bg-black text-white rounded-[24px] p-6 mb-6"><h2 class="font-extrabold text-[16px]">🔑 Gemini API Key</h2><p id="geminiStatus" class="text-[11px] font-bold mt-2 bg-white/10 p-2 rounded-xl">⏳ Checking saved key...</p><div class="flex gap-2 mt-3"><input id="geminiKeyInput" type="password" placeholder="Paste Gemini Key - AIza..." class="flex-1 bg-white text-black border p-3 rounded-xl text-[13px] outline-none"><button onclick="toggleGeminiKey()" class="bg-white text-black px-3 rounded-xl">👁️</button></div><div class="flex gap-2 mt-3"><button onclick="saveGeminiKey()" class="flex-1 bg-[#ffcc1a] text-black py-3 rounded-xl font-bold text-[13px]">💾 Save Gemini Key</button><button onclick="testGeminiKey()" class="flex-1 bg-white text-black py-3 rounded-xl font-bold text-[13px]">🧪 Test Key</button><button onclick="clearGeminiKey()" class="bg-red-500 text-white px-4 py-3 rounded-xl font-bold text-[13px]">Clear</button></div><a href="https://aistudio.google.com/app/apikey" target="_blank" class="block text-center text-[11px] underline mt-2 text-[#ffcc1a]">Get Free Key from Google AI Studio ↗</a><p id="geminiTestResult" class="text-[11px] mt-2"></p></div>
+<div class="bg-white rounded-[24px] border p-6"><h2 class="font-extrabold text-[16px]">🤖 Feed AI Brain (Photo / Text)</h2><div class="mt-5 bg-[#f7f7f5] p-4 rounded-2xl border-2 border-dashed"><div class="grid grid-cols-2 gap-3"><button onclick="openCamera()" class="bg-black text-white py-3 rounded-xl text-[12px] font-bold">📷 Open Camera</button><label class="bg-white border py-3 rounded-xl text-[12px] font-bold text-center cursor-pointer">🖼️ Choose Photo<input type="file" id="fileInput" accept="image/*" capture="environment" class="hidden" onchange="handleFile(this)"></label></div><video id="video" autoplay playsinline class="hidden w-full mt-3 rounded-2xl bg-black h-[240px]"></video><canvas id="canvas" class="hidden"></canvas><div class="flex gap-2 mt-3 hidden" id="camBtns"><button onclick="takePhoto()" class="flex-1 bg-[#ffcc1a] py-2.5 rounded-xl font-bold text-[12px]">📸 Capture</button><button onclick="closeCamera()" class="flex-1 bg-white border py-2.5 rounded-xl font-bold text-[12px]">Close</button></div><img id="preview" class="hidden w-full mt-3 rounded-2xl border max-h-[300px] object-contain bg-white"><p id="photoStatus" class="text-[10px] mt-2"></p></div><div class="mt-5 space-y-3"><input id="aiTitle" placeholder="Title" class="w-full bg-[#f7f7f5] border p-4 rounded-2xl text-[13px]"><div class="grid grid-cols-3 gap-3"><select id="aiSubject" class="bg-[#f7f7f5] border p-3 rounded-2xl text-[12px]"></select><select id="aiGrade" onchange="updateSubjects('aiGrade','aiSubject')" class="bg-[#f7f7f5] border p-3 rounded-2xl text-[12px]"><option>Playgroup</option><option>PP1</option><option>PP2</option><option>Grade 1</option><option>Grade 2</option><option>Grade 3</option><option>Grade 4</option><option>Grade 5</option><option>Grade 6</option><option>Grade 7</option><option selected>Grade 8</option><option>Grade 9</option><option>Grade 10</option></select><select id="aiUse" class="bg-[#f7f7f5] border p-3 rounded-2xl text-[12px]"><option value="all">All</option><option value="exam">EXAM</option><option value="homework">HOMEWORK</option></select></div><textarea id="aiText" placeholder="Paste text..." class="w-full bg-[#f7f7f5] border p-4 rounded-2xl text-[13px] h-[100px]"></textarea><button onclick="addAiBrain()" class="w-full bg-[#ffcc1a] py-4 rounded-2xl font-bold text-[13px]">🧠 Feed to AI</button><p id="aiMsg" class="text-[11px] text-center"></p></div></div></div><div class="col-span-12 lg:col-span-5"><div class="bg-black text-white rounded-[24px] p-6"><h3 class="font-bold text-[13px]">🧠 AI Library</h3><div id="aiList" class="mt-4 space-y-3 max-h-[700px] overflow-y-auto"></div></div></div></div></div>
+<div id="tab-tuition"><div class="max-w-4xl mx-auto bg-white rounded-[24px] border p-6 shadow-sm"><div class="flex justify-between items-center"><h2 class="font-extrabold text-[16px]">🏠 Homeschooling Requests</h2><button onclick="loadTuition()" class="bg-black text-white px-4 py-2 rounded-full text-[11px] font-bold">🔄 Reload</button></div><p id="tStatus" class="text-[11px] mt-3 bg-[#f7f7f5] p-3 rounded-xl">Loading...</p><div id="tList" class="mt-5 space-y-4"></div></div></div>
 </div>
 <script>
 let currentType='Notes', allRes=[], photoBase64='', stream=null;
 let RESOURCE_FULLTEXT = "", RESOURCE_FILE_NAME = "", RESOURCE_PAGES = 0;
 let EDITING_ID = null;
-const LEARNING_AREAS = {
-  "Playgroup": ["Language Activities","Mathematical Activities","Environmental Activities","Creative Activities","Religious Activities","Movement and Music","Health and Nutrition","Play"],
-  "PP1": ["Language Activities","Mathematical Activities","Environmental Activities","Creative Activities","Religious Education - CRE / IRE / HRE","Movement Activities","Music"],
-  "PP2": ["Language Activities","Mathematical Activities","Environmental Activities","Creative Activities","Religious Education - CRE / IRE / HRE","Movement Activities","Music"],
-  "Grade 1": ["English","Kiswahili","Mathematics","Religious Education - CRE / IRE / HRE","Environmental Activities","Creative Activities - Art, Craft, Music","Movement and Physical Activities","Indigenous Language"],
-  "Grade 2": ["English","Kiswahili","Mathematics","Religious Education - CRE / IRE / HRE","Environmental Activities","Creative Activities - Art, Craft, Music","Movement and Physical Activities","Indigenous Language"],
-  "Grade 3": ["English","Kiswahili","Mathematics","Religious Education - CRE / IRE / HRE","Environmental Activities","Creative Activities - Art, Craft, Music","Movement and Physical Activities","Indigenous Language"],
-  "Grade 4": ["English","Kiswahili","Mathematics","Science and Technology","Social Studies","Religious Education - CRE / IRE / HRE","Creative Arts","Physical Education and Sports","Agriculture","Home Science","Foreign Languages - French","Foreign Languages - German"],
-  "Grade 5": ["English","Kiswahili","Mathematics","Science and Technology","Social Studies","Religious Education - CRE / IRE / HRE","Creative Arts","Physical Education and Sports","Agriculture","Home Science","Foreign Languages - French","Foreign Languages - German"],
-  "Grade 6": ["English","Kiswahili","Mathematics","Science and Technology","Social Studies","Religious Education - CRE / IRE / HRE","Creative Arts","Physical Education and Sports","Agriculture","Home Science","Foreign Languages - French","Foreign Languages - German"],
-  "Grade 7": ["English","Kiswahili","Mathematics","Integrated Science","Social Studies","Religious Education - CRE / IRE / HRE","Pre-Technical Studies","Agriculture and Nutrition","Creative Arts and Sports","Health Education","Life Skills","Foreign Languages - French","Foreign Languages - German","Foreign Languages - Mandarin Chinese","Foreign Languages - Arabic","Indigenous Language","Computer Science"],
-  "Grade 8": ["English","Kiswahili","Mathematics","Integrated Science","Social Studies","Religious Education - CRE / IRE / HRE","Pre-Technical Studies","Agriculture and Nutrition","Creative Arts and Sports","Health Education","Life Skills","Foreign Languages - French","Foreign Languages - German","Foreign Languages - Mandarin Chinese","Foreign Languages - Arabic","Indigenous Language","Computer Science"],
-  "Grade 9": ["English","Kiswahili","Mathematics","Integrated Science","Social Studies","Religious Education - CRE / IRE / HRE","Pre-Technical Studies","Agriculture and Nutrition","Creative Arts and Sports","Health Education","Life Skills","Foreign Languages - French","Foreign Languages - German","Foreign Languages - Mandarin Chinese","Foreign Languages - Arabic","Indigenous Language","Computer Science"],
-  "Grade 10": ["English","Kiswahili","Mathematics","Biology","Chemistry","Physics","General Science","Social Studies / History","Geography","CRE / IRE / HRE","Agriculture","Business Studies","Computer Science","Home Science","Pre-Technical and Pre-Career","Creative Arts and Sports","Foreign Languages - French","Foreign Languages - German","Foreign Languages - Mandarin Chinese","Foreign Languages - Arabic"]
-};
-const ALL_AREAS = [...new Set(Object.values(LEARNING_AREAS).flat())];
+const LEARNING_AREAS = {"Playgroup":["Language Activities","Mathematical Activities","Environmental Activities","Creative Activities","Religious Activities","Movement and Music","Health and Nutrition","Play"],"PP1":["Language Activities","Mathematical Activities","Environmental Activities","Creative Activities","Religious Education - CRE / IRE / HRE","Movement Activities","Music"],"PP2":["Language Activities","Mathematical Activities","Environmental Activities","Creative Activities","Religious Education - CRE / IRE / HRE","Movement Activities","Music"],"Grade 1":["English","Kiswahili","Mathematics","Religious Education - CRE / IRE / HRE","Environmental Activities","Creative Activities - Art, Craft, Music","Movement and Physical Activities","Indigenous Language"],"Grade 2":["English","Kiswahili","Mathematics","Religious Education - CRE / IRE / HRE","Environmental Activities","Creative Activities - Art, Craft, Music","Movement and Physical Activities","Indigenous Language"],"Grade 3":["English","Kiswahili","Mathematics","Religious Education - CRE / IRE / HRE","Environmental Activities","Creative Activities - Art, Craft, Music","Movement and Physical Activities","Indigenous Language"],"Grade 4":["English","Kiswahili","Mathematics","Science and Technology","Social Studies","Religious Education - CRE / IRE / HRE","Creative Arts","Physical Education and Sports","Agriculture","Home Science"],"Grade 5":["English","Kiswahili","Mathematics","Science and Technology","Social Studies","Religious Education - CRE / IRE / HRE","Creative Arts","Physical Education and Sports","Agriculture","Home Science"],"Grade 6":["English","Kiswahili","Mathematics","Science and Technology","Social Studies","Religious Education - CRE / IRE / HRE","Creative Arts","Physical Education and Sports","Agriculture","Home Science"],"Grade 7":["English","Kiswahili","Mathematics","Integrated Science","Social Studies","Religious Education - CRE / IRE / HRE","Pre-Technical Studies","Agriculture and Nutrition","Creative Arts and Sports","Health Education","Life Skills","Computer Science"],"Grade 8":["English","Kiswahili","Mathematics","Integrated Science","Social Studies","Religious Education - CRE / IRE / HRE","Pre-Technical Studies","Agriculture and Nutrition","Creative Arts and Sports","Health Education","Life Skills","Computer Science"],"Grade 9":["English","Kiswahili","Mathematics","Integrated Science","Social Studies","Religious Education - CRE / IRE / HRE","Pre-Technical Studies","Agriculture and Nutrition","Creative Arts and Sports","Health Education","Life Skills","Computer Science"],"Grade 10":["English","Kiswahili","Mathematics","Biology","Chemistry","Physics","General Science","Social Studies","Geography","CRE / IRE / HRE","Agriculture","Business Studies","Computer Science","Home Science"]};
+const ALL_AREAS=[...new Set(Object.values(LEARNING_AREAS).flat())];
 function updateSubjects(gradeId, subjId){ let grade=document.getElementById(gradeId).value; let list=LEARNING_AREAS[grade]||ALL_AREAS; let sel=document.getElementById(subjId); sel.innerHTML=list.map(s=>`<option>${s}</option>`).join(''); }
-const TYPE_TO_FILE = { Notes:'notes.html', Design:'curriculum-designs.html', Exam:'exam.html', Homework:'homework.html', Scheme:'schemes.html', LessonPlan:'lesson-plans.html' };
-const TYPE_TO_SAVE = { Notes:'Notes', Design:'Curriculum Design', Exam:'Exam', Homework:'Homework', Scheme:'Scheme', LessonPlan:'LessonPlan' };
-function showTab(t){['resources','ai','tuition'].forEach(x=>{document.getElementById('tab-'+x).classList.add('hidden'); document.getElementById('btn-'+x).className='bg-white border px-4 py-2 rounded-full text-[11px] font-bold';}); document.getElementById('tab-'+t).classList.remove('hidden'); document.getElementById('btn-'+t).className='bg-black text-white px-4 py-2 rounded-full text-[11px] font-bold'; if(t=='resources'){ loadRes(); loadPreview(); } if(t=='ai'){ loadAi(); loadGeminiKey(); } if(t=='tuition') loadTuition();}
+const TYPE_TO_FILE={Notes:'notes.html',Design:'curriculum-designs.html',Exam:'exam.html',Homework:'homework.html',Scheme:'schemes.html',LessonPlan:'lesson-plans.html'};
+const TYPE_TO_SAVE={Notes:'Notes',Design:'Curriculum Design',Exam:'Exam',Homework:'Homework',Scheme:'Scheme',LessonPlan:'LessonPlan'};
+function showTab(t){['resources','ai','tuition'].forEach(x=>{document.getElementById('tab-'+x).classList.add('hidden'); document.getElementById('btn-'+x).className='bg-white border px-4 py-2 rounded-full text-[11px] font-bold';}); document.getElementById('tab-'+t).classList.remove('hidden'); document.getElementById('btn-'+t).className='bg-black text-white px-4 py-2 rounded-full text-[11px] font-bold'; if(t=='resources'){loadRes();loadPreview();} if(t=='ai'){loadAi();loadGeminiKey();} if(t=='tuition') loadTuition();}
 function setType(t){ currentType=t; document.getElementById('rType').value=t; document.getElementById('showWhere').innerText=TYPE_TO_FILE[t]||'notes.html'; document.getElementById('previewFilter').value=TYPE_TO_SAVE[t]; loadPreview(); document.querySelectorAll('.typeBtn').forEach(b=>b.className='typeBtn bg-white border p-3 rounded-2xl text-left'); document.getElementById('t'+t).className='typeBtn bg-black text-white p-3 rounded-2xl text-left'; }
-function cleanTitle(t, grade, subject){
-  t=(t||"").trim();
-  if(!t || t.includes("uc?export") || t.includes("drive.google.com") || t.includes("http") || t.includes("id=")) return (grade||"")+" "+(subject||"");
-  return t;
-}
-function convertDriveLink(url){
-  if(!url) return url;
-  url = url.trim();
-  if(url.includes("drive.google.com/file/d/")){
-    let id = url.split("/file/d/")[1].split("/")[0].split("?")[0];
-    return "https://drive.google.com/uc?export=download&id=" + id;
-  }
-  if(url.includes("drive.google.com/open?id=")){
-    let id = url.split("id=")[1].split("&")[0];
-    return "https://drive.google.com/uc?export=download&id=" + id;
-  }
-  return url;
-}
+function cleanTitle(t, grade, subject){ t=(t||"").trim(); if(!t||t.includes("uc?export")||t.includes("drive.google.com")||t.includes("http")||t.includes("id=")) return (grade||"")+" "+(subject||""); return t; }
 function isJunkText(t){ if(!t) return true; let s=t.trim(); if(s.length<100) return true; let letters=(s.match(/[a-zA-Z]/g)||[]).length; if(letters/s.length<0.4) return true; return false; }
 
-// === NEW SIMPLE CLOUD UPLOAD + CLOUD READER ===
+// *** FIXED UPLOAD - NO BARE ref, USES window.SOMA_STORAGE ***
 async function handleResourceFile(input){
-  let file = input.files[0]; if(!file) return;
-  document.getElementById("rFileStatus").innerText = "⏳ Uploading to Cloud... please wait...";
+  let file=input.files[0]; if(!file) return;
+  document.getElementById("rFileStatus").innerText="⏳ Uploading to Cloud... please wait...";
   try{
-    let safeName = (document.getElementById("rGrade").value + "-" + document.getElementById("rSubject").value + "-" + Date.now() + "-" + file.name).replace(/[^a-zA-Z0-9.\-_]/g,"-");
-    let storageRef = ref(storage, "resources/" + safeName);
-    await uploadBytes(storageRef, file);
-    let cloudUrl = await getDownloadURL(storageRef);
-    document.getElementById("rUrl").value = cloudUrl;
-    RESOURCE_FILE_NAME = file.name;
-    document.getElementById("rFileStatus").innerText = "✅ Saved to Cloud! Now cloud is reading PDF... wait 10-20 sec...";
-    // Cloud reads, not phone
-    try{
-      let readRes = await fetch("/api/read-cloud?url=" + encodeURIComponent(cloudUrl));
-      let readData = await readRes.json();
-      if(readData.ok && readData.text){
-        RESOURCE_FULLTEXT = readData.text;
-        RESOURCE_PAGES = readData.pages;
-        document.getElementById("rFileStatus").innerText = `✅ Cloud read ${readData.pages} pages - ${readData.chars} chars. Now tap + Add below.`;
-        document.getElementById("rFilePreview").innerText = RESOURCE_FULLTEXT.slice(0,300);
-      } else {
-        RESOURCE_FULLTEXT = "";
-        document.getElementById("rFileStatus").innerText = "✅ Saved to Cloud! Cloud could not read text. You can still tap + Add, it will save as link.";
-      }
-    }catch(e){
-      RESOURCE_FULLTEXT = "";
-      document.getElementById("rFileStatus").innerText = "✅ Saved to Cloud! Cloud reader not ready yet: " + e.message + " - Tap + Add anyway.";
-    }
-  }catch(e){
-    document.getElementById("rFileStatus").innerText = "❌ Cloud upload failed: " + e.message + " - Check Storage Rules in Firebase.";
-  }
+    let S=window.SOMA_STORAGE;
+    if(!S) throw new Error("Storage not ready - reload page");
+    let safeName=(document.getElementById("rGrade").value+"-"+document.getElementById("rSubject").value+"-"+Date.now()+"-"+file.name).replace(/[^a-zA-Z0-9.\-_]/g,"-");
+    let storageRef=S.ref(S.storage, "resources/"+safeName);
+    await S.uploadBytes(storageRef, file);
+    let cloudUrl=await S.getDownloadURL(storageRef);
+    document.getElementById("rUrl").value=cloudUrl;
+    RESOURCE_FILE_NAME=file.name; RESOURCE_FULLTEXT=""; RESOURCE_PAGES=0;
+    document.getElementById("rFileStatus").innerText="✅ Saved to Cloud! Now tap + Add below.";
+    document.getElementById("rFilePreview").innerText="Cloud link: "+cloudUrl.slice(0,60)+"...";
+  }catch(e){ document.getElementById("rFileStatus").innerText="❌ Cloud upload failed: "+e.message; }
 }
-// Old Drive button removed - kept as dummy so no error if called
-async function feedDriveToAiBrain(){ alert("Drive reading is removed. Use Upload PDF to Cloud instead."); }
-
-async function saveToBrain(data){
-  try{
-    let brainText = (data.title + " " + (data.subject||"") + " " + (data.grade||"") + " " + (data.description||"") + " " + (data.fullText||"")).slice(0,30000);
-    await window.FB.addDoc(window.FB.collection(window.FB.db,"ai_brain"), { title: data.title, subject: data.subject||"", grade: data.grade||"", type: data.type||"", text: brainText, fullText: (data.fullText||"").slice(0,30000), fileUrl: data.fileUrl||"", createdAt: window.FB.serverTimestamp() });
-  }catch(e){ console.log("Brain save error", e); }
-}
-
-async function addResource(){
-  let grade=document.getElementById("rGrade").value;
-  let subject=document.getElementById("rSubject").value;
-  let title=cleanTitle(document.getElementById("rTitle").value, grade, subject);
-  let url=document.getElementById("rUrl").value.trim();
-  let desc=document.getElementById("rDesc").value.trim();
-  let type=TYPE_TO_SAVE[currentType]||"Notes";
-  let fullText = RESOURCE_FULLTEXT || "";
-  // If editing and no new file, keep old fullText handled in edit flow
-  let data={ title, grade, subject, type, fileUrl: url, description: desc, fullText: fullText.slice(0,30000), fileName: RESOURCE_FILE_NAME||"", pages: RESOURCE_PAGES||0, createdAt: window.FB.serverTimestamp() };
-  document.getElementById("rMsg").innerText="⏳ Saving...";
-  try{
-    if(EDITING_ID){
-      await window.FB.updateDoc(window.FB.doc(window.FB.db,"resources",EDITING_ID), { title, grade, subject, type, fileUrl:url, description:desc, fullText: fullText.slice(0,30000), fileName: RESOURCE_FILE_NAME||"", pages: RESOURCE_PAGES||0 });
-      await saveToBrain(data);
-      document.getElementById("rMsg").innerText="✅ Updated + Brain saved!";
-      cancelEdit();
-    } else {
-      await window.FB.addDoc(window.FB.collection(window.FB.db,"resources"), data);
-      await saveToBrain(data);
-      document.getElementById("rMsg").innerText="✅ Added + Brain saved!";
-    }
-    RESOURCE_FULLTEXT=""; RESOURCE_FILE_NAME=""; RESOURCE_PAGES=0;
-    document.getElementById("rTitle").value=""; document.getElementById("rUrl").value=""; document.getElementById("rDesc").value=""; document.getElementById("rFile").value=""; document.getElementById("rFileStatus").innerText=""; document.getElementById("rFilePreview").innerText="";
-    loadRes(); loadPreview();
-    document.getElementById("viewBtnWrap").classList.remove("hidden");
-    document.getElementById("viewLink").href = "/" + (TYPE_TO_FILE[currentType]||"notes.html");
-  }catch(e){ document.getElementById("rMsg").innerText="❌ "+e.message; }
-}
+async function feedDriveToAiBrain(){ alert("Drive reading removed. Use Upload PDF to Cloud."); }
+async function saveToBrain(data){ try{ let brainText=(data.title+" "+(data.subject||"")+" "+(data.grade||"")+" "+(data.description||"")+" "+(data.fullText||"")).slice(0,30000); await window.FB.addDoc(window.FB.collection(window.FB.db,"ai_brain"), {title:data.title, subject:data.subject||"", grade:data.grade||"", type:data.type||"", text:brainText, fullText:(data.fullText||"").slice(0,30000), fileUrl:data.fileUrl||"", createdAt:window.FB.serverTimestamp()}); }catch(e){ console.log(e); } }
+async function addResource(){ let grade=document.getElementById("rGrade").value; let subject=document.getElementById("rSubject").value; let title=cleanTitle(document.getElementById("rTitle").value, grade, subject); let url=document.getElementById("rUrl").value.trim(); let desc=document.getElementById("rDesc").value.trim(); let type=TYPE_TO_SAVE[currentType]||"Notes"; let fullText=RESOURCE_FULLTEXT||""; let data={title, grade, subject, type, fileUrl:url, description:desc, fullText:fullText.slice(0,30000), fileName:RESOURCE_FILE_NAME||"", pages:RESOURCE_PAGES||0, createdAt:window.FB.serverTimestamp()}; document.getElementById("rMsg").innerText="⏳ Saving..."; try{ if(EDITING_ID){ await window.FB.updateDoc(window.FB.doc(window.FB.db,"resources",EDITING_ID), {title, grade, subject, type, fileUrl:url, description:desc, fullText:fullText.slice(0,30000), fileName:RESOURCE_FILE_NAME||"", pages:RESOURCE_PAGES||0}); await saveToBrain(data); document.getElementById("rMsg").innerText="✅ Updated + Brain saved!"; cancelEdit(); } else { await window.FB.addDoc(window.FB.collection(window.FB.db,"resources"), data); await saveToBrain(data); document.getElementById("rMsg").innerText="✅ Added + Brain saved!"; } RESOURCE_FULLTEXT=""; RESOURCE_FILE_NAME=""; RESOURCE_PAGES=0; document.getElementById("rTitle").value=""; document.getElementById("rUrl").value=""; document.getElementById("rDesc").value=""; document.getElementById("rFile").value=""; document.getElementById("rFileStatus").innerText=""; document.getElementById("rFilePreview").innerText=""; loadRes(); loadPreview(); document.getElementById("viewBtnWrap").classList.remove("hidden"); document.getElementById("viewLink").href="/"+(TYPE_TO_FILE[currentType]||"notes.html"); }catch(e){ document.getElementById("rMsg").innerText="❌ "+e.message; } }
 function cancelEdit(){ EDITING_ID=null; document.getElementById("editBanner").classList.add("hidden"); document.getElementById("cancelEditBtn").classList.add("hidden"); document.getElementById("addBtn").innerText="+ Add to "+(TYPE_TO_FILE[currentType]||"notes.html")+" + 🧠 AI Brain"; document.getElementById("rTitle").value=""; document.getElementById("rUrl").value=""; document.getElementById("rDesc").value=""; RESOURCE_FULLTEXT=""; RESOURCE_PAGES=0; }
-async function loadRes(){
-  try{
-    let snap=await window.FB.getDocs(window.FB.collection(window.FB.db,"resources"));
-    allRes=[]; snap.forEach(d=>{ allRes.push({id:d.id, ...d.data()}); });
-    allRes.sort((a,b)=>(b.createdAt?.seconds||0)-(a.createdAt?.seconds||0));
-    let html=allRes.slice(0,50).map(r=>{
-      let hasText = r.fullText && !isJunkText(r.fullText);
-      let badge = hasText ? `<span class="text-green-600">✅ Full text saved + 🧠 Brain</span>` : `<span class="text-orange-600">🔗 Link only - Upload PDF to Cloud to fix</span>`;
-      return `<div class="bg-[#f7f7f5] p-3 rounded-xl flex justify-between gap-2"><div><p class="font-bold text-[12px]">${r.title||r.grade+" "+r.subject}</p><p class="text-[11px] text-gray-500">${r.grade} • ${r.subject} • ${r.type} • ${badge}</p></div><div class="flex gap-1 shrink-0"><button onclick="editRes('${r.id}')" class="bg-black text-white px-2 py-1 rounded-lg text-[11px]">✏️ Edit</button><button onclick="deleteRes('${r.id}')" class="bg-red-500 text-white px-2 py-1 rounded-lg text-[11px]">🗑️</button></div></div>`;
-    }).join("");
-    document.getElementById("rList").innerHTML = html || "<p class='text-[11px] text-gray-500'>No resources yet</p>";
-  }catch(e){ document.getElementById("rList").innerText="Error: "+e.message; }
-}
-async function loadPreview(){
-  let filter=document.getElementById("previewFilter").value;
-  let list=allRes.filter(r=>r.type===filter);
-  if(list.length===0) { document.getElementById("previewList").innerHTML="<p class='text-[11px] text-gray-500'>No "+filter+" yet</p>"; return; }
-  document.getElementById("previewList").innerHTML=list.slice(0,20).map(r=>{
-    let hasText = r.fullText && !isJunkText(r.fullText);
-    return `<div class="bg-[#f7f7f5] p-3 rounded-xl"><p class="font-bold text-[12px]">${r.title}</p><p class="text-[11px]">${hasText?"✅ Full text saved + 🧠 Brain":"🔗 Link only - opens in Drive + 🧠 Brain"}</p></div>`;
-  }).join("");
-}
-function editRes(id){
-  let r=allRes.find(x=>x.id===id); if(!r) return;
-  EDITING_ID=id;
-  document.getElementById("rTitle").value=r.title||"";
-  document.getElementById("rGrade").value=r.grade||"Grade 8"; updateSubjects('rGrade','rSubject');
-  setTimeout(()=>{ document.getElementById("rSubject").value=r.subject||""; },50);
-  document.getElementById("rUrl").value=r.fileUrl||"";
-  document.getElementById("rDesc").value=r.description||"";
-  RESOURCE_FULLTEXT=r.fullText||""; RESOURCE_PAGES=r.pages||0; RESOURCE_FILE_NAME=r.fileName||"";
-  document.getElementById("editBanner").classList.remove("hidden");
-  document.getElementById("editTitleShow").innerText=r.title||"";
-  document.getElementById("cancelEditBtn").classList.remove("hidden");
-  document.getElementById("addBtn").innerText="💾 Update File + 🧠 Brain";
-  window.scrollTo({top:0, behavior:'smooth'});
-  document.getElementById("rFileStatus").innerText = RESOURCE_FULLTEXT ? `ℹ️ This file already has ${RESOURCE_FULLTEXT.length} chars saved. Upload new PDF only if you want to replace it.` : "ℹ️ This file is Link only. Upload PDF to Cloud to fix it.";
-}
-async function deleteRes(id){
-  if(!confirm("Delete this resource?")) return;
-  await window.FB.deleteDoc(window.FB.doc(window.FB.db,"resources",id));
-  loadRes(); loadPreview();
-}
-async function syncAllToBrain(){
-  document.getElementById("syncStatus").innerText="⏳ Syncing...";
-  let count=0;
-  for(let r of allRes){ await saveToBrain(r); count++; }
-  document.getElementById("syncStatus").innerText=`✅ Synced ${count} to Brain`;
-}
-async function fixBadTitles(){
-  for(let r of allRes){
-    if(!r.title || r.title.includes("uc?export") || r.title.includes("http")){
-      let nt=(r.grade||"")+" "+(r.subject||"");
-      await window.FB.updateDoc(window.FB.doc(window.FB.db,"resources",r.id), {title: nt});
-    }
-  }
-  alert("Done - bad titles fixed"); loadRes();
-}
-// --- AI Brain + Gemini + Tuition (kept from your file) ---
-async function loadAi(){
-  try{
-    let snap=await window.FB.getDocs(window.FB.collection(window.FB.db,"ai_brain"));
-    let list=[]; snap.forEach(d=>list.push({id:d.id,...d.data()}));
-    list.sort((a,b)=>(b.createdAt?.seconds||0)-(a.createdAt?.seconds||0));
-    document.getElementById("aiList").innerHTML=list.slice(0,50).map(x=>`<div class="bg-white/10 p-3 rounded-xl"><p class="font-bold text-[12px]">${x.title||""}</p><p class="text-[11px] text-gray-300">${(x.text||"").slice(0,150)}</p></div>`).join("")||"<p class='text-[11px]'>No Brain yet</p>";
-  }catch(e){ document.getElementById("aiList").innerText=e.message; }
-}
-async function addAiBrain(){
-  let title=document.getElementById("aiTitle").value||"Untitled";
-  let text=document.getElementById("aiText").value;
-  let grade=document.getElementById("aiGrade").value;
-  let subject=document.getElementById("aiSubject").value;
-  let use=document.getElementById("aiUse").value;
-  if(!text && !photoBase64){ document.getElementById("aiMsg").innerText="Paste text or photo first"; return; }
-  try{
-    await window.FB.addDoc(window.FB.collection(window.FB.db,"ai_brain"), {title, text: text||photoBase64, grade, subject, use, createdAt: window.FB.serverTimestamp()});
-    document.getElementById("aiMsg").innerText="✅ Fed to Brain";
-    document.getElementById("aiText").value=""; loadAi();
-  }catch(e){ document.getElementById("aiMsg").innerText="❌ "+e.message; }
-}
-function loadGeminiKey(){ let k=localStorage.getItem("gemini_key"); document.getElementById("geminiStatus").innerText = k ? "✅ Key saved (hidden)" : "⚠️ No key saved"; if(k) document.getElementById("geminiKeyInput").value=k; }
+async function loadRes(){ try{ let snap=await window.FB.getDocs(window.FB.collection(window.FB.db,"resources")); allRes=[]; snap.forEach(d=>{allRes.push({id:d.id, ...d.data()});}); allRes.sort((a,b)=>(b.createdAt?.seconds||0)-(a.createdAt?.seconds||0)); document.getElementById("rList").innerHTML=allRes.slice(0,50).map(r=>{ let hasText=r.fullText && !isJunkText(r.fullText); let badge=hasText?`<span class="text-green-600">✅ Full text + 🧠 Brain</span>`:`<span class="text-orange-600">🔗 Link only</span>`; return `<div class="bg-[#f7f7f5] p-3 rounded-xl flex justify-between gap-2"><div><p class="font-bold text-[12px]">${r.title||r.grade+" "+r.subject}</p><p class="text-[11px] text-gray-500">${r.grade} • ${r.subject} • ${r.type} • ${badge}</p></div><div class="flex gap-1 shrink-0"><button onclick="editRes('${r.id}')" class="bg-black text-white px-2 py-1 rounded-lg text-[11px]">✏️ Edit</button><button onclick="deleteRes('${r.id}')" class="bg-red-500 text-white px-2 py-1 rounded-lg text-[11px]">🗑️</button></div></div>`; }).join("")||"<p class='text-[11px]'>No resources yet</p>"; }catch(e){ document.getElementById("rList").innerText="Error: "+e.message; } }
+async function loadPreview(){ let filter=document.getElementById("previewFilter").value; let list=allRes.filter(r=>r.type===filter); if(list.length===0){ document.getElementById("previewList").innerHTML="<p class='text-[11px] text-gray-500'>No "+filter+" yet</p>"; return; } document.getElementById("previewList").innerHTML=list.slice(0,20).map(r=>{ let hasText=r.fullText && !isJunkText(r.fullText); return `<div class="bg-[#f7f7f5] p-3 rounded-xl"><p class="font-bold text-[12px]">${r.title}</p><p class="text-[11px]">${hasText?"✅ Full text + 🧠 Brain":"🔗 Link only"}</p></div>`; }).join(""); }
+function editRes(id){ let r=allRes.find(x=>x.id===id); if(!r) return; EDITING_ID=id; document.getElementById("rTitle").value=r.title||""; document.getElementById("rGrade").value=r.grade||"Grade 8"; updateSubjects('rGrade','rSubject'); setTimeout(()=>{ document.getElementById("rSubject").value=r.subject||""; },50); document.getElementById("rUrl").value=r.fileUrl||""; document.getElementById("rDesc").value=r.description||""; RESOURCE_FULLTEXT=r.fullText||""; RESOURCE_PAGES=r.pages||0; RESOURCE_FILE_NAME=r.fileName||""; document.getElementById("editBanner").classList.remove("hidden"); document.getElementById("editTitleShow").innerText=r.title||""; document.getElementById("cancelEditBtn").classList.remove("hidden"); document.getElementById("addBtn").innerText="💾 Update File + 🧠 Brain"; window.scrollTo({top:0, behavior:'smooth'}); }
+async function deleteRes(id){ if(!confirm("Delete?")) return; await window.FB.deleteDoc(window.FB.doc(window.FB.db,"resources",id)); loadRes(); loadPreview(); }
+async function syncAllToBrain(){ document.getElementById("syncStatus").innerText="⏳ Syncing..."; let c=0; for(let r of allRes){ await saveToBrain(r); c++; } document.getElementById("syncStatus").innerText=`✅ Synced ${c} to Brain`; }
+async function fixBadTitles(){ for(let r of allRes){ if(!r.title||r.title.includes("uc?export")||r.title.includes("http")){ await window.FB.updateDoc(window.FB.doc(window.FB.db,"resources",r.id), {title:(r.grade||"")+" "+(r.subject||"")}); } } alert("Done"); loadRes(); }
+async function loadAi(){ try{ let snap=await window.FB.getDocs(window.FB.collection(window.FB.db,"ai_brain")); let list=[]; snap.forEach(d=>list.push({id:d.id,...d.data()})); list.sort((a,b)=>(b.createdAt?.seconds||0)-(a.createdAt?.seconds||0)); document.getElementById("aiList").innerHTML=list.slice(0,50).map(x=>`<div class="bg-white/10 p-3 rounded-xl"><p class="font-bold text-[12px]">${x.title||""}</p><p class="text-[11px] text-gray-300">${(x.text||"").slice(0,150)}</p></div>`).join("")||"<p class='text-[11px]'>No Brain yet</p>"; }catch(e){ document.getElementById("aiList").innerText=e.message; } }
+async function addAiBrain(){ let title=document.getElementById("aiTitle").value||"Untitled"; let text=document.getElementById("aiText").value; let grade=document.getElementById("aiGrade").value; let subject=document.getElementById("aiSubject").value; let use=document.getElementById("aiUse").value; if(!text && !photoBase64){ document.getElementById("aiMsg").innerText="Paste text or photo first"; return; } try{ await window.FB.addDoc(window.FB.collection(window.FB.db,"ai_brain"), {title, text:text||photoBase64, grade, subject, use, createdAt:window.FB.serverTimestamp()}); document.getElementById("aiMsg").innerText="✅ Fed to Brain"; document.getElementById("aiText").value=""; loadAi(); }catch(e){ document.getElementById("aiMsg").innerText="❌ "+e.message; } }
+function loadGeminiKey(){ let k=localStorage.getItem("gemini_key"); document.getElementById("geminiStatus").innerText=k?"✅ Key saved (hidden)":"⚠️ No key saved"; if(k) document.getElementById("geminiKeyInput").value=k; }
 function saveGeminiKey(){ let k=document.getElementById("geminiKeyInput").value.trim(); if(!k) return; localStorage.setItem("gemini_key",k); document.getElementById("geminiStatus").innerText="✅ Key saved"; }
-function testGeminiKey(){ document.getElementById("geminiTestResult").innerText="Testing via /api/gemini..."; fetch("/api/gemini",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({prompt:"Say hi"})}).then(r=>r.json()).then(d=>{ document.getElementById("geminiTestResult").innerText = d.text||d.error||"OK"; }).catch(e=>{ document.getElementById("geminiTestResult").innerText="❌ "+e.message; }); }
+function testGeminiKey(){ document.getElementById("geminiTestResult").innerText="Testing via /api/gemini..."; fetch("/api/gemini",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({prompt:"Say hi"})}).then(r=>r.json()).then(d=>{ document.getElementById("geminiTestResult").innerText=d.text||d.error||"OK"; }).catch(e=>{ document.getElementById("geminiTestResult").innerText="❌ "+e.message; }); }
 function clearGeminiKey(){ localStorage.removeItem("gemini_key"); document.getElementById("geminiKeyInput").value=""; loadGeminiKey(); }
-function toggleGeminiKey(){ let i=document.getElementById("geminiKeyInput"); i.type = i.type==="password"?"text":"password"; }
+function toggleGeminiKey(){ let i=document.getElementById("geminiKeyInput"); i.type=i.type==="password"?"text":"password"; }
 function openCamera(){ document.getElementById("video").classList.remove("hidden"); document.getElementById("camBtns").classList.remove("hidden"); navigator.mediaDevices.getUserMedia({video:true}).then(s=>{ stream=s; document.getElementById("video").srcObject=s; }).catch(e=>{ document.getElementById("photoStatus").innerText="Camera error: "+e.message; }); }
 function takePhoto(){ let v=document.getElementById("video"); let c=document.getElementById("canvas"); c.width=v.videoWidth; c.height=v.videoHeight; c.getContext("2d").drawImage(v,0,0); photoBase64=c.toDataURL("image/jpeg",0.7); document.getElementById("preview").src=photoBase64; document.getElementById("preview").classList.remove("hidden"); document.getElementById("photoStatus").innerText="✅ Photo captured"; closeCamera(); }
 function closeCamera(){ if(stream) stream.getTracks().forEach(t=>t.stop()); document.getElementById("video").classList.add("hidden"); document.getElementById("camBtns").classList.add("hidden"); }
 function handleFile(input){ let f=input.files[0]; if(!f) return; let r=new FileReader(); r.onload=e=>{ photoBase64=e.target.result; document.getElementById("preview").src=photoBase64; document.getElementById("preview").classList.remove("hidden"); }; r.readAsDataURL(f); }
-async function loadTuition(){
-  try{
-    let snap=await window.FB.getDocs(window.FB.collection(window.FB.db,"tuition_requests"));
-    let list=[]; snap.forEach(d=>list.push({id:d.id,...d.data()}));
-    document.getElementById("tuitionCountTop").innerText=list.length;
-    document.getElementById("tStatus").innerText=`${list.length} requests`;
-    document.getElementById("tList").innerHTML=list.map(x=>`<div class="bg-[#f7f7f5] p-4 rounded-2xl"><p class="font-bold text-[13px]">${x.name||"Parent"} - ${x.grade||""} ${x.subject||""}</p><p class="text-[12px] text-gray-500">${x.phone||""} • ${x.location||""}</p><p class="text-[12px] mt-1">${x.message||""}</p></div>`).join("")||"<p>No requests</p>";
-  }catch(e){ document.getElementById("tStatus").innerText="Error: "+e.message; }
-}
+async function loadTuition(){ try{ let snap=await window.FB.getDocs(window.FB.collection(window.FB.db,"tuition_requests")); let list=[]; snap.forEach(d=>list.push({id:d.id,...d.data()})); document.getElementById("tuitionCountTop").innerText=list.length; document.getElementById("tStatus").innerText=`${list.length} requests`; document.getElementById("tList").innerHTML=list.map(x=>`<div class="bg-[#f7f7f5] p-4 rounded-2xl"><p class="font-bold text-[13px]">${x.name||"Parent"} - ${x.grade||""} ${x.subject||""}</p><p class="text-[12px] text-gray-500">${x.phone||""} • ${x.location||""}</p><p class="text-[12px] mt-1">${x.message||""}</p></div>`).join("")||"<p>No requests</p>"; }catch(e){ document.getElementById("tStatus").innerText="Error: "+e.message; } }
 window.addEventListener("DOMContentLoaded", ()=>{ updateSubjects('rGrade','rSubject'); updateSubjects('aiGrade','aiSubject'); showTab('resources'); });
 </script>
 </body>
