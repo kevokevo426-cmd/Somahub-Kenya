@@ -83,6 +83,7 @@ let currentGrade = "Grade 8";
 let CURRENT_FILE_TEXT = "";
 let CURRENT_TOPIC = "";
 let READER_TITLE = ""; let READER_META = "";
+let CURRENT_FILE_URL = "";
 
 function safeTitle(r){
   let t = (r.title||"").trim();
@@ -154,8 +155,6 @@ function getAdminFileContext(question){
   let scored=chunks.map(c=>{let low=c.toLowerCase(); let s=0; qWords.forEach(w=>{if(low.includes(w)) s++;}); return {c,s};}).sort((a,b)=>b.s-a.s);
   return `\n\nADMIN FILE (Original Design): ${CURRENT_TOPIC}\nMost relevant pages:\n${scored.slice(0,8).map(x=>x.c).join("\n---\n")}\n`;
 }
-
-// === NEW CBC DEEP + SIMPLIFY PROMPT - USED BY ALL AI BUTTONS ===
 function buildCBCPrompt(r, topicText){
   return `You are SomaHub CBC Tutor Kenya. You MUST use ONLY the content from this KICD Curriculum Design below. Do NOT invent. Do NOT use big grammar without explaining it.
 
@@ -180,9 +179,8 @@ PART 1 - FOR TEACHER / PARENT (Full CBC - copy from document):
 9. **Suggested Learning Experiences:** (what learners actually DO in class)
 10. **Lesson Allocation / Strand Totals:** (from LESSON ALLOCATION table in document - e.g. Strand X = 12 lessons, Total = 72 lessons. If table not in text, say "Not in this design")
 
-PART 2 - FOR LEARNER - CLARIFY & SIMPLIFY (Most important - teach like a patient Kenyan teacher):
+PART 2 - FOR LEARNER - CLARIFY & SIMPLIFY (Most important):
 Now teach the SAME topic again to a ${r.grade} child.
-
 Rules:
 - Use VERY simple words. 1 short sentence per idea. No long paragraphs.
 - If you must use a big word, say it then explain in brackets. Example: "Atmosphere (the air around us)"
@@ -195,10 +193,8 @@ Rules:
 PART 3 - CHECK UNDERSTANDING:
 - **Quick Quiz:** 5 easy questions with answers at end.
 - **Remember This:** 3 bullet points to remember for exam.
-
 Tone: Warm, friendly, patient teacher, not a textbook. Use **bold** for headings.`;
 }
-
 function openReader(title, meta, text){
   READER_TITLE=title; READER_META=meta;
   document.getElementById("readerTitle").innerText=title;
@@ -226,6 +222,7 @@ function getDriveViewLink(url){
 }
 function isDriveLink(url){ return !!getDriveId(url) && url.includes("drive.google.com") || (url && url.includes("docs.google.com")); }
 function downloadOriginal(){
+  if(CURRENT_FILE_URL){ window.open(CURRENT_FILE_URL, "_blank"); return; }
   let r = ALL.find(x=>safeTitle(x)===READER_TITLE || x.title===READER_TITLE);
   if(r && (r.fileUrl || r.url || r.pdfUrl)){
     let link = r.fileUrl || r.url || r.pdfUrl;
@@ -269,14 +266,14 @@ function loadDesigns(){
   }).join("");
 }
 
-// === FIXED: READ ORIGINAL ALWAYS SHOWS REAL PDF LIKE GRADE 8 ===
+// === FIXED: NO GOOGLE VIEWER - PDF.js ONLY + MOZILLA VIEWER FALLBACK ===
 async function openOriginalDesign(id){
   let r=ALL.find(x=>x.id==id); if(!r) return;
   CURRENT_FILE_TEXT = getBrainTextFor(r);
   CURRENT_TOPIC = safeTitle(r);
   let fileUrl = r.fileUrl || r.url || r.pdfUrl || r.link || "";
+  CURRENT_FILE_URL = fileUrl;
   let title = safeTitle(r);
-  // 1. Drive files - Google preview iframe (real PDF layout)
   if(fileUrl && isDriveLink(fileUrl)){
     let did = getDriveId(fileUrl);
     let preview = "https://drive.google.com/file/d/" + did + "/preview";
@@ -289,8 +286,7 @@ async function openOriginalDesign(id){
     document.getElementById("reader").classList.remove("hidden");
     return;
   }
-  // 2. Cloudinary / direct PDF - render with PDF.js canvas (like Grade 8 screenshot)
-  if(fileUrl && (fileUrl.toLowerCase().includes(".pdf") || fileUrl.includes("cloudinary") || fileUrl.includes("uc?export"))){
+  if(fileUrl){
     READER_TITLE = title; READER_META = `${r.grade} • ${r.subject} • Original PDF - Loading...`;
     document.getElementById("readerTitle").innerText=title;
     document.getElementById("readerMeta").innerText=READER_META;
@@ -306,7 +302,6 @@ async function openOriginalDesign(id){
       let pdf = await pdfjsLib.getDocument({data:buf}).promise;
       document.getElementById("readerMeta").innerText=`${r.grade} • ${r.subject} • Original PDF - ${pdf.numPages} pages`;
       page.innerHTML = "";
-      // Render first 15 pages immediately, then rest
       let renderPage = async (i)=>{
         let pg = await pdf.getPage(i);
         let viewport = pg.getViewport({scale:1.6});
@@ -329,14 +324,13 @@ async function openOriginalDesign(id){
       }
       return;
     }catch(e){
-      // 3. Fallback - Google Docs Viewer (still real PDF layout, not text)
-      let gview = "https://docs.google.com/gview?embedded=1&url=" + encodeURIComponent(fileUrl);
-      page.innerHTML = `<iframe src="${gview}"></iframe>`;
+      // NO GOOGLE VIEWER - Use Mozilla PDF.js Viewer (works with Cloudinary) + Open button
+      let mozilla = "https://mozilla.github.io/pdf.js/web/viewer.html?file=" + encodeURIComponent(fileUrl);
+      page.innerHTML = `<div style="padding:16px;text-align:center"><p style="font-size:13px">PDF is too big to load inside, opening with PDF Viewer...</p><a href="${fileUrl}" target="_blank" style="display:inline-block;background:#0d9488;color:#fff;padding:12px 20px;border-radius:999px;font-weight:800;text-decoration:none;margin-top:10px">📖 Open PDF in New Tab</a><p style="font-size:12px;color:#666;margin-top:10px">Or tap ⬇ Download at top</p></div><iframe src="${mozilla}" style="height:70vh"></iframe>`;
       document.getElementById("readerMeta").innerText=`${r.grade} • ${r.subject} • Original PDF`;
       return;
     }
   }
-  if(fileUrl){ openReader(title, `${r.grade} • ${r.subject} • Link`, `Tap ⬇ Download at top to open it.\n\nLink: ${fileUrl}`); return; }
   openReader(title, `${r.grade} • ${r.subject}`, `⚠️ This design is BLANK.\n\nAdmin only saved Title: ${title}\n\nFIX: Admin must re-upload ${title} PDF in admin.html.`);
 }
 async function openDesign(id){
@@ -353,7 +347,6 @@ async function openDesign(id){
   }
   try{ let prompt=buildCBCPrompt(r, safeTitle(r)); let ai=await callAI(prompt,safeTitle(r)); box.querySelector(".ai-box").innerHTML=formatAI(ai); }catch(e){ box.querySelector(".ai-box").innerHTML="AI busy, try again."; }
 }
-// Kept for old links - now uses same deep CBC prompt
 async function openDesignCombined(id){ return openDesign(id); }
 async function makeHomework(topic){ let box=document.getElementById("searchResult"); box.innerHTML+=`<div class="ai-box mt-2">⏳ Setting homework...</div>`; try{ let ai=await callAI(`Set Homework for ${currentGrade} on ${topic}. ${getAdminFileContext(topic)} Use the CBC structure: Specific Outcomes, then CLARIFY & SIMPLIFY in simple words with Kenya examples. 5 questions easy to hard, 1 Kenya example, Answers at end. Use **bold**.`,topic); box.innerHTML+=`<div class="ai-box mt-2">${formatAI(ai)}</div>`; }catch(e){} }
 async function makeExam(topic){ let box=document.getElementById("searchResult"); box.innerHTML+=`<div class="ai-box mt-2">⏳ Setting exam...</div>`; try{ let ai=await callAI(`Set Exam for ${currentGrade} on ${topic}. ${getAdminFileContext(topic)} Use CBC structure + CLARIFY & SIMPLIFY. 10 questions: 5 MCQ, 3 Short, 2 Structured. Marking Scheme at end. Use **bold**.`,topic); box.innerHTML+=`<div class="ai-box mt-2">${formatAI(ai)}</div>`; }catch(e){} }
