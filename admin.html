@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SomaHub Admin - Professional</title>
+<title>SomaHub Admin</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
@@ -33,7 +33,7 @@ onAuthStateChanged(auth,u=>{ if(!u) signInAnonymously(auth).catch(e=>console.log
 </head>
 <body class="text-[#111] min-h-screen">
 
-<!-- ================= HEADER ================= -->
+<!-- HEADER -->
 <header class="bg-white border-b sticky top-0 z-50">
   <div class="max-w-6xl mx-auto px-4 py-4">
     <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
@@ -56,14 +56,15 @@ onAuthStateChanged(auth,u=>{ if(!u) signInAnonymously(auth).catch(e=>console.log
 <div id="tab-resources">
   <div class="grid grid-cols-1 lg:grid-cols-12 gap-5">
     <div class="lg:col-span-7 space-y-5">
-
-      <!-- 1. ADD RESOURCE -->
       <div class="card">
-        <div class="flex items-center justify-between">
+        <div class="flex items-center justify-between gap-2">
           <h2 class="font-extrabold text-[16px]">📚 Add Resource</h2>
-          <span class="text-[11px] bg-[#e6f7f5] text-[#0f766e] px-3 py-1 rounded-full font-bold">Auto-saves to AI Brain</span>
+          <span class="text-[11px] bg-[#e6f7f5] text-[#0f766e] px-3 py-1 rounded-full font-bold shrink-0">Auto-saves to AI Brain</span>
         </div>
         <p class="text-[12px] text-gray-500 mt-1">Upload a PDF once. It goes to the learner page + AI Brain automatically.</p>
+
+        <!-- KEEN FIX 1: rType MUST exist, setType() uses it -->
+        <input type="hidden" id="rType" value="Notes">
 
         <div class="mt-5">
           <span class="label">1. Type</span>
@@ -93,7 +94,7 @@ onAuthStateChanged(auth,u=>{ if(!u) signInAnonymously(auth).catch(e=>console.log
           <span class="label">3. PDF File</span>
           <div class="bg-[#fffbe6] border-2 border-dashed border-[#ffcc1a] rounded-2xl p-4">
             <p class="font-bold text-[13px]">📤 Upload PDF to Cloud</p>
-            <p class="text-[12px] text-gray-500 mt-1">The file is read for AI, then uploaded to Cloudinary. Do not close this page until it says ✅ Saved.</p>
+            <p class="text-[12px] text-gray-500 mt-1">The file is read for AI, then uploaded to Cloudinary. Wait for ✅ Saved.</p>
             <label class="block text-center bg-black text-white py-3.5 rounded-2xl font-bold text-[13px] mt-3 cursor-pointer">📤 Choose PDF<input id="rFile" type="file" accept=".pdf,.docx,.txt" class="hidden" onchange="handleResourceFile(this)"></label>
             <p id="rFileStatus" class="text-[12px] font-bold mt-3 break-words"></p>
             <p id="rFilePreview" class="text-[11px] mt-1 text-gray-500 break-words"></p>
@@ -117,7 +118,6 @@ onAuthStateChanged(auth,u=>{ if(!u) signInAnonymously(auth).catch(e=>console.log
         </div>
       </div>
 
-      <!-- 2. PREVIEW -->
       <div class="card">
         <h3 class="font-bold text-[14px]">👀 Preview by Type</h3>
         <div class="flex flex-col sm:flex-row gap-2 mt-3">
@@ -127,7 +127,6 @@ onAuthStateChanged(auth,u=>{ if(!u) signInAnonymously(auth).catch(e=>console.log
         <div id="previewList" class="mt-4 space-y-2 max-h-[400px] overflow-y-auto"></div>
       </div>
 
-      <!-- 3. MANAGE -->
       <div class="card">
         <h3 class="font-bold text-[14px]">Manage Resources</h3>
         <p class="text-[12px] text-gray-500 mt-1">Edit or delete. Deleting a resource does not delete its AI Brain copy.</p>
@@ -138,7 +137,6 @@ onAuthStateChanged(auth,u=>{ if(!u) signInAnonymously(auth).catch(e=>console.log
       </div>
     </div>
 
-    <!-- RIGHT COLUMN -->
     <div class="lg:col-span-5 space-y-5">
       <div class="grid grid-cols-2 gap-3">
         <div class="card !p-5"><p class="text-[11px] text-gray-400 font-bold">STUDENTS</p><p id="sCount" class="font-black text-[28px] mt-1">0</p></div>
@@ -167,13 +165,14 @@ onAuthStateChanged(auth,u=>{ if(!u) signInAnonymously(auth).catch(e=>console.log
     <div class="lg:col-span-7">
       <div class="card">
         <h2 class="font-extrabold text-[16px]">🧠 Feed AI Brain</h2>
-        <p class="text-[12px] text-gray-500 mt-1">Use this for a photo of a page, or text you paste. For full PDFs, use Resources → Upload PDF instead.</p>
+        <p class="text-[12px] text-gray-500 mt-1">For a photo of a page, or text you paste. For full PDFs, use Resources → Upload PDF instead.</p>
 
         <div class="mt-5 bg-[#f7f7f5] p-4 rounded-2xl border-2 border-dashed">
           <span class="label">Photo (optional)</span>
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <button onclick="openCamera()" class="bg-black text-white py-3 rounded-xl text-[12px] font-bold">📷 Open Camera</button>
-            <label class="bg-white border py-3 rounded-xl text-[12px] font-bold text-center cursor-pointer">🖼️ Choose Photo<input type="file" id="fileInput" accept="image/*" capture="environment" class="hidden" onchange="handleFile(this)"></label>
+            <!-- KEEN FIX 2: NO capture="environment" here. That was forcing Camera. -->
+            <label class="bg-white border py-3 rounded-xl text-[12px] font-bold text-center cursor-pointer">🖼️ Choose Photo<input type="file" id="fileInput" accept="image/*" class="hidden" onchange="handleFile(this)"></label>
           </div>
           <video id="video" autoplay playsinline class="hidden w-full mt-3 rounded-2xl bg-black h-[240px]"></video>
           <canvas id="canvas" class="hidden"></canvas>
@@ -242,7 +241,9 @@ function showTab(t){
   if(t=='tuition') loadTuition();
 }
 function setType(t){
-  currentType=t;document.getElementById('rType').value=t;
+  currentType=t;
+  // rType EXISTS now — line below will NOT crash
+  document.getElementById('rType').value=t;
   document.getElementById('showWhere').innerText=TYPE_TO_FILE[t]||'notes.html';
   document.getElementById('previewFilter').value=TYPE_TO_SAVE[t];loadPreview();
   document.querySelectorAll('.type-btn').forEach(b=>b.classList.remove('active'));
@@ -257,7 +258,7 @@ function updateViewButton(){
 }
 function showViewButtonAfterUpload(){updateViewButton();document.getElementById("viewHint").innerText="✅ Uploaded! Tap to check how learners see it.";}
 
-/* ---------- PDF TEXT: 2-column + X-gap spacing ---------- */
+/* PDF TEXT: 2-column + X-gap spacing */
 function fixJoinedWords(t){
   if(!t) return "";
   return t.replace(/potentialof/g,"potential of").replace(/partof/g,"part of").replace(/storedin/g,"stored in").replace(/systemor/g,"system or").replace(/permissionof/g,"permission of").replace(/learningto/g,"learning to").replace(/providesa/g,"provides a").replace(/developedto/g,"developed to").replace(/\bendof\b/gi,"end of").replace(/\bcouldbe\b/gi,"could be").replace(/\bengagedin\b/gi,"engaged in").replace(/\boutof\b/gi,"out of").replace(/\brelatedto\b/gi,"related to");
