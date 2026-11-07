@@ -77,28 +77,33 @@ function showViewButtonAfterUpload(){
   document.getElementById("viewHint").innerText="✅ Uploaded! Tap to check how learners see it in "+(TYPE_TO_FILE[currentType]||'notes.html');
 }
 
-// === ORGANIZE: keep original wording, fix layout only ===
+// === ORGANIZE + FIX BROKEN WORDS + 2-COLUMN SAFE ===
 function organizePdfText(raw){
   if(!raw) return "";
   let t = raw;
-  // Remove dot leaders: .......... -> " — "
   t = t.replace(/\.[\s\.]{4,}/g, " — ");
-  // Collapse 3+ spaces, keep single newlines as paragraph breaks
+  // Fix PDF split words: "eve ry" -> "every", "co mprehension" -> "comprehension"
+  // Join: word + space + 1-2 letters + space, when followed by lowercase
+  t = t.replace(/\b([A-Za-z]{3,})\s+([a-z]{1,2})\s+(?=[a-z])/g, "$1$2 ");
+  // Fix common KICD splits / typos from PDF extraction
+  t = t.replace(/\bLANGAUGE\b/g, "LANGUAGE")
+       .replace(/\bLangauage\b/g, "Language")
+       .replace(/\bEve ry\b/g, "Every")
+       .replace(/\beve ry\b/g, "every")
+       .replace(/\bco mprehension\b/g, "comprehension")
+       .replace(/\bComprehension\b/g, "Comprehension");
   t = t.replace(/[ \t]{3,}/g, " ");
-  // Split into lines, trim, drop empty
   let lines = t.split("\n").map(s=>s.trim()).filter(s=>s.length>0);
-  // Add blank line before known headings so learner page can show them as headings
-  const HEADS = ["TABLE OF CONTENTS","NATIONAL GOALS OF EDUCATION","LEVEL LEARNING OUTCOMES","GENERAL LEARNING OUTCOMES","ESSENCE OF","STRAND","SUB-STRAND","SUGGESTED LEARNING EXPERIENCES","KEY INQUIRY","CORE COMPETENCIES","LESSON ALLOCATION","FOREWORD","ACKNOWLEDGEMENT","INTRODUCTION"];
+  const HEADS = ["TABLE OF CONTENTS","NATIONAL GOALS OF EDUCATION","LEVEL LEARNING OUTCOMES","GENERAL LEARNING OUTCOMES","ESSENCE OF","STRAND","SUB-STRAND","SUGGESTED LEARNING EXPERIENCES","KEY INQUIRY","CORE COMPETENCIES","LESSON ALLOCATION","FOREWORD","ACKNOWLEDGEMENT","INTRODUCTION","SPECIFIC LEARNING OUTCOMES","PERTINENT AND CONTEMPORARY ISSUES"];
   let out = [];
   lines.forEach(line=>{
     let u = line.toUpperCase();
     let isHead = HEADS.some(h=>u.includes(h));
-    // All-caps short line = heading too
     if(!isHead && line===line.toUpperCase() && line.length>4 && line.length<120 && !line.includes(".")) isHead = true;
     if(isHead) out.push("\n## " + line + "\n");
     else out.push(line);
   });
-  return out.join("\n").replace(/\n{3,}/g,"\n\n").slice(0,30000);
+  return out.join("\n").replace(/\n{3,}/g,"\n\n").slice(0,120000);
 }
 
 async function handleResourceFile(input){
@@ -108,29 +113,37 @@ async function handleResourceFile(input){
     RESOURCE_FULLTEXT=""; RESOURCE_PAGES=0;
     try{
       if(file.name.toLowerCase().endsWith(".txt")){
-        RESOURCE_FULLTEXT=organizePdfText((await file.text()).slice(0,30000)); RESOURCE_PAGES=1;
+        RESOURCE_FULLTEXT=organizePdfText((await file.text()).slice(0,120000)); RESOURCE_PAGES=1;
       } else if(file.name.toLowerCase().endsWith(".pdf")){
         let buf=await file.arrayBuffer();
         if(window.pdfjsLib) window.pdfjsLib.GlobalWorkerOptions.workerSrc="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
         let pdf=await window.pdfjsLib.getDocument({data:buf}).promise;
         RESOURCE_PAGES=pdf.numPages;
         let txt="";
-        for(let i=1;i<=Math.min(pdf.numPages,30);i++){
+        // WHOLE BOOK: 120 pages, 120k chars (was 30 pages / 30k - only Foreword)
+        for(let i=1;i<=Math.min(pdf.numPages,120);i++){
           let page=await pdf.getPage(i);
+          let vp=page.getViewport({scale:1});
+          let midX = vp.width / 2; // 2-COLUMN FIX: split left / right
           let c=await page.getTextContent();
-          // FIXED: Group by Y (line) so headings / paragraphs stay separate - NOT join(" ") for whole page
-          let linesMap={};
+          // Group by COLUMN then by LINE - NOT by Y only
+          let cols = {left:{}, right:{}};
           c.items.forEach(item=>{
+            let x=item.transform[4];
             let y=Math.round(item.transform[5]);
-            if(!linesMap[y]) linesMap[y]=[];
-            linesMap[y].push(item.str);
+            let col = x < midX ? "left" : "right";
+            if(!cols[col][y]) cols[col][y]=[];
+            cols[col][y].push(item.str);
           });
-          let sortedY=Object.keys(linesMap).map(Number).sort((a,b)=>b-a); // top to bottom
-          sortedY.forEach(y=>{ txt+=linesMap[y].join(" ").trim()+"\n"; });
+          // Read LEFT column top-to-bottom, THEN RIGHT column
+          ["left","right"].forEach(col=>{
+            let sortedY=Object.keys(cols[col]).map(Number).sort((a,b)=>b-a);
+            sortedY.forEach(y=>{ txt+=cols[col][y].join(" ").trim()+"\n"; });
+          });
           txt+="\n";
-          if(txt.length>28000) break;
+          if(txt.length>120000) break;
         }
-        RESOURCE_FULLTEXT=organizePdfText(txt.slice(0,30000));
+        RESOURCE_FULLTEXT=organizePdfText(txt.slice(0,120000));
       }
     }catch(e){ console.log("PDF text read failed, will save link only", e); RESOURCE_FULLTEXT=""; }
     let form=new FormData();
@@ -151,7 +164,7 @@ async function handleResourceFile(input){
   }catch(e){ document.getElementById("rFileStatus").innerText="❌ Upload failed: "+e.message; }
 }
 async function feedDriveToAiBrain(){ alert("Drive reading removed. Use Upload PDF to Cloud."); }
-async function saveToBrain(data){ try{ let brainText=(data.title+" "+(data.subject||"")+" "+(data.grade||"")+" "+(data.description||"")+" "+(data.fullText||"")).slice(0,30000); await window.FB.addDoc(window.FB.collection(window.FB.db,"ai_brain"), {title:data.title, subject:data.subject||"", grade:data.grade||"", type:data.type||"", text:brainText, fullText:(data.fullText||"").slice(0,30000), fileUrl:data.fileUrl||"", createdAt:window.FB.serverTimestamp()}); }catch(e){ console.log(e); } }
+async function saveToBrain(data){ try{ let brainText=(data.title+" "+(data.subject||"")+" "+(data.grade||"")+" "+(data.description||"")+" "+(data.fullText||"")).slice(0,120000); await window.FB.addDoc(window.FB.collection(window.FB.db,"ai_brain"), {title:data.title, subject:data.subject||"", grade:data.grade||"", type:data.type||"", text:brainText, fullText:(data.fullText||"").slice(0,120000), fileUrl:data.fileUrl||"", createdAt:window.FB.serverTimestamp()}); }catch(e){ console.log(e); } }
 async function addResource(){
   let grade=document.getElementById("rGrade").value;
   let subject=document.getElementById("rSubject").value;
@@ -161,11 +174,17 @@ async function addResource(){
   let type=TYPE_TO_SAVE[currentType]||"Notes";
   let fullText=RESOURCE_FULLTEXT||"";
   if(EDITING_ID && !fullText){ let old=allRes.find(x=>x.id===EDITING_ID); fullText=old?.fullText||""; }
-  let data={title, grade, subject, type, fileUrl:url, description:desc, fullText:fullText.slice(0,30000), fileName:RESOURCE_FILE_NAME||"", pages:RESOURCE_PAGES||0, createdAt:window.FB.serverTimestamp()};
+  if(!fullText || fullText.length < 500){
+    if(!confirm("⚠️ AI text is only "+fullText.length+" chars. This PDF has no readable text - AI will invent from title. Continue anyway?")){
+      document.getElementById("rMsg").innerText="❌ Cancelled - re-upload a text PDF (not scanned image PDF)";
+      return;
+    }
+  }
+  let data={title, grade, subject, type, fileUrl:url, description:desc, fullText:fullText.slice(0,120000), fileName:RESOURCE_FILE_NAME||"", pages:RESOURCE_PAGES||0, createdAt:window.FB.serverTimestamp()};
   document.getElementById("rMsg").innerText="⏳ Saving...";
   try{
     if(EDITING_ID){
-      await window.FB.updateDoc(window.FB.doc(window.FB.db,"resources",EDITING_ID), {title, grade, subject, type, fileUrl:url, description:desc, fullText:fullText.slice(0,30000), fileName:RESOURCE_FILE_NAME||""});
+      await window.FB.updateDoc(window.FB.doc(window.FB.db,"resources",EDITING_ID), {title, grade, subject, type, fileUrl:url, description:desc, fullText:fullText.slice(0,120000), fileName:RESOURCE_FILE_NAME||""});
       document.getElementById("rMsg").innerText="✅ Updated!";
       cancelEdit();
     } else {
@@ -259,7 +278,7 @@ async function addAiBrain(){
   try{
     let full=text;
     if(photoBase64 && !text) full="[Photo content] "+title;
-    await window.FB.addDoc(window.FB.collection(window.FB.db,"ai_brain"), {title, subject, grade, type:"AI", text:(title+" "+subject+" "+grade+" "+full).slice(0,30000), fullText:full.slice(0,30000), fileUrl:photoBase64?photoBase64.slice(0,100):"", createdAt:window.FB.serverTimestamp()});
+    await window.FB.addDoc(window.FB.collection(window.FB.db,"ai_brain"), {title, subject, grade, type:"AI", text:(title+" "+subject+" "+grade+" "+full).slice(0,120000), fullText:full.slice(0,120000), fileUrl:photoBase64?photoBase64.slice(0,100):"", createdAt:window.FB.serverTimestamp()});
     document.getElementById("aiMsg").innerText="✅ Saved to AI Brain!";
     document.getElementById("aiTitle").value=""; document.getElementById("aiText").value=""; photoBase64=""; document.getElementById("preview").classList.add("hidden");
     loadAi();
