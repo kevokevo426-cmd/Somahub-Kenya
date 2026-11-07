@@ -41,6 +41,13 @@ select,input{font-family:inherit;max-width:100%}
 .reader-page iframe{width:100%;height:100%;border:0;display:block}
 .reader-page canvas{width:100%!important;height:auto!important;display:block;margin:0 auto 8px;border-bottom:1px solid #e2e8f0}
 .hidden{display:none!important}
+.org-head{font-weight:900;font-size:17px;color:#0f766e;margin:22px 0 8px;padding-bottom:6px;border-bottom:3px solid #ffcc1a;line-height:1.4;white-space:normal}
+.org-sub{font-weight:800;font-size:15px;color:#111;margin:16px 0 6px;line-height:1.4;white-space:normal}
+.org-p{font-size:15px;line-height:1.75;color:#111;margin:0 0 10px;white-space:pre-wrap;overflow-wrap:anywhere}
+.org-toc{background:#f7f7f5;border-radius:10px;padding:10px 12px;margin:0 0 8px;font-size:13.5px;line-height:1.6;white-space:normal}
+.org-cover{text-align:center;background:#0f766e;color:#fff;border-radius:14px;padding:18px 14px;margin-bottom:16px;white-space:normal}
+.org-cover b{font-size:18px;line-height:1.4;display:block}
+.org-note{background:#fffbe6;border:1px solid #ffcc1a;border-radius:12px;padding:12px;font-size:13px;line-height:1.6;margin-bottom:14px;white-space:normal}
 </style>
 </head>
 <body>
@@ -195,13 +202,60 @@ PART 3 - CHECK UNDERSTANDING:
 - **Remember This:** 3 bullet points to remember for exam.
 Tone: Warm, friendly, patient teacher, not a textbook. Use **bold** for headings.`;
 }
+
+// === ORGANIZE ORIGINAL - same wording, clean layout ===
+function organizeOriginalHTML(raw){
+  if(!raw) return "<p>No original text saved.</p>";
+  let t = String(raw);
+  t = t.replace(/\.[\s\.]{4,}/g, " — ");
+  t = t.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+  let lines = t.split("\n").map(s=>s.trim()).filter(s=>s.length>0);
+  let html = `<div class="org-note">📖 <b>Original KICD Design</b> - Same wording as the PDF, only organized into headings & paragraphs. Not rewritten by AI.</div>`;
+  let inTOC = false;
+  lines.forEach((line, idx)=>{
+    let isMarked = line.startsWith("##");
+    let clean = line.replace(/^##\s*/,"");
+    let u = clean.toUpperCase();
+    if(idx===0 && u.includes("KENYA INSTITUTE")){
+      html += `<div class="org-cover"><b>${clean}</b></div>`;
+      return;
+    }
+    if(u.includes("TABLE OF CONTENTS")) inTOC = true;
+    if(u.includes("NATIONAL GOALS") || u.includes("LEARNING OUTCOMES") || u.includes("FOREWORD") || u.includes("ACKNOWLEDGEMENT") || u.includes("INTRODUCTION")) inTOC = false;
+    let isHead = isMarked ||
+      u.includes("TABLE OF CONTENTS") ||
+      u.includes("NATIONAL GOALS OF EDUCATION") ||
+      u.includes("LEVEL LEARNING OUTCOMES") ||
+      u.includes("GENERAL LEARNING OUTCOMES") ||
+      u.includes("LESSON ALLOCATION") ||
+      u.includes("SUGGESTED LEARNING EXPERIENCES") ||
+      u.includes("KEY INQUIRY") ||
+      u.includes("CORE COMPETENCIES") ||
+      (u.includes("STRAND") && clean.length < 120) ||
+      (u.includes("SUB-STRAND") && clean.length < 120) ||
+      (clean === clean.toUpperCase() && clean.length>5 && clean.length<120 && !clean.includes("."));
+    if(isHead){
+      if(inTOC && !u.includes("TABLE OF CONTENTS")){
+        html += `<div class="org-toc">• ${clean}</div>`;
+      } else {
+        html += `<div class="org-head">${clean}</div>`;
+      }
+    } else if(inTOC){
+      html += `<div class="org-toc">• ${clean}</div>`;
+    } else {
+      html += `<p class="org-p">${clean}</p>`;
+    }
+  });
+  return html;
+}
+
 function openReader(title, meta, text){
   READER_TITLE=title; READER_META=meta;
   document.getElementById("readerTitle").innerText=title;
   document.getElementById("readerMeta").innerText=meta;
   let page = document.getElementById("readerPage");
   page.classList.add("text-mode");
-  page.innerText = text||"";
+  page.innerHTML = organizeOriginalHTML(text||"");
   page.scrollTop=0;
   document.getElementById("reader").classList.remove("hidden");
   window.scrollTo(0,0);
@@ -265,8 +319,6 @@ function loadDesigns(){
     return `<div class="card"><p class="font-black text-[15px]">${safeTitle(r)}</p><p class="text-[12px] text-gray-500">${r.grade} • ${r.subject} • ${r.type||'Design'} • ${badge}</p><p class="text-[13px] mt-1">${safeDesc(r).slice(0,180)}</p><div class="flex gap-2 mt-3 flex-wrap"><button class="action-btn bg-[#263b99]" onclick="openOriginalDesign('${r.id}')">📖 Read Original</button><button class="action-btn bg-[#0d9488]" onclick="openDesign('${r.id}')">🤖 AI Explains</button></div></div>`;
   }).join("");
 }
-
-// === FIXED: NO GOOGLE VIEWER - PDF.js ONLY + MOZILLA VIEWER FALLBACK ===
 async function openOriginalDesign(id){
   let r=ALL.find(x=>x.id==id); if(!r) return;
   CURRENT_FILE_TEXT = getBrainTextFor(r);
@@ -292,65 +344,66 @@ async function openOriginalDesign(id){
     document.getElementById("readerMeta").innerText=READER_META;
     let page = document.getElementById("readerPage");
     page.classList.remove("text-mode");
-    page.innerHTML = `<div style="padding:20px;text-align:center">⏳ Loading real PDF...<br><span style="font-size:12px;color:#666">If it stays here, tap ⬇ Download at top</span></div>`;
+    page.innerHTML = `<div style="padding:20px;text-align:center">⏳ Loading real PDF...<br><small>If PDF does not load, organized text below will show.</small></div>`;
     document.getElementById("reader").classList.remove("hidden");
     try{
-      if(window.pdfjsLib) pdfjsLib.GlobalWorkerOptions.workerSrc="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
-      let buf = await fetch(fileUrl).then(res=>{ if(!res.ok) throw new Error("Fetch failed "+res.status); return res.arrayBuffer(); });
-      let head = new TextDecoder().decode(buf.slice(0,5));
-      if(head !== "%PDF-") throw new Error("Not direct PDF");
-      let pdf = await pdfjsLib.getDocument({data:buf}).promise;
-      document.getElementById("readerMeta").innerText=`${r.grade} • ${r.subject} • Original PDF - ${pdf.numPages} pages`;
-      page.innerHTML = "";
-      let renderPage = async (i)=>{
+      if(window.pdfjsLib) window.pdfjsLib.GlobalWorkerOptions.workerSrc="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
+      let pdf = await window.pdfjsLib.getDocument({url: fileUrl}).promise;
+      let html = "";
+      for(let i=1;i<=Math.min(pdf.numPages, 60);i++){
         let pg = await pdf.getPage(i);
-        let viewport = pg.getViewport({scale:1.6});
+        let vp = pg.getViewport({scale: 1.2});
         let canvas = document.createElement("canvas");
-        canvas.width = viewport.width; canvas.height = viewport.height;
-        let ctx = canvas.getContext("2d");
-        await pg.render({canvasContext:ctx, viewport}).promise;
-        let label = document.createElement("div");
-        label.style.cssText="text-align:center;font-size:11px;color:#888;padding:4px";
-        label.innerText = `Page ${i} / ${pdf.numPages}`;
-        page.appendChild(canvas); page.appendChild(label);
-      };
-      for(let i=1;i<=Math.min(pdf.numPages,15);i++){ await renderPage(i); }
-      if(pdf.numPages>15){
-        let moreBtn = document.createElement("button");
-        moreBtn.innerText = `Load remaining ${pdf.numPages-15} pages`;
-        moreBtn.style.cssText="display:block;margin:12px auto;background:#0d9488;color:#fff;border:0;padding:12px 18px;border-radius:999px;font-weight:800";
-        moreBtn.onclick = async ()=>{ moreBtn.remove(); for(let i=16;i<=pdf.numPages;i++){ await renderPage(i); } };
-        page.appendChild(moreBtn);
+        canvas.width = vp.width; canvas.height = vp.height;
+        await pg.render({canvasContext: canvas.getContext("2d"), viewport: vp}).promise;
+        html += `<img src="${canvas.toDataURL()}" style="width:100%;height:auto;display:block;margin:0 auto 8px;border-bottom:1px solid #e2e8f0">`;
       }
+      document.getElementById("readerMeta").innerText = `${r.grade} • ${r.subject} • Original PDF - ${pdf.numPages} pages`;
+      page.innerHTML = html;
       return;
     }catch(e){
-      // NO GOOGLE VIEWER - Use Mozilla PDF.js Viewer (works with Cloudinary) + Open button
-      let mozilla = "https://mozilla.github.io/pdf.js/web/viewer.html?file=" + encodeURIComponent(fileUrl);
-      page.innerHTML = `<div style="padding:16px;text-align:center"><p style="font-size:13px">PDF is too big to load inside, opening with PDF Viewer...</p><a href="${fileUrl}" target="_blank" style="display:inline-block;background:#0d9488;color:#fff;padding:12px 20px;border-radius:999px;font-weight:800;text-decoration:none;margin-top:10px">📖 Open PDF in New Tab</a><p style="font-size:12px;color:#666;margin-top:10px">Or tap ⬇ Download at top</p></div><iframe src="${mozilla}" style="height:70vh"></iframe>`;
-      document.getElementById("readerMeta").innerText=`${r.grade} • ${r.subject} • Original PDF`;
+      // Fallback: organized original text (not raw dump)
+      page.classList.add("text-mode");
+      page.innerHTML = organizeOriginalHTML(CURRENT_FILE_TEXT || "Original PDF could not load. Tap Download to open it. " + fileUrl);
+      document.getElementById("readerMeta").innerText = `${r.grade} • ${r.subject} • Organized Original Text`;
       return;
     }
   }
-  openReader(title, `${r.grade} • ${r.subject}`, `⚠️ This design is BLANK.\n\nAdmin only saved Title: ${title}\n\nFIX: Admin must re-upload ${title} PDF in admin.html.`);
+  // No fileUrl - show organized text only
+  openReader(title, `${r.grade} • ${r.subject} • Organized Original Text`, CURRENT_FILE_TEXT);
 }
 async function openDesign(id){
   let r=ALL.find(x=>x.id==id); if(!r) return;
   currentGrade=r.grade||currentGrade;
-  CURRENT_FILE_TEXT=getBrainTextFor(r);
-  CURRENT_TOPIC=safeTitle(r);
+  CURRENT_FILE_TEXT = getBrainTextFor(r);
+  CURRENT_TOPIC = safeTitle(r);
   let box=document.getElementById("detailBox");
-  box.innerHTML=`<div class="card"><h3 class="font-black">${safeTitle(r)}</h3><p class="text-[12px] text-gray-500">${r.grade} • ${r.subject}</p><p class="text-[14px] mt-2">${safeDesc(r)}</p><div class="ai-box mt-3">⏳ AI Explains - Reading full CBC design...</div><div class="flex gap-2 mt-3 flex-wrap"><button class="action-btn bg-[#263b99]" onclick="openOriginalDesign('${r.id}')">📖 Read Original Instead</button><button class="action-btn bg-red-600" onclick="closeDetail()">✕ Exit</button></div></div>`;
+  box.innerHTML=`<div class="card"><p class="font-black text-[15px]">${safeTitle(r)}</p><p class="text-[12px] text-gray-500">${r.grade} • ${r.subject}</p><div class="ai-box mt-3">⏳ AI Explains - reading original design...</div><div class="flex gap-2 mt-3 flex-wrap"><button class="action-btn bg-[#263b99]" onclick="openOriginalDesign('${r.id}')">📖 Read Original</button><a target="_blank" href="https://www.youtube.com/results?search_query=${encodeURIComponent(safeTitle(r)+" "+r.grade+" CBC Kenya lesson")}" class="action-btn bg-red-600 no-underline">▶ Watch Video</a></div></div>`;
   box.scrollIntoView({behavior:"smooth"});
-  if(!CURRENT_FILE_TEXT || isJunkText(CURRENT_FILE_TEXT)){
-    box.querySelector(".ai-box").innerHTML = "⚠️ AI has NOT read this file yet.<br><br>This file is LINK ONLY. Admin must re-upload PDF in admin.html using <b>Choose PDF to Upload to Cloud</b>. Then AI will read it.<br><br>Tap 📖 Read Original Instead to read the real PDF.";
-    return;
+  try{
+    let prompt = buildCBCPrompt(r, safeTitle(r));
+    let ai = await callAI(prompt, safeTitle(r));
+    box.querySelector(".ai-box").innerHTML = formatAI(ai);
+  }catch(e){
+    box.querySelector(".ai-box").innerHTML = `AI busy: ${e.message}<br><br>Tap 📖 Read Original to see the organized original design.`;
   }
-  try{ let prompt=buildCBCPrompt(r, safeTitle(r)); let ai=await callAI(prompt,safeTitle(r)); box.querySelector(".ai-box").innerHTML=formatAI(ai); }catch(e){ box.querySelector(".ai-box").innerHTML="AI busy, try again."; }
 }
-async function openDesignCombined(id){ return openDesign(id); }
-async function makeHomework(topic){ let box=document.getElementById("searchResult"); box.innerHTML+=`<div class="ai-box mt-2">⏳ Setting homework...</div>`; try{ let ai=await callAI(`Set Homework for ${currentGrade} on ${topic}. ${getAdminFileContext(topic)} Use the CBC structure: Specific Outcomes, then CLARIFY & SIMPLIFY in simple words with Kenya examples. 5 questions easy to hard, 1 Kenya example, Answers at end. Use **bold**.`,topic); box.innerHTML+=`<div class="ai-box mt-2">${formatAI(ai)}</div>`; }catch(e){} }
-async function makeExam(topic){ let box=document.getElementById("searchResult"); box.innerHTML+=`<div class="ai-box mt-2">⏳ Setting exam...</div>`; try{ let ai=await callAI(`Set Exam for ${currentGrade} on ${topic}. ${getAdminFileContext(topic)} Use CBC structure + CLARIFY & SIMPLIFY. 10 questions: 5 MCQ, 3 Short, 2 Structured. Marking Scheme at end. Use **bold**.`,topic); box.innerHTML+=`<div class="ai-box mt-2">${formatAI(ai)}</div>`; }catch(e){} }
-setTimeout(loadResources, 800);
+async function makeHomework(topic){
+  let q = topic || CURRENT_TOPIC || "this topic";
+  let box=document.getElementById("searchResult") || document.getElementById("detailBox");
+  let prompt=`You are SomaHub CBC Tutor for ${currentGrade}. Topic: ${q}\nDOCUMENT:\n${CURRENT_FILE_TEXT.slice(0,12000)}\nTASK: Create HOMEWORK for ${currentGrade} from ONLY this document. 10 questions: 5 short answer, 3 multiple choice, 2 activity (draw / talk to parent). Simple words, Kenya examples. Include answers for teacher at end. Use **bold**.`;
+  try{ let ai=await callAI(prompt,q); box.innerHTML += `<div class="ai-box mt-3"><b>📝 HOMEWORK - ${q}</b><br><br>${formatAI(ai)}</div>`; }catch(e){ alert("AI busy: "+e.message); }
+}
+async function makeExam(topic){
+  let q = topic || CURRENT_TOPIC || "this topic";
+  let box=document.getElementById("searchResult") || document.getElementById("detailBox");
+  let prompt=`You are SomaHub CBC Tutor for ${currentGrade}. Topic: ${q}\nDOCUMENT:\n${CURRENT_FILE_TEXT.slice(0,12000)}\nTASK: Create EXAM for ${currentGrade} from ONLY this document. Section A: 10 MCQ, Section B: 5 short answer, Section C: 1 practical / composition. Simple words, Kenya examples. Include marking scheme at end. Use **bold**.`;
+  try{ let ai=await callAI(prompt,q); box.innerHTML += `<div class="ai-box mt-3"><b>📝 EXAM - ${q}</b><br><br>${formatAI(ai)}</div>`; }catch(e){ alert("AI busy: "+e.message); }
+}
+window.addEventListener("load", ()=>{
+  document.getElementById("gradeSel").value = currentGrade;
+  loadResources();
+});
 </script>
 </body>
 </html>
