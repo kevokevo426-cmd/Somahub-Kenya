@@ -63,8 +63,6 @@ function showTab(t){['resources','ai','tuition'].forEach(x=>{document.getElement
 function setType(t){ currentType=t; document.getElementById('rType').value=t; document.getElementById('showWhere').innerText=TYPE_TO_FILE[t]||'notes.html'; document.getElementById('previewFilter').value=TYPE_TO_SAVE[t]; loadPreview(); document.querySelectorAll('.typeBtn').forEach(b=>b.className='typeBtn bg-white border p-3 rounded-2xl text-left'); document.getElementById('t'+t).className='typeBtn bg-black text-white p-3 rounded-2xl text-left'; updateViewButton(); }
 function cleanTitle(t, grade, subject){ t=(t||"").trim(); if(!t||t.includes("uc?export")||t.includes("drive.google.com")||t.includes("http")||t.includes("id=")) return (grade||"")+" "+(subject||""); return t; }
 function isJunkText(t){ if(!t) return true; let s=t.trim(); if(s.length<100) return true; let letters=(s.match(/[a-zA-Z]/g)||[]).length; if(letters/s.length<0.4) return true; return false; }
-
-// === VIEW IN CURRICULUM / NOTES / EXAM BUTTON ===
 function updateViewButton(){
   let wrap=document.getElementById("viewBtnWrap");
   let link=document.getElementById("viewLink");
@@ -78,7 +76,6 @@ function showViewButtonAfterUpload(){
   updateViewButton();
   document.getElementById("viewHint").innerText="✅ Uploaded! Tap to check how learners see it in "+(TYPE_TO_FILE[currentType]||'notes.html');
 }
-
 async function handleResourceFile(input){
   let file=input.files[0]; if(!file) return;
   document.getElementById("rFileStatus").innerText="⏳ Reading PDF for AI + Uploading... please wait...";
@@ -105,7 +102,8 @@ async function handleResourceFile(input){
     let form=new FormData();
     form.append("file", file);
     form.append("upload_preset", "somahub");
-    let res=await fetch("https://api.cloudinary.com/v1_1/wzm2sx30/raw/upload", {method:"POST", body:form});
+    // FIXED: auto instead of raw - raw blocks Google Viewer + PDF.js iframe, auto allows viewing
+    let res=await fetch("https://api.cloudinary.com/v1_1/wzm2sx30/auto/upload", {method:"POST", body:form});
     let data=await res.json();
     if(!data.secure_url) throw new Error(data.error?.message || "Upload failed - check preset is Unsigned");
     document.getElementById("rUrl").value=data.secure_url;
@@ -121,7 +119,6 @@ async function handleResourceFile(input){
 }
 async function feedDriveToAiBrain(){ alert("Drive reading removed. Use Upload PDF to Cloud."); }
 async function saveToBrain(data){ try{ let brainText=(data.title+" "+(data.subject||"")+" "+(data.grade||"")+" "+(data.description||"")+" "+(data.fullText||"")).slice(0,30000); await window.FB.addDoc(window.FB.collection(window.FB.db,"ai_brain"), {title:data.title, subject:data.subject||"", grade:data.grade||"", type:data.type||"", text:brainText, fullText:(data.fullText||"").slice(0,30000), fileUrl:data.fileUrl||"", createdAt:window.FB.serverTimestamp()}); }catch(e){ console.log(e); } }
-
 async function addResource(){
   let grade=document.getElementById("rGrade").value;
   let subject=document.getElementById("rSubject").value;
