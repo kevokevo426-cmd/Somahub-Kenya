@@ -5,6 +5,7 @@
 <title>SomaHub Admin</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 <style>body{font-family:'Inter',sans-serif}</style>
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
@@ -33,7 +34,7 @@ onAuthStateChanged(auth,u=>{ if(!u) signInAnonymously(auth).catch(e=>console.log
 <input id="rTitle" placeholder="Title (optional - auto = Grade + Subject)" class="w-full bg-[#f7f7f5] border p-4 rounded-2xl text-[13px] mb-3 outline-none">
 <div class="grid grid-cols-2 gap-3 mb-3"><select id="rGrade" onchange="updateSubjects('rGrade','rSubject')" class="bg-[#f7f7f5] border p-4 rounded-2xl text-[13px]"><option>Playgroup</option><option>PP1</option><option>PP2</option><option>Grade 1</option><option>Grade 2</option><option>Grade 3</option><option>Grade 4</option><option>Grade 5</option><option>Grade 6</option><option>Grade 7</option><option selected>Grade 8</option><option>Grade 9</option><option>Grade 10</option></select><select id="rSubject" class="bg-[#f7f7f5] border p-4 rounded-2xl text-[13px]"></select></div>
 <input id="rUrl" placeholder="🔗 Cloud link will appear here automatically" class="w-full bg-[#f7f7f5] border p-4 rounded-2xl text-[13px] mb-3 outline-none">
-<div class="bg-[#fffbe6] border-2 border-dashed border-[#ffcc1a] p-4 rounded-2xl mb-3"><p class="font-bold text-[13px]">📤 Upload PDF to Cloud</p><p class="text-[11px] text-gray-500">Pick PDF from phone. It uploads to Cloudinary FREE. No billing, no Failed to fetch.</p><label class="block text-center bg-black text-white py-3 rounded-2xl font-bold text-[13px] mt-3 cursor-pointer">📤 Choose PDF to Upload to Cloud<input id="rFile" type="file" accept=".pdf,.docx,.txt" class="hidden" onchange="handleResourceFile(this)"></label><p id="rFileStatus" class="text-[11px] font-bold mt-2 text-gray-700"></p><p id="rFilePreview" class="text-[11px] mt-1 text-gray-500 max-h-[100px] overflow-y-auto"></p></div>
+<div class="bg-[#fffbe6] border-2 border-dashed border-[#ffcc1a] p-4 rounded-2xl mb-3"><p class="font-bold text-[13px]">📤 Upload PDF to Cloud</p><p class="text-[11px] text-gray-500">Pick PDF from phone. It reads text for AI, then uploads to Cloudinary FREE.</p><label class="block text-center bg-black text-white py-3 rounded-2xl font-bold text-[13px] mt-3 cursor-pointer">📤 Choose PDF to Upload to Cloud<input id="rFile" type="file" accept=".pdf,.docx,.txt" class="hidden" onchange="handleResourceFile(this)"></label><p id="rFileStatus" class="text-[11px] font-bold mt-2 text-gray-700"></p><p id="rFilePreview" class="text-[11px] mt-1 text-gray-500 max-h-[100px] overflow-y-auto"></p></div>
 <textarea id="rDesc" placeholder="Description... (optional)" class="w-full bg-[#f7f7f5] border p-4 rounded-2xl text-[13px] h-[80px] mb-3 outline-none"></textarea>
 <p id="editBanner" class="hidden text-[12px] font-bold text-center bg-yellow-100 p-2 rounded-xl mb-2">✏️ Editing: <span id="editTitleShow"></span></p>
 <button onclick="addResource()" id="addBtn" class="w-full bg-black text-white py-4 rounded-2xl font-bold text-[13px]">+ Add to <span id="showWhere">notes.html</span> + 🧠 AI Brain</button>
@@ -62,11 +63,34 @@ function setType(t){ currentType=t; document.getElementById('rType').value=t; do
 function cleanTitle(t, grade, subject){ t=(t||"").trim(); if(!t||t.includes("uc?export")||t.includes("drive.google.com")||t.includes("http")||t.includes("id=")) return (grade||"")+" "+(subject||""); return t; }
 function isJunkText(t){ if(!t) return true; let s=t.trim(); if(s.length<100) return true; let letters=(s.match(/[a-zA-Z]/g)||[]).length; if(letters/s.length<0.4) return true; return false; }
 
-// *** CLOUDINARY FREE UPLOAD - NO FIREBASE STORAGE BILLING ***
+// *** CLOUDINARY + PDF TEXT FOR AI - READS PDF BEFORE UPLOAD ***
 async function handleResourceFile(input){
   let file=input.files[0]; if(!file) return;
-  document.getElementById("rFileStatus").innerText="⏳ Uploading to Cloudinary... please wait...";
+  document.getElementById("rFileStatus").innerText="⏳ Reading PDF for AI + Uploading... please wait...";
   try{
+    RESOURCE_FULLTEXT=""; RESOURCE_PAGES=0;
+    // STEP 1 - READ TEXT LOCALLY FOR AI (works for .pdf, .txt)
+    try{
+      if(file.name.toLowerCase().endsWith(".txt")){
+        RESOURCE_FULLTEXT=(await file.text()).slice(0,30000); RESOURCE_PAGES=1;
+      } else if(file.name.toLowerCase().endsWith(".pdf")){
+        let buf=await file.arrayBuffer();
+        // pdf.js is loaded in <head>
+        if(window.pdfjsLib) window.pdfjsLib.GlobalWorkerOptions.workerSrc="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
+        let pdf=await window.pdfjsLib.getDocument({data:buf}).promise;
+        RESOURCE_PAGES=pdf.numPages;
+        let txt="";
+        for(let i=1;i<=Math.min(pdf.numPages,30);i++){
+          let page=await pdf.getPage(i);
+          let c=await page.getTextContent();
+          txt+=c.items.map(x=>x.str).join(" ")+" \n";
+          if(txt.length>28000) break;
+        }
+        RESOURCE_FULLTEXT=txt.slice(0,30000);
+      }
+    }catch(e){ console.log("PDF text read failed, will save link only", e); RESOURCE_FULLTEXT=""; }
+
+    // STEP 2 - UPLOAD TO CLOUDINARY
     let form=new FormData();
     form.append("file", file);
     form.append("upload_preset", "somahub");
@@ -74,9 +98,13 @@ async function handleResourceFile(input){
     let data=await res.json();
     if(!data.secure_url) throw new Error(data.error?.message || "Upload failed - check preset is Unsigned");
     document.getElementById("rUrl").value=data.secure_url;
-    RESOURCE_FILE_NAME=file.name; RESOURCE_FULLTEXT=""; RESOURCE_PAGES=0;
-    document.getElementById("rFileStatus").innerText="✅ Saved to Cloud! Now tap + Add below.";
-    document.getElementById("rFilePreview").innerText="Cloud link: "+data.secure_url.slice(0,60)+"...";
+    RESOURCE_FILE_NAME=file.name;
+    if(RESOURCE_FULLTEXT && RESOURCE_FULLTEXT.length>100){
+      document.getElementById("rFileStatus").innerText="✅ Saved to Cloud! AI read "+RESOURCE_PAGES+" pages ("+RESOURCE_FULLTEXT.length+" chars). Now tap + Add below.";
+    } else {
+      document.getElementById("rFileStatus").innerText="✅ Saved to Cloud! (AI could not read text - scanned PDF? Tap + Add, then use Read Original)";
+    }
+    document.getElementById("rFilePreview").innerText="Cloud link: "+data.secure_url.slice(0,60)+"... | AI text: "+RESOURCE_FULLTEXT.length+" chars";
   }catch(e){ document.getElementById("rFileStatus").innerText="❌ Upload failed: "+e.message; }
 }
 async function feedDriveToAiBrain(){ alert("Drive reading removed. Use Upload PDF to Cloud."); }
@@ -131,7 +159,7 @@ async function loadRes(){
     allRes=snap.docs.map(d=>({id:d.id, ...d.data()})).sort((a,b)=>(b.createdAt?.seconds||0)-(a.createdAt?.seconds||0));
     let list=document.getElementById("rList");
     if(!allRes.length){ list.innerHTML='<p class="text-[11px] text-gray-400 text-center">No resources yet</p>'; return; }
-    list.innerHTML=allRes.slice(0,50).map(r=>`<div class="flex justify-between items-center bg-[#f7f7f5] p-3 rounded-xl"><div class="min-w-0"><p class="font-bold text-[12px] truncate">${(r.title||"").replace(/</g,"&lt;")}</p><p class="text-[10px] text-gray-500">${r.grade||""} • ${r.subject||""} • ${r.type||""}</p></div><div class="flex gap-1 shrink-0"><button onclick="editRes('${r.id}')" class="bg-white border px-2 py-1 rounded-lg text-[11px] font-bold">✏️</button><button onclick="delRes('${r.id}')" class="bg-red-500 text-white px-2 py-1 rounded-lg text-[11px] font-bold">🗑️</button></div></div>`).join('');
+    list.innerHTML=allRes.slice(0,50).map(r=>`<div class="flex justify-between items-center bg-[#f7f7f5] p-3 rounded-xl"><div class="min-w-0"><p class="font-bold text-[12px] truncate">${(r.title||"").replace(/</g,"&lt;")}</p><p class="text-[10px] text-gray-500">${r.grade||""} • ${r.subject||""} • ${r.type||""} • AI: ${(r.fullText||"").length} chars</p></div><div class="flex gap-1 shrink-0"><button onclick="editRes('${r.id}')" class="bg-white border px-2 py-1 rounded-lg text-[11px] font-bold">✏️</button><button onclick="delRes('${r.id}')" class="bg-red-500 text-white px-2 py-1 rounded-lg text-[11px] font-bold">🗑️</button></div></div>`).join('');
   }catch(e){ document.getElementById("rList").innerHTML='<p class="text-[11px] text-red-500">'+e.message+'</p>'; }
 }
 async function loadPreview(){
@@ -139,7 +167,7 @@ async function loadPreview(){
   let box=document.getElementById("previewList");
   let filtered=allRes.filter(r=>r.type===filter);
   if(!filtered.length){ box.innerHTML='<p class="text-[11px] text-gray-400">No '+filter+' yet</p>'; return; }
-  box.innerHTML=filtered.slice(0,20).map(r=>`<div class="bg-[#f7f7f5] p-3 rounded-xl"><p class="font-bold text-[12px]">${(r.title||"").replace(/</g,"&lt;")}</p><p class="text-[10px] text-gray-500">${r.grade} • ${r.subject}</p>${r.fileUrl?`<a href="${r.fileUrl}" target="_blank" class="text-[11px] text-blue-600 underline">Open PDF ↗</a>`:""}</div>`).join('');
+  box.innerHTML=filtered.slice(0,20).map(r=>`<div class="bg-[#f7f7f5] p-3 rounded-xl"><p class="font-bold text-[12px]">${(r.title||"").replace(/</g,"&lt;")}</p><p class="text-[10px] text-gray-500">${r.grade} • ${r.subject} • AI: ${(r.fullText||"").length} chars</p>${r.fileUrl?`<a href="${r.fileUrl}" target="_blank" class="text-[11px] text-blue-600 underline">Open PDF ↗</a>`:""}</div>`).join('');
 }
 async function syncAllToBrain(){
   document.getElementById("syncStatus").innerText="⏳ Syncing...";
@@ -207,7 +235,6 @@ async function loadTuition(){
     document.getElementById("tuitionCountTop").innerText=items.length;
     document.getElementById("tStatus").innerText=items.length+" requests";
     document.getElementById("tList").innerHTML=items.map(x=>`<div class="border p-4 rounded-2xl"><p class="font-bold text-[13px]">${(x.parentName||x.name||"Parent").replace(/</g,"&lt;")} • ${x.grade||""}</p><p class="text-[11px] text-gray-500">${x.phone||""} • ${x.location||""}</p><p class="text-[12px] mt-1">${(x.message||x.details||"").replace(/</g,"&lt;")}</p></div>`).join('')||'<p class="text-[11px] text-gray-400">No requests yet</p>';
-    // counts
     try{ let s=await window.FB.getDocs(window.FB.collection(window.FB.db,"students")); document.getElementById("sCount").innerText=s.size; }catch(e){}
     try{ let t=await window.FB.getDocs(window.FB.collection(window.FB.db,"teachers")); document.getElementById("tCount2").innerText=t.size; }catch(e){}
   }catch(e){ document.getElementById("tStatus").innerText="❌ "+e.message; }
