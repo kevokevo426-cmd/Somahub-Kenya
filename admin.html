@@ -76,6 +76,31 @@ function showViewButtonAfterUpload(){
   updateViewButton();
   document.getElementById("viewHint").innerText="✅ Uploaded! Tap to check how learners see it in "+(TYPE_TO_FILE[currentType]||'notes.html');
 }
+
+// === ORGANIZE: keep original wording, fix layout only ===
+function organizePdfText(raw){
+  if(!raw) return "";
+  let t = raw;
+  // Remove dot leaders: .......... -> " — "
+  t = t.replace(/\.[\s\.]{4,}/g, " — ");
+  // Collapse 3+ spaces, keep single newlines as paragraph breaks
+  t = t.replace(/[ \t]{3,}/g, " ");
+  // Split into lines, trim, drop empty
+  let lines = t.split("\n").map(s=>s.trim()).filter(s=>s.length>0);
+  // Add blank line before known headings so learner page can show them as headings
+  const HEADS = ["TABLE OF CONTENTS","NATIONAL GOALS OF EDUCATION","LEVEL LEARNING OUTCOMES","GENERAL LEARNING OUTCOMES","ESSENCE OF","STRAND","SUB-STRAND","SUGGESTED LEARNING EXPERIENCES","KEY INQUIRY","CORE COMPETENCIES","LESSON ALLOCATION","FOREWORD","ACKNOWLEDGEMENT","INTRODUCTION"];
+  let out = [];
+  lines.forEach(line=>{
+    let u = line.toUpperCase();
+    let isHead = HEADS.some(h=>u.includes(h));
+    // All-caps short line = heading too
+    if(!isHead && line===line.toUpperCase() && line.length>4 && line.length<120 && !line.includes(".")) isHead = true;
+    if(isHead) out.push("\n## " + line + "\n");
+    else out.push(line);
+  });
+  return out.join("\n").replace(/\n{3,}/g,"\n\n").slice(0,30000);
+}
+
 async function handleResourceFile(input){
   let file=input.files[0]; if(!file) return;
   document.getElementById("rFileStatus").innerText="⏳ Reading PDF for AI + Uploading... please wait...";
@@ -83,7 +108,7 @@ async function handleResourceFile(input){
     RESOURCE_FULLTEXT=""; RESOURCE_PAGES=0;
     try{
       if(file.name.toLowerCase().endsWith(".txt")){
-        RESOURCE_FULLTEXT=(await file.text()).slice(0,30000); RESOURCE_PAGES=1;
+        RESOURCE_FULLTEXT=organizePdfText((await file.text()).slice(0,30000)); RESOURCE_PAGES=1;
       } else if(file.name.toLowerCase().endsWith(".pdf")){
         let buf=await file.arrayBuffer();
         if(window.pdfjsLib) window.pdfjsLib.GlobalWorkerOptions.workerSrc="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
@@ -93,20 +118,27 @@ async function handleResourceFile(input){
         for(let i=1;i<=Math.min(pdf.numPages,30);i++){
           let page=await pdf.getPage(i);
           let c=await page.getTextContent();
-          txt+=c.items.map(x=>x.str).join(" ")+" \n";
+          // FIXED: Group by Y (line) so headings / paragraphs stay separate - NOT join(" ") for whole page
+          let linesMap={};
+          c.items.forEach(item=>{
+            let y=Math.round(item.transform[5]);
+            if(!linesMap[y]) linesMap[y]=[];
+            linesMap[y].push(item.str);
+          });
+          let sortedY=Object.keys(linesMap).map(Number).sort((a,b)=>b-a); // top to bottom
+          sortedY.forEach(y=>{ txt+=linesMap[y].join(" ").trim()+"\n"; });
+          txt+="\n";
           if(txt.length>28000) break;
         }
-        RESOURCE_FULLTEXT=txt.slice(0,30000);
+        RESOURCE_FULLTEXT=organizePdfText(txt.slice(0,30000));
       }
     }catch(e){ console.log("PDF text read failed, will save link only", e); RESOURCE_FULLTEXT=""; }
     let form=new FormData();
     form.append("file", file);
     form.append("upload_preset", "somahub");
-    // FIXED: image/upload for PDFs - raw = 401 deny, image = public viewable PDF
-    // Cloudinary treats PDF uploaded as image as viewable document
     let res=await fetch("https://api.cloudinary.com/v1_1/wzm2sx30/image/upload", {method:"POST", body:form});
     let data=await res.json();
-    if(!data.secure_url) throw new Error(data.error?.message || "Upload failed - check preset is Unsigned. In Cloudinary: Settings > Upload > Upload presets > somahub > Signing Mode = Unsigned");
+    if(!data.secure_url) throw new Error(data.error?.message || "Upload failed - check preset is Unsigned");
     document.getElementById("rUrl").value=data.secure_url;
     RESOURCE_FILE_NAME=file.name;
     if(RESOURCE_FULLTEXT && RESOURCE_FULLTEXT.length>100){
@@ -114,7 +146,7 @@ async function handleResourceFile(input){
     } else {
       document.getElementById("rFileStatus").innerText="✅ Saved to Cloud! (AI could not read text - scanned PDF? Tap + Add, then use Read Original)";
     }
-    document.getElementById("rFilePreview").innerText="Cloud link: "+data.secure_url.slice(0,70)+"... | AI text: "+RESOURCE_FULLTEXT.length+" chars";
+    document.getElementById("rFilePreview").innerText="Cloud link: "+data.secure_url.slice(0,60)+"... | AI text: "+RESOURCE_FULLTEXT.length+" chars";
     showViewButtonAfterUpload();
   }catch(e){ document.getElementById("rFileStatus").innerText="❌ Upload failed: "+e.message; }
 }
@@ -128,6 +160,7 @@ async function addResource(){
   let desc=document.getElementById("rDesc").value.trim();
   let type=TYPE_TO_SAVE[currentType]||"Notes";
   let fullText=RESOURCE_FULLTEXT||"";
+  if(EDITING_ID && !fullText){ let old=allRes.find(x=>x.id===EDITING_ID); fullText=old?.fullText||""; }
   let data={title, grade, subject, type, fileUrl:url, description:desc, fullText:fullText.slice(0,30000), fileName:RESOURCE_FILE_NAME||"", pages:RESOURCE_PAGES||0, createdAt:window.FB.serverTimestamp()};
   document.getElementById("rMsg").innerText="⏳ Saving...";
   try{
