@@ -33,6 +33,9 @@ body{font-family:system-ui,-apple-system,sans-serif;background:#f1f5f9}
 .ai-note{color:#fb923c;font-weight:900}
 select,input{font-family:inherit;max-width:100%}
 .action-btn{border:0;border-radius:999px;padding:8px 13px;font-weight:800;font-size:12px;color:#fff;cursor:pointer;white-space:nowrap}
+.area-btn{display:block;width:100%;text-align:left;background:#0f766e;color:#fff;border:0;border-radius:12px;padding:12px;margin:6px 0;font-weight:800;font-size:14px;cursor:pointer}
+.strand-btn{display:block;width:100%;text-align:left;background:#f7f7f5;border:1px solid #e2e8f0;border-radius:12px;padding:11px 12px;margin:6px 0;font-weight:700;font-size:13.5px;color:#111;cursor:pointer}
+.strand-btn:active{background:#ffcc1a}
 #reader{position:fixed;inset:0;z-index:100;background:#fff;display:flex;flex-direction:column;overflow:hidden}
 .reader-top{flex:0 0 auto;background:#0f766e;color:#fff;padding:10px 12px;display:flex;align-items:center;justify-content:space-between;gap:8px}
 .reader-top b{font-size:14px;line-height:1.3;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:180px}
@@ -42,7 +45,6 @@ select,input{font-family:inherit;max-width:100%}
 .reader-page canvas{width:100%!important;height:auto!important;display:block;margin:0 auto 8px;border-bottom:1px solid #e2e8f0}
 .hidden{display:none!important}
 .org-head{font-weight:900;font-size:17px;color:#0f766e;margin:22px 0 8px;padding-bottom:6px;border-bottom:3px solid #ffcc1a;line-height:1.4;white-space:normal}
-.org-sub{font-weight:800;font-size:15px;color:#111;margin:16px 0 6px;line-height:1.4;white-space:normal}
 .org-p{font-size:15px;line-height:1.75;color:#111;margin:0 0 10px;white-space:pre-wrap;overflow-wrap:anywhere}
 .org-toc{background:#f7f7f5;border-radius:10px;padding:10px 12px;margin:0 0 8px;font-size:13.5px;line-height:1.6;white-space:normal}
 .org-cover{text-align:center;background:#0f766e;color:#fff;border-radius:14px;padding:18px 14px;margin-bottom:16px;white-space:normal}
@@ -54,9 +56,9 @@ select,input{font-family:inherit;max-width:100%}
 <div class="page">
 <div class="hero">
   <h1>📘 CBC Curriculum Designs<br>PP1-G9 - REAL AI Explains + Video</h1>
-  <p>AI summarizes KICD design, searches word meaning by level PP1-G9 + comparison, YouTube video of strand, sets homework/exam FROM design</p>
+  <p>Full book = all subjects. Tap Design → Tap Learning Area → Tap Strand → AI explains THAT strand only.</p>
   <div class="search-box mt-3">
-    <input id="searchInput" placeholder="Search word or strand...">
+    <input id="searchInput" placeholder="Search e.g. Listening, Greetings, Counting...">
     <button class="btn-search" onclick="searchNotes()">Search<br>Notes</button>
   </div>
   <div id="searchResult" class="card mt-3 text-gray-800"></div>
@@ -66,7 +68,7 @@ select,input{font-family:inherit;max-width:100%}
     <option>PP1</option><option>PP2</option><option>Grade 1</option><option>Grade 2</option><option>Grade 3</option><option>Grade 4</option><option>Grade 5</option><option>Grade 6</option><option>Grade 7</option><option selected>Grade 8</option><option>Grade 9</option>
   </select>
   <select id="subjectSel" class="w-full bg-white border rounded-xl p-3 text-[15px] outline-none" onchange="loadDesigns()">
-    <option value="">All Subjects</option>
+    <option value="">All Subjects / Full Books</option>
     <option>Agriculture and Nutrition</option><option>English</option><option>Kiswahili</option><option>Mathematics</option><option>Integrated Science</option><option>Social Studies</option><option>CRE</option><option>IRE</option><option>Creative Arts</option><option>Physical Education</option><option>Pre-Technical Studies</option>
   </select>
   <button class="w-full bg-[#0d9488] text-white font-black py-3 rounded-xl text-[15px]" onclick="loadDesigns()">📘 Show Designs</button>
@@ -89,6 +91,9 @@ let AI_BRAIN = [];
 let currentGrade = "Grade 8";
 let CURRENT_FILE_TEXT = "";
 let CURRENT_TOPIC = "";
+let CURRENT_AREA = "";
+let CURRENT_STRAND = "";
+let CURRENT_DESIGN_ID = "";
 let READER_TITLE = ""; let READER_META = "";
 let CURRENT_FILE_URL = "";
 
@@ -136,7 +141,7 @@ async function loadResources(){
   loadDesigns();
 }
 async function callAI(prompt, question){
-  let res = await fetch(PROXY,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({prompt, question: question||prompt, grade: currentGrade, task:"EN", history:[]})});
+  let res = await fetch(PROXY,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({prompt: prompt, question: prompt, grade: currentGrade, task:"EN", history:[]})});
   let data={}; try{data=await res.json();}catch(e){}
   let txt = data.answer || data.text || data.reply || "";
   if(!txt) throw new Error(data.error||"AI busy");
@@ -147,6 +152,7 @@ function formatAI(text){
   esc = esc.replace(/\*\*(.*?)\*\*/g,"<b>$1</b>"); esc = esc.replace(/\*(.*?)\*/g,"<i>$1</i>");
   esc = esc.replace(/^### (.*)$/gm,"<div style='color:#5eead4;font-weight:900;margin:10px 0 4px'>$1</div>");
   esc = esc.replace(/^## (.*)$/gm,"<div style='color:#5eead4;font-weight:900;margin:10px 0 4px'>$1</div>");
+  esc = esc.replace(/^#### (.*)$/gm,"<div style='color:#5eead4;font-weight:900;margin:10px 0 4px'>$1</div>");
   let lines=esc.split("\n"); let out=""; let inList=false;
   lines.forEach(l=>{ let t=l.trim();
     if(/^(Key Point|Important|Note|Answer|Final Answer|Solution)[:：]/i.test(t)){ if(inList){out+="</ul>";inList=false;} let cls=/^(Answer|Final Answer|Solution)/i.test(t)?"ai-answer":/^(Note|Important)/i.test(t)?"ai-note":"ai-key"; out+=`<p><span class="${cls}">${l}</span></p>`; }
@@ -155,78 +161,180 @@ function formatAI(text){
     else { if(inList){out+="</ul>";inList=false;} if(t) out+=`<p>${l}</p>`; }
   }); if(inList) out+="</ul>"; return out;
 }
+function escAttr(s){ return String(s||"").replace(/'/g,"").replace(/"/g,""); }
 
-// === WHOLE BOOK: find relevant chunks from ANY page, not just first pages ===
+// === FULL BOOK: Learning Areas + Strands inside each Area ===
+// PP1/PP2 + Grades 1-9 - all areas that can appear in a combined KICD book
+const ALL_AREAS = [
+  "LANGUAGE ACTIVITIES","ENGLISH","KISWAHILI","INDIGENOUS LANGUAGE",
+  "MATHEMATICAL ACTIVITIES","MATHEMATICS",
+  "ENVIRONMENTAL ACTIVITIES","ENVIRONMENTAL",
+  "CREATIVE ACTIVITIES","CREATIVE ARTS","CREATIVE ARTS AND SPORTS",
+  "RELIGIOUS EDUCATION","CHRISTIAN RELIGIOUS EDUCATION","CRE","ISLAMIC RELIGIOUS EDUCATION","IRE","HINDU RELIGIOUS EDUCATION","HRE",
+  "MOVEMENT ACTIVITIES","MOVEMENT AND PHYSICAL ACTIVITIES","PHYSICAL EDUCATION","PHYSICAL EDUCATION AND SPORTS",
+  "MUSIC","HEALTH EDUCATION","LIFE SKILLS","COMPUTER SCIENCE",
+  "INTEGRATED SCIENCE","SCIENCE AND TECHNOLOGY","SOCIAL STUDIES",
+  "AGRICULTURE","AGRICULTURE AND NUTRITION","HOME SCIENCE","PRE-TECHNICAL STUDIES","BUSINESS STUDIES"
+];
+function extractAreasAndStrands(fullText){
+  if(!fullText) return {areas:[]};
+  let lines = fullText.split("\n").map(s=>s.trim()).filter(s=>s.length>0);
+  let areas = [];
+  let areaMap = {}; // areaName -> {index, strands:[]}
+  // 1. Find area headings + their line index
+  lines.forEach((line, idx)=>{
+    let clean = line.replace(/^##\s*/,"").trim();
+    let u = clean.toUpperCase();
+    // Area heading = line that IS an area name, or contains it and is short + heading-like
+    let found = ALL_AREAS.find(a=>{
+      if(u===a) return true;
+      if(u.startsWith(a+" ") && clean.length<60) return true;
+      if(u.includes("LEARNING AREA") && u.includes(a)) return true;
+      return false;
+    });
+    if(found && clean.length<80){
+      if(!areaMap[found]){ areaMap[found]={index:idx, strands:[]}; areas.push(found); }
+    }
+  });
+  // If no areas found, treat whole book as ONE area = the saved subject
+  if(!areas.length){
+    return {areas:[{name: CURRENT_TOPIC || "Full Book", strands: extractStrandsInRange(lines, 0, lines.length)}]};
+  }
+  // 2. Find strands + assign to nearest preceding area
+  lines.forEach((line, idx)=>{
+    let clean = line.replace(/^##\s*/,"").trim();
+    let m = clean.match(/^(\d+\.\d+)\s+(.+)$/);
+    if(m && m[2].length>=3 && m[2].length<90 && !m[2].includes(".")){
+      // Find area before this line
+      let area = null;
+      for(let a of areas){ if(areaMap[a].index < idx) area = a; }
+      if(!area) area = areas[0];
+      let key = clean.toLowerCase();
+      if(!areaMap[area].strands.some(s=>s.toLowerCase()===key)) areaMap[area].strands.push(clean);
+    }
+  });
+  // 3. Also add SUB-STRAND lines as strands if no 1.0 strands in that area
+  areas.forEach(a=>{
+    if(areaMap[a].strands.length===0){
+      lines.forEach((line, idx)=>{
+        let clean = line.replace(/^##\s*/,"").trim();
+        let u = clean.toUpperCase();
+        if(u.includes("SUB-STRAND") && clean.length<120){
+          let before = null;
+          for(let x of areas){ if(areaMap[x].index < idx) before = x; }
+          if(before===a && !areaMap[a].strands.includes(clean)) areaMap[a].strands.push(clean);
+        }
+      });
+    }
+  });
+  return {areas: areas.map(a=>({name:a, strands: areaMap[a].strands.slice(0,30)}))};
+}
+function extractStrandsInRange(lines, from, to){
+  let out=[]; let seen=new Set();
+  for(let i=from;i<to && i<lines.length;i++){
+    let clean = lines[i].replace(/^##\s*/,"").trim();
+    let m = clean.match(/^(\d+\.\d+)\s+(.+)$/);
+    if(m && m[2].length>=3 && m[2].length<90 && !m[2].includes(".")){
+      let k=clean.toLowerCase(); if(!seen.has(k)){seen.add(k); out.push(clean);}
+    }
+  }
+  return out.slice(0,30);
+}
+// Get text for ONE Learning Area only - so Maths chunks don't leak into Language
+function getAreaText(areaName){
+  if(!CURRENT_FILE_TEXT) return "";
+  let lines = CURRENT_FILE_TEXT.split("\n");
+  let parsed = extractAreasAndStrands(CURRENT_FILE_TEXT);
+  if(parsed.areas.length<=1) return CURRENT_FILE_TEXT;
+  let idx = parsed.areas.findIndex(a=>a.name===areaName);
+  if(idx===-1) return CURRENT_FILE_TEXT;
+  // Find start / end line index for this area in original text
+  let start=-1, end=lines.length;
+  let uArea = areaName.toUpperCase();
+  lines.forEach((l,i)=>{ let u=l.replace(/^##\s*/,"").trim().toUpperCase(); if(start===-1 && (u===uArea || u.startsWith(uArea+" "))) start=i; });
+  if(start===-1) return CURRENT_FILE_TEXT;
+  for(let i=start+1;i<lines.length;i++){
+    let u=lines[i].replace(/^##\s*/,"").trim().toUpperCase();
+    let isOtherArea = ALL_AREAS.some(a=>a!==areaName && (u===a || u.startsWith(a+" ")));
+    if(isOtherArea){ end=i; break; }
+  }
+  return lines.slice(start, end).join("\n");
+}
+
+// === WHOLE BOOK: chunks for ONE Area + ONE Strand ===
 function getWholeBookContext(question, maxChars){
   if(!CURRENT_FILE_TEXT || isJunkText(CURRENT_FILE_TEXT)) return "";
+  // Use Area-only text if an Area is selected - stops cross-subject mixing
+  let sourceText = CURRENT_AREA ? getAreaText(CURRENT_AREA) : CURRENT_FILE_TEXT;
+  if(!sourceText || sourceText.length<300) sourceText = CURRENT_FILE_TEXT;
   let max = maxChars || 20000;
-  let qWords = (question+" "+CURRENT_TOPIC).toLowerCase().split(/[^a-z0-9]+/).filter(w=>w.length>3);
+  let stop = new Set(["pp1","pp2","grade","language","activities","curriculum","design","kenya","cbc","learning","area","topic","full","book"]);
+  let qWords = (question+" "+(CURRENT_AREA||"")).toLowerCase().split(/[^a-z0-9]+/).filter(w=>w.length>3 && !stop.has(w));
+  if(!qWords.length) qWords = (question||"").toLowerCase().split(/[^a-z0-9]+/).filter(w=>w.length>3);
   let chunks=[];
-  for(let i=0;i<CURRENT_FILE_TEXT.length;i+=1500) chunks.push(CURRENT_FILE_TEXT.slice(i,i+1500));
+  for(let i=0;i<sourceText.length;i+=1500) chunks.push(sourceText.slice(i,i+1500));
   let scored = chunks.map((c,idx)=>{
     let low=c.toLowerCase(); let s=0;
     qWords.forEach(w=>{ if(low.includes(w)) s++; });
-    if(low.includes("strand")||low.includes("specific learning outcomes")||low.includes("suggested learning experiences")||low.includes("key inquiry")||low.includes("core competence")||low.includes("values")) s+=2;
+    if(question && low.includes(question.toLowerCase())) s+=10;
+    if(low.includes("specific learning outcomes")||low.includes("suggested learning experiences")||low.includes("key inquiry")) s+=2;
     return {c, s, idx};
   }).sort((a,b)=>b.s-a.s);
   let picked = scored.slice(0, Math.ceil(max/1500)).sort((a,b)=>a.idx-b.idx);
   return picked.map(x=>x.c).join("\n--- PAGE ---\n");
 }
-function getAdminFileContext(question){
-  // Now uses WHOLE BOOK, not just first 8 chunks
-  let ctx = getWholeBookContext(question, 12000);
-  if(!ctx) return "";
-  return `\n\nADMIN FILE (Original Design): ${CURRENT_TOPIC}\nMost relevant pages from WHOLE BOOK:\n${ctx}\n`;
-}
 function buildCBCPrompt(r, topicText){
-  return `You are SomaHub CBC Tutor Kenya. You MUST use ONLY the content from this KICD Curriculum Design below. Do NOT invent. Do NOT use big grammar without explaining it.
+  let parsed = extractAreasAndStrands(CURRENT_FILE_TEXT);
+  let areaList = parsed.areas.map(a=>a.name).join(", ");
+  let strandList = parsed.areas.map(a=>a.name+": "+(a.strands.join(" | ")||"(no strands)")).join("\n");
+  return `You are SomaHub CBC Tutor Kenya. You MUST use ONLY the content from this KICD Curriculum Design below. Do NOT invent. Do NOT use general knowledge. Do NOT mix subjects.
 
 GRADE: ${r.grade}
-LEARNING AREA: ${r.subject}
-TOPIC / DESIGN: ${topicText}
+BOOK TITLE: ${safeTitle(r)} - THIS IS A FULL COMBINED BOOK WITH ALL SUBJECTS
+LEARNING AREA TO EXPLAIN (ONLY THIS ONE): ${CURRENT_AREA || r.subject}
+EXACT STRAND TO EXPLAIN (ONLY THIS ONE): ${topicText}
+REAL LEARNING AREAS FOUND IN THIS BOOK: ${areaList}
+REAL STRANDS FOUND IN THIS BOOK (use only these):
+${strandList}
 
-DOCUMENT (KICD Design - RELEVANT PARTS FROM WHOLE BOOK, in book order):
+DOCUMENT (KICD Design - RELEVANT PARTS FOR THIS LEARNING AREA + THIS STRAND ONLY, in book order):
 ${getWholeBookContext(topicText, 20000)}
 
-Answer in this EXACT structure. Do NOT skip any section. If a section is not in the document, say "Not in this design" - do NOT invent.
+CRITICAL RULES:
+- Explain ONLY Learning Area "${CURRENT_AREA}" + Strand "${topicText}". Do NOT bring in strands from other Learning Areas (e.g. do NOT bring Maths into Language, do NOT bring Environmental into Language).
+- If the EXACT STRAND is not found verbatim in DOCUMENT, say: "Not in this design - here are the real strands in ${CURRENT_AREA}:" and list them. Do NOT invent "Explanation" or any other strand.
+- Copy Specific Learning Outcomes, Key Inquiry Questions, Suggested Learning Experiences word-for-word from DOCUMENT. If not in DOCUMENT, say "Not in this design".
+- Do NOT invent outcomes like "Name familiar objects" unless they are in DOCUMENT.
 
-PART 1 - FOR TEACHER / PARENT (Full CBC - copy from document):
-1. **Topic:**
-2. **Strand / Sub-Strand:**
-3. **General Learning Outcomes:** (from design)
-4. **Specific Learning Outcomes:** (bullet list - By end of sub-strand, learner should...)
-5. **Key Inquiry Questions:**
-6. **Core Competencies Developed:** (e.g. Communication & Collaboration, Critical Thinking, Digital Literacy, Creativity, Self-Efficacy, Citizenship - explain each in 5 words)
-7. **Values:** (e.g. Love, Respect, Responsibility, Unity, Patriotism - explain each in 5 words)
-8. **Pertinent & Contemporary Issues (PCIs):**
-9. **Suggested Learning Experiences:** (what learners actually DO in class)
-10. **Lesson Allocation / Strand Totals:** (from LESSON ALLOCATION table in document - e.g. Strand X = 12 lessons, Total = 72 lessons. If table not in text, say "Not in this design")
+Answer in this EXACT structure:
+PART 1 - FOR TEACHER / PARENT (copy from document):
+1. **Learning Area:** ${CURRENT_AREA}
+2. **Strand / Sub-Strand:** (exact wording from document)
+3. **Specific Learning Outcomes:** (bullet list)
+4. **Key Inquiry Questions:**
+5. **Core Competencies Developed:**
+6. **Values:**
+7. **Pertinent & Contemporary Issues (PCIs):**
+8. **Suggested Learning Experiences:**
+9. **Lesson Allocation:**
 
-PART 2 - FOR LEARNER - CLARIFY & SIMPLIFY (Most important):
-Now teach the SAME topic again to a ${r.grade} child.
-Rules:
-- Use VERY simple words. 1 short sentence per idea. No long paragraphs.
-- If you must use a big word, say it then explain in brackets. Example: "Atmosphere (the air around us)"
-- Use Kenya examples: Ruiru, Nairobi, shamba, mama mboga, matatu, rain in April, sun in January, ugali, sukuma.
-- Use an analogy: "Weather is like clothes for the sky..."
-- Use emojis to make it fun.
-- Break into small steps: What is it? Why does it happen? What do we see? What do we do?
-- End with: "**In simple words:** ..." - one line a child can remember.
+PART 2 - FOR LEARNER - CLARIFY & SIMPLIFY:
+Teach the SAME strand again to a ${r.grade} child in ${CURRENT_AREA}. Very simple words. 1 short sentence per idea. Kenya examples: Ruiru, Nairobi, shamba, mama mboga, matatu, ugali, sukuma. Analogy. Emojis. End with: "**In simple words:** ..." - one line.
 
 PART 3 - CHECK UNDERSTANDING:
-- **Quick Quiz:** 5 easy questions with answers at end.
+- **Quick Quiz:** 5 easy questions with answers at end, ONLY from DOCUMENT.
 - **Remember This:** 3 bullet points to remember for exam.
-Tone: Warm, friendly, patient teacher, not a textbook. Use **bold** for headings.`;
+Tone: Warm, friendly, patient teacher. Use **bold** for headings.`;
 }
 
-// === ORGANIZE ORIGINAL - same wording, clean layout ===
+// === ORGANIZE ORIGINAL ===
 function organizeOriginalHTML(raw){
   if(!raw) return "<p>No original text saved.</p>";
   let t = String(raw);
   t = t.replace(/\.[\s\.]{4,}/g, " — ");
   t = t.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
   let lines = t.split("\n").map(s=>s.trim()).filter(s=>s.length>0);
-  let html = `<div class="org-note">📖 <b>Original KICD Design</b> - Same wording as the PDF, only organized into headings & paragraphs. Not rewritten by AI.</div>`;
+  let html = `<div class="org-note">📖 <b>Original KICD Design - Full Book (All Subjects)</b> - Same wording as the PDF, only organized. Not rewritten by AI.</div>`;
   let inTOC = false;
   lines.forEach((line, idx)=>{
     let isMarked = line.startsWith("##");
@@ -239,6 +347,7 @@ function organizeOriginalHTML(raw){
     if(u.includes("TABLE OF CONTENTS")) inTOC = true;
     if(u.includes("NATIONAL GOALS") || u.includes("LEARNING OUTCOMES") || u.includes("FOREWORD") || u.includes("ACKNOWLEDGEMENT") || u.includes("INTRODUCTION")) inTOC = false;
     let isHead = isMarked ||
+      ALL_AREAS.some(a=>u===a && clean.length<80) ||
       u.includes("TABLE OF CONTENTS") ||
       u.includes("NATIONAL GOALS OF EDUCATION") ||
       u.includes("LEVEL LEARNING OUTCOMES") ||
@@ -302,23 +411,21 @@ function downloadOriginal(){
 }
 async function searchNotes(){
   let q=document.getElementById("searchInput").value.trim(); if(!q) return;
-  currentGrade=document.getElementById("gradeSel").value; CURRENT_TOPIC=q;
+  currentGrade=document.getElementById("gradeSel").value; CURRENT_TOPIC=q; CURRENT_STRAND=q;
+  // Search: try to guess Area from query - if user types "Counting", it's Maths, not Language
   let box=document.getElementById("searchResult");
   let words=q.toLowerCase().split(/[^a-z0-9]+/).filter(w=>w.length>3);
   let hayAll = ALL.map(r=>({...r, _text: getBrainTextFor(r)}));
   let matched=hayAll.filter(r=>{let hay=((r.title||"")+" "+(r.subject||"")+" "+(r.description||"")+" "+(r._text||"")).toLowerCase(); return r.grade==currentGrade && words.some(w=>hay.includes(w));});
   if(!matched.length){
     matched=hayAll.filter(r=>{let hay=((r.title||"")+" "+(r.subject||"")+" "+(r.description||"")+" "+(r._text||"")).toLowerCase(); return words.some(w=>hay.includes(w));}).slice(0,3);
-    if(!matched.length && AI_BRAIN.length){
-      let bm = AI_BRAIN.filter(b=>{let hay=((b.title||"")+" "+(b.subject||"")+" "+(b.text||"")).toLowerCase(); return b.grade==currentGrade && words.some(w=>hay.includes(w)) && !isJunkText(b.text);}).slice(0,3);
-      matched = bm.map(b=>({id:b.resourceId||b.id, title:b.title, grade:b.grade, subject:b.subject, description:b.title, fullText:b.text, _text:b.text}));
-    }
   }
   if(matched.length && matched[0]._text && !isJunkText(matched[0]._text)){ CURRENT_FILE_TEXT = matched[0]._text; }
   else if(matched.length && matched[0].fullText && !isJunkText(matched[0].fullText)){ CURRENT_FILE_TEXT = matched[0].fullText; }
   else CURRENT_FILE_TEXT = "";
-  box.innerHTML=`<p class="font-black">🔍 "${q}" - ${matched.length} designs + AI meaning for ${currentGrade}</p><div class="ai-box mt-2">⏳ Thinking...</div>`;
-  // FIXED: Use WHOLE BOOK for search context, not first 2000 chars
+  // For search, clear Area so it searches whole full book, then AI will tell which Area it found it in
+  CURRENT_AREA = "";
+  box.innerHTML=`<p class="font-black">🔍 "${q}" - ${matched.length} designs</p><div class="ai-box mt-2">⏳ Thinking - searching WHOLE FULL BOOK (all subjects) for "${q}"...</div>`;
   let designCtx=matched.length?matched.map((r,i)=>{
     let full = (r._text||r.fullText||'');
     let ctx = "";
@@ -327,22 +434,22 @@ async function searchNotes(){
       ctx = getWholeBookContext(q, 4000);
       CURRENT_FILE_TEXT = old;
     } else ctx = 'NO FILE TEXT YET - Link only';
-    return `${i+1}. ${safeTitle(r)} | ${r.grade} ${r.subject} | ${ctx}`;
-  }).join("\n"):"No exact design - use CBC/KICD.";
-  let fileCtx=getAdminFileContext(q);
-  let prompt=`You are SomaHub CBC Tutor for ${currentGrade}. Topic: ${q}\nDesigns (Admin files + AI Brain - WHOLE BOOK parts):\n${designCtx}\n${fileCtx}\nTASK: Give FULL CBC structure: Strand, Specific Outcomes, Key Inquiry Questions, Core Competencies, Values, PCIs, Lesson Totals, then CLARIFY & SIMPLIFY for a ${currentGrade} child - simple words, Kenya examples, analogy, "In simple words:" summary. Use **bold**. Never mention missing resources. Never mention links.`;
-  try{ let ai=await callAI(prompt,q); let videoQ=encodeURIComponent(q+" "+currentGrade+" CBC Kenya lesson"); box.innerHTML=`<p class="font-black">🔍 "${q}" - ${matched.length} designs</p>${matched.map(r=>`<div class="mt-2 text-[13px]"><b>${safeTitle(r)}</b> • ${r.grade} ${r.subject} <button class="action-btn bg-[#263b99] ml-1" onclick="openDesign('${r.id}')">🤖 AI Explains</button></div>`).join("")}<div class="ai-box mt-3">${formatAI(ai)}</div><div class="flex gap-2 mt-3 flex-wrap"><a target="_blank" href="https://www.youtube.com/results?search_query=${videoQ}" class="action-btn bg-red-600 no-underline">▶ Watch Video</a><button class="action-btn bg-orange-500" onclick="makeHomework('${q.replace(/'/g,"")}')">Set Homework</button><button class="action-btn bg-[#263b99]" onclick="makeExam('${q.replace(/'/g,"")}')">Set Exam</button></div>`; }catch(e){ box.innerHTML=`<div class="ai-box">AI busy: ${e.message}</div>`; }
+    return `${i+1}. ${safeTitle(r)} | ${r.grade} | ${ctx}`;
+  }).join("\n"):"No exact design.";
+  let prompt=`You are SomaHub CBC Tutor for ${currentGrade}. Topic / Strand to find in FULL COMBINED BOOK (all subjects): ${q}\nDesigns (WHOLE BOOK parts):\n${designCtx}\nRULE: First say which LEARNING AREA this belongs to (e.g. LANGUAGE ACTIVITIES, MATHEMATICAL ACTIVITIES). Use ONLY document. If "${q}" is not verbatim in document, say "Not in this design" and list real strands. Do NOT invent "Explanation". TASK: Give FULL CBC structure for THIS strand only in ITS Learning Area: Strand, Specific Outcomes, Key Inquiry, Core Competencies, Values, PCIs, Lesson Totals, then CLARIFY & SIMPLIFY for a ${currentGrade} child - simple words, Kenya examples, analogy, "In simple words:" summary. Use **bold**.`;
+  try{ let ai=await callAI(prompt,q); let videoQ=encodeURIComponent(q+" "+currentGrade+" CBC Kenya lesson"); box.innerHTML=`<p class="font-black">🔍 "${q}" - ${matched.length} designs</p>${matched.map(r=>`<div class="mt-2 text-[13px]"><b>${safeTitle(r)}</b> • ${r.grade} <button class="action-btn bg-[#263b99] ml-1" onclick="openDesign('${r.id}')">🤖 AI Explains</button></div>`).join("")}<div class="ai-box mt-3">${formatAI(ai)}</div><div class="flex gap-2 mt-3 flex-wrap"><a target="_blank" href="https://www.youtube.com/results?search_query=${videoQ}" class="action-btn bg-red-600 no-underline">▶ Watch Video</a><button class="action-btn bg-orange-500" onclick="makeHomework('${escAttr(q)}')">Set Homework</button><button class="action-btn bg-[#263b99]" onclick="makeExam('${escAttr(q)}')">Set Exam</button></div>`; }catch(e){ box.innerHTML=`<div class="ai-box">AI busy: ${e.message}</div>`; }
 }
 function loadDesigns(){
   currentGrade=document.getElementById("gradeSel").value;
   let subj=document.getElementById("subjectSel").value;
-  let list=ALL.filter(r=>r.grade==currentGrade && (!subj || r.subject==subj) && (r.type=="Curriculum Design" || r.type=="Design"));
+  // Full books: don't filter out a full book just because its saved subject != filter - if no filter, show all. If filter set, show books whose text contains that area OR saved subject matches.
+  let list=ALL.filter(r=>r.grade==currentGrade && (r.type=="Curriculum Design" || r.type=="Design") && (!subj || r.subject==subj || (getBrainTextFor(r)||"").toUpperCase().includes(subj.toUpperCase())));
   let box=document.getElementById("designsList");
-  if(!list.length){ box.innerHTML=`<div class="card text-center text-gray-500 text-[13px]">No saved designs for ${currentGrade} ${subj||''} yet.<br>Use Search Notes above - AI will generate from CBC / KICD.</div>`; return; }
+  if(!list.length){ box.innerHTML=`<div class="card text-center text-gray-500 text-[13px]">No saved designs for ${currentGrade} ${subj||''} yet.<br>Use Search Notes above.</div>`; return; }
   box.innerHTML=list.map(r=>{
     let bt = getBrainTextFor(r);
-    let badge = bt && !isJunkText(bt) ? `🧠 Brain: ${Math.round(bt.length/1000)}k chars` : `🔗 Link only - Tap Read Original to see PDF`;
-    return `<div class="card"><p class="font-black text-[15px]">${safeTitle(r)}</p><p class="text-[12px] text-gray-500">${r.grade} • ${r.subject} • ${r.type||'Design'} • ${badge}</p><p class="text-[13px] mt-1">${safeDesc(r).slice(0,180)}</p><div class="flex gap-2 mt-3 flex-wrap"><button class="action-btn bg-[#263b99]" onclick="openOriginalDesign('${r.id}')">📖 Read Original</button><button class="action-btn bg-[#0d9488]" onclick="openDesign('${r.id}')">🤖 AI Explains</button></div></div>`;
+    let badge = bt && !isJunkText(bt) ? `🧠 Brain: ${Math.round(bt.length/1000)}k chars • Full Book (All Subjects)` : `🔗 Link only - Tap Read Original`;
+    return `<div class="card"><p class="font-black text-[15px]">${safeTitle(r)}</p><p class="text-[12px] text-gray-500">${r.grade} • Full Book • ${r.type||'Design'} • ${badge}</p><p class="text-[13px] mt-1">${safeDesc(r).slice(0,180)}</p><div class="flex gap-2 mt-3 flex-wrap"><button class="action-btn bg-[#263b99]" onclick="openOriginalDesign('${r.id}')">📖 Read Original</button><button class="action-btn bg-[#0d9488]" onclick="openDesign('${r.id}')">🤖 AI Explains</button></div></div>`;
   }).join("");
 }
 async function openOriginalDesign(id){
@@ -355,7 +462,7 @@ async function openOriginalDesign(id){
   if(fileUrl && isDriveLink(fileUrl)){
     let did = getDriveId(fileUrl);
     let preview = "https://drive.google.com/file/d/" + did + "/preview";
-    READER_TITLE = title; READER_META = `${r.grade} • ${r.subject} • Original PDF`;
+    READER_TITLE = title; READER_META = `${r.grade} • Full Book • Original PDF`;
     document.getElementById("readerTitle").innerText=title;
     document.getElementById("readerMeta").innerText=READER_META;
     let page = document.getElementById("readerPage");
@@ -365,7 +472,7 @@ async function openOriginalDesign(id){
     return;
   }
   if(fileUrl){
-    READER_TITLE = title; READER_META = `${r.grade} • ${r.subject} • Original PDF - Loading...`;
+    READER_TITLE = title; READER_META = `${r.grade} • Full Book • Original PDF - Loading...`;
     document.getElementById("readerTitle").innerText=title;
     document.getElementById("readerMeta").innerText=READER_META;
     let page = document.getElementById("readerPage");
@@ -384,65 +491,90 @@ async function openOriginalDesign(id){
         await pg.render({canvasContext: canvas.getContext("2d"), viewport: vp}).promise;
         html += `<img src="${canvas.toDataURL()}" style="width:100%;height:auto;display:block;margin:0 auto 8px;border-bottom:1px solid #e2e8f0">`;
       }
-      document.getElementById("readerMeta").innerText = `${r.grade} • ${r.subject} • Original PDF - ${pdf.numPages} pages`;
+      document.getElementById("readerMeta").innerText = `${r.grade} • Full Book • Original PDF - ${pdf.numPages} pages`;
       page.innerHTML = html;
       return;
     }catch(e){
       page.classList.add("text-mode");
       page.innerHTML = organizeOriginalHTML(CURRENT_FILE_TEXT || "Original PDF could not load. Tap Download to open it. " + fileUrl);
-      document.getElementById("readerMeta").innerText = `${r.grade} • ${r.subject} • Organized Original Text`;
+      document.getElementById("readerMeta").innerText = `${r.grade} • Full Book • Organized Original Text`;
       return;
     }
   }
-  openReader(title, `${r.grade} • ${r.subject} • Organized Original Text`, CURRENT_FILE_TEXT);
+  openReader(title, `${r.grade} • Full Book • Organized Original Text`, CURRENT_FILE_TEXT);
 }
+// NEW: Step 1 - Show LEARNING AREAS in this full book
 async function openDesign(id){
   let r=ALL.find(x=>x.id==id); if(!r) return;
   currentGrade=r.grade||currentGrade;
   CURRENT_FILE_TEXT = getBrainTextFor(r);
   CURRENT_TOPIC = safeTitle(r);
+  CURRENT_DESIGN_ID = id;
+  CURRENT_AREA = "";
+  let parsed = extractAreasAndStrands(CURRENT_FILE_TEXT);
   let box=document.getElementById("detailBox");
-  box.innerHTML=`<div class="card"><p class="font-black text-[15px]">${safeTitle(r)}</p><p class="text-[12px] text-gray-500">${r.grade} • ${r.subject}</p><div class="ai-box mt-3">⏳ AI Explains - reading WHOLE original design...</div><div class="flex gap-2 mt-3 flex-wrap"><button class="action-btn bg-[#263b99]" onclick="openOriginalDesign('${r.id}')">📖 Read Original</button><a target="_blank" href="https://www.youtube.com/results?search_query=${encodeURIComponent(safeTitle(r)+" "+r.grade+" CBC Kenya lesson")}" class="action-btn bg-red-600 no-underline">▶ Watch Video</a></div></div>`;
+  let areaHtml = parsed.areas.map(a=>`<button class="area-btn" onclick="openArea('${escAttr(a.name)}')">📚 ${a.name} • ${a.strands.length} strands →</button>`).join("");
+  box.innerHTML=`<div class="card"><p class="font-black text-[15px]">${safeTitle(r)}</p><p class="text-[12px] text-gray-500">${r.grade} • Full Book - All Subjects • ${Math.round(CURRENT_FILE_TEXT.length/1000)}k chars</p><p class="font-black text-[14px] mt-3">👇 Step 1 - Tap a Learning Area from THIS book:</p>${areaHtml}<div id="areaBox"></div><div id="strandAI"></div><div class="flex gap-2 mt-3 flex-wrap"><button class="action-btn bg-[#263b99]" onclick="openOriginalDesign('${r.id}')">📖 Read Original</button><a target="_blank" href="https://www.youtube.com/results?search_query=${encodeURIComponent(safeTitle(r)+" "+r.grade+" CBC Kenya lesson")}" class="action-btn bg-red-600 no-underline">▶ Watch Video</a></div></div>`;
   box.scrollIntoView({behavior:"smooth"});
+}
+// NEW: Step 2 - Show Strands in THAT Area only
+function openArea(areaName){
+  CURRENT_AREA = areaName;
+  let parsed = extractAreasAndStrands(CURRENT_FILE_TEXT);
+  let area = parsed.areas.find(a=>a.name===areaName);
+  let box = document.getElementById("areaBox");
+  if(!box) return;
+  let strandHtml = area && area.strands.length ? area.strands.map(s=>`<button class="strand-btn" onclick="explainStrand('${escAttr(s)}')">▶ ${s}</button>`).join("") : `<p class="text-[13px] text-gray-500">No "1.0 ..." strands found in ${areaName}. Use Search for a strand name in this Area.</p>`;
+  box.innerHTML = `<div class="mt-3"><p class="font-black text-[14px]">📚 ${areaName}</p><p class="text-[12px] text-gray-500">👇 Step 2 - Tap a Strand in ${areaName} only:</p>${strandHtml}</div>`;
+  box.scrollIntoView({behavior:"smooth"});
+}
+// NEW: Step 3 - Explain ONE Strand in ONE Area
+async function explainStrand(strand){
+  CURRENT_STRAND = strand;
+  let r = ALL.find(x=>x.id===CURRENT_DESIGN_ID);
+  if(!r) return;
+  let out = document.getElementById("strandAI");
+  if(!out) return;
+  out.innerHTML = `<div class="ai-box mt-3">⏳ AI Explains - reading ${CURRENT_AREA} section only for "${strand}"...</div>`;
+  out.scrollIntoView({behavior:"smooth"});
   try{
-    let prompt = buildCBCPrompt(r, safeTitle(r));
-    let ai = await callAI(prompt, safeTitle(r));
-    box.querySelector(".ai-box").innerHTML = formatAI(ai);
+    let prompt = buildCBCPrompt(r, strand);
+    let ai = await callAI(prompt, strand);
+    let videoQ = encodeURIComponent(strand+" "+CURRENT_AREA+" "+r.grade+" CBC Kenya lesson");
+    out.innerHTML = `<div class="ai-box mt-3">${formatAI(ai)}</div><div class="flex gap-2 mt-3 flex-wrap"><a target="_blank" href="https://www.youtube.com/results?search_query=${videoQ}" class="action-btn bg-red-600 no-underline">▶ Watch Video: ${strand}</a><button class="action-btn bg-orange-500" onclick="makeHomework('${escAttr(strand)}')">Set Homework</button><button class="action-btn bg-[#263b99]" onclick="makeExam('${escAttr(strand)}')">Set Exam</button><button class="action-btn bg-[#0d9488]" onclick="makeScheme('${escAttr(strand)}')">Scheme</button><button class="action-btn bg-[#0d9488]" onclick="makeLessonPlan('${escAttr(strand)}')">Lesson Plan</button><button class="action-btn bg-[#0d9488]" onclick="makeNotes('${escAttr(strand)}')">Notes</button></div>`;
   }catch(e){
-    box.querySelector(".ai-box").innerHTML = `AI busy: ${e.message}<br><br>Tap 📖 Read Original to see the organized original design.`;
+    out.innerHTML = `<div class="ai-box">AI busy: ${e.message}<br><br>Tap 📖 Read Original to see the organized original design.</div>`;
   }
 }
 async function makeHomework(topic){
-  let q = topic || CURRENT_TOPIC || "this topic";
+  let q = topic || CURRENT_STRAND || CURRENT_TOPIC || "this topic";
   let box=document.getElementById("searchResult") || document.getElementById("detailBox");
-  let prompt=`You are SomaHub CBC Tutor for ${currentGrade}. Topic: ${q}\nDOCUMENT (WHOLE BOOK - RELEVANT PARTS):\n${getWholeBookContext(q, 18000)}\nTASK: Create HOMEWORK for ${currentGrade} from ONLY this document. 10 questions: 5 short answer, 3 multiple choice, 2 activity (draw / talk to parent). Simple words, Kenya examples. Include answers for teacher at end. Use **bold**. If document has no content for this topic, say "Not in this design" - do NOT invent.`;
-  try{ let ai=await callAI(prompt,q); box.innerHTML += `<div class="ai-box mt-3"><b>📝 HOMEWORK - ${q}</b><br><br>${formatAI(ai)}</div>`; }catch(e){ alert("AI busy: "+e.message); }
+  let prompt=`You are SomaHub CBC Tutor for ${currentGrade}. LEARNING AREA: ${CURRENT_AREA}. EXACT STRAND: ${q}\nBOOK: ${CURRENT_TOPIC} - FULL BOOK, use ONLY ${CURRENT_AREA} section.\nDOCUMENT (WHOLE BOOK - RELEVANT PARTS FOR THIS AREA + STRAND ONLY):\n${getWholeBookContext(q, 18000)}\nRULE: Use ONLY document. If "${q}" not verbatim in ${CURRENT_AREA} section, say "Not in this design". Do NOT mix other subjects. Do NOT invent. TASK: Create HOMEWORK for ${currentGrade} from ONLY this document. 10 questions: 5 short answer, 3 multiple choice, 2 activity. Simple words, Kenya examples. Include answers for teacher at end. Use **bold**.`;
+  try{ let ai=await callAI(prompt,q); box.innerHTML += `<div class="ai-box mt-3"><b>📝 HOMEWORK - ${CURRENT_AREA} - ${q}</b><br><br>${formatAI(ai)}</div>`; }catch(e){ alert("AI busy: "+e.message); }
 }
 async function makeExam(topic){
-  let q = topic || CURRENT_TOPIC || "this topic";
+  let q = topic || CURRENT_STRAND || CURRENT_TOPIC || "this topic";
   let box=document.getElementById("searchResult") || document.getElementById("detailBox");
-  let prompt=`You are SomaHub CBC Tutor for ${currentGrade}. Topic: ${q}\nDOCUMENT (WHOLE BOOK - RELEVANT PARTS):\n${getWholeBookContext(q, 18000)}\nTASK: Create EXAM for ${currentGrade} from ONLY this document. Section A: 10 MCQ, Section B: 5 short answer, Section C: 1 practical / composition. Simple words, Kenya examples. Include marking scheme at end. Use **bold**. If document has no content for this topic, say "Not in this design" - do NOT invent.`;
-  try{ let ai=await callAI(prompt,q); box.innerHTML += `<div class="ai-box mt-3"><b>📝 EXAM - ${q}</b><br><br>${formatAI(ai)}</div>`; }catch(e){ alert("AI busy: "+e.message); }
+  let prompt=`You are SomaHub CBC Tutor for ${currentGrade}. LEARNING AREA: ${CURRENT_AREA}. EXACT STRAND: ${q}\nBOOK: ${CURRENT_TOPIC} - FULL BOOK, use ONLY ${CURRENT_AREA} section.\nDOCUMENT (WHOLE BOOK - RELEVANT PARTS FOR THIS AREA + STRAND ONLY):\n${getWholeBookContext(q, 18000)}\nRULE: Use ONLY document. If "${q}" not verbatim in ${CURRENT_AREA} section, say "Not in this design". Do NOT mix other subjects. Do NOT invent. TASK: Create EXAM for ${currentGrade} from ONLY this document. Section A: 10 MCQ, Section B: 5 short answer, Section C: 1 practical. Simple words, Kenya examples. Include marking scheme at end. Use **bold**.`;
+  try{ let ai=await callAI(prompt,q); box.innerHTML += `<div class="ai-box mt-3"><b>📝 EXAM - ${CURRENT_AREA} - ${q}</b><br><br>${formatAI(ai)}</div>`; }catch(e){ alert("AI busy: "+e.message); }
 }
-// Same WHOLE BOOK helper for Schemes / Lesson Plans / Notes - copy this line into those pages too:
-// DOCUMENT (WHOLE BOOK - RELEVANT PARTS):\n${getWholeBookContext(topic, 18000)}
 async function makeScheme(topic){
-  let q = topic || CURRENT_TOPIC || "this topic";
+  let q = topic || CURRENT_STRAND || CURRENT_TOPIC || "this topic";
   let box=document.getElementById("detailBox") || document.getElementById("searchResult");
-  let prompt=`You are SomaHub CBC Tutor for ${currentGrade}. Topic: ${q}\nDOCUMENT (WHOLE BOOK - RELEVANT PARTS):\n${getWholeBookContext(q, 18000)}\nTASK: Create SCHEME OF WORK for ${currentGrade} from ONLY this document. Table: Week | Strand/Sub-strand | Specific Outcomes | Learning Experiences | Resources | Assessment. Use **bold**. If not in document, say "Not in this design".`;
-  try{ let ai=await callAI(prompt,q); box.innerHTML += `<div class="ai-box mt-3"><b>🗂️ SCHEME - ${q}</b><br><br>${formatAI(ai)}</div>`; }catch(e){ alert("AI busy: "+e.message); }
+  let prompt=`You are SomaHub CBC Tutor for ${currentGrade}. LEARNING AREA: ${CURRENT_AREA}. EXACT STRAND: ${q}\nDOCUMENT (WHOLE BOOK - RELEVANT PARTS FOR THIS AREA + STRAND ONLY):\n${getWholeBookContext(q, 18000)}\nRULE: Use ONLY document. If not in document, say "Not in this design". Do NOT mix other subjects. TASK: Create SCHEME OF WORK for ${currentGrade} from ONLY this document. Table: Week | Strand/Sub-strand | Specific Outcomes | Learning Experiences | Resources | Assessment. Use **bold**.`;
+  try{ let ai=await callAI(prompt,q); box.innerHTML += `<div class="ai-box mt-3"><b>🗂️ SCHEME - ${CURRENT_AREA} - ${q}</b><br><br>${formatAI(ai)}</div>`; }catch(e){ alert("AI busy: "+e.message); }
 }
 async function makeLessonPlan(topic){
-  let q = topic || CURRENT_TOPIC || "this topic";
+  let q = topic || CURRENT_STRAND || CURRENT_TOPIC || "this topic";
   let box=document.getElementById("detailBox") || document.getElementById("searchResult");
-  let prompt=`You are SomaHub CBC Tutor for ${currentGrade}. Topic: ${q}\nDOCUMENT (WHOLE BOOK - RELEVANT PARTS):\n${getWholeBookContext(q, 18000)}\nTASK: Create LESSON PLAN for ${currentGrade} from ONLY this document. Include: Strand, Sub-strand, Specific Outcomes, Key Inquiry, Learning Experiences step-by-step, Resources, Assessment, Conclusion. Simple words, Kenya examples. Use **bold**. If not in document, say "Not in this design".`;
-  try{ let ai=await callAI(prompt,q); box.innerHTML += `<div class="ai-box mt-3"><b>📋 LESSON PLAN - ${q}</b><br><br>${formatAI(ai)}</div>`; }catch(e){ alert("AI busy: "+e.message); }
+  let prompt=`You are SomaHub CBC Tutor for ${currentGrade}. LEARNING AREA: ${CURRENT_AREA}. EXACT STRAND: ${q}\nDOCUMENT (WHOLE BOOK - RELEVANT PARTS FOR THIS AREA + STRAND ONLY):\n${getWholeBookContext(q, 18000)}\nRULE: Use ONLY document. If not in document, say "Not in this design". Do NOT mix other subjects. TASK: Create LESSON PLAN for ${currentGrade} from ONLY this document. Include: Strand, Sub-strand, Specific Outcomes, Key Inquiry, Learning Experiences step-by-step, Resources, Assessment, Conclusion. Simple words, Kenya examples. Use **bold**.`;
+  try{ let ai=await callAI(prompt,q); box.innerHTML += `<div class="ai-box mt-3"><b>📋 LESSON PLAN - ${CURRENT_AREA} - ${q}</b><br><br>${formatAI(ai)}</div>`; }catch(e){ alert("AI busy: "+e.message); }
 }
 async function makeNotes(topic){
-  let q = topic || CURRENT_TOPIC || "this topic";
+  let q = topic || CURRENT_STRAND || CURRENT_TOPIC || "this topic";
   let box=document.getElementById("detailBox") || document.getElementById("searchResult");
-  let prompt=`You are SomaHub CBC Tutor for ${currentGrade}. Topic: ${q}\nDOCUMENT (WHOLE BOOK - RELEVANT PARTS):\n${getWholeBookContext(q, 18000)}\nTASK: Create NOTES for ${currentGrade} learner from ONLY this document. Simple words, short sentences, Kenya examples, 3 key points to remember. Use **bold**. If not in document, say "Not in this design".`;
-  try{ let ai=await callAI(prompt,q); box.innerHTML += `<div class="ai-box mt-3"><b>📘 NOTES - ${q}</b><br><br>${formatAI(ai)}</div>`; }catch(e){ alert("AI busy: "+e.message); }
+  let prompt=`You are SomaHub CBC Tutor for ${currentGrade}. LEARNING AREA: ${CURRENT_AREA}. EXACT STRAND: ${q}\nDOCUMENT (WHOLE BOOK - RELEVANT PARTS FOR THIS AREA + STRAND ONLY):\n${getWholeBookContext(q, 18000)}\nRULE: Use ONLY document. If not in document, say "Not in this design". Do NOT mix other subjects. TASK: Create NOTES for ${currentGrade} learner from ONLY this document. Simple words, short sentences, Kenya examples, 3 key points to remember. Use **bold**.`;
+  try{ let ai=await callAI(prompt,q); box.innerHTML += `<div class="ai-box mt-3"><b>📘 NOTES - ${CURRENT_AREA} - ${q}</b><br><br>${formatAI(ai)}</div>`; }catch(e){ alert("AI busy: "+e.message); }
 }
 window.addEventListener("load", ()=>{
   document.getElementById("gradeSel").value = currentGrade;
