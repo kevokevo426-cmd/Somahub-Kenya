@@ -78,32 +78,23 @@ window.FB={auth:getAuth(app),db:getFirestore(app),doc,getDoc,setDoc,updateDoc,co
 let currentUser=null,currentSHKE="SHKE",blindMode=false;
 let ALL_DESIGNS=[],AI_BRAIN=[],ALL_NOTES=[],CURRENT_DESIGN=null,CURRENT_SOURCE="none",AI_NOTES=[];
 try{AI_NOTES=JSON.parse(localStorage.getItem("soma_ai_notes")||"[]");}catch(e){AI_NOTES=[];}
-// === AUTO-CLEAN OLD BROKEN <div> CARDS ===
-// Old file saved HTML like <div class="definition">... This strips it back to plain text once, so you never see code again.
 function cleanOldHtmlNotes(){
   let changed=false;
-  AI_NOTES = AI_NOTES.map(n=>{
-    let t = String(n.text||"");
-    if(t.includes("<div") || t.includes("&lt;div") || t.includes("class=")){
+  AI_NOTES=AI_NOTES.map(n=>{
+    let t=String(n.text||"");
+    if(t.includes("<div")||t.includes("&lt;div")||t.includes("class=")){
       changed=true;
-      // Un-escape then strip tags
       let d=document.createElement("div");
       d.innerHTML=t.replace(/&lt;/g,"<").replace(/&gt;/g,">").replace(/&amp;/g,"&");
       let plain=(d.innerText||d.textContent||"").replace(/\s+/g," ").trim();
-      // Rebuild in clean format
-      return {...n, text:`What KICD says: ${plain.slice(0,900)}\nKey Inquiry: See Design Key Inquiry for this Sub-Strand.\nLearn: ${plain.slice(0,300)}\nDo: Follow the Suggested Learning Experience in the Design.`};
+      return {...n,text:`What KICD says: ${plain.slice(0,900)}\nKey Inquiry: See Design Key Inquiry for this Sub-Strand.\nLearn: ${plain.slice(0,300)}\nDo: Follow the Suggested Learning Experience in the Design.`};
     }
     return n;
   });
   if(changed) localStorage.setItem("soma_ai_notes",JSON.stringify(AI_NOTES));
 }
 cleanOldHtmlNotes();
-function clearBrokenNotes(){ cleanOldHtmlNotes(); // also drop any still containing <div
-  let before=AI_NOTES.length;
-  AI_NOTES=AI_NOTES.filter(n=>!String(n.text||"").includes("<div"));
-  localStorage.setItem("soma_ai_notes",JSON.stringify(AI_NOTES));
-  renderNotesList(); toast(`🧹 Fixed ${before-AI_NOTES.length} broken cards`);
-}
+function clearBrokenNotes(){ cleanOldHtmlNotes(); let before=AI_NOTES.length; AI_NOTES=AI_NOTES.filter(n=>!String(n.text||"").includes("<div")); localStorage.setItem("soma_ai_notes",JSON.stringify(AI_NOTES)); renderNotesList(); toast(`🧹 Fixed ${before-AI_NOTES.length} broken cards`); }
 function clearCurrentNotes(){ if(!confirm("Delete notes for this Grade + Subject?")) return; AI_NOTES=AI_NOTES.filter(n=>!(String(n.grade)===String(curGrade())&&normSubject(n.subject)===normSubject(curSubject()))); localStorage.setItem("soma_ai_notes",JSON.stringify(AI_NOTES)); renderNotesList(); toast("🗑️ Cleared"); }
 const GRADES=["Playgroup","PP1","PP2","Grade 1","Grade 2","Grade 3","Grade 4","Grade 5","Grade 6","Grade 7","Grade 8","Grade 9","Grade 10"];
 const GRADE_SUBJECTS={
@@ -163,7 +154,13 @@ const ICONS={"Language Activities":"🗣️","Mathematical Activities":"🔢","E
 const STRAND_SUBSTRANDS={
 "Conserving Agricultural Environment 🌱":["1.1 Soil Conservation Measures","1.2 Water Harvesting and Storage"],
 "Crop Production 🌾":["2.1 Kitchen Gardening","2.2 Poultry Rearing in a Fold","2.3 Crop Pest and Disease Control","2.4 Preparation of Animal Products","2.5 Preserving Milk and Meat","2.6 Cooking"],
-"Food Production Processes":["2.1 Kitchen Gardening","2.2 Poultry Rearing in a Fold","2.3 Crop Pest and Disease Control","2.4 Preparation of Animal Products","2.5 Preserving Milk and Meat","2.6 Cooking"]};
+"Food Production Processes":["2.1 Kitchen Gardening","2.2 Poultry Rearing in a Fold","2.3 Crop Pest and Disease Control","2.4 Preparation of Animal Products","2.5 Preserving Milk and Meat","2.6 Cooking"],
+"Animal Production 🐄":["3.1 Animal Housing","3.2 Animal Feeding","3.3 Animal Health"],
+"Agricultural Innovations 💡":["4.1 Innovative Farming","4.2 Use of Technology in Agriculture"],
+"Food and Nutrition 🍎":["5.1 Balanced Diet","5.2 Food Groups","5.3 Food Hygiene"],
+"Food Preservation 🥫":["6.1 Methods of Food Preservation","6.2 Storing Preserved Food"],
+"Consumer Education 🛒":["7.1 Wise Buying","7.2 Consumer Rights"],
+"Clothing and Textiles 👕":["8.1 Care of Clothes","8.2 Making Clothes"]};
 function esc(v){return String(v??"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#039;");}
 function escForJS(v){return String(v||"").replace(/\\/g,"\\\\").replace(/'/g,"\\'").replace(/"/g,'\\"').replace(/\n/g," ");}
 function toast(m){let t=document.getElementById("toast");t.innerText=m;t.classList.remove("hidden");setTimeout(()=>t.classList.add("hidden"),2200);}
@@ -172,6 +169,7 @@ function isJunk(t){if(!t)return true;t=String(t).trim();if(t.length<300)return t
 function normSubject(s){s=String(s||"").toLowerCase().trim();if(s==="agriculture and nutrition"||s==="agriculture")return"agriculture";if(s.includes("language activities"))return"language activities";if(s.includes("mathematical"))return"mathematical activities";if(s.includes("environmental"))return"environmental activities";if(s.includes("psychomotor")||s.includes("creative"))return"creative";if(s.includes("movement"))return"movement activities";if(s.includes("religious")||s==="cre"||s==="ire"||s==="hre")return"religious";if(s.includes("kiswahili"))return"kiswahili";if(s.includes("english"))return"english";if(s.includes("mathematics"))return"mathematics";if(s.includes("integrated"))return"integrated science";if(s.includes("social"))return"social";if(s.includes("pre-technical"))return"pre-technical";if(s.includes("science"))return"science";return s;}
 function cleanLine(s){return String(s||"").replace(/^#{1,6}\s*/g,"").replace(/#{1,6}\s*/g,"").replace(/\*\*/g,"").replace(/<[^>]+>/g,"").trim();}
 function isCoverOrBoilerplate(s){let u=cleanLine(s).toUpperCase();if(!u)return true;let bad=["KENYA INSTITUTE OF CURRICULUM","CURRICULUM DEVELOPMENT","KICD","A SKILLED AND ETHICAL SOCIETY","JUNIOR SCHOOL CURRICULUM DESIGN","PRIMARY SCHOOL CURRICULUM DESIGN","SENIOR SCHOOL CURRICULUM DESIGN","PRE-PRIMARY","NATIONAL GOALS OF EDUCATION","TABLE OF CONTENTS","FOREWORD","ACKNOWLEDGEMENT","ACKNOWLEDGMENTS","COPYRIGHT","ALL RIGHTS RESERVED","PUBLISHED BY","PRINTED BY","ISBN","KENYA NATIONAL","MINISTRY OF EDUCATION","REPUBLIC OF KENYA","VISION 2030","ESSENCE STATEMENT","GENERAL LEARNING OUTCOMES FOR","LEVEL LEARNING OUTCOMES"];if(bad.some(b=>u.includes(b)))return true;if(u.length<12)return true;if(u===u.toUpperCase()&&u.split(" ").length<=6&&!u.includes(".")&&!u.includes("?"))return true;return false;}
+function isRubricLine(s){let u=String(s||"").toLowerCase();return u.includes("exceeds expectations")||u.includes("meets expectations")||u.includes("approaches expectations")||u.includes("below expectations")||u.includes("exhibits two aspects")||u.includes("exhibits less than")||u.includes("assessment rubric")||u.includes("dependable in areas")||u.includes("proactively solves")||u.includes("performance level");}
 function gradeBand(grade){let g=String(grade||"");if(g==="Playgroup"||g==="PP1"||g==="PP2"||g==="Grade 1"||g==="Grade 2"||g==="Grade 3")return"early";if(g==="Grade 4"||g==="Grade 5"||g==="Grade 6")return"middle";return"upper";}
 function curGrade(){return document.getElementById("gradeSel").value;}
 function curSubject(){return document.getElementById("subSel").value;}
@@ -205,32 +203,27 @@ function extractStrandSection(fullText, strandName){
   let clean = cleanStrandName(strandName).toLowerCase();
   let keywords = clean.split(/[^a-z]+/).filter(w=>w.length>3);
   let upper = fullText.toUpperCase();
-  let start = -1;
-  let strandMatches = [...upper.matchAll(/STRAND\s+(\d+)\.0[^\n]{0,80}/g)];
-  for(let m of strandMatches){
-    let line = m[0].toLowerCase();
-    let hits = keywords.filter(k=>line.includes(k)).length;
-    if(hits>=1){ start = m.index; break; }
-  }
-  if(start===-1){
-    let phrase = clean.split(" ").slice(0,2).join(" ");
-    let idx = fullText.toLowerCase().indexOf(phrase);
-    if(idx>-1) start = idx;
+  let cutAt = upper.search(/ASSESSMENT\s+RUBRIC|APPENDIX\s+1:|NATIONAL\s+GOALS/);
+  let searchable = cutAt>-1 ? fullText.slice(0, cutAt) : fullText;
+  let upperSearch = searchable.toUpperCase();
+  let start=-1;
+  let matches=[...upperSearch.matchAll(/STRAND\s+(\d+)\.0[^\n]{0,90}/g)];
+  for(let m of matches){
+    let line=m[0].toLowerCase();
+    if(keywords.filter(k=>line.includes(k)).length>=1){ start=m.index; break; }
   }
   if(start===-1){
     for(let k of keywords){
-      let idx = fullText.toLowerCase().indexOf(k, 5000);
-      if(idx>-1){ start = idx; break; }
+      let idx=upperSearch.indexOf(k, 2000);
+      if(idx>-1){ start=idx; break; }
     }
   }
-  if(start===-1) return fullText.slice(0,8000);
-  let next = -1;
-  let after = upper.slice(start+10);
-  let nm = after.search(/STRAND\s+\d+\.0|APPENDIX\s+1:|ASSESSMENT\s+RUBRIC\s+FOR\s+STRAND|NATIONAL\s+GOALS/);
-  if(nm>-1) next = start+10+nm;
-  let end = next>-1 ? next : Math.min(fullText.length, start+12000);
-  let section = fullText.slice(start, end);
-  section = section.split("\n").filter(l=>!isCoverOrBoilerplate(l)).join("\n");
+  if(start===-1) return "";
+  let after=upperSearch.slice(start+10);
+  let nm=after.search(/STRAND\s+\d+\.0/);
+  let end=nm>-1 ? start+10+nm : Math.min(searchable.length, start+12000);
+  let section=searchable.slice(start,end).split("\n").filter(l=>!isCoverOrBoilerplate(l)&&!isRubricLine(l)).join("\n");
+  if(section.toLowerCase().includes("exceeds expectations")) return "";
   return section;
 }
 function describeSource(){let info=document.getElementById("sourceInfo");if(!info)return;let dt=CURRENT_DESIGN?getDesignText(CURRENT_DESIGN):"";let nt=getNoteTextFor(CURRENT_DESIGN);let aiN=getAINotesForCurrent().length;let strandSec = isAllStrands() ? dt : extractStrandSection(dt, curStrand());if(CURRENT_SOURCE==="design+notes")info.innerHTML=`📚 Design + Notes • ${isAllStrands()?"ALL Strands "+dt.length+" chars":"Strand section "+strandSec.length+" chars (cover removed)"} • AI Notes: ${aiN}`;else if(CURRENT_SOURCE==="design-only")info.innerHTML=`📘 Design only • ${isAllStrands()?"ALL Strands "+dt.length+" chars":"Strand section "+strandSec.length+" chars"} • AI Notes: ${aiN}`;else if(CURRENT_SOURCE==="notes-only")info.innerHTML=`📝 Notes only • ${nt.length} chars • AI Notes: ${aiN}`;else info.innerHTML=`⚠️ None — Tap Generate ALL Strands to create from Design.`;info.classList.remove("hidden");}
@@ -256,6 +249,7 @@ function updateSub(){
 function youtubeLinkFor(title, query){let q = query || `${curGrade()} ${curSubject()} ${cleanStrandName(curStrand())} ${title||""} KICD explained`;return `https://www.youtube.com/results?search_query=${encodeURIComponent(q)}`;}
 function openYouTube(title, query){window.open(youtubeLinkFor(title, query),"_blank");}
 function formatNoteText(t){
+  if((t||"").includes("<div")) return t;
   let s=esc(t||"");
   s=s.replace(/\*\*(.+?)\*\*/g,'<span class="key-word">$1</span>');
   let lines=s.split("\n").map(l=>l.trim()).filter(Boolean);
@@ -310,7 +304,7 @@ function buildLocalNotesFromDesign(strandParam){
   let strandSec = extractStrandSection(CURRENT_DESIGN?getDesignText(CURRENT_DESIGN):"", strand);
   if(!strandSec || strandSec.length<200) return null;
   let expected = STRAND_SUBSTRANDS[strand]||null;
-  let parts = strandSec.split(/(?=\b\d+\.\d+\s)/g).filter(p=>p.trim().length>80);
+  let parts = strandSec.split(/(?=\b\d+\.\d+\s)/g).map(p=>p.split("\n").filter(l=>!isRubricLine(l)).join("\n")).filter(p=>p.trim().length>80);
   if(expected && parts.length<expected.length){
     return expected.map((title,i)=>{
       let chunk = parts[i]||strandSec.slice(i*800,(i+1)*800);
@@ -335,7 +329,7 @@ async function generateNotesForOneStrand(strand, grade, subject){
   let strandSec = extractStrandSection(fullDesign, strand);
   let keys=getDesignKeywordsForStrand(strand).join(", "); let band=gradeBand(grade);
   let expected = STRAND_SUBSTRANDS[strand]||[];
-  const prompt=`You are a Kenyan CBC teacher. Create NOTES for ${grade} ${subject} - Strand: ${strand}.\nGrade Band: ${band}\nSource: ${CURRENT_SOURCE}\nDesign Title: ${CURRENT_DESIGN?(CURRENT_DESIGN.title||""):"(No Design)"}\nKEY WORDS: ${keys}\nEXPECTED SUB-STRANDS (use EXACTLY these titles, in order): ${expected.length?expected.join(" | "):"Extract Sub-Strands from Strand section below, e.g. 1.1 ..., 1.2 ..."}\n=== STRAND SECTION ONLY - DO NOT USE COVER / NATIONAL GOALS / TABLE OF CONTENTS / OTHER STRANDS ===\n${strandSec?strandSec.slice(0,8000):`(No Design - use Grade + Subject + Strand + Key Words.)`}\nSTRICT RULES:\n1. DO NOT summarise whole Strand into generic ideas.\n2. Create ONE note card PER Sub-Strand. No extra cards.\n3. Each card MUST contain: What KICD says: copy Specific Learning Outcomes "By the end of the sub-strand the learner should be able to: a) ... b) ... c) ..." | Key Inquiry: copy exact Key Inquiry Question(s) | Learn: 2-3 sentences explaining ONLY that Sub-Strand, child language | Do: 1 Suggested Learning Experience from Design.\n4. NEVER: ##, <div>, HTML tags, KENYA INSTITUTE, cover page, National Goals, Table of Contents, Assessment Rubric, generic "protect soil and water". Return PLAIN TEXT ONLY.\n5. If a Sub-Strand is missing in text, write "Not in Design" - DO NOT invent.\nReturn ONLY JSON: {"notes":[{"title":"1.1 Soil Conservation Measures","text":"What KICD says: ...\\nKey Inquiry: ...\\nLearn: ...\\nDo: ...","youtubeQuery":"Grade 8 Agriculture Soil Conservation Measures KICD explained"}]}`;
+  const prompt=`You are a Kenyan CBC teacher. Create NOTES for ${grade} ${subject} - Strand: ${strand}.\nGrade Band: ${band}\nSource: ${CURRENT_SOURCE}\nDesign Title: ${CURRENT_DESIGN?(CURRENT_DESIGN.title||""):"(No Design)"}\nKEY WORDS: ${keys}\nEXPECTED SUB-STRANDS (use EXACTLY these titles, in order): ${expected.length?expected.join(" | "):"Extract Sub-Strands from Strand section below, e.g. 1.1 ..., 1.2 ..."}\n=== STRAND SECTION ONLY - DO NOT USE COVER / NATIONAL GOALS / TABLE OF CONTENTS / OTHER STRANDS / ASSESSMENT RUBRIC ===\n${strandSec?strandSec.slice(0,8000):`(No Design - use Grade + Subject + Strand + Key Words.)`}\nSTRICT RULES:\n1. DO NOT summarise whole Strand into generic ideas.\n2. Create ONE note card PER Sub-Strand. No extra cards.\n3. Each card MUST contain: What KICD says: copy Specific Learning Outcomes "By the end of the sub-strand the learner should be able to: a) ... b) ... c) ..." | Key Inquiry: copy exact Key Inquiry Question(s) | Learn: 2-3 sentences explaining ONLY that Sub-Strand, child language | Do: 1 Suggested Learning Experience from Design.\n4. NEVER: ##, <div>, HTML tags, KENYA INSTITUTE, cover page, National Goals, Table of Contents, Assessment Rubric, Exceeds Expectations, Meets Expectations, Exhibits, dependable, generic "protect soil and water". Return PLAIN TEXT ONLY.\n5. If a Sub-Strand is missing in text, write "Not in Design" - DO NOT invent.\nReturn ONLY JSON: {"notes":[{"title":"1.1 Soil Conservation Measures","text":"What KICD says: ...\\nKey Inquiry: ...\\nLearn: ...\\nDo: ...","youtubeQuery":"Grade 8 Agriculture Soil Conservation Measures KICD explained"}]}`;
   const resp=await fetch("/api/gemini",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({task:"notes_generation",mode:"notes",question:prompt,originalQuestion:prompt,grade,subject,topic:strand,strand,role:"learner",source:"SomaHub Notes - AI from Design Strand Only",useSomaHubFiles:true,provider:"auto",designTitle:CURRENT_DESIGN?(CURRENT_DESIGN.title||""):"",designText:strandSec.slice(0,8000),designSource:CURRENT_SOURCE,expectedSubStrands:expected})});
   const text=await resp.text(); let data={}; try{data=JSON.parse(text);}catch(e){throw new Error("AI returned invalid response.");}
   if(!resp.ok||data.ok===false) throw new Error(data.error||"AI notes failed.");
