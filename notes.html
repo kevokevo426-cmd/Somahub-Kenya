@@ -17,6 +17,10 @@ details summary{list-style:none;cursor:pointer}details summary::-webkit-details-
 .important{background:#fffbeb;border-left:4px solid #f59e0b;border-radius:10px;padding:10px;margin:8px 0}
 .strandHead{background:#000;color:#fff;border-radius:12px;padding:10px;margin-top:14px}
 .strandHead p{margin:0}
+#assistantPanel{position:fixed;left:8px;right:8px;bottom:70px;max-width:464px;margin:0 auto;background:#fff;border:2px solid #000;border-radius:16px;z-index:60;box-shadow:0 10px 30px rgba(0,0,0,.25);display:none}
+#assistantPanel.open{display:block}
+.msgUser{background:#000;color:#fff;border-radius:12px;padding:8px;margin:6px 0 6px 30px;font-size:12px}
+.msgAI{background:#eff6ff;border:1px solid #4a86ff;border-radius:12px;padding:8px;margin:6px 30px 6px 0;font-size:12px}
 </style>
 <script type="module">
 import {initializeApp} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
@@ -46,14 +50,34 @@ window.FB={auth:getAuth(app),db:getFirestore(app),doc,getDoc,setDoc,updateDoc,co
 </div>
 <p id="designInfo" class="bg-[#e0f2ff] border border-black rounded-lg p-2 text-[10px] font-bold break-words">⏳ Loading Designs + AI Brain...</p>
 <p id="sourceInfo" class="bg-[#fff7e0] border border-black rounded-lg p-2 text-[10px] font-bold break-words hidden"></p>
+<p id="strandSourceInfo" class="bg-[#ecfdf5] border border-black rounded-lg p-2 text-[10px] font-bold break-words hidden"></p>
 <p class="font-black text-[11px]">📚 Learning Areas for <span id="gradeLabel">Grade 4</span></p>
 <div id="learningAreas" class="grid grid-cols-2 gap-1.5"></div>
 </div>
 </details>
+
+<!-- AI ASSISTANT INLINE SECTION -->
+<section class="bg-white rounded-xl border-2 border-black overflow-hidden">
+<div class="p-2 flex justify-between items-center gap-2"><p class="font-black text-[12px]">🤖 AI Assistant</p><a href="ai_assistant.html" class="text-[9px] font-black bg-[#4a86ff] text-white px-2 py-1 rounded-full">Open full AI Assistant →</a></div>
+<div class="px-2 pb-2 space-y-2">
+<p class="text-[10px] font-bold text-gray-600">Ask about <span id="assistantContext">this Strand</span>. Answers come from YOUR Design only — no guessing.</p>
+<div class="flex gap-1.5 flex-wrap">
+<button onclick="askAssistantQuick('Explain this strand in simple words')" class="bg-[#e0f2ff] border border-black rounded-full px-2 py-1 text-[10px] font-black">💡 Explain this strand</button>
+<button onclick="askAssistantQuick('Give me 3 exam questions for this strand')" class="bg-[#fff7e0] border border-black rounded-full px-2 py-1 text-[10px] font-black">📝 Exam questions</button>
+<button onclick="askAssistantQuick('Give me examples for this strand')" class="bg-[#dcfce7] border border-black rounded-full px-2 py-1 text-[10px] font-black">🌍 Examples</button>
+</div>
+<div class="flex gap-1.5">
+<input id="assistantInput" placeholder="Ask AI... e.g. What is soil conservation?" class="flex-1 border-2 border-black rounded-full p-2 text-[12px] font-bold" onkeydown="if(event.key==='Enter') askAssistant()">
+<button onclick="askAssistant()" id="assistantBtn" class="bg-black text-white px-3 rounded-full font-black text-[11px] shrink-0">Ask →</button>
+</div>
+<div id="assistantChat" class="max-h-[220px] overflow-y-auto border border-gray-200 rounded-xl p-2 bg-[#f8fafc]"><p class="text-[11px] text-gray-500">👋 Hi! I am your AI Assistant. Pick a Strand above, then ask me anything about it.</p></div>
+</div>
+</section>
+
 <section class="bg-white rounded-xl border-2 border-black overflow-hidden">
 <div class="p-2 flex justify-between items-center gap-2"><p class="font-black text-[12px]">📝 Notes <span id="notesCount" class="text-[9px] bg-[#2ac5a0] px-1.5 py-0.5 rounded-full">0</span></p><span id="notesSource" class="text-[9px] font-black text-gray-500"></span></div>
 <div class="px-2 pb-2 space-y-2">
-<input id="noteSearch" oninput="renderNotesList()" placeholder="🔍 Search notes..." class="w-full border-2 border-black rounded-full p-2 text-[12px] font-bold bg-[#f8fafc]">
+<input id="noteSearch" oninput="renderNotesList()" placeholder="🔍 Search notes... e.g. soil, poultry, wise buying" class="w-full border-2 border-black rounded-full p-2 text-[12px] font-bold bg-[#f8fafc]">
 <div class="grid grid-cols-2 gap-1.5">
 <button onclick="generateAINotes()" id="genNotesBtn" class="bg-black text-white border-2 border-black rounded-full py-2 font-black text-[11px]">✨ Generate ALL Strands</button>
 <button onclick="speakNotes()" class="bg-[#4a86ff] text-white border-2 border-black rounded-full py-2 font-black text-[11px]">🔊 Hear All</button>
@@ -64,19 +88,31 @@ window.FB={auth:getAuth(app),db:getFirestore(app),doc,getDoc,setDoc,updateDoc,co
 </div>
 <p id="notesStatus" class="text-[9px] font-black text-center text-gray-500"></p>
 <div id="notesList" class="space-y-2"></div>
-<div id="emptyBox" class="hidden bg-white border-2 border-dashed border-black rounded-xl p-3 text-center"><p class="text-[20px]">📝</p><p class="font-black text-[12px]">No Notes yet for this Subject</p><p class="text-[10px] text-gray-500 mt-1">Tap ✨ Generate ALL Strands — AI will read ALL Strands from YOUR Design in resources/fullText and make 1 card per Sub-Strand for EVERY Strand.</p></div>
+<div id="emptyBox" class="hidden bg-white border-2 border-dashed border-black rounded-xl p-3 text-center"><p class="text-[20px]">📝</p><p class="font-black text-[12px]">No Notes yet for this Subject</p><p class="text-[10px] text-gray-500 mt-1">Pick ONE strand in the dropdown above, or leave it on ALL Strands, then tap ✨ Generate. Search in the box above to find a note.</p></div>
 </div>
 </section>
 <div class="grid grid-cols-2 gap-1.5">
 <a href="exam.html" class="text-center bg-[#ffcc1a] border-2 border-black rounded-full py-2.5 font-black text-[12px]">📝 Go to Exam →</a>
 <a href="homework.html" class="text-center bg-[#2ac5a0] border-2 border-black rounded-full py-2.5 font-black text-[12px]">📚 Go to Homework →</a>
 </div>
+<a href="ai_assistant.html" class="block text-center bg-[#4a86ff] text-white border-2 border-black rounded-full py-2.5 font-black text-[12px] mt-2">🤖 Open full AI Assistant →</a>
 <div id="toast" class="hidden fixed left-1/2 bottom-5 -translate-x-1/2 bg-black text-white px-3 py-2 rounded-full text-[10px] font-black z-50"></div>
 </main>
 </div>
+
+<!-- FLOATING AI ASSISTANT BUTTON + PANEL -->
+<button onclick="toggleAssistant()" class="fixed bottom-4 right-4 z-[70] bg-black text-white border-2 border-white shadow-xl rounded-full px-4 py-3 font-black text-[12px]">🤖 Ask AI</button>
+<div id="assistantPanel">
+<div class="p-2 flex justify-between items-center border-b-2 border-black"><p class="font-black text-[12px]">🤖 AI Assistant — <span id="assistantPanelContext">This Strand</span></p><button onclick="toggleAssistant()" class="bg-black text-white px-2 py-1 rounded-full text-[10px] font-black">✕ Close</button></div>
+<div id="assistantChat2" class="max-h-[260px] overflow-y-auto p-2"><p class="text-[11px] text-gray-500">Ask me about this Strand. I answer from YOUR Design only.</p></div>
+<div class="p-2 flex gap-1.5 border-t-2 border-black"><input id="assistantInput2" placeholder="Ask AI..." class="flex-1 border-2 border-black rounded-full p-2 text-[12px] font-bold" onkeydown="if(event.key==='Enter') askAssistant2()"><button onclick="askAssistant2()" class="bg-black text-white px-3 rounded-full font-black text-[11px]">Ask →</button></div>
+<div class="px-2 pb-2"><a href="ai_assistant.html" class="block text-center bg-[#4a86ff] text-white rounded-full py-1.5 font-black text-[10px]">Open full ai_assistant.html →</a></div>
+</div>
+
 <script>
 let currentUser=null,currentSHKE="SHKE",blindMode=false;
 let ALL_DESIGNS=[],AI_BRAIN=[],ALL_NOTES=[],CURRENT_DESIGN=null,CURRENT_SOURCE="none",AI_NOTES=[];
+let DESIGN_STRANDS=[],DESIGN_STRANDS_FROM="fallback",DESIGN_SUBSTRANDS={};
 try{AI_NOTES=JSON.parse(localStorage.getItem("soma_ai_notes")||"[]");}catch(e){AI_NOTES=[];}
 function cleanOldHtmlNotes(){
   let changed=false;
@@ -112,55 +148,55 @@ const GRADE_SUBJECTS={
 "Grade 9":["English","Kiswahili","Mathematics","Integrated Science","Social Studies","Pre-Technical Studies","Agriculture and Nutrition","Religious Education","Creative Arts and Sports","Health Education","Life Skills Education"],
 "Grade 10":["English","Kiswahili","Mathematics","Biology","Chemistry","Physics","General Science","History and Government","Geography","CRE","IRE","HRE","Business Studies","Agriculture","Computer Studies","Home Science","Art and Design","Music","Physical Education","Life Skills Education","Foreign Language"]};
 const STRANDS={
-"Language Activities":["Explanation 📝","Listening & Speaking 🎤","Reading 📚","Writing ✏️","Vocabulary 🌈"],
-"Mathematical Activities":["Counting 🔢","Numbers 1-10 🔢","Shapes 🟠","Sorting & Matching 🎯","Measurement 📏"],
-"Environmental Activities":["Weather ☀️","Plants 🌱","Animals 🐄","Water 💧","Soil 🏔️","My Home 🏠"],
-"Psychomotor and Creative Activities":["Art 🎨","Music 🎵","Movement 💃","Craft ✂️","Colour 🌈"],
-"Creative Activities":["Art 🎨","Music 🎵","Movement 💃","Craft ✂️","Colour 🌈"],
-"Movement Activities":["Movement 💃","Games ⚽","Balance 🤸","Outdoor Play 🌳"],
-"Religious Education":["Creation 🌍","My Family 👨‍👩‍👧","Good Manners 🙏","Prayer 🙏","Bible Stories 📖"],
-"English":["Grammar - Tenses 📝","Comprehension 📚","Vocabulary 🌈","Punctuation ✏️","Nouns & Verbs 🎯"],
-"Kiswahili":["Sarufi - Nomino 📝","Wingi & Umoja 🔢","Sentensi 📖","Kinyume ↔️","Methali 🎭"],
-"Mathematics":["Fractions 🍕","Percentages %","Geometry - Area 📐","Algebra x+y","Number Patterns 🔢"],
-"Science and Technology":["Flower Parts 🌸","Photosynthesis ☀️","States of Matter 💧","Human Body 🧍","Water Cycle 🌧️"],
-"Integrated Science":["Flower Parts 🌸","Photosynthesis ☀️","States of Matter 💧","Human Body 🧍","Water Cycle 🌧️","Mixtures 🧪"],
-"Social Studies":["Map Work - Kenya 🗺️","Rift Valley Lakes 🌊","Compass Direction 🧭","Physical Features ⛰️","People & Population 👨‍👩‍👧"],
-"Agriculture and Nutrition":["Conserving Agricultural Environment 🌱","Crop Production 🌾","Animal Production 🐄","Agricultural Innovations 💡","Food and Nutrition 🍎","Food Preservation 🥫","Consumer Education 🛒","Clothing and Textiles 👕"],
-"Creative Arts":["Art 🎨","Music 🎵","Movement 💃","Craft ✂️","Colour 🌈"],
-"Creative Arts and Sports":["Art 🎨","Music 🎵","Sports ⚽","Movement 💃","Craft ✂️"],
-"Physical Education and Sports":["Games ⚽","Movement 💃","Balance 🤸","Fitness 🏃"],
-"Physical Education":["Games ⚽","Movement 💃","Balance 🤸","Fitness 🏃"],
-"Pre-Technical Studies":["Tools 🔧","Materials 🪵","Drawing 📐","Safety 🦺","Energy ⚡"],
-"Health Education":["Hygiene 🧼","My Body 🧍","Safety 🦺","Nutrition 🍎"],
-"Life Skills Education":["Self Awareness 💡","Good Manners 🙏","Safety 🦺","Decision Making 🎯"],
-"Indigenous Language":["Vocabulary 🌈","Listening 🎤","Speaking 🎤","Reading 📚"],
-"Foreign Language":["Vocabulary 🌈","Listening 🎤","Speaking 🎤","Reading 📚"],
-"Biology":["Cells 🧬","Plants 🌱","Animals 🐄","Human Body 🧍"],
-"Chemistry":["Mixtures 🧪","Acids & Bases 🧪","Metals ⚙️","Air 🌬️"],
-"Physics":["Force 💪","Energy ⚡","Light 💡","Sound 🔊","Electricity 🔌"],
-"General Science":["Plants 🌱","Animals 🐄","Water 💧","Air 🌬️","Soil 🏔️"],
-"History and Government":["Kenya History 🇰🇪","Government 🏛️","Freedom Fighters 🎖️"],
-"Geography":["Map Work 🗺️","Weather ☀️","Climate 🌦️","Rivers 🌊"],
-"CRE":["Creation 🌍","Commandments 📜","Fruit of Spirit 🍎","Life of Jesus ✝️","Old Testament 📖"],
-"IRE":["Creation 🌍","Pillars of Islam 🕌","Prophets 📖","Good Manners 🙏"],
-"HRE":["Creation 🌍","Good Manners 🙏","Community 👨‍👩‍👧","Festivals 🎉"],
-"Business Studies":["Money 💰","Trade 🛒","Business 💼","Saving 🏦"],
-"Agriculture":["Conserving Agricultural Environment 🌱","Crop Production 🌾","Animal Production 🐄","Agricultural Innovations 💡","Food and Nutrition 🍎","Food Preservation 🥫","Consumer Education 🛒","Clothing and Textiles 👕"],
-"Computer Studies":["Computer Parts 💻","Internet 🌐","Safety 🔒","Typing ⌨️"],
-"Home Science":["Nutrition 🍎","Hygiene 🧼","Clothing 👕","Home 🏠"],
-"Art and Design":["Drawing ✏️","Colour 🌈","Craft ✂️","Design 🎨"],
-"Music":["Singing 🎵","Instruments 🎸","Rhythm 🥁","Listening 🎧"]};
+"Language Activities":["Listening & Speaking","Reading","Writing","Vocabulary"],
+"Mathematical Activities":["Counting","Numbers 1-10","Shapes","Sorting & Matching","Measurement"],
+"Environmental Activities":["Weather","Plants","Animals","Water","Soil","My Home"],
+"Psychomotor and Creative Activities":["Art","Music","Movement","Craft","Colour"],
+"Creative Activities":["Art","Music","Movement","Craft","Colour"],
+"Movement Activities":["Movement","Games","Balance","Outdoor Play"],
+"Religious Education":["Creation","My Family","Good Manners","Prayer","Bible Stories"],
+"English":["Grammar - Tenses","Comprehension","Vocabulary","Punctuation","Nouns & Verbs"],
+"Kiswahili":["Sarufi - Nomino","Wingi & Umoja","Sentensi","Kinyume","Methali"],
+"Mathematics":["Fractions","Percentages","Geometry - Area","Algebra","Number Patterns"],
+"Science and Technology":["Flower Parts","Photosynthesis","States of Matter","Human Body","Water Cycle"],
+"Integrated Science":["Flower Parts","Photosynthesis","States of Matter","Human Body","Water Cycle","Mixtures"],
+"Social Studies":["Map Work - Kenya","Rift Valley Lakes","Compass Direction","Physical Features","People & Population"],
+"Agriculture and Nutrition":["Conserving Agricultural Environment","Food Production Processes","Animal Production","Agricultural Innovations","Food and Nutrition","Food Preservation","Consumer Education","Clothing and Textiles"],
+"Creative Arts":["Art","Music","Movement","Craft","Colour"],
+"Creative Arts and Sports":["Art","Music","Sports","Movement","Craft"],
+"Physical Education and Sports":["Games","Movement","Balance","Fitness"],
+"Physical Education":["Games","Movement","Balance","Fitness"],
+"Pre-Technical Studies":["Tools","Materials","Drawing","Safety","Energy"],
+"Health Education":["Hygiene","My Body","Safety","Nutrition"],
+"Life Skills Education":["Self Awareness","Good Manners","Safety","Decision Making"],
+"Indigenous Language":["Vocabulary","Listening","Speaking","Reading"],
+"Foreign Language":["Vocabulary","Listening","Speaking","Reading"],
+"Biology":["Cells","Plants","Animals","Human Body"],
+"Chemistry":["Mixtures","Acids & Bases","Metals","Air"],
+"Physics":["Force","Energy","Light","Sound","Electricity"],
+"General Science":["Plants","Animals","Water","Air","Soil"],
+"History and Government":["Kenya History","Government","Freedom Fighters"],
+"Geography":["Map Work","Weather","Climate","Rivers"],
+"CRE":["Creation","Commandments","Fruit of Spirit","Life of Jesus","Old Testament"],
+"IRE":["Creation","Pillars of Islam","Prophets","Good Manners"],
+"HRE":["Creation","Good Manners","Community","Festivals"],
+"Business Studies":["Money","Trade","Business","Saving"],
+"Agriculture":["Conserving Agricultural Environment","Food Production Processes","Animal Production","Agricultural Innovations","Food and Nutrition","Food Preservation","Consumer Education","Clothing and Textiles"],
+"Computer Studies":["Computer Parts","Internet","Safety","Typing"],
+"Home Science":["Nutrition","Hygiene","Clothing","Home"],
+"Art and Design":["Drawing","Colour","Craft","Design"],
+"Music":["Singing","Instruments","Rhythm","Listening"]};
 const ICONS={"Language Activities":"🗣️","Mathematical Activities":"🔢","Environmental Activities":"🌍","Psychomotor and Creative Activities":"🎨","Creative Activities":"🎨","Movement Activities":"💃","Religious Education":"🙏","English":"📖","Kiswahili":"💬","Mathematics":"🔢","Science and Technology":"🔬","Integrated Science":"🔬","Social Studies":"🗺️","Agriculture and Nutrition":"🌾","Creative Arts":"🎨","Creative Arts and Sports":"🎨","Physical Education and Sports":"⚽","Physical Education":"⚽","Pre-Technical Studies":"🔧","Health Education":"🧼","Life Skills Education":"💡","Indigenous Language":"🗣️","Foreign Language":"🌍","Biology":"🧬","Chemistry":"🧪","Physics":"⚡","General Science":"🔬","History and Government":"🏛️","Geography":"🗺️","CRE":"✝️","IRE":"🕌","HRE":"🙏","Business Studies":"💰","Agriculture":"🌾","Computer Studies":"💻","Home Science":"🏠","Art and Design":"🎨","Music":"🎵"};
 const STRAND_SUBSTRANDS={
-"Conserving Agricultural Environment 🌱":["1.1 Soil Conservation Measures","1.2 Water Harvesting and Storage"],
-"Crop Production 🌾":["2.1 Kitchen Gardening","2.2 Poultry Rearing in a Fold","2.3 Crop Pest and Disease Control","2.4 Preparation of Animal Products","2.5 Preserving Milk and Meat","2.6 Cooking"],
+"Conserving Agricultural Environment":["1.1 Soil Conservation Measures","1.2 Water Harvesting and Storage"],
 "Food Production Processes":["2.1 Kitchen Gardening","2.2 Poultry Rearing in a Fold","2.3 Crop Pest and Disease Control","2.4 Preparation of Animal Products","2.5 Preserving Milk and Meat","2.6 Cooking"],
-"Animal Production 🐄":["3.1 Animal Housing","3.2 Animal Feeding","3.3 Animal Health"],
-"Agricultural Innovations 💡":["4.1 Innovative Farming","4.2 Use of Technology in Agriculture"],
-"Food and Nutrition 🍎":["5.1 Balanced Diet","5.2 Food Groups","5.3 Food Hygiene"],
-"Food Preservation 🥫":["6.1 Methods of Food Preservation","6.2 Storing Preserved Food"],
-"Consumer Education 🛒":["7.1 Wise Buying","7.2 Consumer Rights"],
-"Clothing and Textiles 👕":["8.1 Care of Clothes","8.2 Making Clothes"]};
+"Crop Production":["2.1 Kitchen Gardening","2.2 Poultry Rearing in a Fold","2.3 Crop Pest and Disease Control","2.4 Preparation of Animal Products","2.5 Preserving Milk and Meat","2.6 Cooking"],
+"Animal Production":["3.1 Animal Housing","3.2 Animal Feeding","3.3 Animal Health"],
+"Agricultural Innovations":["4.1 Innovative Farming","4.2 Use of Technology in Agriculture"],
+"Food and Nutrition":["5.1 Balanced Diet","5.2 Food Groups","5.3 Food Hygiene"],
+"Food Preservation":["6.1 Methods of Food Preservation","6.2 Storing Preserved Food"],
+"Consumer Education":["7.1 Wise Buying","7.2 Consumer Rights"],
+"Clothing and Textiles":["8.1 Care of Clothes","8.2 Making Clothes"]};
 function esc(v){return String(v??"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#039;");}
 function escForJS(v){return String(v||"").replace(/\\/g,"\\\\").replace(/'/g,"\\'").replace(/"/g,'\\"').replace(/\n/g," ");}
 function toast(m){let t=document.getElementById("toast");t.innerText=m;t.classList.remove("hidden");setTimeout(()=>t.classList.add("hidden"),2200);}
@@ -175,11 +211,87 @@ function curGrade(){return document.getElementById("gradeSel").value;}
 function curSubject(){return document.getElementById("subSel").value;}
 function curStrand(){return document.getElementById("strandSel").value||"";}
 function isAllStrands(){return curStrand()==="__ALL__";}
-function allStrandsForSubject(sub){return STRANDS[sub]||[];}
 function cleanStrandName(s){return String(s||"").replace(/[🌱🌾🐄💡🍎🥫🛒👕☀️💧🏔️🌸🧪🧍🌧️🗺️🌊🧭⛰️👨‍👩‍👧🔢🍕%📐🎯📝📚🌈✏️🎤↔️🎭🟠🎨🎵💃✂️🏠🙏📖🌍👨‍👩‍👧‍👦🧼🦺🔧🪵⚡💡🧬🐄🧍🧪⚙️🌬️💪💡🔊🔌🇰🇪🏛️🎖️🌦️🌊📜🍎✝️🕌🎉💰💻🏠✏️🎸🥁🎧⚽🤸🏃]/gu,"").trim();}
+function resolveStrandName(s){let c=cleanStrandName(s).toLowerCase();if(c.includes("crop production")) return "Food Production Processes";if(c.includes("food production")) return "Food Production Processes";return cleanStrandName(s);}
+function parseStrandsFromDesignText(fullText){
+  if(!fullText) return [];
+  let upper=fullText.toUpperCase();
+  let cutAt=upper.search(/ASSESSMENT\s+RUBRIC|APPENDIX\s+1:|NATIONAL\s+GOALS/);
+  let searchable=cutAt>-1?fullText.slice(0,cutAt):fullText;
+  let out=[]; let seen=new Set();
+  let re=/STRAND\s+(\d+)\.0\s+([A-Z][^\n\r]{3,90})/gi; let m;
+  while((m=re.exec(searchable))!==null){
+    let name=cleanLine(m[2]).replace(/\s{2,}/g," ").replace(/[.:;]+$/,"").trim();
+    if(name.length<3||name.length>80) continue;
+    if(isCoverOrBoilerplate(name)||isRubricLine(name)) continue;
+    let key=name.toLowerCase();
+    if(!seen.has(key)){seen.add(key); out.push({num:parseInt(m[1],10), name});}
+  }
+  if(!out.length){
+    let re2=/(?:^|\n)\s*(\d+)\.0\s+([A-Z][^\n\r]{3,80})/g; let m2;
+    while((m2=re2.exec(searchable))!==null){
+      let name=cleanLine(m2[2]).replace(/\s{2,}/g," ").trim();
+      if(isCoverOrBoilerplate(name)) continue;
+      let key=name.toLowerCase();
+      if(!seen.has(key)){seen.add(key); out.push({num:parseInt(m2[1],10), name});}
+    }
+  }
+  out.sort((a,b)=>a.num-b.num);
+  return out.map(o=>o.name);
+}
+function parseSubStrandsFromSection(section){
+  if(!section) return [];
+  let out=[]; let seen=new Set();
+  let re=/(\d+\.\d+)\s+([A-Z][^\n\r]{3,80})/g; let m;
+  while((m=re.exec(section))!==null){
+    let title=`${m[1]} ${cleanLine(m[2]).replace(/\s{2,}/g," ").trim()}`;
+    if(isCoverOrBoilerplate(title)||isRubricLine(title)) continue;
+    if(title.toLowerCase().includes("strand")) continue;
+    let key=title.toLowerCase();
+    if(!seen.has(key)){seen.add(key); out.push(title);}
+  }
+  return out;
+}
+function refreshDesignStrands(){
+  DESIGN_STRANDS=[]; DESIGN_SUBSTRANDS={}; DESIGN_STRANDS_FROM="fallback";
+  if(CURRENT_DESIGN){
+    let txt=getDesignText(CURRENT_DESIGN);
+    let parsed=parseStrandsFromDesignText(txt);
+    if(parsed.length>=2){
+      DESIGN_STRANDS=parsed; DESIGN_STRANDS_FROM="design";
+      parsed.forEach(s=>{
+        let sec=extractStrandSection(txt,s);
+        let subs=parseSubStrandsFromSection(sec);
+        if(subs.length) DESIGN_SUBSTRANDS[s]=subs;
+      });
+    }
+  }
+  let info=document.getElementById("strandSourceInfo");
+  if(info){
+    if(DESIGN_STRANDS_FROM==="design"){ info.innerHTML=`✅ Strands STRICT from YOUR Design • ${DESIGN_STRANDS.length} found in resources/fullText • Sub-strands also from Design`; }
+    else { info.innerHTML=`⚠️ No STRAND headings found in Design — using fallback list. Check Admin: resources / fullText for this Grade + Subject.`; }
+    info.classList.remove("hidden");
+  }
+  updateAssistantContext();
+}
+function allStrandsForSubject(sub){
+  if(DESIGN_STRANDS_FROM==="design" && DESIGN_STRANDS.length) return DESIGN_STRANDS;
+  return STRANDS[sub]||[];
+}
+function getExpectedSubStrands(strand){
+  let resolved=resolveStrandName(strand);
+  if(DESIGN_SUBSTRANDS[resolved] && DESIGN_SUBSTRANDS[resolved].length) return DESIGN_SUBSTRANDS[resolved];
+  if(DESIGN_SUBSTRANDS[strand] && DESIGN_SUBSTRANDS[strand].length) return DESIGN_SUBSTRANDS[strand];
+  for(let k of Object.keys(DESIGN_SUBSTRANDS)){ if(cleanStrandName(k)===cleanStrandName(resolved)) return DESIGN_SUBSTRANDS[k]; }
+  if(STRAND_SUBSTRANDS[resolved]) return STRAND_SUBSTRANDS[resolved];
+  if(STRAND_SUBSTRANDS[strand]) return STRAND_SUBSTRANDS[strand];
+  for(let k of Object.keys(STRAND_SUBSTRANDS)){ if(cleanStrandName(k)===cleanStrandName(resolved)) return STRAND_SUBSTRANDS[k]; }
+  return [];
+}
 function getAINotesForCurrent(){
   if(isAllStrands()) return AI_NOTES.filter(n=>String(n.grade||"")===String(curGrade())&&normSubject(n.subject)===normSubject(curSubject()));
-  return AI_NOTES.filter(n=>String(n.grade||"")===String(curGrade())&&normSubject(n.subject)===normSubject(curSubject())&&String(n.strand||"")===String(curStrand()));
+  let wanted=resolveStrandName(curStrand());
+  return AI_NOTES.filter(n=>String(n.grade||"")===String(curGrade())&&normSubject(n.subject)===normSubject(curSubject())&&(resolveStrandName(n.strand||"")===wanted||cleanStrandName(n.strand||"")===cleanStrandName(curStrand())));
 }
 function getNoteTextFor(design){let out=[];ALL_NOTES.forEach(n=>{let match=false;if(design&&(n.resourceId===design.id||n.designId===design.id||n.resource_id===design.id))match=true;if(!match&&design&&String(n.grade||"").trim()===String(design.grade||"").trim()&&normSubject(n.subject)===normSubject(design.subject))match=true;if(!match&&!design&&String(n.grade||"").trim()===String(curGrade())&&normSubject(n.subject)===normSubject(curSubject()))match=true;if(match){let t=n.text||n.content||n.fullText||n.notes||n.body||n.description||"";if(t&&!isJunk(t))out.push(fixSpacing(t));}});getAINotesForCurrent().forEach(n=>{if(n.text)out.push(`=== AI NOTES: ${n.title||""} ===\n${fixSpacing(n.text)}`);});return out.join("\n\n--- NOTES ---\n\n");}
 function stripHtml(html){if(!html)return"";let d=document.createElement("div");d.innerHTML=String(html);return d.innerText||d.textContent||"";}
@@ -200,8 +312,10 @@ function getDesignText(r){
 function getCombinedSourceText(){let designText=CURRENT_DESIGN?getDesignText(CURRENT_DESIGN):"";let noteText=getNoteTextFor(CURRENT_DESIGN);if(designText&&noteText)CURRENT_SOURCE="design+notes";else if(designText)CURRENT_SOURCE="design-only";else if(noteText)CURRENT_SOURCE="notes-only";else CURRENT_SOURCE="none";let c="";if(designText)c+=`=== DESIGN ===\n${designText}\n\n`;if(noteText)c+=`=== NOTES ===\n${noteText}\n\n`;return c;}
 function extractStrandSection(fullText, strandName){
   if(!fullText) return "";
-  let clean = cleanStrandName(strandName).toLowerCase();
+  let resolved=resolveStrandName(strandName);
+  let clean = cleanStrandName(resolved).toLowerCase();
   let keywords = clean.split(/[^a-z]+/).filter(w=>w.length>3);
+  if(clean.includes("food production")) keywords=["food","production","processes"];
   let upper = fullText.toUpperCase();
   let cutAt = upper.search(/ASSESSMENT\s+RUBRIC|APPENDIX\s+1:|NATIONAL\s+GOALS/);
   let searchable = cutAt>-1 ? fullText.slice(0, cutAt) : fullText;
@@ -226,7 +340,7 @@ function extractStrandSection(fullText, strandName){
   if(section.toLowerCase().includes("exceeds expectations")) return "";
   return section;
 }
-function describeSource(){let info=document.getElementById("sourceInfo");if(!info)return;let dt=CURRENT_DESIGN?getDesignText(CURRENT_DESIGN):"";let nt=getNoteTextFor(CURRENT_DESIGN);let aiN=getAINotesForCurrent().length;let strandSec = isAllStrands() ? dt : extractStrandSection(dt, curStrand());if(CURRENT_SOURCE==="design+notes")info.innerHTML=`📚 Design + Notes • ${isAllStrands()?"ALL Strands "+dt.length+" chars":"Strand section "+strandSec.length+" chars (cover removed)"} • AI Notes: ${aiN}`;else if(CURRENT_SOURCE==="design-only")info.innerHTML=`📘 Design only • ${isAllStrands()?"ALL Strands "+dt.length+" chars":"Strand section "+strandSec.length+" chars"} • AI Notes: ${aiN}`;else if(CURRENT_SOURCE==="notes-only")info.innerHTML=`📝 Notes only • ${nt.length} chars • AI Notes: ${aiN}`;else info.innerHTML=`⚠️ None — Tap Generate ALL Strands to create from Design.`;info.classList.remove("hidden");}
+function describeSource(){let info=document.getElementById("sourceInfo");if(!info)return;let dt=CURRENT_DESIGN?getDesignText(CURRENT_DESIGN):"";let nt=getNoteTextFor(CURRENT_DESIGN);let aiN=getAINotesForCurrent().length;let strandSec = isAllStrands() ? dt : extractStrandSection(dt, curStrand());if(CURRENT_SOURCE==="design+notes")info.innerHTML=`📚 Design + Notes • ${isAllStrands()?"ALL Strands "+dt.length+" chars":"One Strand "+resolveStrandName(curStrand())+" • Section "+strandSec.length+" chars"} • AI Notes: ${aiN}`;else if(CURRENT_SOURCE==="design-only")info.innerHTML=`📘 Design only • ${isAllStrands()?"ALL Strands "+dt.length+" chars":"One Strand "+resolveStrandName(curStrand())+" • Section "+strandSec.length+" chars"} • AI Notes: ${aiN}`;else if(CURRENT_SOURCE==="notes-only")info.innerHTML=`📝 Notes only • ${nt.length} chars • AI Notes: ${aiN}`;else info.innerHTML=`⚠️ None — Tap Generate to create from Design.`;info.classList.remove("hidden");}
 async function loadDesignsFromFirestore(){let FB=window.FB;try{let s=await FB.getDocs(FB.collection(FB.db,'resources'));ALL_DESIGNS=[];s.forEach(d=>ALL_DESIGNS.push({id:d.id,...d.data()}));}catch(e){ALL_DESIGNS=[];}try{let b=await FB.getDocs(FB.collection(FB.db,'ai_brain'));AI_BRAIN=[];b.forEach(d=>AI_BRAIN.push({id:d.id,...d.data()}));}catch(e){AI_BRAIN=[];}ALL_NOTES=[];let cols=["notes","curriculum_notes","design_notes","student_notes","lesson_notes","study_notes"];for(let col of cols){try{let s=await FB.getDocs(FB.collection(FB.db,col));s.forEach(d=>{let data=d.data();ALL_NOTES.push({id:d.id,_col:col,...data});});}catch(e){}}ALL_DESIGNS.forEach(r=>{if(String(r.type||"").toLowerCase().includes("note")){ALL_NOTES.push({id:r.id,_col:"resources-notes",grade:r.grade,subject:r.subject,title:r.title,text:r.fullText||r.description||"",resourceId:r.id});}});onGradeSubjectChange();}
 function matchDesign(grade,subject){let g=String(grade||"").trim();let want=normSubject(subject);let list=ALL_DESIGNS.filter(r=>String(r.grade||"").trim()===g&&normSubject(r.subject)===want);if(list.length)return list[0];let l2=ALL_DESIGNS.filter(r=>String(r.grade||"").trim()===g&&String(r.subject||"").toLowerCase().trim()===String(subject||"").toLowerCase().trim());if(l2.length)return l2[0];return null;}
 function buildGradeSelect(){let sel=document.getElementById("gradeSel");sel.innerHTML=GRADES.map(g=>`<option ${g==="Grade 8"?"selected":""}>${g}</option>`).join("");}
@@ -236,16 +350,62 @@ function renderLearningAreas(){
   document.getElementById("learningAreas").innerHTML=subjects.map(s=>`<button onclick="document.getElementById('subSel').value='${esc(s)}';updateSub()" class="bg-[#f8fafc] border-2 ${curSubject()===s?'border-black bg-[#ffcc1a]':'border-gray-200'} rounded-xl p-2 text-left"><span class="text-[16px]">${ICONS[s]||"📚"}</span><p class="font-black text-[11px] leading-tight mt-1">${esc(s)}</p><p class="text-[9px] text-blue-600 font-black mt-0.5">${curSubject()===s?'✓ Selected':'Tap →'}</p></button>`).join("");
 }
 function onGradeChange(){let grade=curGrade();let subSel=document.getElementById("subSel");let subjects=GRADE_SUBJECTS[grade]||["English"];subSel.innerHTML=subjects.map(s=>`<option>${esc(s)}</option>`).join("");updateSub();}
-function onStrandChange(){describeSource();renderNotesList();document.getElementById("setupSummary").innerText= isAllStrands() ? `${curGrade()} • ${curSubject()} • ALL Strands` : `${curGrade()} • ${curSubject()} • ${curStrand()}`;}
-function onGradeSubjectChange(){updateSub();let d=matchDesign(curGrade(),curSubject());CURRENT_DESIGN=d;getCombinedSourceText();describeSource();let info=document.getElementById("designInfo");if(info){if(d){let txt=getDesignText(d);info.innerHTML=`✅ ${esc(d.title||d.subject||"")} • ${esc(d.grade||"")} • Design ${txt.length} • ${isAllStrands()?"ALL Strands":"Strand section "+extractStrandSection(txt,curStrand()).length} • AI Brain ${AI_BRAIN.length} • From resources/fullText`;}else{let nt=getNoteTextFor(null);if(nt)info.innerHTML=`📝 No Design, Notes ${nt.length} chars • AI Brain ${AI_BRAIN.length}`;else info.innerHTML=`⚠️ No Design for ${esc(curGrade())} — ${esc(curSubject())}. Tap Generate Notes.`;}}renderLearningAreas();renderNotesList();document.getElementById("setupSummary").innerText= isAllStrands() ? `${curGrade()} • ${curSubject()} • ALL Strands` : `${curGrade()} • ${curSubject()} • ${curStrand()}`;}
+function onStrandChange(){describeSource();renderNotesList();updateAssistantContext();document.getElementById("setupSummary").innerText= isAllStrands() ? `${curGrade()} • ${curSubject()} • ALL Strands` : `${curGrade()} • ${curSubject()} • ${curStrand()}`;}
+function onGradeSubjectChange(){updateSub();let d=matchDesign(curGrade(),curSubject());CURRENT_DESIGN=d;refreshDesignStrands();updateSub();getCombinedSourceText();describeSource();let info=document.getElementById("designInfo");if(info){if(d){let txt=getDesignText(d);info.innerHTML=`✅ ${esc(d.title||d.subject||"")} • ${esc(d.grade||"")} • Design ${txt.length} • ${isAllStrands()?"ALL Strands":"Strand section "+extractStrandSection(txt,curStrand()).length} • AI Brain ${AI_BRAIN.length} • From resources/fullText`;}else{let nt=getNoteTextFor(null);if(nt)info.innerHTML=`📝 No Design, Notes ${nt.length} chars • AI Brain ${AI_BRAIN.length}`;else info.innerHTML=`⚠️ No Design for ${esc(curGrade())} — ${esc(curSubject())}. Tap Generate Notes.`;}}renderLearningAreas();renderNotesList();document.getElementById("setupSummary").innerText= isAllStrands() ? `${curGrade()} • ${curSubject()} • ALL Strands` : `${curGrade()} • ${curSubject()} • ${curStrand()}`;}
 function updateSub(){
+  let d=matchDesign(curGrade(),curSubject());CURRENT_DESIGN=d;refreshDesignStrands();
   const strand=document.getElementById("strandSel");
   let list=allStrandsForSubject(curSubject());
   strand.innerHTML=`<option value="__ALL__">📚 ALL Strands (${list.length}) - Full Design</option>`+list.map(s=>`<option>${esc(s)}</option>`).join("");
-  let d=matchDesign(curGrade(),curSubject());CURRENT_DESIGN=d;getCombinedSourceText();describeSource();
-  let info=document.getElementById("designInfo");if(info){if(d){let txt=getDesignText(d);info.innerHTML=`✅ ${esc(d.title||d.subject||"")} • Design ${txt.length} • ALL Strands • Notes ${getNoteTextFor(d).length} • From resources/fullText`;}else{let nt=getNoteTextFor(null);if(nt)info.innerHTML=`📝 No Design, Notes ${nt.length} chars`;else info.innerHTML=`⚠️ No Design, no Notes for ${esc(curGrade())} — ${esc(curSubject())}.`;}}
-  renderLearningAreas();renderNotesList();document.getElementById("setupSummary").innerText=`${curGrade()} • ${curSubject()} • ALL Strands`;
+  getCombinedSourceText();describeSource();
+  let info=document.getElementById("designInfo");if(info){if(d){let txt=getDesignText(d);info.innerHTML=`✅ ${esc(d.title||d.subject||"")} • Design ${txt.length} • ${DESIGN_STRANDS_FROM==="design"?"Strands from Design":"Fallback strands"} • Notes ${getNoteTextFor(d).length} • From resources/fullText`;}else{let nt=getNoteTextFor(null);if(nt)info.innerHTML=`📝 No Design, Notes ${nt.length} chars`;else info.innerHTML=`⚠️ No Design, no Notes for ${esc(curGrade())} — ${esc(curSubject())}.`;}}
+  renderLearningAreas();renderNotesList();updateAssistantContext();document.getElementById("setupSummary").innerText=`${curGrade()} • ${curSubject()} • ALL Strands`;
 }
+// ===== AI ASSISTANT (built-in + link to ai_assistant.html) =====
+function updateAssistantContext(){
+  let ctx = isAllStrands() ? `${curGrade()} • ${curSubject()} • ALL Strands` : `${curGrade()} • ${curSubject()} • ${resolveStrandName(curStrand())}`;
+  let a=document.getElementById("assistantContext"); if(a) a.innerText=ctx;
+  let b=document.getElementById("assistantPanelContext"); if(b) b.innerText=ctx;
+}
+function toggleAssistant(){ document.getElementById("assistantPanel").classList.toggle("open"); updateAssistantContext(); }
+function addAssistantMsg(chatId, text, who){
+  let box=document.getElementById(chatId); if(!box) return;
+  let div=document.createElement("div");
+  div.className = who==="user" ? "msgUser" : "msgAI";
+  div.innerText = text;
+  box.appendChild(div); box.scrollTop=box.scrollHeight;
+}
+async function askAssistantCore(question, chatId){
+  if(!question) return;
+  addAssistantMsg(chatId, question, "user");
+  addAssistantMsg(chatId, "⏳ Thinking from YOUR Design...", "ai");
+  let strand = isAllStrands() ? "ALL Strands" : resolveStrandName(curStrand());
+  let strandSec = isAllStrands() ? (CURRENT_DESIGN?getDesignText(CURRENT_DESIGN):"").slice(0,6000) : extractStrandSection(CURRENT_DESIGN?getDesignText(CURRENT_DESIGN):"", curStrand());
+  let notesCtx = getAINotesForCurrent().slice(0,4).map(n=>`${n.title}: ${n.text}`).join("\n").slice(0,3000);
+  let prompt=`You are SomaHub AI Assistant for a Kenyan CBC learner. Answer ONLY from the Design + Notes below. Grade: ${curGrade()}, Subject: ${curSubject()}, Strand: ${strand}.\nIf answer is not in Design, say "Not in Design" - do not invent.\nUse simple child language, short sentences, give 1 example.\nQuestion: ${question}\n=== STRAND SECTION FROM DESIGN ===\n${strandSec?strandSec.slice(0,6000):"(No Design section)"}\n=== NOTES ===\n${notesCtx||"(No notes yet)"}`;
+  try{
+    const resp=await fetch("/api/gemini",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({task:"assistant",mode:"assistant",question:prompt,originalQuestion:question,grade:curGrade(),subject:curSubject(),topic:strand,strand,role:"learner",source:"SomaHub AI Assistant - Design Only",useSomaHubFiles:true,provider:"auto",designTitle:CURRENT_DESIGN?(CURRENT_DESIGN.title||""):"",designText:strandSec.slice(0,6000),designSource:CURRENT_SOURCE})});
+    const txt=await resp.text(); let data={}; try{data=JSON.parse(txt);}catch(e){}
+    let answer = data.answer || data.text || data.result || "";
+    if(!answer && data.notes) answer = JSON.stringify(data.notes);
+    if(!answer) answer = "Sorry, I could not find that in the Design. Try asking about this Strand's Learning Outcomes or Examples.";
+    // Remove the "Thinking..." bubble and add real answer
+    let box=document.getElementById(chatId); if(box && box.lastChild) box.removeChild(box.lastChild);
+    addAssistantMsg(chatId, String(answer).replace(/<[^>]+>/g,"").slice(0,2000), "ai");
+  }catch(e){
+    let box=document.getElementById(chatId); if(box && box.lastChild) box.removeChild(box.lastChild);
+    addAssistantMsg(chatId, "⚠️ AI is busy. Try again, or tap Generate to make notes first.", "ai");
+  }
+}
+function askAssistant(){
+  let inp=document.getElementById("assistantInput"); let q=(inp.value||"").trim(); if(!q) return;
+  inp.value=""; askAssistantCore(q, "assistantChat");
+}
+function askAssistant2(){
+  let inp=document.getElementById("assistantInput2"); let q=(inp.value||"").trim(); if(!q) return;
+  inp.value=""; askAssistantCore(q, "assistantChat2");
+}
+function askAssistantQuick(q){ document.getElementById("assistantInput").value=q; askAssistant(); }
 function youtubeLinkFor(title, query){let q = query || `${curGrade()} ${curSubject()} ${cleanStrandName(curStrand())} ${title||""} KICD explained`;return `https://www.youtube.com/results?search_query=${encodeURIComponent(q)}`;}
 function openYouTube(title, query){window.open(youtubeLinkFor(title, query),"_blank");}
 function formatNoteText(t){
@@ -273,25 +433,26 @@ function renderNotesList(){
   let all=[...list,...uploaded];
   if(q) all=all.filter(n=>(n.title+" "+n.text).toLowerCase().includes(q));
   document.getElementById("notesCount").innerText=all.length;
-  document.getElementById("notesSource").innerText=`Source: ${CURRENT_SOURCE} • ${isAllStrands()?"ALL Strands":"Strand only"}`;
+  document.getElementById("notesSource").innerText=`Source: ${CURRENT_SOURCE} • ${isAllStrands()?"ALL Strands":"One Strand: "+curStrand()}`;
   let box=document.getElementById("notesList");
   if(!all.length){box.innerHTML="";document.getElementById("emptyBox").classList.remove("hidden");return;}
   document.getElementById("emptyBox").classList.add("hidden");
   function cardHtml(n){
     let idx=AI_NOTES.indexOf(n);
     let strandLabel = n.strand||curStrand();
-    return `<div class="noteCard"><div class="flex justify-between gap-2"><p class="font-black text-[12px]">${esc(n.title||"Notes")}</p>${n.uploaded?"":`<button onclick="deleteNote(${idx})" class="text-[9px] font-black bg-red-100 border border-black rounded-full px-1.5 shrink-0">🗑️</button>`}</div><p class="text-[9px] font-bold text-gray-500">${esc(curGrade())} • ${esc(curSubject())} • ${esc(strandLabel)} ${n.uploaded?"• Uploaded":"• AI from Design Strand"}</p><div class="text-[12px] leading-relaxed mt-1">${formatNoteText(n.text||"")}</div><div class="flex flex-wrap gap-1.5 mt-2"><button onclick="speakText('${escForJS(n.text||"")}')" class="bg-black text-white px-3 py-1 rounded-full text-[9px] font-black">🔊 Hear</button><button onclick="openYouTube('${escForJS(n.title||"")}', '${escForJS(n.youtubeQuery||"")}')" class="bg-[#dc2626] text-white px-3 py-1 rounded-full text-[9px] font-black">▶️ Watch on YouTube</button><button onclick="goToExam()" class="bg-[#ffcc1a] px-3 py-1 rounded-full text-[9px] font-black border border-black">📝 Practice Exam →</button></div></div>`;
+    return `<div class="noteCard"><div class="flex justify-between gap-2"><p class="font-black text-[12px]">${esc(n.title||"Notes")}</p>${n.uploaded?"":`<button onclick="deleteNote(${idx})" class="text-[9px] font-black bg-red-100 border border-black rounded-full px-1.5 shrink-0">🗑️</button>`}</div><p class="text-[9px] font-bold text-gray-500">${esc(curGrade())} • ${esc(curSubject())} • ${esc(strandLabel)} ${n.uploaded?"• Uploaded":"• AI from Design Strand"}</p><div class="text-[12px] leading-relaxed mt-1">${formatNoteText(n.text||"")}</div><div class="flex flex-wrap gap-1.5 mt-2"><button onclick="speakText('${escForJS(n.text||"")}')" class="bg-black text-white px-3 py-1 rounded-full text-[9px] font-black">🔊 Hear</button><button onclick="openYouTube('${escForJS(n.title||"")}', '${escForJS(n.youtubeQuery||"")}')" class="bg-[#dc2626] text-white px-3 py-1 rounded-full text-[9px] font-black">▶️ Watch on YouTube</button><button onclick="askAssistantQuick('Explain ${escForJS(n.title||"")} in simple words')" class="bg-[#4a86ff] text-white px-3 py-1 rounded-full text-[9px] font-black">🤖 Ask AI about this</button><button onclick="goToExam()" class="bg-[#ffcc1a] px-3 py-1 rounded-full text-[9px] font-black border border-black">📝 Practice Exam →</button></div></div>`;
   }
   if(isAllStrands()){
     const order=allStrandsForSubject(curSubject());
     const grouped={};
     all.forEach(n=>{let s=n.strand||curStrand();(grouped[s]=grouped[s]||[]).push(n);});
-    const ordered=order.filter(s=>grouped[s]).concat(Object.keys(grouped).filter(s=>!order.includes(s)));
+    const ordered=order.filter(s=>Object.keys(grouped).some(g=>resolveStrandName(g)===resolveStrandName(s))).concat(Object.keys(grouped).filter(s=>!order.some(o=>resolveStrandName(o)===resolveStrandName(s))));
     let html="";
     ordered.forEach(strand=>{
-      const cards=grouped[strand];
-      html+=`<div class="strandHead"><p class="font-black text-[12px]">${esc(strand)}</p><p class="text-[10px] opacity-80">${cards.length} card(s)</p></div>`;
-      cards.forEach(n=>{ html+=cardHtml(n); });
+      const cards=grouped[strand]||Object.values(grouped).flat().filter(n=>resolveStrandName(n.strand||"")===resolveStrandName(strand));
+      let seen=new Set(); let uniq=cards.filter(c=>{let k=c.title+"|"+(c.text||"").slice(0,40); if(seen.has(k)) return false; seen.add(k); return true;});
+      html+=`<div class="strandHead"><p class="font-black text-[12px]">${esc(strand)}</p><p class="text-[10px] opacity-80">${uniq.length} card(s) • From Design</p></div>`;
+      uniq.forEach(n=>{ html+=cardHtml(n); });
     });
     box.innerHTML=html; return;
   }
@@ -300,16 +461,16 @@ function renderNotesList(){
 function deleteNote(idx){if(idx<0)return;if(!confirm("Delete this note?"))return;AI_NOTES.splice(idx,1);localStorage.setItem("soma_ai_notes",JSON.stringify(AI_NOTES));renderNotesList();describeSource();toast("Note deleted");}
 function goToExam(){window.location.href="exam.html";}
 function buildLocalNotesFromDesign(strandParam){
-  let strand = strandParam || curStrand();
+  let strand = resolveStrandName(strandParam || curStrand());
   let strandSec = extractStrandSection(CURRENT_DESIGN?getDesignText(CURRENT_DESIGN):"", strand);
   if(!strandSec || strandSec.length<200) return null;
-  let expected = STRAND_SUBSTRANDS[strand]||null;
+  let expected = getExpectedSubStrands(strand);
   let parts = strandSec.split(/(?=\b\d+\.\d+\s)/g).map(p=>p.split("\n").filter(l=>!isRubricLine(l)).join("\n")).filter(p=>p.trim().length>80);
-  if(expected && parts.length<expected.length){
+  if(expected.length && parts.length<expected.length){
     return expected.map((title,i)=>{
       let chunk = parts[i]||strandSec.slice(i*800,(i+1)*800);
       let clean = cleanLine(chunk).slice(0,900);
-      return {title, text:`What KICD says: ${clean}\nKey Inquiry: ${title.includes("Soil")?"How can we conserve soil?":title.includes("Water")?"How can we harvest and store water?":"See Design Key Inquiry for this Sub-Strand."}\nLearn: ${clean.slice(0,300)}\nDo: Follow the Suggested Learning Experience in the Design for this Sub-Strand.`};
+      return {title, text:`What KICD says: ${clean}\nKey Inquiry: See Design Key Inquiry for this Sub-Strand.\nLearn: ${clean.slice(0,300)}\nDo: Follow the Suggested Learning Experience in the Design for this Sub-Strand.`};
     });
   }
   if(parts.length>=2){
@@ -325,22 +486,20 @@ function buildLocalNotesFromDesign(strandParam){
 function getDesignKeywordsForStrand(strand){let combined=extractStrandSection(CURRENT_DESIGN?getDesignText(CURRENT_DESIGN):"", strand);let title=(CURRENT_DESIGN?(CURRENT_DESIGN.title||""):"")+" "+curSubject()+" "+strand;let all=(combined+" "+title).toLowerCase();let stop=new Set(["grade","learning","area","topic","design","curriculum","kenya","learner","should","strand","focuses","using","practicing","exploring","planning","notes","institute","development","skilled","ethical","society","junior","school"]);let words=all.split(/[^a-z]+/).filter(w=>w.length>=4&&!stop.has(w));let freq={};words.forEach(w=>freq[w]=(freq[w]||0)+1);return Object.keys(freq).sort((a,b)=>freq[b]-freq[a]).slice(0,30);}
 function getDesignKeywords(){return getDesignKeywordsForStrand(curStrand());}
 async function generateNotesForOneStrand(strand, grade, subject){
+  let resolved=resolveStrandName(strand);
   let fullDesign = CURRENT_DESIGN?getDesignText(CURRENT_DESIGN):"";
-  let strandSec = extractStrandSection(fullDesign, strand);
-  let keys=getDesignKeywordsForStrand(strand).join(", "); let band=gradeBand(grade);
-  let expected = STRAND_SUBSTRANDS[strand]||[];
-  const prompt=`You are a Kenyan CBC teacher. Create NOTES for ${grade} ${subject} - Strand: ${strand}.\nGrade Band: ${band}\nSource: ${CURRENT_SOURCE}\nDesign Title: ${CURRENT_DESIGN?(CURRENT_DESIGN.title||""):"(No Design)"}\nKEY WORDS: ${keys}\nEXPECTED SUB-STRANDS (use EXACTLY these titles, in order): ${expected.length?expected.join(" | "):"Extract Sub-Strands from Strand section below, e.g. 1.1 ..., 1.2 ..."}\n=== STRAND SECTION ONLY - DO NOT USE COVER / NATIONAL GOALS / TABLE OF CONTENTS / OTHER STRANDS / ASSESSMENT RUBRIC ===\n${strandSec?strandSec.slice(0,8000):`(No Design - use Grade + Subject + Strand + Key Words.)`}\nSTRICT RULES:\n1. DO NOT summarise whole Strand into generic ideas.\n2. Create ONE note card PER Sub-Strand. No extra cards.\n3. Each card MUST contain: What KICD says: copy Specific Learning Outcomes "By the end of the sub-strand the learner should be able to: a) ... b) ... c) ..." | Key Inquiry: copy exact Key Inquiry Question(s) | Learn: 2-3 sentences explaining ONLY that Sub-Strand, child language | Do: 1 Suggested Learning Experience from Design.\n4. NEVER: ##, <div>, HTML tags, KENYA INSTITUTE, cover page, National Goals, Table of Contents, Assessment Rubric, Exceeds Expectations, Meets Expectations, Exhibits, dependable, generic "protect soil and water". Return PLAIN TEXT ONLY.\n5. If a Sub-Strand is missing in text, write "Not in Design" - DO NOT invent.\nReturn ONLY JSON: {"notes":[{"title":"1.1 Soil Conservation Measures","text":"What KICD says: ...\\nKey Inquiry: ...\\nLearn: ...\\nDo: ...","youtubeQuery":"Grade 8 Agriculture Soil Conservation Measures KICD explained"}]}`;
-  const resp=await fetch("/api/gemini",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({task:"notes_generation",mode:"notes",question:prompt,originalQuestion:prompt,grade,subject,topic:strand,strand,role:"learner",source:"SomaHub Notes - AI from Design Strand Only",useSomaHubFiles:true,provider:"auto",designTitle:CURRENT_DESIGN?(CURRENT_DESIGN.title||""):"",designText:strandSec.slice(0,8000),designSource:CURRENT_SOURCE,expectedSubStrands:expected})});
+  let strandSec = extractStrandSection(fullDesign, resolved);
+  let keys=getDesignKeywordsForStrand(resolved).join(", "); let band=gradeBand(grade);
+  let expected = getExpectedSubStrands(resolved);
+  const prompt=`You are a Kenyan CBC teacher. Create NOTES for ${grade} ${subject} - Strand: ${resolved} (also called ${strand} in menu).\nGrade Band: ${band}\nSource: ${CURRENT_SOURCE}\nDesign Title: ${CURRENT_DESIGN?(CURRENT_DESIGN.title||""):"(No Design)"}\nKEY WORDS: ${keys}\nEXPECTED SUB-STRANDS (STRICT FROM DESIGN - use EXACTLY these titles, in order, no others): ${expected.length?expected.join(" | "):"Extract Sub-Strands from Strand section below, e.g. 2.1 ..., 2.2 ..."}\n=== STRAND SECTION ONLY - DO NOT USE COVER / NATIONAL GOALS / TABLE OF CONTENTS / OTHER STRANDS / ASSESSMENT RUBRIC ===\n${strandSec?strandSec.slice(0,8000):`(No Design - use Grade + Subject + Strand + Key Words.)`}\nSTRICT RULES:\n1. DO NOT summarise whole Strand into generic ideas.\n2. Create ONE note card PER Sub-Strand listed above. No extra cards. No invented Sub-Strands.\n3. Each card MUST contain: What KICD says: copy Specific Learning Outcomes "By the end of the sub-strand the learner should be able to: a) ... b) ... c) ..." | Key Inquiry: copy exact Key Inquiry Question(s) | Learn: 2-3 sentences explaining ONLY that Sub-Strand, child language | Do: 1 Suggested Learning Experience from Design.\n4. NEVER: ##, <div>, HTML tags, KENYA INSTITUTE, cover page, National Goals, Table of Contents, Assessment Rubric, Exceeds Expectations, Meets Expectations, Exhibits, dependable, generic "protect soil and water". Return PLAIN TEXT ONLY.\n5. If a Sub-Strand is missing in text, write "Not in Design" - DO NOT invent.\nReturn ONLY JSON: {"notes":[{"title":"2.1 Kitchen Gardening","text":"What KICD says: ...\\nKey Inquiry: ...\\nLearn: ...\\nDo: ...","youtubeQuery":"Grade 8 Agriculture Kitchen Gardening KICD explained"}]}`;
+  const resp=await fetch("/api/gemini",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({task:"notes_generation",mode:"notes",question:prompt,originalQuestion:prompt,grade,subject,topic:resolved,strand:resolved,role:"learner",source:"SomaHub Notes - AI from Design Strand Only",useSomaHubFiles:true,provider:"auto",designTitle:CURRENT_DESIGN?(CURRENT_DESIGN.title||""):"",designText:strandSec.slice(0,8000),designSource:CURRENT_SOURCE,expectedSubStrands:expected})});
   const text=await resp.text(); let data={}; try{data=JSON.parse(text);}catch(e){throw new Error("AI returned invalid response.");}
   if(!resp.ok||data.ok===false) throw new Error(data.error||"AI notes failed.");
   let notes=data.notes||data.result||data.items||[]; if(typeof notes==="string"){try{notes=JSON.parse(notes);}catch(e){notes=[];}}
   if(!Array.isArray(notes)||!notes.length){ if(data.answer){try{let t=String(data.answer).replace(/^```json/i,"").replace(/^```/i,"").replace(/```$/i,"").trim();let p=JSON.parse(t);if(Array.isArray(p))notes=p;else if(Array.isArray(p.notes))notes=p.notes;}catch(e){}} }
   if(!Array.isArray(notes)||!notes.length) throw new Error("AI returned no notes.");
-  notes=notes.map(n=>({title:cleanLine(n.title||n.heading||"Notes"),text:cleanLine(n.text||n.content||n.body||""),youtubeQuery:cleanLine(n.youtubeQuery||n.youtube_query||""),grade,subject,strand,source:CURRENT_SOURCE,createdAt:new Date().toISOString()})).filter(n=>n.text&&!isCoverOrBoilerplate(n.title+" "+n.text));
+  notes=notes.map(n=>({title:cleanLine(n.title||n.heading||"Notes"),text:cleanLine(n.text||n.content||n.body||""),youtubeQuery:cleanLine(n.youtubeQuery||n.youtube_query||""),grade,subject,strand:resolved,source:CURRENT_SOURCE,createdAt:new Date().toISOString()})).filter(n=>n.text&&!isCoverOrBoilerplate(n.title+" "+n.text));
   if(!notes.length) throw new Error("AI notes were off-design.");
-  let joined = notes.map(n=>n.title+" "+n.text).join(" ").toLowerCase();
-  let isGeneric = expected.length>0 && !expected.some(e=>joined.includes(e.toLowerCase().split(" ").slice(1).join(" ").slice(0,10)));
-  if(isGeneric && expected.length>0) throw new Error("AI gave generic notes, not Sub-Strands.");
   return notes;
 }
 async function generateAINotes(){
@@ -348,30 +507,32 @@ async function generateAINotes(){
   let grade=curGrade(), subject=curSubject();
   const strandsToDo = isAllStrands() ? allStrandsForSubject(subject) : [curStrand()];
   if(!strandsToDo.length){ toast("No strands for this subject"); return; }
-  btn.innerText="⏳ Creating ALL..."; btn.disabled=true;
+  btn.innerText="⏳ Creating..."; btn.disabled=true;
+  if(!isAllStrands()) btn.innerText=`⏳ Creating ${curStrand()}...`;
   let totalCreated=0, missing=[];
   for(let sIdx=0;sIdx<strandsToDo.length;sIdx++){
     let strand=strandsToDo[sIdx];
-    status.innerText=`Creating ${sIdx+1}/${strandsToDo.length}: ${strand} • From resources/fullText`;
+    let resolved=resolveStrandName(strand);
+    status.innerText=`Creating ${sIdx+1}/${strandsToDo.length}: ${resolved} • Strands from ${DESIGN_STRANDS_FROM==="design"?"YOUR Design":"fallback"}`;
     try{
       let notes = await generateNotesForOneStrand(strand, grade, subject);
-      AI_NOTES=AI_NOTES.filter(n=>!(String(n.grade||"")===String(grade)&&normSubject(n.subject)===normSubject(subject)&&String(n.strand||"")===String(strand)));
+      AI_NOTES=AI_NOTES.filter(n=>!(String(n.grade||"")===String(grade)&&normSubject(n.subject)===normSubject(subject)&&resolveStrandName(n.strand||"")===resolved));
       AI_NOTES.push(...notes); totalCreated+=notes.length;
-      try{ let FB=window.FB; await FB.setDoc(FB.doc(FB.db,"ai_notes",`${grade}-${subject}-${strand}`.replace(/[^A-Za-z0-9\-]/g,"_")),{grade,subject,strand,notes,source:CURRENT_SOURCE,updatedAt:FB.serverTimestamp()}); }catch(e){}
+      try{ let FB=window.FB; await FB.setDoc(FB.doc(FB.db,"ai_notes",`${grade}-${subject}-${resolved}`.replace(/[^A-Za-z0-9\-]/g,"_")),{grade,subject,strand:resolved,notes,source:CURRENT_SOURCE,updatedAt:FB.serverTimestamp()}); }catch(e){}
     }catch(e){
       console.warn("AI Notes failed for",strand,e);
       let local=buildLocalNotesFromDesign(strand);
       if(local){
-        let notes=local.map(n=>({...n,youtubeQuery:`${grade} ${subject} ${n.title} KICD explained`,grade,subject,strand,source:CURRENT_SOURCE,createdAt:new Date().toISOString()}));
-        AI_NOTES=AI_NOTES.filter(n=>!(String(n.grade||"")===String(grade)&&normSubject(n.subject)===normSubject(subject)&&String(n.strand||"")===String(strand)));
+        let notes=local.map(n=>({...n,youtubeQuery:`${grade} ${subject} ${n.title} KICD explained`,grade,subject,strand:resolved,source:CURRENT_SOURCE,createdAt:new Date().toISOString()}));
+        AI_NOTES=AI_NOTES.filter(n=>!(String(n.grade||"")===String(grade)&&normSubject(n.subject)===normSubject(subject)&&resolveStrandName(n.strand||"")===resolved));
         AI_NOTES.push(...notes); totalCreated+=notes.length;
-      }else{ missing.push(strand); }
+      }else{ missing.push(resolved); }
     }
     localStorage.setItem("soma_ai_notes",JSON.stringify(AI_NOTES));
     renderNotesList();
   }
-  status.innerText=`✅ Notes created from Design ONLY • ${totalCreated} cards across ${strandsToDo.length} Strands • Missing: ${missing.length?missing.join(", "):"none"}`;
-  renderNotesList(); describeSource(); speakText(`Notes for all strands are ready.`); toast("✅ ALL Strands done");
+  status.innerText=`✅ Notes from Design ONLY • ${totalCreated} cards across ${strandsToDo.length} Strand(s) • Missing: ${missing.length?missing.join(", "):"none"}`;
+  renderNotesList(); describeSource(); speakText(`Notes are ready.`); toast("✅ Done");
   btn.innerText="✨ Generate ALL Strands"; btn.disabled=false;
 }
 function speakNotes(){let list=getAINotesForCurrent();if(!list.length){speakText("Tap Generate Notes first.");return;}speakText(list.map(n=>`${n.title}. ${n.text}`).join(" "));}
