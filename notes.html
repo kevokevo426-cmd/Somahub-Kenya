@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>SomaHub KICD Notes - All Strands</title>
+<title>SomaHub KICD Notes</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@500;600;700;800;900&display=swap" rel="stylesheet">
 <style>
@@ -59,7 +59,7 @@ window.FB={auth:getAuth(app),db:getFirestore(app),doc,getDoc,setDoc,updateDoc,co
 <button onclick="speakNotes()" class="bg-[#4a86ff] text-white border-2 border-black rounded-full py-2 font-black text-[11px]">🔊 Hear All</button>
 </div>
 <div class="grid grid-cols-2 gap-1.5">
-<button onclick="generateOneStrand()" class="bg-white border-2 border-black rounded-full py-2 font-black text-[11px]">✏️ Generate This Strand Only</button>
+<button onclick="generateOneStrand()" class="bg-white border-2 border-black rounded-full py-2 font-black text-[11px]">✏️ This Strand Only</button>
 <button onclick="clearCurrentNotes()" class="bg-[#fee2e2] border-2 border-black rounded-full py-2 font-black text-[11px]">🗑️ Clear Notes</button>
 </div>
 <p id="notesStatus" class="text-[9px] font-black text-center text-gray-500"></p>
@@ -75,7 +75,7 @@ window.FB={auth:getAuth(app),db:getFirestore(app),doc,getDoc,setDoc,updateDoc,co
 </main>
 </div>
 <script>
-let currentUser=null,currentSHKE="SHKE";
+let currentUser=null,currentSHKE="SHKE",blindMode=false;
 let ALL_DESIGNS=[],AI_BRAIN=[],ALL_NOTES=[],CURRENT_DESIGN=null,CURRENT_SOURCE="none",AI_NOTES=[];
 try{AI_NOTES=JSON.parse(localStorage.getItem("soma_ai_notes")||"[]");}catch(e){AI_NOTES=[];}
 const GRADES=["Playgroup","PP1","PP2","Grade 1","Grade 2","Grade 3","Grade 4","Grade 5","Grade 6","Grade 7","Grade 8","Grade 9","Grade 10"];
@@ -144,12 +144,14 @@ const STRAND_SUBSTRANDS={
 "Consumer Education 🛒":["7.1 Wise Buying","7.2 Consumer Rights"],
 "Clothing and Textiles 👕":["8.1 Care of Clothes","8.2 Making Clothes"]};
 function esc(v){return String(v??"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#039;");}
+function escForJS(v){return String(v||"").replace(/\\/g,"\\\\").replace(/'/g,"\\'").replace(/"/g,'\\"').replace(/\n/g," ");}
 function toast(m){let t=document.getElementById("toast");t.innerText=m;t.classList.remove("hidden");setTimeout(()=>t.classList.add("hidden"),2200);}
 function fixSpacing(t){if(!t)return"";let s=String(t);s=s.replace(/Socie\s+ty/g,"Society").replace(/\bb\s+y\b/g,"by").replace(/Develop\s+ment/g,"Development").replace(/Activi\s+ties/g,"Activities").replace(/Learn\s+ing/g,"Learning");return s;}
 function isJunk(t){if(!t)return true;t=String(t).trim();if(t.length<300)return true;if(t.includes("uc?export")||t.includes("drive.google.com"))return true;return false;}
 function normSubject(s){s=String(s||"").toLowerCase().trim();if(s==="agriculture and nutrition"||s==="agriculture")return"agriculture";if(s.includes("language activities"))return"language activities";if(s.includes("mathematical"))return"mathematical activities";if(s.includes("environmental"))return"environmental activities";if(s.includes("psychomotor")||s.includes("creative"))return"creative";if(s.includes("movement"))return"movement activities";if(s.includes("religious")||s==="cre"||s==="ire"||s==="hre")return"religious";if(s.includes("kiswahili"))return"kiswahili";if(s.includes("english"))return"english";if(s.includes("mathematics"))return"mathematics";if(s.includes("integrated"))return"integrated science";if(s.includes("social"))return"social";if(s.includes("pre-technical"))return"pre-technical";if(s.includes("science"))return"science";return s;}
 function cleanLine(s){return String(s||"").replace(/^#{1,6}\s*/g,"").replace(/#{1,6}\s*/g,"").replace(/\*\*/g,"").trim();}
 function isCoverOrBoilerplate(s){let u=cleanLine(s).toUpperCase();if(!u)return true;let bad=["KENYA INSTITUTE OF CURRICULUM","CURRICULUM DEVELOPMENT","KICD","A SKILLED AND ETHICAL SOCIETY","JUNIOR SCHOOL CURRICULUM DESIGN","PRIMARY SCHOOL CURRICULUM DESIGN","SENIOR SCHOOL CURRICULUM DESIGN","PRE-PRIMARY","NATIONAL GOALS OF EDUCATION","TABLE OF CONTENTS","FOREWORD","ACKNOWLEDGEMENT","ACKNOWLEDGMENTS","COPYRIGHT","ALL RIGHTS RESERVED","PUBLISHED BY","PRINTED BY","ISBN","KENYA NATIONAL","MINISTRY OF EDUCATION","REPUBLIC OF KENYA","VISION 2030","ESSENCE STATEMENT","GENERAL LEARNING OUTCOMES FOR","LEVEL LEARNING OUTCOMES"];if(bad.some(b=>u.includes(b)))return true;if(u.length<12)return true;if(u===u.toUpperCase()&&u.split(" ").length<=6&&!u.includes(".")&&!u.includes("?"))return true;return false;}
+function gradeBand(grade){let g=String(grade||"");if(g==="Playgroup"||g==="PP1"||g==="PP2"||g==="Grade 1"||g==="Grade 2"||g==="Grade 3")return"early";if(g==="Grade 4"||g==="Grade 5"||g==="Grade 6")return"middle";return"upper";}
 function curGrade(){return document.getElementById("gradeSel").value;}
 function curSubject(){return document.getElementById("subSel").value;}
 function curStrand(){return document.getElementById("strandSel").value||"";}
@@ -161,9 +163,8 @@ function getAINotesForCurrent(){
   return AI_NOTES.filter(n=>String(n.grade||"")===String(curGrade())&&normSubject(n.subject)===normSubject(curSubject())&&String(n.strand||"")===String(curStrand()));
 }
 function getNoteTextFor(design){let out=[];ALL_NOTES.forEach(n=>{let match=false;if(design&&(n.resourceId===design.id||n.designId===design.id||n.resource_id===design.id))match=true;if(!match&&design&&String(n.grade||"").trim()===String(design.grade||"").trim()&&normSubject(n.subject)===normSubject(design.subject))match=true;if(!match&&!design&&String(n.grade||"").trim()===String(curGrade())&&normSubject(n.subject)===normSubject(curSubject()))match=true;if(match){let t=n.text||n.content||n.fullText||n.notes||n.body||n.description||"";if(t&&!isJunk(t))out.push(fixSpacing(t));}});getAINotesForCurrent().forEach(n=>{if(n.text)out.push(`=== AI NOTES: ${n.title||""} ===\n${fixSpacing(n.text)}`);});return out.join("\n\n--- NOTES ---\n\n");}
-function getDesignText(r){if(!r)return"";let parts=[];if(r.fullText&&!isJunk(r.fullText))parts.push(fixSpacing(r.fullText));let m=AI_BRAIN.find(x=>x.resourceId===r.id);if(m&&m.text&&!isJunk(m.text))parts.push(fixSpacing(m.text));let m2=AI_BRAIN.find(x=>x.title===r.title&&x.grade===r.grade&&x.subject===r.subject);if(m2&&m2.text&&!isJunk(m2.text)&&!parts.includes(fixSpacing(m2.text)))parts.push(fixSpacing(m2.text));return parts.join("\n\n--- DESIGN ---\n\n");}
+function getDesignText(r){if(!r)return"";let parts=[];if(r.fullText&&!isJunk(r.fullText))parts.push(fixSpacing(r.fullText));if(r.text&&!isJunk(r.text)&&!parts.includes(fixSpacing(r.text)))parts.push(fixSpacing(r.text));if(r.content&&!isJunk(r.content))parts.push(fixSpacing(r.content));let m=AI_BRAIN.find(x=>x.resourceId===r.id);if(m&&m.text&&!isJunk(m.text))parts.push(fixSpacing(m.text));let m2=AI_BRAIN.find(x=>x.title===r.title&&x.grade===r.grade&&x.subject===r.subject);if(m2&&m2.text&&!isJunk(m2.text)&&!parts.includes(fixSpacing(m2.text)))parts.push(fixSpacing(m2.text));return parts.join("\n\n--- DESIGN ---\n\n");}
 function getCombinedSourceText(){let designText=CURRENT_DESIGN?getDesignText(CURRENT_DESIGN):"";let noteText=getNoteTextFor(CURRENT_DESIGN);if(designText&&noteText)CURRENT_SOURCE="design+notes";else if(designText)CURRENT_SOURCE="design-only";else if(noteText)CURRENT_SOURCE="notes-only";else CURRENT_SOURCE="none";let c="";if(designText)c+=`=== DESIGN ===\n${designText}\n\n`;if(noteText)c+=`=== NOTES ===\n${noteText}\n\n`;return c;}
-// === FIX: EXTRACT ONE STRAND ONLY - USED IN A LOOP FOR ALL STRANDS ===
 function extractStrandSection(fullText, strandName){
   if(!fullText) return "";
   let clean = cleanStrandName(strandName).toLowerCase();
@@ -174,22 +175,17 @@ function extractStrandSection(fullText, strandName){
   for(let i=0;i<lines.length;i++){
     let l=cleanLine(lines[i]).toLowerCase();
     if(isCoverOrBoilerplate(lines[i])) continue;
-    // Heading that matches this strand
     let isHeading = /^(\d+\.?\s*)?(strand|sub-strand|topic)/i.test(l) || l.length<80;
-    if(isHeading && keywords.length && keywords.filter(k=>l.includes(k)).length >= Math.min(2,keywords.length)){
-      start=i; break;
-    }
+    if(isHeading && keywords.length && keywords.filter(k=>l.includes(k)).length >= Math.min(2,keywords.length)){ start=i; break; }
     if(isHeading && clean && l.includes(clean)){ start=i; break; }
   }
   if(start===-1){
-    // Fallback: search any line containing 2 keywords
     for(let i=0;i<lines.length;i++){
       let l=cleanLine(lines[i]).toLowerCase();
       if(keywords.filter(k=>l.includes(k)).length>=2){ start=i; break; }
     }
   }
   if(start===-1) return "";
-  // Find next strand heading = end
   for(let i=start+1;i<lines.length;i++){
     let l=cleanLine(lines[i]).toLowerCase();
     if(l.length<90 && l.length>3){
@@ -204,41 +200,34 @@ function extractStrandSection(fullText, strandName){
   let section = lines.slice(start,end).filter(l=>!isCoverOrBoilerplate(l)).join("\n").trim();
   return section.length<200 ? "" : section;
 }
-// Split a strand section into sub-strands: use exact map first, else detect headings like 1.1, 2.1, Sub-Strand
 function splitIntoSubStrands(section, strand){
   if(STRAND_SUBSTRANDS[strand]) return STRAND_SUBSTRANDS[strand];
   let lines=String(section||"").split(/\n/);
-  let subs=[]; let current=null;
+  let subs=[]; 
   lines.forEach(l=>{
     let c=cleanLine(l);
-    if(/^(sub[\s-]*strand|strand)\s*\d/i.test(c) || /^\d+\.\d+\s+[A-Z]/.test(c)){
-      current=c.slice(0,90); subs.push(current);
-    }
+    if(/^(sub[\s-]*strand|strand)\s*\d/i.test(c) || /^\d+\.\d+\s+[A-Z]/.test(c)){ subs.push(c.slice(0,90)); }
   });
   if(subs.length===0){
-    // Fallback: split by blank-line blocks, max 4 chunks
     let blocks=String(section).split(/\n\s*\n/).filter(b=>cleanLine(b).length>100);
     if(blocks.length>1) return blocks.slice(0,6).map((b,i)=>`Part ${i+1}: ${cleanLine(b).slice(0,60)}`);
     return [`${cleanStrandName(strand)} - Full Notes`];
   }
   return [...new Set(subs)];
 }
-// Build ONE card from text - no AI API needed, uses Design text directly so it NEVER hallucinates other strands
 function buildNoteCardFromText(section, strand, sub, grade, subject){
   let lines=String(section||"").split(/\n/).map(cleanLine).filter(l=>l && !isCoverOrBoilerplate(l));
-  // Try to find lines near the sub-strand heading
   let subClean=cleanLine(sub).toLowerCase().replace(/^\d+\.\d+\s*/,"");
   let idx=lines.findIndex(l=>l.toLowerCase().includes(subClean.slice(0,25)) && subClean.length>5);
   let relevant = idx>=0 ? lines.slice(idx, idx+40) : lines.slice(0,40);
   if(relevant.length<5) relevant=lines.slice(0,40);
   let body = relevant.join(" ").slice(0,2200);
-  // Extract key sentences
   let sentences = body.split(/(?<=[.!?])\s+/).filter(s=>s.length>25).slice(0,8);
   let definition = sentences[0]||`This sub-strand is about ${cleanStrandName(strand)} - ${subClean}.`;
   let keyPoints = sentences.slice(1,5).map(s=>`<li>${esc(s)}</li>`).join("") || `<li>Follow the steps in your KICD Design for this sub-strand.</li>`;
   return `<div class="definition"><b>📌 What is it?</b><br>${esc(definition)}</div><div class="example"><b>✅ Key Points to Remember</b><ul class="list-disc ml-4 mt-1 space-y-1">${keyPoints}</ul></div><div class="important"><b>📖 From Your Design:</b><br>${esc(body.slice(0,900))}</div><p class="text-[10px] text-gray-500 mt-2">Grade: ${esc(grade)} • ${esc(subject)} • Strand: ${esc(strand)} • Sub-Strand: ${esc(sub)}</p>`;
 }
-// === FIX: GENERATE ALL STRANDS ===
+// === ALL STRANDS GENERATOR ===
 async function generateAINotes(){
   const btn=document.getElementById("genNotesBtn");
   const grade=curGrade(), subject=curSubject();
@@ -293,7 +282,6 @@ function clearCurrentNotes(){
   localStorage.setItem("soma_ai_notes", JSON.stringify(AI_NOTES));
   renderNotesList(); toast("🗑️ Cleared");
 }
-// === FIX: RENDER GROUPED BY ALL STRANDS ===
 function renderNotesList(){
   const q=(document.getElementById("noteSearch").value||"").toLowerCase();
   const list = getAINotesForCurrent().filter(n=> (n.title+" "+n.strand+" "+(n.subStrand||"")+" "+n.text).toLowerCase().includes(q));
@@ -302,7 +290,6 @@ function renderNotesList(){
   const box=document.getElementById("notesList"), empty=document.getElementById("emptyBox");
   if(!list.length){ box.innerHTML=""; empty.classList.remove("hidden"); return; }
   empty.classList.add("hidden");
-  // Group by strand in curriculum order
   const order=allStrandsForSubject(curSubject());
   const grouped={};
   list.forEach(n=>{ (grouped[n.strand]=grouped[n.strand]||[]).push(n); });
@@ -320,7 +307,6 @@ function renderNotesList(){
 function deleteOne(idx){ if(!confirm("Delete this card?"))return; AI_NOTES.splice(idx,1); localStorage.setItem("soma_ai_notes",JSON.stringify(AI_NOTES)); renderNotesList(); }
 function speakOne(idx){ let n=AI_NOTES[idx]; if(!n)return; let t=document.createElement("div"); t.innerHTML=n.text; speechSynthesis.cancel(); speechSynthesis.speak(new SpeechSynthesisUtterance(t.innerText)); }
 function speakNotes(){ let list=getAINotesForCurrent(); if(!list.length){toast("No notes to read");return;} let t=document.createElement("div"); t.innerHTML=list.map(n=>n.text).join(" "); speechSynthesis.cancel(); speechSynthesis.speak(new SpeechSynthesisUtterance(t.innerText.slice(0,4000))); }
-// === SELECTS - WITH __ALL__ ===
 function fillGrades(){ let g=document.getElementById("gradeSel"); g.innerHTML=GRADES.map(x=>`<option ${x==="Grade 4"?"selected":""}>${x}</option>`).join(""); }
 function onGradeChange(){
   let grade=curGrade(); document.getElementById("gradeLabel").innerText=grade;
@@ -330,7 +316,6 @@ function onGradeChange(){
 function updateSub(){
   let subject=curSubject(); let strands=allStrandsForSubject(subject);
   let st=document.getElementById("strandSel");
-  // FIRST OPTION = ALL STRANDS - this is the fix
   st.innerHTML=`<option value="__ALL__">📚 ALL Strands (${strands.length}) - Full Design</option>`+strands.map(x=>`<option value="${esc(x)}">${x}</option>`).join("");
   document.getElementById("setupSummary").innerText=`${curGrade()} • ${subject} • ALL Strands`;
   renderLearningAreas(); loadDesignForCurrent(); renderNotesList();
@@ -343,29 +328,67 @@ function renderLearningAreas(){
   let grade=curGrade(); let subs=GRADE_SUBJECTS[grade]||[];
   document.getElementById("learningAreas").innerHTML=subs.map(s=>`<button onclick="document.getElementById('subSel').value='${esc(s)}';updateSub()" class="text-left bg-white border-2 border-black rounded-xl p-2 font-black text-[11px] ${s===curSubject()?"bg-[#ffcc1a]":""}">${ICONS[s]||"📚"} ${s}</button>`).join("");
 }
+// === SAFE LOADER - NO where() FILTER, NO THROW ===
+// Last version broke because it used query(where("grade","==",...))
+// which fails if field name / rules differ. This version:
+// 1. getDocs(collection) only - never filtered in Firestore
+// 2. Each collection try/catch separately - one failure cannot kill all
+// 3. Filter in JS after load
+// 4. Retried after login
 async function loadDesignForCurrent(){
+  const info=document.getElementById("designInfo");
   try{
-    if(!window.FB) return;
-    const {db,collection,getDocs,query,where}=window.FB;
-    let snap=await getDocs(query(collection(db,"designs"),where("grade","==",curGrade())));
-    ALL_DESIGNS=snap.docs.map(d=>({id:d.id,...d.data()}));
-    let snap2=await getDocs(query(collection(db,"ai_brain"),where("grade","==",curGrade())));
-    AI_BRAIN=snap2.docs.map(d=>({id:d.id,...d.data()}));
-    let snap3=await getDocs(query(collection(db,"notes"),where("grade","==",curGrade())));
-    ALL_NOTES=snap3.docs.map(d=>({id:d.id,...d.data()}));
-    CURRENT_DESIGN = ALL_DESIGNS.find(d=>normSubject(d.subject)===normSubject(curSubject())) || null;
-    let info=document.getElementById("designInfo");
-    if(CURRENT_DESIGN){ info.innerText=`✅ Design found: ${CURRENT_DESIGN.title||curSubject()} • ${ALL_DESIGNS.length} designs • AI Brain: ${AI_BRAIN.length}`; }
-    else { info.innerText=`⚠️ No Design found for ${curSubject()} in ${curGrade()}. Upload Design in Admin to enable ALL Strands.`; }
-    let src=document.getElementById("sourceInfo"); let combined=getCombinedSourceText(); src.classList.remove("hidden"); src.innerText=`Source: ${CURRENT_SOURCE} • Design chars: ${combined.length}`;
+    if(!window.FB){ info.innerText="⏳ Waiting for Firebase..."; return; }
+    const {db,collection,getDocs}=window.FB;
+    let foundIn = [];
+    let allDesigns=[], allBrain=[], allNotes=[];
+    // Try every possible name - your admin may have used any of these
+    const designCols = ["designs","curriculum_designs","resources","kicd_designs","curriculumDesigns","Designs","curriculum_design","notes_designs"];
+    for(let name of designCols){
+      try{
+        let s = await getDocs(collection(db, name));
+        if(!s.empty){
+          let docs = s.docs.map(d=>({id:d.id,...d.data()}));
+          // Only keep docs that look like designs (have text/subject/title)
+          let designLike = docs.filter(d=> d.fullText||d.text||d.content||d.subject||d.title);
+          if(designLike.length){ allDesigns = allDesigns.concat(designLike); foundIn.push(name+":"+designLike.length); }
+        }
+      }catch(e){ console.log("Skip collection",name,e.code||e.message); }
+    }
+    // AI Brain
+    for(let name of ["ai_brain","aiBrain","ai_brains"]){
+      try{ let s=await getDocs(collection(db,name)); if(!s.empty){ allBrain=allBrain.concat(s.docs.map(d=>({id:d.id,...d.data()}))); } }catch(e){}
+    }
+    // Notes collection (Firestore notes, not local AI notes)
+    for(let name of ["notes","Notes"]){
+      try{ let s=await getDocs(collection(db,name)); if(!s.empty){ allNotes=allNotes.concat(s.docs.map(d=>({id:d.id,...d.data()}))); } }catch(e){}
+    }
+    ALL_DESIGNS=allDesigns; AI_BRAIN=allBrain; ALL_NOTES=allNotes;
+    // Filter in JS - never in Firestore
+    CURRENT_DESIGN = ALL_DESIGNS.find(d=> String(d.grade||"").trim()===String(curGrade()).trim() && normSubject(d.subject)===normSubject(curSubject()))
+      || ALL_DESIGNS.find(d=> normSubject(d.subject)===normSubject(curSubject()))
+      || ALL_DESIGNS.find(d=> String(d.grade||"").trim()===String(curGrade()).trim())
+      || null;
+    if(CURRENT_DESIGN){
+      info.innerText=`✅ Design found: ${CURRENT_DESIGN.title||curSubject()} • Loaded from: ${foundIn.join(", ")||"unknown"} • Total: ${ALL_DESIGNS.length}`;
+    } else {
+      info.innerText=`⚠️ No Design for ${curSubject()} in ${curGrade()}. Loaded total: ${ALL_DESIGNS.length} from [${foundIn.join(", ")||"none"}]. Check Admin: Grade/Subject names must match exactly.`;
+    }
+    let src=document.getElementById("sourceInfo"); let combined=getCombinedSourceText(); src.classList.remove("hidden"); src.innerText=`Source: ${CURRENT_SOURCE} • Design chars: ${combined.length} • Designs: ${ALL_DESIGNS.length} • AI Brain: ${AI_BRAIN.length}`;
     renderNotesList();
-  }catch(e){ document.getElementById("designInfo").innerText="⚠️ Could not load Designs (offline / login). Notes saved locally still work."; }
+  }catch(e){
+    console.error("LOAD ERROR:",e);
+    info.innerText=`❌ Firebase error: ${e.code||""} ${e.message||e}`;
+  }
 }
 window.addEventListener("DOMContentLoaded", ()=>{
   fillGrades(); onGradeChange();
   try{
     const {auth,onAuthStateChanged}=window.FB;
-    onAuthStateChanged(auth,(u)=>{ currentUser=u; if(u){ currentSHKE=u.email?.split("@")[0].toUpperCase()||"SHKE"; document.getElementById("userBadge").innerText=currentSHKE; } });
+    onAuthStateChanged(auth,(u)=>{
+      currentUser=u;
+      if(u){ currentSHKE=u.email?.split("@")[0].toUpperCase()||"SHKE"; document.getElementById("userBadge").innerText=currentSHKE; setTimeout(loadDesignForCurrent, 600); }
+    });
   }catch(e){}
 });
 window.generateAINotes=generateAINotes; window.generateOneStrand=generateOneStrand; window.clearCurrentNotes=clearCurrentNotes; window.renderNotesList=renderNotesList; window.speakNotes=speakNotes; window.speakOne=speakOne; window.deleteOne=deleteOne; window.onGradeChange=onGradeChange; window.updateSub=updateSub; window.onStrandChange=onStrandChange;
