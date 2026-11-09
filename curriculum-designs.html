@@ -91,77 +91,17 @@ let CURRENT_FILE_TEXT = "";
 let CURRENT_TOPIC = "";
 let READER_TITLE = ""; let READER_META = "";
 let CURRENT_FILE_URL = "";
+function fixCloudinaryUrl(u){ if(!u) return ""; let s=String(u); if(s.includes("/image/upload/") && s.toLowerCase().includes(".pdf")){ return s.replace("/image/upload/","/raw/upload/"); } return s; }
+function safeTitle(r){ let t = (r.title||"").trim(); if(!t || t.includes("uc?export") || t.includes("drive.google.com") || t.includes("http") || t.includes("id=")) return (r.grade||"") + " " + (r.subject||""); return t; }
+function safeDesc(r){ let d = (r.description||""); if(d.includes("uc?export") || d.includes("drive.google.com") || d.startsWith("http")) return safeTitle(r) + " - Original Design"; return d; }
+function isJunkText(t){ if(!t) return true; t = t.trim(); if(t.length < 300) return true; if(t.includes("uc?export") || t.includes("drive.google.com") || t.includes("export=download")) return true; if(t.split("\n").length <= 4 && t.length < 800) return true; return false; }
+function fixSpacing(t){ if(!t) return ""; let s = String(t); s = s.replace(/Socie\s+ty/g,"Society").replace(/\bb\s+y\b/g,"by").replace(/Develop\s+ment/g,"Development").replace(/Curriculum\s+Develop\s+ment/g,"Curriculum Development").replace(/Environ\s+mental/g,"Environmental").replace(/Activi\s+ties/g,"Activities").replace(/Learn\s+ing/g,"Learning").replace(/Know\s+ledge/g,"Knowledge").replace(/Educa\s+tion/g,"Education").replace(/Insti\s+tute/g,"Institute").replace(/Prim\s+ary/g,"Primary").replace(/Natio\s+nal/g,"National"); s = s.replace(/\.[\s\.]{4,}/g," — "); s = s.replace(/[ \t]{3,}/g," "); return s; }
+function getBrainTextFor(r){ if(!r) return ""; if(r.fullText && !isJunkText(r.fullText)) return fixSpacing(r.fullText); if(AI_BRAIN.length){ let m = AI_BRAIN.find(x=>x.resourceId===r.id); if(m && m.text && !isJunkText(m.text)) return fixSpacing(m.text); let m2 = AI_BRAIN.find(x=>safeTitle(x)===safeTitle(r) && x.grade===r.grade && x.subject===r.subject); if(m2 && m2.text && !isJunkText(m2.text)) return fixSpacing(m2.text); } return ""; }
+async function loadResources(){ try{ let FB=window.FB; let s=await FB.getDocs(FB.collection(FB.db,'resources')); ALL=[]; s.forEach(d=>ALL.push({id:d.id,...d.data()})); }catch(e){ ALL=[]; } try{ let FB=window.FB; let b=await FB.getDocs(FB.collection(FB.db,'ai_brain')); AI_BRAIN=[]; b.forEach(d=>AI_BRAIN.push({id:d.id,...d.data()})); ALL.forEach(r=>{ if(!r.fullText || isJunkText(r.fullText)){ let bt = getBrainTextFor(r); if(bt) r.fullText = bt; else r.fullText = ""; } else r.fullText = fixSpacing(r.fullText); }); }catch(e){ AI_BRAIN=[]; } loadDesigns(); }
+async function callAI(prompt, question){ let res = await fetch(PROXY,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({prompt, question: question||prompt, grade: currentGrade, task:"EN", history:[]})}); let data={}; try{data=await res.json();}catch(e){} let txt = data.answer || data.text || data.reply || ""; if(!txt) throw new Error(data.error||"AI busy"); return txt; }
+function formatAI(text){ let esc = text.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); esc = esc.replace(/\*\*(.*?)\*\*/g,"<b>$1</b>"); esc = esc.replace(/\*(.*?)\*/g,"<i>$1</i>"); esc = esc.replace(/^### (.*)$/gm,"<div style='color:#5eead4;font-weight:900;margin:10px 0 4px'>$1</div>"); esc = esc.replace(/^## (.*)$/gm,"<div style='color:#5eead4;font-weight:900;margin:10px 0 4px'>$1</div>"); let lines=esc.split("\n"); let out=""; let inList=false; lines.forEach(l=>{ let t=l.trim(); if(/^(Key Point|Important|Note|Answer|Final Answer|Solution)[:：]/i.test(t)){ if(inList){out+="</ul>";inList=false;} let cls=/^(Answer|Final Answer|Solution)/i.test(t)?"ai-answer":/^(Note|Important)/i.test(t)?"ai-note":"ai-key"; out+=`<p><span class="${cls}">${l}</span></p>`; } else if(/^\d+\.\s/.test(l)){ out+=`<p><b>${l}</b></p>`; } else if(/^[-*]\s/.test(l)){ if(!inList){out+="<ul>";inList=true;} out+=`<li>${l.replace(/^[-*]\s/,"")}</li>`;**Continuing `curriculum-designs.html` — from where it cut off:**
 
-function safeTitle(r){
-  let t = (r.title||"").trim();
-  if(!t || t.includes("uc?export") || t.includes("drive.google.com") || t.includes("http") || t.includes("id=")) return (r.grade||"") + " " + (r.subject||"");
-  return t;
-}
-function safeDesc(r){
-  let d = (r.description||"");
-  if(d.includes("uc?export") || d.includes("drive.google.com") || d.startsWith("http")) return safeTitle(r) + " - Original Design";
-  return d;
-}
-function isJunkText(t){
-  if(!t) return true;
-  t = t.trim();
-  if(t.length < 300) return true;
-  if(t.includes("uc?export") || t.includes("drive.google.com") || t.includes("export=download")) return true;
-  if(t.split("\n").length <= 4 && t.length < 800) return true;
-  return false;
-}
-/* KEEN FIX: Clean spacing BEFORE display or AI - Socie ty -> Society, b y -> by */
-function fixSpacing(t){
-  if(!t) return "";
-  let s = String(t);
-  s = s.replace(/Socie\s+ty/g,"Society").replace(/\bb\s+y\b/g,"by").replace(/Develop\s+ment/g,"Development").replace(/Curriculum\s+Develop\s+ment/g,"Curriculum Development").replace(/Environ\s+mental/g,"Environmental").replace(/Activi\s+ties/g,"Activities").replace(/Learn\s+ing/g,"Learning").replace(/Know\s+ledge/g,"Knowledge").replace(/Educa\s+tion/g,"Education").replace(/Insti\s+tute/g,"Institute").replace(/Prim\s+ary/g,"Primary").replace(/Natio\s+nal/g,"National").replace(/publi\s+shed/g,"published").replace(/reser\s+ves/g,"reserves");
-  s = s.replace(/\.[\s\.]{4,}/g," — ");
-  s = s.replace(/[ \t]{3,}/g," ");
-  s = s.replace(/([a-z])([A-Z])/g,"$1 $2");
-  return s;
-}
-function getBrainTextFor(r){
-  if(!r) return "";
-  if(r.fullText && !isJunkText(r.fullText)) return fixSpacing(r.fullText);
-  if(AI_BRAIN.length){
-    let m = AI_BRAIN.find(x=>x.resourceId===r.id);
-    if(m && m.text && !isJunkText(m.text)) return fixSpacing(m.text);
-    let m2 = AI_BRAIN.find(x=>safeTitle(x)===safeTitle(r) && x.grade===r.grade && x.subject===r.subject);
-    if(m2 && m2.text && !isJunkText(m2.text)) return fixSpacing(m2.text);
-  }
-  return "";
-}
-async function loadResources(){
-  try{ let FB=window.FB; let s=await FB.getDocs(FB.collection(FB.db,'resources')); ALL=[]; s.forEach(d=>ALL.push({id:d.id,...d.data()})); }catch(e){ ALL=[]; }
-  try{
-    let FB=window.FB; let b=await FB.getDocs(FB.collection(FB.db,'ai_brain'));
-    AI_BRAIN=[]; b.forEach(d=>AI_BRAIN.push({id:d.id,...d.data()}));
-    ALL.forEach(r=>{
-      if(!r.fullText || isJunkText(r.fullText)){
-        let bt = getBrainTextFor(r);
-        if(bt) r.fullText = bt; else r.fullText = "";
-      } else r.fullText = fixSpacing(r.fullText);
-    });
-  }catch(e){ AI_BRAIN=[]; }
-  loadDesigns();
-}
-async function callAI(prompt, question){
-  let res = await fetch(PROXY,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({prompt, question: question||prompt, grade: currentGrade, task:"EN", history:[]})});
-  let data={}; try{data=await res.json();}catch(e){}
-  let txt = data.answer || data.text || data.reply || "";
-  if(!txt) throw new Error(data.error||"AI busy");
-  return txt;
-}
-function formatAI(text){
-  let esc = text.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
-  esc = esc.replace(/\*\*(.*?)\*\*/g,"<b>$1</b>"); esc = esc.replace(/\*(.*?)\*/g,"<i>$1</i>");
-  esc = esc.replace(/^### (.*)$/gm,"<div style='color:#5eead4;font-weight:900;margin:10px 0 4px'>$1</div>");
-  esc = esc.replace(/^## (.*)$/gm,"<div style='color:#5eead4;font-weight:900;margin:10px 0 4px'>$1</div>");
-  let lines=esc.split("\n"); let out=""; let inList=false;
-  lines.forEach(l=>{ let t=l.trim();
-    if(/^(Key Point|Important|Note|Answer|Final Answer|Solution)[:：]/i.test(t)){ if(inList){out+="</ul>";inList=false;} let cls=/^(Answer|Final Answer|Solution)/i.test(t)?"ai-answer":/^(Note|Important)/i.test(t)?"ai-note":"ai-key"; out+=`<p><span class="${cls}">${l}</span></p>`; }
-    else if(/^\d+\.\s/.test(l)){ out+=`<p><b>${l}</b></p>`; }
-    else if(/^[-*]\s/.test(l)){ if(!inList){out+="<ul>";inList=true;} out+=`<li>${l.replace(/^[-*]\s/,"")}</li>`; }
+```js
     else { if(inList){out+="</ul>";inList=false;} if(t) out+=`<p>${l}</p>`; }
   }); if(inList) out+="</ul>"; return out;
 }
@@ -172,7 +112,6 @@ function getAdminFileContext(question){
   let scored=chunks.map(c=>{let low=c.toLowerCase(); let s=0; qWords.forEach(w=>{if(low.includes(w)) s++;}); return {c,s};}).sort((a,b)=>b.s-a.s);
   return `\n\nADMIN FILE (Original Design): ${CURRENT_TOPIC}\nMost relevant pages:\n${scored.slice(0,8).map(x=>x.c).join("\n---\n")}\n`;
 }
-/* YOUR TEMPLATE - PP1 Language Activities style, but MORE DETAILED, from THIS book only */
 function buildCBCPrompt(r, topicText){
   return `You are SomaHub CBC Tutor Kenya. You MUST use ONLY the content from this KICD Curriculum Design below. Do NOT invent. Do NOT pull from other grades, other Learning Areas, or other books. If a section is not in THIS document, say "Not in this design" - do NOT invent.
 
@@ -183,7 +122,7 @@ TOPIC / DESIGN: ${topicText}
 DOCUMENT (KICD Design - cleaned, up to 25000 chars):
 ${CURRENT_FILE_TEXT.slice(0,25000)}
 
-Answer in this EXACT structure. Do NOT skip any section. Use **bold** for headings. This is the PP1 Language Activities template, but MORE DETAILED.
+Answer in this EXACT structure. Do NOT skip any section. Use **bold** for headings.
 
 SomaHub CBC Tutor Kenya
 Grade: ${r.grade}
@@ -197,13 +136,13 @@ PART 1 - TEACHER'S GUIDE (Full CBC - copy from document, do not invent):
 3. **General Learning Outcomes:**
 4. **Specific Learning Outcomes:** (bullet list - By end of sub-strand, learner should...)
 5. **Key Inquiry Questions:**
-6. **Core Competencies Developed:** (Communication & Collaboration, Critical Thinking, Digital Literacy, Creativity, Self-Efficacy, Citizenship - explain each in 1 short sentence, only if in document)
-7. **Values:** (Love, Respect, Responsibility, Unity, Patriotism - explain each in 1 short sentence, only if in document)
+6. **Core Competencies Developed:**
+7. **Values:**
 8. **Pertinent & Contemporary Issues (PCIs):**
-9. **Suggested Learning Experiences:** (what learners actually DO in class, step by step)
-10. **Lesson Allocation / Strand Totals:** (from LESSON ALLOCATION table - e.g. Strand X = 12 lessons. If not in text, say "Not in this design")
+9. **Suggested Learning Experiences:**
+10. **Lesson Allocation / Strand Totals:** (from LESSON ALLOCATION table. If not in text, say "Not in this design")
 
-PART 2 - FOR LEARNER - CLARIFY & SIMPLIFY (Most important - teach SAME topic again):
+PART 2 - FOR LEARNER - CLARIFY & SIMPLIFY:
 Rules:
 - VERY simple words. 1 short sentence per idea. No long paragraphs.
 - If you must use a big word, say it then explain in brackets. Example: "Atmosphere (the air around us)"
@@ -213,12 +152,12 @@ Rules:
 - Break into small steps: What is it? Why does it happen? What do we see? What do we do?
 - End with: "**In simple words:** ..." - one line a child can remember.
 
-PART 3 - SAMPLE LESSON (More detailed than before):
-1. **Introduction (Engage):** What teacher shows / asks, with exact teacher words in quotes
-2. **The Explanation (Core):** Step-by-step, with teacher words in quotes
-3. **Guided Practice:** What learners do with teacher
-4. **Independent Practice:** What learners do alone
-5. **Closing:** What teacher asks to check
+PART 3 - SAMPLE LESSON:
+1. **Introduction (Engage):**
+2. **The Explanation (Core):**
+3. **Guided Practice:**
+4. **Independent Practice:**
+5. **Closing:**
 
 PART 4 - VOCABULARY / KEY WORDS:
 - Word (meaning in simple words) - 5-8 words from THIS strand only
@@ -282,12 +221,33 @@ function openReader(title, meta, text){
   document.getElementById("reader").classList.remove("hidden");
   window.scrollTo(0,0);
 }
+function openPdfReader(title, meta, pdfUrl, fallbackText){
+  READER_TITLE=title; READER_META=meta;
+  document.getElementById("readerTitle").innerText=title;
+  document.getElementById("readerMeta").innerText=meta;
+  let page = document.getElementById("readerPage");
+  page.classList.remove("text-mode");
+  if(pdfUrl){
+    page.innerHTML = `
+      <div style="padding:10px;display:flex;gap:8px;flex-wrap:wrap;background:#f1f5f9;">
+        <a href="${pdfUrl}" target="_blank" style="background:#0f766e;color:#fff;padding:8px 12px;border-radius:999px;font-weight:800;font-size:12px;text-decoration:none;">⬇ Open PDF in new tab</a>
+        <button onclick="openReader(READER_TITLE, READER_META, CURRENT_FILE_TEXT)" style="background:#fff;border:1px solid #ddd;padding:8px 12px;border-radius:999px;font-weight:800;font-size:12px;">📄 Show extracted text (AI version)</button>
+      </div>
+      <iframe src="${pdfUrl}" style="width:100%;height:calc(100% - 50px);min-height:70vh;border:0;"></iframe>`;
+  } else {
+    page.classList.add("text-mode");
+    page.innerHTML = organizeOriginalHTML(fallbackText||"") + `<p style="color:#888;font-size:12px;">No PDF link saved — showing extracted text. Re-upload in Admin.</p>`;
+  }
+  page.scrollTop=0;
+  document.getElementById("reader").classList.remove("hidden");
+  window.scrollTo(0,0);
+}
 function closeReader(){ document.getElementById("reader").classList.add("hidden"); document.getElementById("readerPage").innerHTML=""; }
 function closeDetail(){ document.getElementById("detailBox").innerHTML=""; }
 function downloadOriginal(){
   if(CURRENT_FILE_URL){ window.open(CURRENT_FILE_URL, "_blank"); return; }
   let r = ALL.find(x=>safeTitle(x)===READER_TITLE);
-  if(r && r.fileUrl) window.open(r.fileUrl, "_blank");
+  if(r && r.fileUrl) window.open(fixCloudinaryUrl(r.fileUrl), "_blank");
 }
 function loadDesigns(){
   currentGrade = document.getElementById("gradeSel").value;
@@ -313,61 +273,43 @@ function loadDesigns(){
 function openReaderFor(id){
   let r = ALL.find(x=>x.id===id); if(!r) return;
   CURRENT_FILE_TEXT = getBrainTextFor(r) || r.fullText || "";
-  CURRENT_FILE_URL = r.fileUrl || "";
+  CURRENT_FILE_URL = fixCloudinaryUrl(r.fileUrl || "");
   CURRENT_TOPIC = safeTitle(r);
-  openReader(safeTitle(r), `${r.grade} • ${r.subject}`, CURRENT_FILE_TEXT);
+  openPdfReader(safeTitle(r), `${r.grade} • ${r.subject}`, CURRENT_FILE_URL, CURRENT_FILE_TEXT);
 }
 async function openDesign(id){
   let r = ALL.find(x=>x.id===id); if(!r) return;
   currentGrade = r.grade; CURRENT_TOPIC = safeTitle(r);
   CURRENT_FILE_TEXT = getBrainTextFor(r) || r.fullText || "";
-  CURRENT_FILE_URL = r.fileUrl || "";
+  CURRENT_FILE_URL = fixCloudinaryUrl(r.fileUrl || "");
   let box = document.getElementById("detailBox");
-  box.innerHTML = `<div class="card"><b>${safeTitle(r)}</b><p class="text-[12px] text-gray-500 mt-1">${r.grade} • ${r.subject}</p><div class="flex gap-2 mt-3 flex-wrap"><button class="action-btn bg-[#263b99]" onclick="openReaderFor('${r.id}')">📖 Read Original</button><a target="_blank" href="https://www.youtube.com/results?search_query=${encodeURIComponent(safeTitle(r)+" "+r.grade+" CBC Kenya lesson")}" class="action-btn bg-red-600 no-underline">▶ Watch Video</a></div><div class="ai-box mt-3">⏳ Thinking - organizing from THIS design only...</div></div>`;
-  box.scrollIntoView({behavior:"smooth"});
+  box.innerHTML = `<div class="card"><b>${safeTitle(r)}</b><p class="text-[12px] text-gray-500 mt-1">${r.grade} • ${r.subject}</p><div class="flex gap-2 mt-3 flex-wrap"><button class="action-btn bg-[#263b99]" onclick="openReaderFor('${r.id}')">📖 Read Original</button><a target="_blank" href="https://www.youtube.com/results?search_query=${encodeURIComponent(r.grade+" "+r.subject+" KICD explained")}" class="action-btn bg-[#dc2626]" style="text-decoration:none;">▶️ Watch on YouTube</a></div><div class="ai-box mt-3" id="aiBox">⏳ AI is explaining from YOUR Design...</div></div>`;
   try{
-    let ai = await callAI(buildCBCPrompt(r, CURRENT_TOPIC), CURRENT_TOPIC);
-    box.querySelector(".ai-box").innerHTML = formatAI(ai);
+    let prompt = buildCBCPrompt(r, CURRENT_TOPIC);
+    let answer = await callAI(prompt, "Explain this design");
+    document.getElementById("aiBox").innerHTML = formatAI(answer);
   }catch(e){
-    box.querySelector(".ai-box").innerHTML = "❌ AI busy: "+e.message+"<br><br>Tap 📖 Read Original to read the organized book while AI retries.";
+    document.getElementById("aiBox").innerHTML = "⚠️ AI is busy. Try again. "+e.message;
   }
+  box.scrollIntoView({behavior:"smooth"});
 }
 async function searchNotes(){
-  let q=document.getElementById("searchInput").value.trim(); if(!q) return;
-  currentGrade=document.getElementById("gradeSel").value;
-  let subj = document.getElementById("subjectSel").value;
-  CURRENT_TOPIC=q;
-  let box=document.getElementById("searchResult");
-  box.classList.remove("hidden");
-  let words=q.toLowerCase().split(/[^a-z0-9]+/).filter(w=>w.length>3);
-  /* KEEN FIX: NEVER fall back to other grades/subjects - that was the mixing bug */
-  let matched = ALL.filter(r=>{
-    if(r.grade !== currentGrade) return false;
-    if(subj && r.subject !== subj) return false;
-    let hay=((r.title||"")+" "+(r.subject||"")+" "+(r.description||"")+" "+getBrainTextFor(r)).toLowerCase();
-    return words.some(w=>hay.includes(w));
+  let q = document.getElementById("searchInput").value.trim().toLowerCase();
+  let box = document.getElementById("searchResult");
+  if(!q){ box.classList.add("hidden"); return; }
+  let hits = [];
+  ALL.forEach(r=>{
+    let txt = (r.fullText||"").toLowerCase();
+    if(txt.includes(q)){
+      let i = txt.indexOf(q);
+      hits.push({r, snippet: (r.fullText||"").slice(Math.max(0,i-120), i+250)});
+    }
   });
-  if(matched.length && getBrainTextFor(matched[0])) CURRENT_FILE_TEXT = getBrainTextFor(matched[0]);
-  else if(matched.length && matched[0].fullText) CURRENT_FILE_TEXT = fixSpacing(matched[0].fullText);
-  else CURRENT_FILE_TEXT = "";
-  box.innerHTML=`<p class="font-black">🔍 "${q}" - ${matched.length} designs for ${currentGrade} ${subj||""}</p><div class="ai-box mt-2">⏳ Thinking - from THIS grade + subject only...</div>`;
-  if(!matched.length){
-    box.querySelector(".ai-box").innerHTML = "Not in this design for "+currentGrade+" "+(subj||"")+". Try another word, or tap 📖 Read Original on the design below.";
-    return;
-  }
-  let designCtx=matched.map((r,i)=>`${i+1}. ${safeTitle(r)} | ${r.grade} ${r.subject} | ${(getBrainTextFor(r)||"").slice(0,2000)}`).join("\n");
-  let fileCtx=getAdminFileContext(q);
-  let prompt=`You are SomaHub CBC Tutor for ${currentGrade} - ${subj||"this Learning Area"}. Topic: ${q}\nUse ONLY these designs (same grade + same Learning Area):\n${designCtx}\n${fileCtx}\nTASK: Use the PP1 Language Activities template, MORE DETAILED: Teacher's Guide, Outcomes, Key Inquiry, Competencies, Values, PCIs, Learning Experiences, Lesson Allocation, then CLARIFY & SIMPLIFY for a ${currentGrade} child - simple words, Kenya examples, analogy, "In simple words:" summary. Then Sample Lesson (Engage, Core, Guided, Independent, Closing), Vocabulary, Quick Quiz (5 Q + answers), Remember This (3 points). Use **bold**. If not in these designs, say "Not in this design". Never pull from other grades or subjects.`;
-  try{ let ai=await callAI(prompt,q); box.innerHTML=`<p class="font-black">🔍 "${q}" - ${matched.length} designs</p>${matched.map(r=>`<div class="mt-2 text-[13px]"><b>${safeTitle(r)}</b> • ${r.grade} ${r.subject} <button class="action-btn bg-[#263b99] ml-1" onclick="openDesign('${r.id}')">🤖 AI Explains</button></div>`).join("")}<div class="ai-box mt-3">${formatAI(ai)}</div><div class="flex gap-2 mt-3 flex-wrap"><a target="_blank" href="https://www.youtube.com/results?search_query=${encodeURIComponent(q+" "+currentGrade+" CBC Kenya lesson")}" class="action-btn bg-red-600 no-underline">▶ Watch Video</a></div>`; }catch(e){ box.querySelector(".ai-box").innerHTML = "❌ AI busy: "+e.message; }
+  if(!hits.length){ box.innerHTML = `No match for "<b>${q}</b>" in loaded designs.`; box.classList.remove("hidden"); return; }
+  box.innerHTML = hits.slice(0,5).map(h=>`<div style="margin-bottom:10px;"><b>${safeTitle(h.r)}</b><p style="font-size:12.5px;line-height:1.6;">...${h.snippet.replace(/</g,"&lt;")}...</p><button class="action-btn bg-[#263b99]" onclick="openReaderFor('${h.r.id}')">📖 Open</button></div>`).join("");
+  box.classList.remove("hidden");
 }
 window.addEventListener("load", loadResources);
-window.openDesign = openDesign;
-window.openReaderFor = openReaderFor;
-window.searchNotes = searchNotes;
-window.loadDesigns = loadDesigns;
-window.closeReader = closeReader;
-window.closeDetail = closeDetail;
-window.downloadOriginal = downloadOriginal;
 </script>
 </body>
 </html>
