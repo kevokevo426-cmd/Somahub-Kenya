@@ -116,8 +116,8 @@ function clearBrokenNotes(){cleanOldHtmlNotes();let before=AI_NOTES.length;AI_NO
 function clearCurrentNotes(){if(!confirm("Delete notes for this Grade + Subject from this phone?"))return;AI_NOTES=AI_NOTES.filter(n=>!(String(n.grade)===String(curGrade())&&normSubject(n.subject)===normSubject(curSubject())));localStorage.setItem("soma_ai_notes",JSON.stringify(AI_NOTES));renderNotesList();toast("🗑️ Cleared locally");}
 const GRADES=["Playgroup","PP1","PP2","Grade 1","Grade 2","Grade 3","Grade 4","Grade 5","Grade 6","Grade 7","Grade 8","Grade 9","Grade 10"];
 const GRADE_SUBJECTS={"Playgroup":["Language Activities","Mathematical Activities","Environmental Activities","Creative Activities","Religious Education"],"PP1":["Language Activities","Mathematical Activities","Environmental Activities","Creative Activities","Religious Education","Movement Activities"],"PP2":["Language Activities","Mathematical Activities","Environmental Activities","Creative Activities","Religious Education","Movement Activities"],"Grade 1":["English","Kiswahili","Mathematics","Environmental Activities","Creative Activities","Religious Education","Movement Activities","Indigenous Language"],"Grade 2":["English","Kiswahili","Mathematics","Environmental Activities","Creative Activities","Religious Education","Movement Activities","Indigenous Language"],"Grade 3":["English","Kiswahili","Mathematics","Environmental Activities","Creative Activities","Religious Education","Movement Activities","Indigenous Language"],"Grade 4":["English","Kiswahili","Mathematics","Science and Technology","Social Studies","Agriculture and Nutrition","Creative Arts","Religious Education","Physical Education and Sports","Indigenous Language","Foreign Language"],"Grade 5":["English","Kiswahili","Mathematics","Science and Technology","Social Studies","Agriculture and Nutrition","Creative Arts","Religious Education","Physical Education and Sports","Indigenous Language","Foreign Language"],"Grade 6":["English","Kiswahili","Mathematics","Science and Technology","Social Studies","Agriculture and Nutrition","Creative Arts","Religious Education","Physical Education and Sports","Indigenous Language","Foreign Language"],"Grade 7":["English","Kiswahili","Mathematics","Integrated Science","Social Studies","Pre-Technical Studies","Agriculture and Nutrition","Religious Education","Creative Arts and Sports","Health Education","Life Skills Education"],"Grade 8":["English","Kiswahili","Mathematics","Integrated Science","Social Studies","Pre-Technical Studies","Agriculture and Nutrition","Religious Education","Creative Arts and Sports","Health Education","Life Skills Education"],"Grade 9":["English","Kiswahili","Mathematics","Integrated Science","Social Studies","Pre-Technical Studies","Agriculture and Nutrition","Religious Education","Creative Arts and Sports","Health Education","Life Skills Education"],"Grade 10":["English","Kiswahili","Mathematics","Biology","Chemistry","Physics","General Science","History and Government","Geography","CRE","IRE","HRE","Business Studies","Agriculture","Computer Studies","Home Science","Art and Design","Music","Physical Education","Life Skills Education","Foreign Language"]};
-const STRANDS={"Language Activities":["Listening & Speaking","Reading","Writing","Vocabulary"],"Mathematical Activities":["Counting","Numbers 1-10","Shapes","Sorting & Matching","Measurement"],"Environmental Activities":["Weather","Plants","Animals","Water","Soil","My Home"],"Psychomotor and Creative Activities":["Art","Music","Movement","Craft","Colour"],"Creative Activities":["Art","Music","Movement","Craft","Colour"],"Movement Activities":["Movement","Games","Balance","Outdoor Play"],"Religious Education":["Creation","My Family","Good Manners","Prayer","Bible Stories"],"English":["Grammar - Tenses","Comprehension","Vocabulary","Punctuation","Nouns & Verbs"],"Kiswahili":["Sarufi - Nomino","Wingi & Umoja","Sentensi","Kinyume","Methali"],"Mathematics":["Fractions","Percentages","Geometry - Area","Algebra","Number Patterns"],"Science and Technology":["Flower Parts","Photosynthesis","States of Matter","Human Body","Water Cycle"],"Integrated Science":["Flower Parts","Photosynthesis","States of Matter","Human Body","Water Cycle","Mixtures"],"Social Studies":["Map Work - Kenya","Rift Valley Lakes","Compass Direction","Physical Features","People & Population"],"Agriculture and Nutrition":["Conserving Agricultural Environment","Food Production Processes","Animal Production","Agricultural Innovations","Food and Nutrition","Food Preservation","Consumer Education","Clothing and Textiles"],"Creative Arts":["Art","Music","Movement","Craft","Colour"],"Creative Arts and Sports":["Art","Music","Sports","Movement","Craft"],"Physical Education and Sports":["Games","Movement","Balance","Fitness"],"Physical Education":["Games","Movement","Balance","Fitness"],"Pre-Technical Studies":["Tools","Materials","Drawing","Safety","Energy"],"Health Education":["Hygiene","My Body","Safety","Nutrition"],"Life Skills Education":["Self Awareness","Good Manners","Safety","Decision Making"],"Indigenous Language":["Vocabulary","Listening","Speaking","Reading"],"Foreign Language":["Vocabulary","Listening","Speaking","Reading"],"Biology":["Cells","Plants","Animals","Human Body"],"Chemistry":["Mixtures","Acids & Bases","Metals","Air"],"Physics":["Force","Energy","Light","Sound","Electricity"],"General Science":["Plants","Animals","Water","Air","Soil"],"History and Government":["Kenya History","Government","Freedom Fighters"],"Geography":["Map Work","Weather","Climate","Rivers"],"CRE":["Creation","Commandments","Fruit of Spirit","Life of Jesus","Old Testament"],"IRE":["Creation","Pillars of Islam","Prophets","Good Manners"],"HRE":["Creation","Good Manners","Community","Festivals"],"Business Studies":["Money","Trade","Business","Saving"],"Agriculture":["Conserving Agricultural Environment","Food Production Processes","Animal Production","Agricultural Innovations","Food and Nutrition","Food Preservation","Consumer Education","Clothing and Textiles"],"Computer Studies":["Computer Parts","Internet","Safety","Typing"],"Home Science":["Nutrition","Hygiene","Clothing","Home"],"Art and Design":["Drawing","Colour","Craft","Design"],"Music":["Singing","Instruments","Rhythm","Listening"]};
-const ICONS={"Language Activities":"🗣️","Mathematical Activities":"🔢","Environmental Activities":"🌍","Psychomotor and Creative Activities":"🎨","Creative Activities":"🎨","Movement Activities":"💃","Religious Education":"🙏","English":"📖","Kiswahili":"💬","Mathematics":"🔢","Science and Technology":"🔬","Integrated Science":"🔬","Social Studies":"🗺️","Agriculture and Nutrition":"🌾","Creative Arts":"🎨","Creative Arts and Sports":"🎨","Physical Education and Sports":"⚽","Physical Education":"⚽","Pre-Technical Studies":"🔧","Health Education":"🧼","Life Skills Education":"💡","Indigenous Language":"🗣️","Foreign Language":"🌍","Biology":"🧬","Chemistry":"🧪","Physics":"⚡","General Science":"🔬","History and Government":"🏛️","Geography":"🗺️","CRE":"✝️","IRE":"🕌","HRE":"🙏","Business Studies":"💰","Agriculture":"🌾","Computer Studies":"💻","Home Science":"🏠","Art and Design":"🎨","Music":"🎵"};
+const STRANDS={"Language Activities":["Listening & Speaking","Reading","Writing","Vocabulary"],"Mathematical Activities":["Counting","Numbers 1-10","Shapes","Sorting & Matching","Measurement"],"Environmental Activities":["Weather","Plants","Animals","Water","Soil","My Home"],"Creative Activities":["Art","Music","Movement","Craft","Colour"],"Movement Activities":["Movement","Games","Balance","Outdoor Play"],"Religious Education":["Creation","My Family","Good Manners","Prayer","Bible Stories"],"English":["Grammar - Tenses","Comprehension","Vocabulary","Punctuation","Nouns & Verbs"],"Kiswahili":["Sarufi - Nomino","Wingi & Umoja","Sentensi","Kinyume","Methali"],"Mathematics":["Fractions","Percentages","Geometry - Area","Algebra","Number Patterns"],"Science and Technology":["Flower Parts","Photosynthesis","States of Matter","Human Body","Water Cycle"],"Integrated Science":["Flower Parts","Photosynthesis","States of Matter","Human Body","Water Cycle","Mixtures"],"Social Studies":["Map Work - Kenya","Rift Valley Lakes","Compass Direction","Physical Features","People & Population"],"Agriculture and Nutrition":["Conserving Agricultural Environment","Food Production Processes","Animal Production","Agricultural Innovations","Food and Nutrition","Food Preservation","Consumer Education","Clothing and Textiles"],"Creative Arts":["Art","Music","Movement","Craft","Colour"],"Creative Arts and Sports":["Art","Music","Sports","Movement","Craft"],"Physical Education and Sports":["Games","Movement","Balance","Fitness"],"Physical Education":["Games","Movement","Balance","Fitness"],"Pre-Technical Studies":["Tools","Materials","Drawing","Safety","Energy"],"Health Education":["Hygiene","My Body","Safety","Nutrition"],"Life Skills Education":["Self Awareness","Good Manners","Safety","Decision Making"],"Indigenous Language":["Vocabulary","Listening","Speaking","Reading"],"Foreign Language":["Vocabulary","Listening","Speaking","Reading"],"Biology":["Cells","Plants","Animals","Human Body"],"Chemistry":["Mixtures","Acids & Bases","Metals","Air"],"Physics":["Force","Energy","Light","Sound","Electricity"],"General Science":["Plants","Animals","Water","Air","Soil"],"History and Government":["Kenya History","Government","Freedom Fighters"],"Geography":["Map Work","Weather","Climate","Rivers"],"CRE":["Creation","Commandments","Fruit of Spirit","Life of Jesus","Old Testament"],"IRE":["Creation","Pillars of Islam","Prophets","Good Manners"],"HRE":["Creation","Good Manners","Community","Festivals"],"Business Studies":["Money","Trade","Business","Saving"],"Agriculture":["Conserving Agricultural Environment","Food Production Processes","Animal Production","Agricultural Innovations","Food and Nutrition","Food Preservation","Consumer Education","Clothing and Textiles"],"Computer Studies":["Computer Parts","Internet","Safety","Typing"],"Home Science":["Nutrition","Hygiene","Clothing","Home"],"Art and Design":["Drawing","Colour","Craft","Design"],"Music":["Singing","Instruments","Rhythm","Listening"]};
+const ICONS={"Language Activities":"🗣️","Mathematical Activities":"🔢","Environmental Activities":"🌍","Creative Activities":"🎨","Movement Activities":"💃","Religious Education":"🙏","English":"📖","Kiswahili":"💬","Mathematics":"🔢","Science and Technology":"🔬","Integrated Science":"🔬","Social Studies":"🗺️","Agriculture and Nutrition":"🌾","Creative Arts":"🎨","Creative Arts and Sports":"🎨","Physical Education and Sports":"⚽","Physical Education":"⚽","Pre-Technical Studies":"🔧","Health Education":"🧼","Life Skills Education":"💡","Indigenous Language":"🗣️","Foreign Language":"🌍","Biology":"🧬","Chemistry":"🧪","Physics":"⚡","General Science":"🔬","History and Government":"🏛️","Geography":"🗺️","CRE":"✝️","IRE":"🕌","HRE":"🙏","Business Studies":"💰","Agriculture":"🌾","Computer Studies":"💻","Home Science":"🏠","Art and Design":"🎨","Music":"🎵"};
 const STRAND_SUBSTRANDS={"Conserving Agricultural Environment":["1.1 Soil Conservation Measures","1.2 Water Harvesting and Storage"],"Food Production Processes":["2.1 Kitchen Gardening","2.2 Poultry Rearing in a Fold","2.3 Crop Pest and Disease Control","2.4 Preparation of Animal Products","2.5 Preserving Milk and Meat","2.6 Cooking"],"Crop Production":["2.1 Kitchen Gardening","2.2 Poultry Rearing in a Fold","2.3 Crop Pest and Disease Control","2.4 Preparation of Animal Products","2.5 Preserving Milk and Meat","2.6 Cooking"],"Animal Production":["3.1 Animal Housing","3.2 Animal Feeding","3.3 Animal Health"],"Agricultural Innovations":["4.1 Innovative Farming","4.2 Use of Technology in Agriculture"],"Food and Nutrition":["5.1 Balanced Diet","5.2 Food Groups","5.3 Food Hygiene"],"Food Preservation":["6.1 Methods of Food Preservation","6.2 Storing Preserved Food"],"Consumer Education":["7.1 Wise Buying","7.2 Consumer Rights"],"Clothing and Textiles":["8.1 Care of Clothes","8.2 Making Clothes"]};
 function esc(v){return String(v??"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#039;");}
 function escForJS(v){return String(v||"").replace(/\\/g,"\\\\").replace(/'/g,"\\'").replace(/"/g,'\\"').replace(/\n/g," ");}
@@ -135,30 +135,21 @@ function curStrand(){return document.getElementById("strandSel").value||"";}
 function isAllStrands(){return curStrand()==="__ALL__";}
 function cleanStrandName(s){return String(s||"").replace(/[🌱🌾🐄💡🍎🥫🛒👕☀️💧🏔️🌸🧪🧍🌧️🗺️🌊🧭⛰️👨‍👩‍👧🔢🍕%📐🎯📝📚🌈✏️🎤↔️🎭🟠🎨🎵💃✂️🏠🙏📖🌍👨‍👩‍👧‍👦🧼🦺🔧🪵⚡💡🧬🐄🧍🧪⚙️🌬️💪💡🔊🔌🇰🇪🏛️🎖️🌦️🌊📜🍎✝️🕌🎉💰💻🏠✏️🎸🥁🎧⚽🤸🏃]/gu,"").trim();}
 function resolveStrandName(s){let c=cleanStrandName(s).toLowerCase();if(c.includes("crop production")) return "Food Production Processes";if(c.includes("food production")) return "Food Production Processes";return cleanStrandName(s);}
-// FIX 2: Cloudinary PDF was uploaded as /image/upload -> 401. Fix to /raw/upload on display
 function fixCloudinaryUrl(u){if(!u) return "";let s=String(u);if(s.includes("res.cloudinary.com") && s.includes("/image/upload/") && s.toLowerCase().includes(".pdf")){return s.replace("/image/upload/","/raw/upload/");}return s;}
 function cutRubricOnly(fullText){if(!fullText) return "";let upper=fullText.toUpperCase();let idx=upper.lastIndexOf("ASSESSMENT RUBRIC");if(idx>fullText.length*0.5) return fullText.slice(0,idx);let idx2=upper.lastIndexOf("APPENDIX");if(idx2>fullText.length*0.5) return fullText.slice(0,idx2);return fullText;}
-// FIX 1: Don't rely on word STRAND. Search for real strand names inside the 87819 chars.
 function parseStrandsFromDesignText(fullText, subject){
   if(!fullText) return [];
   let searchable=cutRubricOnly(fullText);
   let upperSearch=searchable.toUpperCase();
-  // Try 1: STRAND 1.0 pattern
   let out=[];let seen=new Set();
   let re=/STRAND\s+(\d+)\.0\s+([A-Z][^\n\r]{3,90})/gi;let m;
   while((m=re.exec(searchable))!==null){let name=cleanLine(m[2]).replace(/\s{2,}/g," ").replace(/[.:;]+$/,"").trim();if(name.length<3||name.length>80) continue;if(isCoverOrBoilerplate(name)||isRubricLine(name)) continue;let key=name.toLowerCase();if(!seen.has(key)){seen.add(key);out.push({num:parseInt(m[1],10),name});}}
   if(out.length>=2){out.sort((a,b)=>a.num-b.num);return out.map(o=>o.name);}
-  // Try 2: Find KNOWN strand names for this subject inside the text, in order of appearance
   let candidates=STRANDS[subject]||[];
-  // Also try Agriculture alias
   if(normSubject(subject)==="agriculture" && !candidates.length) candidates=STRANDS["Agriculture and Nutrition"]||[];
   let found=[];
-  candidates.forEach(name=>{
-    let idx=upperSearch.indexOf(name.toUpperCase());
-    if(idx>-1) found.push({name, idx});
-  });
+  candidates.forEach(name=>{let idx=upperSearch.indexOf(name.toUpperCase());if(idx>-1) found.push({name, idx});});
   if(found.length>=2){found.sort((a,b)=>a.idx-b.idx);return found.map(f=>f.name);}
-  // Try 3: 1.0, 2.0 pattern without STRAND word
   let out3=[];let seen3=new Set();
   let re3=/(?:^|\n)\s*(\d+)\.0\s+([A-Z][^\n\r]{3,80})/g;let m3;
   while((m3=re3.exec(searchable))!==null){let name=cleanLine(m3[2]).replace(/\s{2,}/g," ").trim();if(isCoverOrBoilerplate(name)) continue;let key=name.toLowerCase();if(!seen3.has(key)){seen3.add(key);out3.push({num:parseInt(m3[1],10),name});}}
@@ -166,7 +157,7 @@ function parseStrandsFromDesignText(fullText, subject){
   return [];
 }
 function parseSubStrandsFromSection(section){if(!section) return [];let out=[];let seen=new Set();let re=/(\d+\.\d+)\s+([A-Z][^\n\r]{3,80})/g;let m;while((m=re.exec(section))!==null){let title=`${m[1]} ${cleanLine(m[2]).replace(/\s{2,}/g," ").trim()}`;if(isCoverOrBoilerplate(title)||isRubricLine(title)) continue;if(title.toLowerCase().includes("strand")) continue;let key=title.toLowerCase();if(!seen.has(key)){seen.add(key);out.push(title);}}return out;}
-function refreshDesignStrands(){DESIGN_STRANDS=[];DESIGN_SUBSTRANDS={};DESIGN_STRANDS_FROM="fallback";if(CURRENT_DESIGN){let txt=getDesignText(CURRENT_DESIGN);let parsed=parseStrandsFromDesignText(txt, curSubject());if(parsed.length>=2){DESIGN_STRANDS=parsed;DESIGN_STRANDS_FROM="design";parsed.forEach(s=>{let sec=extractStrandSection(txt,s);let subs=parseSubStrandsFromSection(sec);if(subs.length) DESIGN_SUBSTRANDS[s]=subs;});}}let info=document.getElementById("strandSourceInfo");if(info){if(DESIGN_STRANDS_FROM==="design"){info.innerHTML=`✅ Strands STRICT from YOUR Design • ${DESIGN_STRANDS.length} found by NAME inside ${CURRENT_DESIGN?getDesignText(CURRENT_DESIGN).length:0} chars • Sub-strands also from Design`;}else{info.innerHTML=`⚠️ No STRAND headings found — using fallback list. But notes will still be built from Design text by name.`;}info.classList.remove("hidden");}updateAssistantContext();}
+function refreshDesignStrands(){DESIGN_STRANDS=[];DESIGN_SUBSTRANDS={};DESIGN_STRANDS_FROM="fallback";if(CURRENT_DESIGN){let txt=getDesignText(CURRENT_DESIGN);let parsed=parseStrandsFromDesignText(txt, curSubject());if(parsed.length>=2){DESIGN_STRANDS=parsed;DESIGN_STRANDS_FROM="design";parsed.forEach(s=>{let sec=extractStrandSection(txt,s);let subs=parseSubStrandsFromSection(sec);if(subs.length) DESIGN_SUBSTRANDS[s]=subs;});}}let info=document.getElementById("strandSourceInfo");if(info){if(DESIGN_STRANDS_FROM==="design"){info.innerHTML=`✅ Strands STRICT from YOUR Design • ${DESIGN_STRANDS.length} found by NAME`;}else{info.innerHTML=`⚠️ No STRAND headings found — using fallback list. But notes will still be built from Design text by name.`;}info.classList.remove("hidden");}updateAssistantContext();}
 function allStrandsForSubject(sub){if(DESIGN_STRANDS_FROM==="design" && DESIGN_STRANDS.length) return DESIGN_STRANDS;return STRANDS[sub]||[];}
 function getExpectedSubStrands(strand){let resolved=resolveStrandName(strand);if(DESIGN_SUBSTRANDS[resolved] && DESIGN_SUBSTRANDS[resolved].length) return DESIGN_SUBSTRANDS[resolved];if(DESIGN_SUBSTRANDS[strand] && DESIGN_SUBSTRANDS[strand].length) return DESIGN_SUBSTRANDS[strand];for(let k of Object.keys(DESIGN_SUBSTRANDS)){if(cleanStrandName(k)===cleanStrandName(resolved)) return DESIGN_SUBSTRANDS[k];}if(STRAND_SUBSTRANDS[resolved]) return STRAND_SUBSTRANDS[resolved];if(STRAND_SUBSTRANDS[strand]) return STRAND_SUBSTRANDS[strand];for(let k of Object.keys(STRAND_SUBSTRANDS)){if(cleanStrandName(k)===cleanStrandName(resolved)) return STRAND_SUBSTRANDS[k];}return [];}
 async function loadStoredAINotesFromFirestore(){try{let FB=window.FB;let snap=await FB.getDocs(FB.collection(FB.db,"ai_notes"));let fromFB=[];snap.forEach(d=>{let data=d.data()||{};let notes=data.notes||[];notes.forEach(n=>{fromFB.push({...n,grade:data.grade||n.grade,subject:data.subject||n.subject,strand:data.strand||n.strand});});});if(fromFB.length){let key=n=>`${n.grade}|${normSubject(n.subject)}|${resolveStrandName(n.strand||"")}|${n.title}`;let seen=new Set(fromFB.map(key));let localOnly=AI_NOTES.filter(n=>!seen.has(key(n)));AI_NOTES=[...fromFB,...localOnly];localStorage.setItem("soma_ai_notes",JSON.stringify(AI_NOTES));}}catch(e){console.warn("load ai_notes failed",e);}}
@@ -182,26 +173,47 @@ function extractStrandSection(fullText, strandName){
   let resolved=resolveStrandName(strandName);
   let searchable=cutRubricOnly(fullText);
   let upperSearch=searchable.toUpperCase();
-  // FIX: Find by NAME first — this works even if STRAND heading format is different
-  let start=upperSearch.indexOf(resolved.toUpperCase());
-  if(start===-1){
-    // Try first 2 words, e.g. FOOD PRODUCTION
-    let words=resolved.toUpperCase().split(" ").filter(w=>w.length>3);
-    if(words.length>=2) start=upperSearch.indexOf(words.slice(0,2).join(" "));
+  let needle=resolved.toUpperCase();
+  let positions=[]; let idx=0;
+  while(true){let i=upperSearch.indexOf(needle, idx); if(i===-1) break; positions.push(i); idx=i+1; if(positions.length>20) break;}
+  if(!positions.length){
+    let words=needle.split(" ").filter(w=>w.length>3);
+    if(words.length>=2){let n2=words.slice(0,2).join(" "); idx=0; while(true){let i=upperSearch.indexOf(n2, idx); if(i===-1) break; positions.push(i); idx=i+1; if(positions.length>20) break;}}
   }
-  if(start===-1){
-    let clean=cleanStrandName(resolved).toLowerCase();let keywords=clean.split(/[^a-z]+/).filter(w=>w.length>3);
-    let matches=[...upperSearch.matchAll(/STRAND\s+(\d+)\.0[^\n]{0,90}/g)];
-    for(let m of matches){let line=m[0].toLowerCase();if(keywords.filter(k=>line.includes(k)).length>=1){start=m.index;break;}}
-  }
-  if(start===-1) return "";
-  // End = next known strand name, or next STRAND heading, or +15000 chars
+  if(!positions.length) return "";
+  let best=-1, bestScore=-1;
+  positions.forEach(p=>{
+    let next=searchable.slice(p, p+4000).toUpperCase();
+    let score=0;
+    if(next.includes("BY THE END OF THE SUB-STRAND")) score+=5;
+    if(next.includes("SPECIFIC LEARNING OUTCOMES")) score+=5;
+    if(next.includes("KEY INQUIRY")) score+=4;
+    if(next.includes("SUGGESTED LEARNING")) score+=4;
+    if(next.includes("SUB-STRAND")) score+=2;
+    if(p < searchable.length*0.25) score-=3;
+    if(next.includes("TABLE OF CONTENTS")) score-=5;
+    if(next.includes("NATIONAL GOALS")) score-=3;
+    if(score>bestScore){bestScore=score; best=p;}
+  });
+  if(bestScore<=0) best=positions[positions.length-1];
+  let start=best;
   let end=searchable.length;
   let candidates=allStrandsForSubject(curSubject());
-  candidates.forEach(n=>{if(resolveStrandName(n)===resolved) return;let idx=upperSearch.indexOf(resolveStrandName(n).toUpperCase(), start+100);if(idx>-1 && idx<end) end=idx;});
-  let after=upperSearch.slice(start+10);let nm=after.search(/STRAND\s+\d+\.0/);if(nm>-1 && start+10+nm<end) end=start+10+nm;
+  candidates.forEach(n=>{if(resolveStrandName(n)===resolved) return;let j=upperSearch.indexOf(resolveStrandName(n).toUpperCase(), start+500);if(j>-1 && j<end) end=j;});
   if(end-start>15000) end=start+15000;
-  let section=searchable.slice(start,end).split("\n").filter(l=>!isRubricLine(l)).join("\n");
+  let section=searchable.slice(start,end);
+  section=section.split("\n").filter(l=>{
+    let u=l.toUpperCase();
+    if(u.includes("TABLE OF CONTENTS")) return false;
+    if(u.includes("NATIONAL GOALS OF EDUCATION")) return false;
+    if(u.includes("APPENDIX 1:")||u.includes("APPENDIX 2:")) return false;
+    if(u.includes("KENYA INSTITUTE OF CURRICULUM")) return false;
+    if(u.includes("A SKILLED AND ETHICAL SOCIETY")) return false;
+    if(isRubricLine(l)) return false;
+    if(/^\s*\d+\.0\s+[A-Z ]+\s+—\s*\d+\s*$/.test(l)) return false;
+    if(/^\s*\d+\.\d+\s+[A-Z ]+\s+—\s*\d+\s*$/.test(l)) return false;
+    return true;
+  }).join("\n");
   return section;
 }
 function describeSource(){let info=document.getElementById("sourceInfo");if(!info)return;let dt=CURRENT_DESIGN?getDesignText(CURRENT_DESIGN):"";let nt=getNoteTextFor(CURRENT_DESIGN);let aiN=getAINotesForCurrent().length;let strandSec = isAllStrands() ? dt : extractStrandSection(dt, curStrand());if(CURRENT_SOURCE==="design+notes")info.innerHTML=`📚 Design + Notes • ${isAllStrands()?"ALL Strands "+dt.length+" chars":"One Strand "+resolveStrandName(curStrand())+" • Section "+strandSec.length+" chars"} • AI Notes: ${aiN}`;else if(CURRENT_SOURCE==="design-only")info.innerHTML=`📘 Design only • ${isAllStrands()?"ALL Strands "+dt.length+" chars":"One Strand "+resolveStrandName(curStrand())+" • Section "+strandSec.length+" chars"} • AI Notes: ${aiN}`;else if(CURRENT_SOURCE==="notes-only")info.innerHTML=`📝 Notes only • ${nt.length} chars • AI Notes: ${aiN}`;else info.innerHTML=`⚠️ None — Preparing automatically from Design.`;info.classList.remove("hidden");}
@@ -238,7 +250,13 @@ function buildLocalNotesFromDesign(strandParam){
   }
   if(!strandSec || strandSec.length<200) return null;
   let expected = getExpectedSubStrands(strand);
-  let parts = strandSec.split(/(?=\b\d+\.\d+\s)/g).map(p=>p.split("\n").filter(l=>!isRubricLine(l)).join("\n")).filter(p=>p.trim().length>80);
+  let parts = strandSec.split(/(?=\b\d+\.\d+\s)/g).map(p=>p.split("\n").filter(l=>!isRubricLine(l)&&!isCoverOrBoilerplate(l)).join("\n")).filter(p=>{
+    let t=p.trim();
+    if(t.length<300) return false;
+    if(t.toUpperCase().includes("TABLE OF CONTENTS")) return false;
+    if(t.toUpperCase().includes("NATIONAL GOALS")) return false;
+    return t.toUpperCase().includes("BY THE END")||t.toUpperCase().includes("LEARNER SHOULD")||t.toUpperCase().includes("KEY INQUIRY")||t.toUpperCase().includes("SUGGESTED")||t.length>800;
+  });
   if(expected.length){
     return expected.map((title,i)=>{
       let chunk = parts[i]||parts[0]||strandSec.slice(i*1000,(i+1)*1000);
